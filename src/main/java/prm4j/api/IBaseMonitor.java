@@ -14,7 +14,12 @@ package prm4j.api;
 import prm4j.old.v2.indexing.Event;
 
 /**
- * A base monitor keeps track of a trace of events for a fixed set of bindings.
+ * An {@link IBaseMonitor} is a concrete monitor instance, representing the internal state of an
+ * {@link IParametricMonitor} for one single concrete variable binding.
+ * <p>
+ * Usage: This interface may be implemented by custom monitors to enable interplay with custom indexing strategies. To
+ * implement custom monitors to work with the provided indexing strategies, users should subclass the abstract base
+ * monitors associated with those strategies instead.
  *
  * @param <A>
  *            the type of the auxiliary data usable by base monitors
