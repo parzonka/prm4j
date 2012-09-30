@@ -11,6 +11,7 @@
 package prm4j.api.fsm;
 
 import prm4j.api.Alphabet;
+import prm4j.api.MonitorState;
 import prm4j.api.MatchHandler;
 import prm4j.api.Symbol;
 
@@ -18,7 +19,7 @@ import prm4j.api.Symbol;
  * @param <A>
  *            the type of the auxiliary data usable by base monitors
  */
-public class FSMState<L> {
+public class FSMState<L> implements MonitorState<L> {
 
     private FSMState<L>[] successorTable;
     private final boolean isFinal;
@@ -43,7 +44,11 @@ public class FSMState<L> {
 	this.successorTable[symbol.getIndex()] = successor;
     }
 
-    public FSMState<L> getSuccessor(Symbol symbol) {
+    /* (non-Javadoc)
+     * @see prm4j.api.fsm.IMonitorState#getSuccessor(prm4j.api.Symbol)
+     */
+    @Override
+    public MonitorState<L> getSuccessor(Symbol symbol) {
 	return this.successorTable[symbol.getIndex()];
     }
 
@@ -52,10 +57,18 @@ public class FSMState<L> {
 	return this.label;
     }
 
+    /* (non-Javadoc)
+     * @see prm4j.api.fsm.IMonitorState#isFinal()
+     */
+    @Override
     public boolean isFinal() {
 	return this.isFinal;
     }
 
+    /* (non-Javadoc)
+     * @see prm4j.api.fsm.IMonitorState#getMatchHandler()
+     */
+    @Override
     public MatchHandler getMatchHandler() {
 	return this.matchHandler;
     }
