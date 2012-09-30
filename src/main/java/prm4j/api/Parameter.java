@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package rm4j.api;
+package prm4j.api;
 
 /**
  * A parameter which can be bound to an object.

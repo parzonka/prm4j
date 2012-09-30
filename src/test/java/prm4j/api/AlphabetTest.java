@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package rm4j.api;
+package prm4j.api;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,6 +18,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.junit.Test;
+
+import prm4j.api.Alphabet;
+import prm4j.api.Parameter;
+import prm4j.api.Symbol1;
+import prm4j.api.Symbol2;
+
 
 public class AlphabetTest {
 

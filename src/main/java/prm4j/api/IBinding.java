@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package rm4j.api;
+package prm4j.api;
 
 /**
  * Represents the association of a {@link Parameter} to a object.

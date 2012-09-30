@@ -9,9 +9,9 @@
  * Eric Bodden - initial API
  * Mateusz Parzonka - adapted API
  */
-package rm4j.api;
+package prm4j.api;
 
-import rm4j.old.v2.indexing.Event;
+import prm4j.old.v2.indexing.Event;
 
 /**
  * A base monitor keeps track of a trace of events for a fixed set of bindings.
