@@ -15,8 +15,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import prm4j.api.Alphabet;
+import prm4j.api.MonitorState;
 import prm4j.api.MatchHandler;
-import prm4j.old.v2.fsm.FSMState;
 
 /**
  * A finite state automaton.
@@ -30,7 +30,7 @@ public class FSM<A> {
     private final Set<FSMState<A>> states;
     private final Set<String> usedNames;
     private int stateCount = 0;
-    private FSMState<A> initialState;
+    private MonitorState<A> initialState;
 
     public FSM(Alphabet alphabet) {
 	this.alphabet = alphabet;
@@ -43,7 +43,7 @@ public class FSM<A> {
      *
      * @return the created state
      */
-    public FSMState<A> createInitialState() {
+    public MonitorState<A> createInitialState() {
 	if (this.initialState != null)
 	    throw new IllegalStateException("Initial state already created!");
 	this.initialState = createState("initial");
@@ -55,7 +55,7 @@ public class FSM<A> {
      *
      * @return the created state
      */
-    public FSMState<A> createState() {
+    public MonitorState<A> createState() {
 	return createState(generateStateName());
     }
 
@@ -64,7 +64,7 @@ public class FSM<A> {
      *
      * @return the created state
      */
-    public FSMState<A> createState(String optionalName) {
+    public MonitorState<A> createState(String optionalName) {
 	return createState(false, null, optionalName);
     }
 
@@ -73,7 +73,7 @@ public class FSM<A> {
      *
      * @return the created final state
      */
-    public FSMState<A> createFinalState(MatchHandler matchHandler) {
+    public MonitorState<A> createFinalState(MatchHandler matchHandler) {
 	return createFinalState(matchHandler, generateFinalStateName());
     }
 
@@ -82,7 +82,7 @@ public class FSM<A> {
      *
      * @return the created state
      */
-    public FSMState<A> createFinalState(MatchHandler matchHandler, String optionalName) {
+    public MonitorState<A> createFinalState(MatchHandler matchHandler, String optionalName) {
 	if (matchHandler == null) {
 	    throw new NullPointerException("MatchHandler may not be null!");
 	}
@@ -97,7 +97,7 @@ public class FSM<A> {
 	return "state " + this.stateCount + " (final)";
     }
 
-    private FSMState<A> createState(boolean isFinal, MatchHandler eventHandler, String name) {
+    private MonitorState<A> createState(boolean isFinal, MatchHandler eventHandler, String name) {
 	if (this.usedNames.contains(name))
 	    throw new IllegalArgumentException("The name [" + name + "] has already been used!");
 	this.usedNames.add(name);
@@ -148,7 +148,7 @@ public class FSM<A> {
      *
      * @return the initial state
      */
-    public FSMState<A> getInitialState() {
+    public MonitorState<A> getInitialState() {
 	if (this.initialState == null)
 	    throw new IllegalStateException("No initial state created!");
 	return this.initialState;
