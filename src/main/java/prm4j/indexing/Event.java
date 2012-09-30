@@ -10,11 +10,11 @@
  */
 package prm4j.indexing;
 
-import prm4j.api.IBinding;
+import prm4j.api.Binding;
 import prm4j.api.Symbol;
 
 /**
- * A event contains a {@link Symbol} and a number of {@link IBinding}s.
+ * A event contains a {@link Symbol} and a number of {@link Binding}s.
  *
  * @param <A>
  *            the type of the auxiliary data usable by base monitors

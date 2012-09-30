@@ -21,7 +21,7 @@ public abstract class MatchHandler1<P1> extends MatchHandler {
     }
 
     @Override
-    public void handleMatch(IBinding[] bindings) {
+    public void handleMatch(Binding[] bindings) {
 	handleMatch(getBoundObject(this.param1, bindings));
     }
 

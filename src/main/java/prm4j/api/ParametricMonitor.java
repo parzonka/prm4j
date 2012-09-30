@@ -10,7 +10,7 @@
  */
 package prm4j.api;
 
-import prm4j.old.v2.indexing.Event;
+import prm4j.indexing.Event;
 
 /**
  * A parametric monitor can be thought as a set of base monitors running in parallel, one for each parameter instance.
@@ -20,7 +20,7 @@ import prm4j.old.v2.indexing.Event;
  * @param <M>
  *            the type of the base monitor
  */
-public interface IParametricMonitor<A, M extends IBaseMonitor<A, M>> {
+public interface ParametricMonitor<A, M extends BaseMonitor<A, M>> {
 
     M createBaseMonitor();
 

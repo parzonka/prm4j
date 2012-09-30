@@ -17,7 +17,7 @@ public abstract class MatchHandler {
      *
      * @param bindings
      */
-    public abstract void handleMatch(IBinding[] bindings);
+    public abstract void handleMatch(Binding[] bindings);
 
     /**
      * Retrieves the object which was stored in the monitor bindings. The object may be <code>null</code> if selected
@@ -30,9 +30,9 @@ public abstract class MatchHandler {
      * @return the object which was bound to the given parameter. <code>null</code>, if the object was already garbage
      *         collected.
      */
-    protected <P> P getBoundObject(Parameter<P> param, IBinding[] bindings) {
+    protected <P> P getBoundObject(Parameter<P> param, Binding[] bindings) {
 	// matches are rare, so we simply search the bindings linearly
-	for (IBinding binding : bindings) {
+	for (Binding binding : bindings) {
 	    if (binding != null && binding.getParameterId() == param.getParameterId()) {
 		@SuppressWarnings("unchecked")
 		P boundObject = (P) binding.get();

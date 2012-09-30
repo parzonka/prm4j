@@ -10,7 +10,7 @@
  */
 package prm4j.api;
 
-import prm4j.old.v2.indexing.Event;
+import prm4j.indexing.Event;
 
 public class Symbol2<P1, P2> extends Symbol {
 

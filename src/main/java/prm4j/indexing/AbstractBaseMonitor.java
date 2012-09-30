@@ -10,20 +10,20 @@
  */
 package prm4j.indexing;
 
-import prm4j.api.IBaseMonitor;
-import prm4j.api.IParametricMonitor;
+import prm4j.api.BaseMonitor;
+import prm4j.api.ParametricMonitor;
 
 /**
- * A concrete monitor instance, representing the internal state of a {@link IParametricMonitor} for one single concrete
+ * A concrete monitor instance, representing the internal state of a {@link ParametricMonitor} for one single concrete
  * variable binding.
  *
  * @param <A>
  *            the type of the auxiliary data usable by base monitors
  */
-public abstract class AbstractBaseMonitor<A> implements IBaseMonitor<A, AbstractBaseMonitor<A>> {
+public abstract class AbstractBaseMonitor<A> implements BaseMonitor<A, AbstractBaseMonitor<A>> {
 
     // low level access
-    private ILowLevelBinding<A>[] bindings;
+    private LowLevelBinding<A>[] bindings;
     // low level access
     private long tau;
 
@@ -33,22 +33,22 @@ public abstract class AbstractBaseMonitor<A> implements IBaseMonitor<A, Abstract
      * @param bindings
      * @return
      */
-    final AbstractBaseMonitor<A> copy(ILowLevelBinding<A>[] bindings) {
+    final AbstractBaseMonitor<A> copy(LowLevelBinding<A>[] bindings) {
 	AbstractBaseMonitor<A> copy = copy();
 	copy.setBindings(bindings);
 	copy.setTau(tau);
 	return copy;
     }
 
-    private final void setBindings(ILowLevelBinding<A>[] bindings) {
+    private final void setBindings(LowLevelBinding<A>[] bindings) {
 	this.bindings = bindings;
     }
 
-    final ILowLevelBinding<A>[] getLowLevelBindings() {
+    final LowLevelBinding<A>[] getLowLevelBindings() {
 	return bindings;
     }
 
-    protected final prm4j.api.IBinding[] getBindings() {
+    protected final prm4j.api.Binding[] getBindings() {
 	// upcast
 	return bindings;
     }

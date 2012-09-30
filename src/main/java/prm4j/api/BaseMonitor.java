@@ -11,11 +11,11 @@
  */
 package prm4j.api;
 
-import prm4j.old.v2.indexing.Event;
+import prm4j.indexing.Event;
 
 /**
- * An {@link IBaseMonitor} is a concrete monitor instance, representing the internal state of an
- * {@link IParametricMonitor} for one single concrete variable binding.
+ * An {@link BaseMonitor} is a concrete monitor instance, representing the internal state of an
+ * {@link ParametricMonitor} for one single concrete variable binding.
  * <p>
  * Usage: This interface may be implemented by custom monitors to enable interplay with custom indexing strategies. To
  * implement custom monitors to work with the provided indexing strategies, users should subclass the abstract base
@@ -26,7 +26,7 @@ import prm4j.old.v2.indexing.Event;
  * @param <M>
  *            the type of the base monitor
  */
-public interface IBaseMonitor<A, M extends IBaseMonitor<A, M>> {
+public interface BaseMonitor<A, M extends BaseMonitor<A, M>> {
 
     /**
      * Updates the base monitors internal state by consuming an parametric event. After processing the event, the

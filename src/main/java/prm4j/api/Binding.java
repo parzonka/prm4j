@@ -13,7 +13,7 @@ package prm4j.api;
 /**
  * Represents the association of a {@link Parameter} to a object.
  */
-public interface IBinding {
+public interface Binding {
 
     public int getParameterId();
 
