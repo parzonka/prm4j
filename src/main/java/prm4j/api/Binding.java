@@ -11,7 +11,7 @@
 package prm4j.api;
 
 /**
- * Represents the association of a {@link Parameter} to a object.
+ * Represents the association of a {@link Parameter} to an object.
  */
 public interface Binding {
 
