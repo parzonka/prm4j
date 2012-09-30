@@ -30,7 +30,7 @@
 					<descriptors>
 						<descriptor>src/main/assembly/jar-with-dependencies.xml</descriptor>
 					</descriptors>
-					<finalName>mopbox</finalName>
+					<finalName>prm4j</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 			</plugin>
