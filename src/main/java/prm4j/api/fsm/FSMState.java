@@ -45,9 +45,6 @@ public class FSMState<A> implements MonitorState<A> {
 	this.successorTable[symbol.getIndex()] = successor;
     }
 
-    /* (non-Javadoc)
-     * @see prm4j.api.fsm.IMonitorState#getSuccessor(prm4j.api.Symbol)
-     */
     @Override
     public MonitorState<A> getSuccessor(Symbol symbol) {
 	return this.successorTable[symbol.getIndex()];
@@ -58,17 +55,11 @@ public class FSMState<A> implements MonitorState<A> {
 	return this.label;
     }
 
-    /* (non-Javadoc)
-     * @see prm4j.api.fsm.IMonitorState#isFinal()
-     */
     @Override
     public boolean isFinal() {
 	return this.isFinal;
     }
 
-    /* (non-Javadoc)
-     * @see prm4j.api.fsm.IMonitorState#getMatchHandler()
-     */
     @Override
     public MatchHandler getMatchHandler() {
 	return this.matchHandler;
