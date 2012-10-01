@@ -14,14 +14,18 @@ import prm4j.indexing.Event;
 import prm4j.indexing.IndexingStrategy;
 import prm4j.indexing.treebased.BindingStore;
 import prm4j.indexing.treebased.LowLevelBinding;
+import prm4j.indexing.treebased.Node;
+import prm4j.indexing.treebased.NodeStore;
 
 public class FastIndexingStrategy<A> implements IndexingStrategy<A> {
 
     private BindingStore<A> bindingStore;
+    private NodeStore<A> nodeStore;
 
     @Override
     public void processEvent(Event<A> event) {
 	final LowLevelBinding<A>[] bindings = bindingStore.getBindings(event.getBoundObjects());
+	final Node<A> instanceNode = nodeStore.getNode(bindings);
 
 	// TODO
 
