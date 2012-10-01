@@ -27,8 +27,7 @@ public class DefaultInstance<A> implements Instance<A> {
 
     @Override
     public Binding[] getBindings() {
-	// TODO Auto-generated method stub
-	return null;
+	return bindings;
     }
 
     @Override
@@ -39,6 +38,7 @@ public class DefaultInstance<A> implements Instance<A> {
 	}
 	// fast track for the parameterless instance
 	if (bindings.length == 0) {
+	    cachedInstanceNode = rootNode;
 	    return rootNode;
 	}
 	// retrieve the head of the array pointing to the first node we will use
