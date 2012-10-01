@@ -19,7 +19,7 @@ public interface Instance<A> {
     /**
      * Return the associated node for this instance.
      *
-     * @return
+     * @return the associated node
      */
     public Node<A> getNode();
 
@@ -27,7 +27,8 @@ public interface Instance<A> {
      * Return the associated node for the sub-instance selected by the given parameterMask.
      *
      * @param parameterMask
-     * @return
+     *            each int selects a binding from the instance bindings
+     * @return the associated node
      */
     public Node<A> getNode(int[] parameterMask);
 
