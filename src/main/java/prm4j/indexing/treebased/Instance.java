@@ -12,8 +12,23 @@ package prm4j.indexing.treebased;
 
 import prm4j.indexing.Binding;
 
-public interface Instance {
+public interface Instance<A> {
 
     public Binding[] getBindings();
+
+    /**
+     * Return the associated node for this instance.
+     *
+     * @return
+     */
+    public Node<A> getNode();
+
+    /**
+     * Return the associated node for the sub-instance selected by the given parameterMask.
+     *
+     * @param parameterMask
+     * @return
+     */
+    public Node<A> getNode(int[] parameterMask);
 
 }

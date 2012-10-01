@@ -18,7 +18,7 @@ public interface BindingStore<A> {
      * @param boundObjects
      * @return
      */
-    public Instance getInstance(Object[] boundObjects);
+    public Instance<A> getInstance(Object[] boundObjects);
 
     /**
      * Tests if a {@link LowLevelBinding} exists for the given object associated to the parameter with given id. As a
