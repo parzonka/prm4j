@@ -12,6 +12,14 @@ package prm4j.indexing.treebased;
 
 public interface BindingStore<A> {
 
+    /**
+     * Returns an instance for the given bound objects.
+     *
+     * @param boundObjects
+     * @return
+     */
+    public Instance getInstance(Object[] boundObjects);
+
     public LowLevelBinding<A> getBinding(Object object);
 
     /**
