@@ -16,6 +16,7 @@ import java.util.Set;
 
 import prm4j.api.Alphabet;
 import prm4j.api.MatchHandler;
+import prm4j.logic.MonitorStateProvider;
 
 /**
  * A finite state automaton.
@@ -23,7 +24,7 @@ import prm4j.api.MatchHandler;
  * @param <A>
  *            the type of the auxiliary data usable by base monitors
  */
-public class FSM<A> {
+public class FSM<A> implements MonitorStateProvider<A> {
 
     private final Alphabet alphabet;
     private final Set<FSMState<A>> states;
@@ -147,6 +148,7 @@ public class FSM<A> {
      *
      * @return the initial state
      */
+    @Override
     public FSMState<A> getInitialState() {
 	if (this.initialState == null)
 	    throw new IllegalStateException("No initial state created!");
