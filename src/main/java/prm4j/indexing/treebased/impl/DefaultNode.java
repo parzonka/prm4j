@@ -19,9 +19,9 @@ import prm4j.logic.NodeContext;
 public class DefaultNode<A> implements Node<A> {
 
     private final NodeContext<A> nodeContext;
-    private final NodeMap<A> nodeMap;
     private final MonitorSet<A>[] monitorSets;
 
+    private NodeMap<A> nodeMap;
     private AbstractBaseMonitor<A> monitor;
 
     public DefaultNode(NodeContext<A> nodeContext, NodeMap<A> nodeMap, MonitorSet<A>[] monitorSets) {
@@ -48,6 +48,10 @@ public class DefaultNode<A> implements Node<A> {
 
     @Override
     public NodeMap<A> getNodeMap() {
+	// lazy creation
+	if (nodeMap == null) {
+	    nodeMap = nodeContext.createNodeMap();
+	}
 	return nodeMap;
     }
 

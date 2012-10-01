@@ -11,11 +11,17 @@
 package prm4j.logic;
 
 import prm4j.indexing.treebased.MonitorSet;
+import prm4j.indexing.treebased.Node;
+import prm4j.indexing.treebased.NodeMap;
 
 public interface NodeContext<A> {
 
     public ChainingData[] getChainingData();
 
     public MonitorSet<A> createMonitorSet();
+
+    public Node<A> createNode();
+
+    public NodeMap<A> createNodeMap();
 
 }
