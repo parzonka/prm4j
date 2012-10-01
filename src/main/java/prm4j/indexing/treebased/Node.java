@@ -57,7 +57,7 @@ public interface Node<A> {
      *            all a1b1d
      * @return
      */
-    public MonitorSet<A> getMonitorSet(int setId);
+    public MonitorSet<A> getMonitorSet(int parameterSetId);
 
     public NodeMap<A> getNodeMap();
 
