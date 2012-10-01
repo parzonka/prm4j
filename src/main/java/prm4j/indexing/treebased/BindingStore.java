@@ -15,14 +15,14 @@ public interface BindingStore<A> {
     public LowLevelBinding<A> getBinding(Object object);
 
     /**
-     * Tests if a IBinding exists for the given object. As a side-effect, an IBinding may be pre-fetched because an
-     * getBinding-operation is to be expected.
+     * Tests if a {@link LowLevelBinding} exists for the given object associated to the parameter with given id. As a
+     * side-effect, an {@link LowLevelBinding} may be pre-fetched because an getBinding-operation is to be expected.
      *
-     * @param object
+     * @param parameterId
      * @param boundObject
-     * @return
+     * @return <code>true</code> if a binding exists for the given bound object
      */
-    public boolean contains(int parameterObject, Object boundObject);
+    public boolean contains(int parameterId, Object boundObject);
 
     /**
      * DESIGN Implementors must set base nodes.
