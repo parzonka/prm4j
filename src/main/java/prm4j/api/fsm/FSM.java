@@ -15,8 +15,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import prm4j.api.Alphabet;
-import prm4j.api.MonitorState;
 import prm4j.api.MatchHandler;
+import prm4j.indexing.MonitorState;
 
 /**
  * A finite state automaton.

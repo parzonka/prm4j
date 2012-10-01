@@ -10,7 +10,6 @@
  */
 package prm4j.indexing;
 
-import prm4j.api.Binding;
 import prm4j.api.Symbol;
 
 /**

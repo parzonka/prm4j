@@ -9,9 +9,8 @@
  * Eric Bodden - initial API
  * Mateusz Parzonka - adapted API
  */
-package prm4j.api;
+package prm4j.indexing;
 
-import prm4j.indexing.Event;
 
 /**
  * An {@link BaseMonitor} is a concrete monitor instance, representing the internal state of an

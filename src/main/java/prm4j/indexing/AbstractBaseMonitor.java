@@ -10,8 +10,6 @@
  */
 package prm4j.indexing;
 
-import prm4j.api.BaseMonitor;
-import prm4j.api.ParametricMonitor;
 
 /**
  * A concrete monitor instance, representing the internal state of a {@link ParametricMonitor} for one single concrete
@@ -48,7 +46,7 @@ public abstract class AbstractBaseMonitor<A> implements BaseMonitor<A, AbstractB
 	return bindings;
     }
 
-    protected final prm4j.api.Binding[] getBindings() {
+    protected final prm4j.indexing.Binding[] getBindings() {
 	// upcast
 	return bindings;
     }

@@ -8,7 +8,10 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.api;
+package prm4j.indexing;
+
+import prm4j.api.MatchHandler;
+import prm4j.api.Symbol;
 
 /**
  * @param <A>

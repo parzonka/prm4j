@@ -8,7 +8,9 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.api;
+package prm4j.indexing;
+
+import prm4j.api.Parameter;
 
 /**
  * Represents the association of a {@link Parameter} to an object.

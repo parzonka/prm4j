@@ -8,9 +8,8 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.api;
+package prm4j.indexing;
 
-import prm4j.indexing.Event;
 
 /**
  * A parametric monitor can be thought as a set of base monitors running in parallel, one for each parameter instance.
