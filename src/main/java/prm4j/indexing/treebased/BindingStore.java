@@ -20,8 +20,6 @@ public interface BindingStore<A> {
      */
     public Instance getInstance(Object[] boundObjects);
 
-    public LowLevelBinding<A> getBinding(Object object);
-
     /**
      * Tests if a {@link LowLevelBinding} exists for the given object associated to the parameter with given id. As a
      * side-effect, an {@link LowLevelBinding} may be pre-fetched because an getBinding-operation is to be expected.
