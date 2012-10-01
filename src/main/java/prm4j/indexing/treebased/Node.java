@@ -21,6 +21,7 @@ package prm4j.indexing.treebased;
  * Mateusz Parzonka - initial API and implementation
  */
 import prm4j.indexing.AbstractBaseMonitor;
+import prm4j.logic.NodeContext;
 
 /**
  * @param <A>
@@ -60,5 +61,7 @@ public interface Node<A> {
     public MonitorSet<A> getMonitorSet(int parameterSetId);
 
     public NodeMap<A> getNodeMap();
+
+    public NodeContext getNodeContext();
 
 }
