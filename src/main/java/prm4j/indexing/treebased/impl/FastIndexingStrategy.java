@@ -10,6 +10,7 @@
  */
 package prm4j.indexing.treebased.impl;
 
+import prm4j.indexing.AbstractBaseMonitor;
 import prm4j.indexing.Event;
 import prm4j.indexing.IndexingStrategy;
 import prm4j.indexing.treebased.BindingStore;
@@ -24,10 +25,16 @@ public class FastIndexingStrategy<A> implements IndexingStrategy<A> {
 
     @Override
     public void processEvent(Event<A> event) {
+
 	final LowLevelBinding<A>[] bindings = bindingStore.getBindings(event.getBoundObjects());
 	final Node<A> instanceNode = nodeStore.getNode(bindings);
+	final AbstractBaseMonitor<A> instanceMonitor = instanceNode.getMonitor();
 
-	// TODO
+	if (instanceMonitor == null) {
+	    // TODO join and chain with implicit update
+	} else {
+	    // TODO just update
+	}
 
     }
 
