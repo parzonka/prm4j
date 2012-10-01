@@ -10,8 +10,12 @@
  */
 package prm4j.logic;
 
-public interface NodeContext {
+import prm4j.indexing.treebased.MonitorSet;
+
+public interface NodeContext<A> {
 
     public ChainingData[] getChainingData();
+
+    public MonitorSet<A> createMonitorSet();
 
 }

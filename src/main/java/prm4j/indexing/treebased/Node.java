@@ -29,7 +29,7 @@ import prm4j.logic.NodeContext;
  */
 public interface Node<A> {
 
-    public NodeContext getNodeContext();
+    public NodeContext<A> getNodeContext();
 
     /**
      *
