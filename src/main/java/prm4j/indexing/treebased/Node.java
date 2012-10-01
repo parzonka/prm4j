@@ -42,7 +42,7 @@ public interface Node<A> {
      */
     public AbstractBaseMonitor<A> getMonitor();
 
-    public AbstractBaseMonitor<A> setMonitor(AbstractBaseMonitor<A> monitor);
+    public void setMonitor(AbstractBaseMonitor<A> monitor);
 
     /**
      * Returns a monitor set which represents a (sometimes not real) subset of instances which are more informative than
