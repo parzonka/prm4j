@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing;
+package prm4j.logic;
 
 import prm4j.api.MatchHandler;
 import prm4j.api.Symbol;

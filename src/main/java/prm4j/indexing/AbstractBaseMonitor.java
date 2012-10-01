@@ -10,6 +10,8 @@
  */
 package prm4j.indexing;
 
+import prm4j.indexing.treebased.LowLevelBinding;
+
 
 /**
  * A concrete monitor instance, representing the internal state of a {@link ParametricMonitor} for one single concrete

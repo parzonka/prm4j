@@ -16,7 +16,7 @@ import java.util.Set;
 
 import prm4j.api.Alphabet;
 import prm4j.api.MatchHandler;
-import prm4j.indexing.MonitorState;
+import prm4j.logic.MonitorState;
 
 /**
  * A finite state automaton.
