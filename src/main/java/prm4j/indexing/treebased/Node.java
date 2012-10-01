@@ -21,7 +21,6 @@ package prm4j.indexing.treebased;
  * Mateusz Parzonka - initial API and implementation
  */
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.old.v2.logic.INodeContext;
 
 /**
  * @param <A>
@@ -35,13 +34,6 @@ public interface Node<A> {
      * @return TODO comment
      */
     public Node<A> next();
-
-    /**
-     * Each node associated to the same instance parameter set provides the same {@link INodeContext}.
-     *
-     * @return
-     */
-    public INodeContext<A> getNodeContext();
 
     /**
      *
