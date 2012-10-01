@@ -22,6 +22,7 @@ import prm4j.indexing.treebased.Node;
 public class DefaultInstance<A> implements Instance<A> {
 
     private Node<A> rootNode;
+    private Node<A> cachedInstanceNode;
     private LowLevelBinding<A>[] bindings;
 
     @Override
@@ -32,6 +33,10 @@ public class DefaultInstance<A> implements Instance<A> {
 
     @Override
     public Node<A> getNode() {
+	// retrieve from cache
+	if (cachedInstanceNode != null) {
+	    return cachedInstanceNode;
+	}
 	// fast track for the parameterless instance
 	if (bindings.length == 0) {
 	    return rootNode;
@@ -43,6 +48,7 @@ public class DefaultInstance<A> implements Instance<A> {
 	    // traverse the node tree until the parameter instance is fully realized
 	    node = node.getNodeMap().getNode(bindings[i]);
 	}
+	cachedInstanceNode = node;
 	return node;
     }
 
