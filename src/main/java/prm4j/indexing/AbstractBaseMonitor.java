@@ -33,7 +33,7 @@ public abstract class AbstractBaseMonitor<A> implements BaseMonitor<A, AbstractB
      * @param bindings
      * @return
      */
-    final AbstractBaseMonitor<A> copy(LowLevelBinding<A>[] bindings) {
+    public final AbstractBaseMonitor<A> copy(LowLevelBinding<A>[] bindings) {
 	AbstractBaseMonitor<A> copy = copy();
 	copy.setBindings(bindings);
 	copy.setTau(tau);
@@ -44,7 +44,7 @@ public abstract class AbstractBaseMonitor<A> implements BaseMonitor<A, AbstractB
 	this.bindings = bindings;
     }
 
-    final LowLevelBinding<A>[] getLowLevelBindings() {
+    public final LowLevelBinding<A>[] getLowLevelBindings() {
 	return bindings;
     }
 
@@ -53,7 +53,7 @@ public abstract class AbstractBaseMonitor<A> implements BaseMonitor<A, AbstractB
 	return bindings;
     }
 
-    final long getTau() {
+    public final long getTau() {
 	return tau;
     }
 
