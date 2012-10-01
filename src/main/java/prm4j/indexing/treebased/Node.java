@@ -29,12 +29,7 @@ import prm4j.logic.NodeContext;
  */
 public interface Node<A> {
 
-    /**
-     * The node is used in {@link NodeMap}s with similar functionality as map entries.
-     *
-     * @return TODO comment
-     */
-    public Node<A> next();
+    public NodeContext getNodeContext();
 
     /**
      *
@@ -44,6 +39,8 @@ public interface Node<A> {
     public AbstractBaseMonitor<A> getMonitor();
 
     public void setMonitor(AbstractBaseMonitor<A> monitor);
+
+    public NodeMap<A> getNodeMap();
 
     /**
      * Returns a monitor set which represents a (sometimes not real) subset of instances which are more informative than
@@ -60,8 +57,11 @@ public interface Node<A> {
      */
     public MonitorSet<A> getMonitorSet(int parameterSetId);
 
-    public NodeMap<A> getNodeMap();
-
-    public NodeContext getNodeContext();
+    /**
+     * The node is used in {@link NodeMap}s with similar functionality as map entries.
+     *
+     * @return TODO comment
+     */
+    public Node<A> next();
 
 }
