@@ -16,7 +16,6 @@ import java.util.Set;
 
 import prm4j.api.Alphabet;
 import prm4j.api.MatchHandler;
-import prm4j.logic.MonitorState;
 
 /**
  * A finite state automaton.
@@ -43,7 +42,7 @@ public class FSM<A> {
      *
      * @return the created state
      */
-    public MonitorState<A> createInitialState() {
+    public FSMState<A> createInitialState() {
 	if (this.initialState != null)
 	    throw new IllegalStateException("Initial state already created!");
 	this.initialState = createState("initial");
