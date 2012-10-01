@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- * Mateusz Parzonka - initial API and implementation
+ * Eric Bodden - initial API and implementation
+ * Mateusz Parzonka - adapted API and implementation
  */
 package prm4j.api.fsm;
 
