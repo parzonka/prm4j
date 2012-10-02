@@ -1,12 +1,3 @@
-package prm4j;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import prm4j.api.Alphabet;
 /*
  * Copyright (c) 2012 Mateusz Parzonka, Eric Bodden
  * All rights reserved. This program and the accompanying materials
@@ -17,6 +8,15 @@ import prm4j.api.Alphabet;
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
+package prm4j;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import prm4j.api.Alphabet;
 import prm4j.api.MatchHandler1;
 import prm4j.api.Parameter;
 import prm4j.api.Symbol;
