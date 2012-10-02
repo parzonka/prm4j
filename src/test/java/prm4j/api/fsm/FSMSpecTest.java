@@ -48,4 +48,19 @@ public class FSMSpecTest extends AbstractTest {
 	assertEquals(expected, actual);
     }
 
+    @Test
+    public void getCreationSymbols_unsafeMapIterator() {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	StatefulSpec fsmSpec = new FSMSpec<Void>(u.fsm);
+	Set<Symbol> actual = fsmSpec.getCreationSymbols();
+
+	Set<Symbol> expected = new HashSet<Symbol>();
+	expected.add(u.createColl);
+	expected.add(u.updateMap);
+	expected.add(u.createIter);
+	expected.add(u.useIter);
+
+	assertEquals(expected, actual);
+    }
+
 }
