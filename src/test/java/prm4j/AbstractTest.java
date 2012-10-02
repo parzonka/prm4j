@@ -1,8 +1,10 @@
 package prm4j;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import prm4j.api.Alphabet;
 /*
@@ -17,6 +19,7 @@ import prm4j.api.Alphabet;
  */
 import prm4j.api.MatchHandler1;
 import prm4j.api.Parameter;
+import prm4j.api.Symbol;
 import prm4j.api.Symbol1;
 import prm4j.api.Symbol2;
 import prm4j.api.fsm.FSM;
@@ -64,6 +67,20 @@ public abstract class AbstractTest {
 	    s3.addTransition(useIter, error);
 	}
 
+    }
+
+    /**
+     * Downcast SymbolN to Symbol.
+     *
+     * @param values
+     * @return
+     */
+    public static Set<Symbol> asSet(Symbol... values) {
+	Set<Symbol> set = new HashSet<Symbol>();
+	for (Symbol s : values) {
+	    set.add(s);
+	}
+	return set;
     }
 
 }
