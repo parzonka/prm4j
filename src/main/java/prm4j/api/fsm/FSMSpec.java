@@ -52,8 +52,8 @@ public class FSMSpec<A> implements StatefulSpec {
 
     @Override
     public Map<MonitorState<?>, Set<Set<Symbol>>> getStateCoEnableSet() {
-	// TODO Auto-generated method stub
-	return null;
+	Map<MonitorState<?>, Set<Set<Symbol>>> result = new HashMap<MonitorState<?>, Set<Set<Symbol>>>();
+	return result;
     }
 
     @Override
