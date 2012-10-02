@@ -23,6 +23,10 @@ public class FSMSpec<A> implements StatefulSpec {
 
     private FSM<A> fsm;
 
+    public FSMSpec(FSM<A> fsm) {
+	this.fsm = fsm;
+    }
+
     @Override
     public Set<Symbol> getSymbols() {
 	return fsm.getAlphabet().getSymbols();
