@@ -13,19 +13,14 @@ package prm4j.api;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.junit.Test;
 
-import prm4j.api.Alphabet;
-import prm4j.api.Parameter;
-import prm4j.api.Symbol1;
-import prm4j.api.Symbol2;
+import prm4j.AbstractTest;
 
 
-public class AlphabetTest {
+public class AlphabetTest extends AbstractTest {
 
     @Test
     @SuppressWarnings("rawtypes")
@@ -49,14 +44,6 @@ public class AlphabetTest {
 	assertEquals(2, updateIter.getIndex());
 	assertEquals(1, updateIter.getParameterCount());
 	assertEquals(asSet(i), updateIter.getParameters());
-    }
-
-    private static Set<?> asSet(Object... obj) {
-	Set<Object> set = new HashSet<Object>();
-	for (Object object : obj) {
-	    set.add(object);
-	}
-	return set;
     }
 
 }

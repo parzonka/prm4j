@@ -83,4 +83,12 @@ public abstract class AbstractTest {
 	return set;
     }
 
+    public static Set<Parameter<?>> asSet(Parameter<?>... values) {
+	Set<Parameter<?>> set = new HashSet<Parameter<?>>();
+	for (Parameter<?> s : values) {
+	    set.add(s);
+	}
+	return set;
+    }
+
 }
