@@ -82,4 +82,25 @@ public class StatefulSpecProcessorTest extends AbstractTest {
 	assertEquals(expected, actual);
     }
 
+    @Test
+    public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM<Void> fsm = u.fsm;
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec<Void>(fsm));
+
+	Map<MonitorState<?>, Set<Set<Symbol>>> actual = ssp.getStatePropertyCoEnableSets();
+
+	Map<MonitorState<?>, Set<Set<Symbol>>> expected = new HashMap<MonitorState<?>, Set<Set<Symbol>>>();
+	for (MonitorState<?> state : u.fsm.getStates()){
+	    expected.put(state, new HashSet<Set<Symbol>>());
+	}
+	expected.get(u.initial).add(asSet(u.createColl, u.createIter, u.updateMap, u.useIter));
+	expected.get(u.s1).add(asSet(u.createIter, u.useIter, u.updateMap));
+	expected.get(u.s2).add(asSet(u.useIter, u.updateMap));
+	expected.get(u.s3).add(asSet(u.useIter));
+	expected.get(u.error).add(Collections.<Symbol> emptySet());
+
+	assertEquals(expected, actual);
+    }
+
 }
