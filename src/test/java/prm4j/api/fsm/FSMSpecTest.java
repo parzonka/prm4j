@@ -33,7 +33,7 @@ public class FSMSpecTest extends AbstractTest {
     public void getPropertyEnableSet_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	StatefulSpec fsmSpec = new FSMSpec<Void>(u.fsm);
-	Map<Symbol, Set<Set<Symbol>>> actual = fsmSpec.getPropertyEnableSet();
+	Map<Symbol, Set<Set<Symbol>>> actual = fsmSpec.getPropertyEnableSets();
 
 	Map<Symbol, Set<Set<Symbol>>> expected = new HashMap<Symbol, Set<Set<Symbol>>>();
 	for (Symbol symbol : u.alphabet.getSymbols()) {
@@ -72,7 +72,7 @@ public class FSMSpecTest extends AbstractTest {
 	FSM<Void> fsm = u.fsm;
 	StatefulSpec fsmSpec = new FSMSpec<Void>(fsm);
 
-	Map<MonitorState<?>, Set<Set<Symbol>>> actual = fsmSpec.getStateCoEnableSet();
+	Map<MonitorState<?>, Set<Set<Symbol>>> actual = fsmSpec.getStatePropertyCoEnableSets();
 
 	Map<MonitorState<?>, Set<Set<Symbol>>> expected = new HashMap<MonitorState<?>, Set<Set<Symbol>>>();
 	for (MonitorState<?> state : u.fsm.getStates()){

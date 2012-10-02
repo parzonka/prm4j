@@ -36,7 +36,7 @@ public interface StatefulSpec {
      *
      * @return the property enable set
      */
-    public Map<Symbol, Set<Set<Symbol>>> getPropertyEnableSet();
+    public Map<Symbol, Set<Set<Symbol>>> getPropertyEnableSets();
 
 
     /**
@@ -45,7 +45,7 @@ public interface StatefulSpec {
      *
      * @return the state co-enable set
      */
-    public Map<MonitorState<?>, Set<Set<Symbol>>> getStateCoEnableSet();
+    public Map<MonitorState<?>, Set<Set<Symbol>>> getStatePropertyCoEnableSets();
 
     /**
      * Returns the initial state.

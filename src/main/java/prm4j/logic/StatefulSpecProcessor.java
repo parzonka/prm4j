@@ -30,9 +30,9 @@ public class StatefulSpecProcessor {
     private final Set<Symbol> symbols;
 
     public StatefulSpecProcessor(StatefulSpec spec) {
-	propertyEnableSets = spec.getPropertyEnableSet();
+	propertyEnableSets = spec.getPropertyEnableSets();
 	parameterEnableSets = toMap2SetOfSetOfParameters(propertyEnableSets);
-	statePropertyCoEnableSets = spec.getStateCoEnableSet();
+	statePropertyCoEnableSets = spec.getStatePropertyCoEnableSets();
 	stateParameterCoEnableSets = toMap2SetOfSetOfParameters(statePropertyCoEnableSets);
 	initialState = spec.getInitialState();
 	symbols = spec.getSymbols();

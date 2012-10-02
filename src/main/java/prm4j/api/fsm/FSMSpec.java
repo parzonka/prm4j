@@ -46,12 +46,12 @@ public class FSMSpec<A> implements StatefulSpec {
     }
 
     @Override
-    public Map<Symbol, Set<Set<Symbol>>> getPropertyEnableSet() {
+    public Map<Symbol, Set<Set<Symbol>>> getPropertyEnableSets() {
 	return new PropertyEnableSetCalculator<A>(fsm).getEnableSets();
     }
 
     @Override
-    public Map<MonitorState<?>, Set<Set<Symbol>>> getStateCoEnableSet() {
+    public Map<MonitorState<?>, Set<Set<Symbol>>> getStatePropertyCoEnableSets() {
 	Map<MonitorState<?>, Set<Set<Symbol>>> result = new HashMap<MonitorState<?>, Set<Set<Symbol>>>();
 	// TODO getStateCoEnableSet
 	return result;
