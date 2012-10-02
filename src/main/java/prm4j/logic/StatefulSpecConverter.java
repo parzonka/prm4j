@@ -78,6 +78,30 @@ public class StatefulSpecConverter {
 	return Collections.unmodifiableSet(maxSet);
     }
 
+    public Map<Symbol, Set<Set<Symbol>>> getPropertyEnableSets() {
+        return propertyEnableSets;
+    }
+
+    public Map<Symbol, Set<Set<Parameter<?>>>> getParameterEnableSets() {
+        return parameterEnableSets;
+    }
+
+    public Map<MonitorState<?>, Set<Set<Symbol>>> getStatePropertyCoEnableSets() {
+        return statePropertyCoEnableSets;
+    }
+
+    public Map<MonitorState<?>, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
+        return stateParameterCoEnableSets;
+    }
+
+    public MonitorState<?> getInitialState() {
+        return initialState;
+    }
+
+    public Set<Symbol> getSymbols() {
+        return symbols;
+    }
+
 
 
 }
