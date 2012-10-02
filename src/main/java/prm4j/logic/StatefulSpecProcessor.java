@@ -27,6 +27,7 @@ public class StatefulSpecProcessor {
     private final Map<MonitorState<?>, Set<Set<Symbol>>> statePropertyCoEnableSets;
     private final Map<MonitorState<?>, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
     private final MonitorState<?> initialState;
+    private final Set<MonitorState<?>> states;
     private final Set<Symbol> symbols;
 
     public StatefulSpecProcessor(StatefulSpec spec) {
@@ -35,6 +36,7 @@ public class StatefulSpecProcessor {
 	statePropertyCoEnableSets = spec.getStatePropertyCoEnableSets();
 	stateParameterCoEnableSets = toMap2SetOfSetOfParameters(statePropertyCoEnableSets);
 	initialState = spec.getInitialState();
+	states = spec.getStates();
 	symbols = spec.getSymbols();
     }
 

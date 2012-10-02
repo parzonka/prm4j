@@ -33,6 +33,13 @@ public class FSMSpec<A> implements StatefulSpec {
     }
 
     @Override
+    public Set<MonitorState<?>> getStates() {
+	Set<MonitorState<?>> states = new HashSet<MonitorState<?>>();
+	states.addAll(fsm.getStates());
+	return states;
+    }
+
+    @Override
     public Set<Symbol> getCreationSymbols() {
 	Set<Symbol> creationSymbols = new HashSet<Symbol>();
 	MonitorState<?> initialState = fsm.getInitialState();

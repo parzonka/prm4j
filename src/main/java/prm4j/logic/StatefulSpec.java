@@ -28,6 +28,13 @@ public interface StatefulSpec {
      */
     public Set<Symbol> getSymbols();
 
+    /**
+     * Get all states.
+     *
+     * @return all states
+     */
+    public Set<MonitorState<?>> getStates();
+
     public Set<Symbol> getCreationSymbols();
 
     /**
@@ -37,7 +44,6 @@ public interface StatefulSpec {
      * @return the property enable set
      */
     public Map<Symbol, Set<Set<Symbol>>> getPropertyEnableSets();
-
 
     /**
      * Return the state co-enable set. It maps each state to set of symbol sets, where each symbol has to be seen at
