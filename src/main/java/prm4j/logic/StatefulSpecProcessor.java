@@ -13,16 +13,14 @@ package prm4j.logic;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import prm4j.api.Parameter;
 import prm4j.api.Symbol;
-import prm4j.api.fsm.FSM;
 
-public class StatefulSpecConverter {
+public class StatefulSpecProcessor {
 
     private final Map<Symbol, Set<Set<Symbol>>> propertyEnableSets;
     private final Map<Symbol, Set<Set<Parameter<?>>>> parameterEnableSets;
@@ -31,7 +29,7 @@ public class StatefulSpecConverter {
     private final MonitorState<?> initialState;
     private final Set<Symbol> symbols;
 
-    public StatefulSpecConverter(StatefulSpec spec) {
+    public StatefulSpecProcessor(StatefulSpec spec) {
 	propertyEnableSets = spec.getPropertyEnableSet();
 	parameterEnableSets = toMap2SetOfSetOfParameters(propertyEnableSets);
 	statePropertyCoEnableSets = spec.getStateCoEnableSet();
