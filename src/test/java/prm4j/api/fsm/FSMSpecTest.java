@@ -21,8 +21,11 @@ import java.util.Set;
 import org.junit.Test;
 
 import prm4j.AbstractTest;
+import prm4j.AbstractTest.FSM_unsafeMapIterator;
 import prm4j.api.Symbol;
+import prm4j.logic.MonitorState;
 import prm4j.logic.StatefulSpec;
+import prm4j.logic.StatefulSpecProcessor;
 
 public class FSMSpecTest extends AbstractTest {
 
@@ -59,6 +62,27 @@ public class FSMSpecTest extends AbstractTest {
 	expected.add(u.updateMap);
 	expected.add(u.createIter);
 	expected.add(u.useIter);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM<Void> fsm = u.fsm;
+	StatefulSpec fsmSpec = new FSMSpec<Void>(fsm);
+
+	Map<MonitorState<?>, Set<Set<Symbol>>> actual = fsmSpec.getStateCoEnableSet();
+
+	Map<MonitorState<?>, Set<Set<Symbol>>> expected = new HashMap<MonitorState<?>, Set<Set<Symbol>>>();
+	for (MonitorState<?> state : u.fsm.getStates()){
+	    expected.put(state, new HashSet<Set<Symbol>>());
+	}
+	expected.get(u.initial).add(asSet(u.createColl, u.createIter, u.updateMap, u.useIter));
+	expected.get(u.s1).add(asSet(u.createIter, u.useIter, u.updateMap));
+	expected.get(u.s2).add(asSet(u.useIter, u.updateMap));
+	expected.get(u.s3).add(asSet(u.useIter));
+	expected.get(u.error).add(Collections.<Symbol> emptySet());
 
 	assertEquals(expected, actual);
     }
