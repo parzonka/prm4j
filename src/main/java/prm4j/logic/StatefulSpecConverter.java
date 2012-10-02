@@ -72,7 +72,7 @@ public class StatefulSpecConverter {
 	for (Set<Parameter<?>> set : stateParameterCoEnableSets.get(initialState)) {
 	    if (maxSize < set.size()) {
 		maxSize = set.size();
-		maxSet = null;
+		maxSet = set;
 	    }
 	}
 	return Collections.unmodifiableSet(maxSet);
