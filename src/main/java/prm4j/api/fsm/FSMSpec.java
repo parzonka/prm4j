@@ -10,7 +10,6 @@
  */
 package prm4j.api.fsm;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,7 +20,7 @@ import prm4j.logic.StatefulSpec;
 public class FSMSpec implements StatefulSpec {
 
     @Override
-    public List<Symbol> getSymbols() {
+    public Set<Symbol> getSymbols() {
 	// TODO Auto-generated method stub
 	return null;
     }

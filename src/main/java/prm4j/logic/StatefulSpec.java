@@ -10,7 +10,6 @@
  */
 package prm4j.logic;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,7 +26,7 @@ public interface StatefulSpec {
      *
      * @return all symbols
      */
-    public List<Symbol> getSymbols();
+    public Set<Symbol> getSymbols();
 
     /**
      * Returns the property enable set. It maps each symbol S into a set of symbol sets, where each symbol have to be

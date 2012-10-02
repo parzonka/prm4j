@@ -29,7 +29,7 @@ public class StatefulSpecConverter {
     private final Map<MonitorState<?>, Set<Set<Symbol>>> statePropertyCoEnableSets;
     private final Map<MonitorState<?>, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
     private final MonitorState<?> initialState;
-    private final List<Symbol> symbols;
+    private final Set<Symbol> symbols;
 
     public StatefulSpecConverter(StatefulSpec spec) {
 	propertyEnableSets = spec.getPropertyEnableSet();
@@ -77,5 +77,7 @@ public class StatefulSpecConverter {
 	}
 	return Collections.unmodifiableSet(maxSet);
     }
+
+
 
 }
