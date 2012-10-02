@@ -25,22 +25,24 @@ public class StatefulSpecConverter {
 
     private final Map<Symbol, Set<Set<Symbol>>> propertyEnableSets;
     private final Map<Symbol, Set<Set<Parameter<?>>>> parameterEnableSets;
-    private final Map<MonitorState<?>, Set<Set<Symbol>>> stateCoEnableSets;
+    private final Map<MonitorState<?>, Set<Set<Symbol>>> statePropertyCoEnableSets;
+    private final Map<MonitorState<?>, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
     private final MonitorState<?> initialState;
     private final List<Symbol> symbols;
 
     public StatefulSpecConverter(StatefulSpec spec) {
 	propertyEnableSets = spec.getPropertyEnableSet();
-	parameterEnableSets = getParameterEnableSets(propertyEnableSets);
-	stateCoEnableSets = spec.getStateCoEnableSet();
+	parameterEnableSets = toMap2SetOfSetOfParameters(propertyEnableSets);
+	statePropertyCoEnableSets = spec.getStateCoEnableSet();
+	stateParameterCoEnableSets = toMap2SetOfSetOfParameters(statePropertyCoEnableSets);
 	initialState = spec.getInitialState();
 	symbols = spec.getSymbols();
     }
 
-    private static <A> Map<Symbol, Set<Set<Parameter<?>>>> getParameterEnableSets(
-	    Map<Symbol, Set<Set<Symbol>>> symbol2setOfSetOfSymbol) {
-	Map<Symbol, Set<Set<Parameter<?>>>> result = new HashMap<Symbol, Set<Set<Parameter<?>>>>();
-	for (Entry<Symbol, Set<Set<Symbol>>> entry : symbol2setOfSetOfSymbol.entrySet()) {
+    private static <T> Map<T, Set<Set<Parameter<?>>>> toMap2SetOfSetOfParameters(
+	    Map<T, Set<Set<Symbol>>> t2setOfSetOfSymbol) {
+	Map<T, Set<Set<Parameter<?>>>> result = new HashMap<T, Set<Set<Parameter<?>>>>();
+	for (Entry<T, Set<Set<Symbol>>> entry : t2setOfSetOfSymbol.entrySet()) {
 	    result.put(entry.getKey(), toParameterSets(entry.getValue()));
 	}
 	return result;
