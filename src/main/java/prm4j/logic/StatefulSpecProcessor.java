@@ -100,6 +100,4 @@ public class StatefulSpecProcessor {
         return symbols;
     }
 
-
-
 }
