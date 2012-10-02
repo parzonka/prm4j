@@ -33,6 +33,19 @@ public class FSMSpec<A> implements StatefulSpec {
     }
 
     @Override
+    public Set<Symbol> getCreationSymbols() {
+	Set<Symbol> creationSymbols = new HashSet<Symbol>();
+	MonitorState<?> initialState = fsm.getInitialState();
+	for (Symbol symbol : fsm.getAlphabet().getSymbols()) {
+	    MonitorState<?> successor = initialState.getSuccessor(symbol);
+	    if (successor == null || !successor.equals(initialState)) {
+		creationSymbols.add(symbol);
+	    }
+	}
+	return creationSymbols;
+    }
+
+    @Override
     public Map<Symbol, Set<Set<Symbol>>> getPropertyEnableSet() {
 	return new PropertyEnableSetCalculator<A>(fsm).getEnableSets();
     }

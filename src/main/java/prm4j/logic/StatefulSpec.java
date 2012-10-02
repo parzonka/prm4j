@@ -28,13 +28,16 @@ public interface StatefulSpec {
      */
     public Set<Symbol> getSymbols();
 
+    public Set<Symbol> getCreationSymbols();
+
     /**
      * Returns the property enable set. It maps each symbol S into a set of symbol sets, where each symbol have to be
-     * seen, before S can be observerd.
+     * seen, before S can be observed.
      *
      * @return the property enable set
      */
     public Map<Symbol, Set<Set<Symbol>>> getPropertyEnableSet();
+
 
     /**
      * Return the state co-enable set. It maps each state to set of symbol sets, where each symbol has to be seen at
