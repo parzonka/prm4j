@@ -61,4 +61,21 @@ public class StatefulSpecConverter {
 	return result;
     }
 
+    /**
+     * Calculate the largest set of parameters which is needed to trigger a match.
+     *
+     * @return
+     */
+    public Set<Parameter<?>> getLongestMatchingInstance() {
+	int maxSize = -1;
+	Set<Parameter<?>> maxSet = null;
+	for (Set<Parameter<?>> set : stateParameterCoEnableSets.get(initialState)) {
+	    if (maxSize < set.size()) {
+		maxSize = set.size();
+		maxSet = null;
+	    }
+	}
+	return Collections.unmodifiableSet(maxSet);
+    }
+
 }
