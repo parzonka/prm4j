@@ -10,6 +10,7 @@
  */
 package prm4j.logic;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,9 +41,9 @@ public class StatefulSpecConverter {
     }
 
     private static <T> Map<T, Set<Set<Parameter<?>>>> toMap2SetOfSetOfParameters(
-	    Map<T, Set<Set<Symbol>>> t2setOfSetOfSymbol) {
+	    Map<T, Set<Set<Symbol>>> symbol2setOfSetOfSymbol) {
 	Map<T, Set<Set<Parameter<?>>>> result = new HashMap<T, Set<Set<Parameter<?>>>>();
-	for (Entry<T, Set<Set<Symbol>>> entry : t2setOfSetOfSymbol.entrySet()) {
+	for (Entry<T, Set<Set<Symbol>>> entry : symbol2setOfSetOfSymbol.entrySet()) {
 	    result.put(entry.getKey(), toParameterSets(entry.getValue()));
 	}
 	return result;
