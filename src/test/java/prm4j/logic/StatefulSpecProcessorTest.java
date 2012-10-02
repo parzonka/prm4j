@@ -21,6 +21,7 @@ import java.util.Set;
 import org.junit.Test;
 
 import prm4j.AbstractTest;
+import prm4j.api.Parameter;
 import prm4j.api.Symbol;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
@@ -56,6 +57,27 @@ public class StatefulSpecProcessorTest extends AbstractTest {
 	expected.get(u.updateMap).add(asSet(u.createColl));
 	expected.get(u.updateMap).add(asSet(u.createColl, u.createIter));
 	expected.get(u.updateMap).add(asSet(u.createColl, u.createIter, u.useIter));
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getParameterEnableSets_unsafeMapIterator() throws Exception {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM<Void> fsm = u.fsm;
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec<Void>(fsm));
+
+	Map<Symbol, Set<Set<Parameter<?>>>> actual = ssp.getParameterEnableSets();
+
+	Map<Symbol, Set<Set<Parameter<?>>>> expected = new HashMap<Symbol, Set<Set<Parameter<?>>>>();
+	for (Symbol symbol : u.alphabet.getSymbols()) {
+	    expected.put(symbol, new HashSet<Set<Parameter<?>>>());
+	}
+	expected.get(u.createColl).add(Collections.<Parameter<?>> emptySet());
+	expected.get(u.createIter).add(asSet(u.m, u.c));
+	expected.get(u.useIter).add(asSet(u.m, u.c, u.i));
+	expected.get(u.updateMap).add(asSet(u.m, u.c));
+	expected.get(u.updateMap).add(asSet(u.m, u.c, u.i));
 
 	assertEquals(expected, actual);
     }
