@@ -45,4 +45,11 @@ public interface StatefulSpec {
      */
     public Map<MonitorState<?>, Set<Set<Symbol>>> getStateCoEnableSet();
 
+    /**
+     * Returns the initial state.
+     *
+     * @return the initial state
+     */
+    public MonitorState<?> getInitialState();
+
 }
