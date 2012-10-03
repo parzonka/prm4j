@@ -15,6 +15,15 @@ import prm4j.indexing.Binding;
 public abstract class MatchHandler {
 
     /**
+     * This {@link MatchHandler} does nothing.
+     */
+    public final static MatchHandler NO_OP = new MatchHandler0() {
+	@Override
+	public void handleMatch() {
+	}
+    };
+
+    /**
      * Retrieve bound objects with getBoundObject(...) TODO doc method.
      *
      * @param bindings

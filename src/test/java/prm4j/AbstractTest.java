@@ -17,8 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import prm4j.api.Alphabet;
-import prm4j.api.MatchHandler0;
-import prm4j.api.MatchHandler1;
+import prm4j.api.MatchHandler;
 import prm4j.api.Parameter;
 import prm4j.api.Symbol;
 import prm4j.api.Symbol0;
@@ -52,12 +51,7 @@ public abstract class AbstractTest {
 	public final FSMState<Void> s1 = fsm.createState();
 	public final FSMState<Void> s2 = fsm.createState();
 	public final FSMState<Void> s3 = fsm.createState();
-	public final FSMState<Void> error = fsm.createFinalState(new MatchHandler1<Iterator>(i) {
-	    @Override
-	    public void handleMatch(Iterator obj1) {
-
-	    }
-	});
+	public final FSMState<Void> error = fsm.createFinalState(MatchHandler.NO_OP);
 
 	public FSM_unsafeMapIterator() {
 	    initial.addTransition(createColl, s1);
@@ -85,11 +79,7 @@ public abstract class AbstractTest {
 
 	public final FSMState<Void> initial = fsm.createInitialState();
 	public final FSMState<Void> s1 = fsm.createState();
-	public final FSMState<Void> error = fsm.createFinalState(new MatchHandler0() {
-	    @Override
-	    public void handleMatch() {
-	    }
-	});
+	public final FSMState<Void> error = fsm.createFinalState(MatchHandler.NO_OP);
 
 	public AbstractFSM_2symbols3states() {
 	    setupTransitions();
@@ -117,11 +107,7 @@ public abstract class AbstractTest {
 
 	public final FSMState<Void> initial = fsm.createInitialState();
 	public final FSMState<Void> s1 = fsm.createState();
-	public final FSMState<Void> error = fsm.createFinalState(new MatchHandler0() {
-	    @Override
-	    public void handleMatch() {
-	    }
-	});
+	public final FSMState<Void> error = fsm.createFinalState(MatchHandler.NO_OP);
 
 	public FSM_e1e3() {
 	    initial.addTransition(e1, s1);
