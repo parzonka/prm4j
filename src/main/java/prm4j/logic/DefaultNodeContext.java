@@ -29,6 +29,12 @@ public class DefaultNodeContext<A> implements NodeContext<A>{
     }
 
     @Override
+    public Node<A> createNode() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
     public Node<A> createNode(int parameterId) {
 	// TODO Auto-generated method stub
 	return null;

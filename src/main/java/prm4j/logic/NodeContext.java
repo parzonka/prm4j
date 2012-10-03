@@ -27,6 +27,8 @@ public interface NodeContext<A> {
 
     public MonitorSet<A> createMonitorSet();
 
+    public Node<A> createNode();
+
     public Node<A> createNode(int parameterId);
 
     public NodeMap<A> createNodeMap();
