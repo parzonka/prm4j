@@ -21,7 +21,7 @@ package prm4j.indexing.treebased;
  * Mateusz Parzonka - initial API and implementation
  */
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.logic.MetaNode;
+import prm4j.logic.treebased.MetaNode;
 
 /**
  * @param <A>

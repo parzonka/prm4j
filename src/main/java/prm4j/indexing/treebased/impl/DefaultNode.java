@@ -14,8 +14,8 @@ import prm4j.indexing.AbstractBaseMonitor;
 import prm4j.indexing.treebased.MonitorSet;
 import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeMap;
-import prm4j.logic.MetaNode;
-import prm4j.logic.NodePrototype;
+import prm4j.logic.treebased.MetaNode;
+import prm4j.logic.treebased.NodePrototype;
 
 public class DefaultNode<A> implements Node<A>, NodePrototype<A> {
 

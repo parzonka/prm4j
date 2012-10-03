@@ -18,9 +18,9 @@ import prm4j.indexing.treebased.LowLevelBinding;
 import prm4j.indexing.treebased.MonitorSetIterator;
 import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeStore;
-import prm4j.logic.ChainingData;
-import prm4j.logic.EventContext;
-import prm4j.logic.JoinData;
+import prm4j.logic.treebased.ChainingData;
+import prm4j.logic.treebased.EventContext;
+import prm4j.logic.treebased.JoinData;
 
 public class FastIndexingStrategy<A> implements IndexingStrategy<A> {
 

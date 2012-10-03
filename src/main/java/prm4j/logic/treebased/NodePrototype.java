@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.logic;
+package prm4j.logic.treebased;
 
 import prm4j.indexing.treebased.Node;
 

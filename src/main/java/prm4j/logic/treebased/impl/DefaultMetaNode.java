@@ -8,11 +8,14 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.logic;
+package prm4j.logic.treebased.impl;
 
 import prm4j.indexing.treebased.MonitorSet;
 import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeMap;
+import prm4j.logic.treebased.ChainingData;
+import prm4j.logic.treebased.MetaNode;
+import prm4j.logic.treebased.NodePrototype;
 
 public class DefaultMetaNode<A> implements MetaNode<A> {
 

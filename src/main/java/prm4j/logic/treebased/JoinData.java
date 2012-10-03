@@ -8,7 +8,8 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.logic;
+package prm4j.logic.treebased;
+
 
 /**
  * Represents all instances which are compatible with the event instance.
