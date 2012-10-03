@@ -15,8 +15,9 @@ import prm4j.indexing.treebased.MonitorSet;
 import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeMap;
 import prm4j.logic.NodeContext;
+import prm4j.logic.NodePrototype;
 
-public class DefaultNode<A> implements Node<A> {
+public class DefaultNode<A> implements Node<A>, NodePrototype<A> {
 
     private final NodeContext<A> nodeContext;
     private final MonitorSet<A>[] monitorSets;
@@ -70,6 +71,16 @@ public class DefaultNode<A> implements Node<A> {
     public Node<A> next() {
 	// TODO Auto-generated method stub
 	return null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Node<A> clonePrototype() {
+	try {
+	    return (Node<A>) this.clone();
+	} catch (CloneNotSupportedException e) {
+	    throw new IllegalStateException(e);
+	}
     }
 
 }
