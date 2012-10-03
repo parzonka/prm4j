@@ -62,6 +62,31 @@ public class Alphabet {
     }
 
     /**
+     * Creates a symbol without any parameters.
+     *
+     * @return the symbol
+     */
+    public Symbol0 createSymbol0() {
+	Symbol0 symbol = new Symbol0(this, symbolCount, "Symbol_" + symbolCount);
+	symbols.add(symbol);
+	symbolCount++;
+	return symbol;
+    }
+
+    /**
+     * Creates a symbol without any parameters providing an optional name.
+     *
+     * @param optionalName
+     * @return the symbol
+     */
+    public Symbol0 createSymbol0(String optionalName) {
+	Symbol0 symbol = new Symbol0(this, symbolCount, optionalName);
+	symbols.add(symbol);
+	symbolCount++;
+	return symbol;
+    }
+
+    /**
      * Creates a symbol associated with one parameter.
      *
      * @param param1
