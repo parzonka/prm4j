@@ -12,8 +12,8 @@ package prm4j.logic;
 
 import prm4j.indexing.treebased.Node;
 
-public interface NodeFactory<A> {
+public interface NodePrototype<A> {
 
-    public Node<A> createNode();
+    public Node<A> clonePrototype();
 
 }

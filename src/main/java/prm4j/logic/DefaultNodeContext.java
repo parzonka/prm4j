@@ -17,7 +17,7 @@ import prm4j.indexing.treebased.NodeMap;
 public class DefaultNodeContext<A> implements NodeContext<A>{
 
     private NodeContext<A>[] successors;
-    private NodeFactory<A> nodeFactory;
+    private NodePrototype<A> nodePrototype;
 
     @Override
     public ChainingData[] getChainingData() {
@@ -33,7 +33,7 @@ public class DefaultNodeContext<A> implements NodeContext<A>{
 
     @Override
     public Node<A> createNode() {
-	return nodeFactory.createNode();
+	return nodePrototype.clonePrototype();
     }
 
     @Override
