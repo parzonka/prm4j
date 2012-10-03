@@ -14,10 +14,16 @@ import prm4j.indexing.treebased.MonitorSet;
 import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeMap;
 
-public class DefaultNodeContext<A> implements NodeContext<A>{
+public class DefaultNodeContext<A> implements NodeContext<A> {
 
     private NodeContext<A>[] successors;
     private NodePrototype<A> nodePrototype;
+
+    public DefaultNodeContext(NodeContext<A>[] successors, NodePrototype<A> nodePrototype) {
+	super();
+	this.successors = successors;
+	this.nodePrototype = nodePrototype;
+    }
 
     @Override
     public ChainingData[] getChainingData() {
@@ -45,6 +51,14 @@ public class DefaultNodeContext<A> implements NodeContext<A>{
     public NodeMap<A> createNodeMap() {
 	// TODO Auto-generated method stub
 	return null;
+    }
+
+    public void setSuccessor(int parameterId, NodeContext<A> nodeContext) {
+	this.successors[parameterId] = nodeContext;
+    }
+
+    public void setNodePrototype(NodePrototype<A> nodePrototype) {
+	this.nodePrototype = nodePrototype;
     }
 
 }
