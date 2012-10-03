@@ -79,11 +79,11 @@ public class StatefulSpecProcessor {
     }
 
     public Map<Symbol, Set<Set<Symbol>>> getPropertyEnableSets() {
-        return propertyEnableSets;
+	return propertyEnableSets;
     }
 
     public Map<Symbol, Set<Set<Parameter<?>>>> getParameterEnableSets() {
-        return parameterEnableSets;
+	return parameterEnableSets;
     }
 
     public Map<MonitorState<?>, Set<Set<Symbol>>> getStatePropertyCoEnableSets() {
@@ -91,15 +91,15 @@ public class StatefulSpecProcessor {
     }
 
     public Map<MonitorState<?>, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
-        return stateParameterCoEnableSets;
+	return stateParameterCoEnableSets;
     }
 
     public MonitorState<?> getInitialState() {
-        return initialState;
+	return initialState;
     }
 
     public Set<Symbol> getSymbols() {
-        return symbols;
+	return symbols;
     }
 
 }
