@@ -21,11 +21,9 @@ import java.util.Set;
 import org.junit.Test;
 
 import prm4j.AbstractTest;
-import prm4j.AbstractTest.FSM_unsafeMapIterator;
 import prm4j.api.Symbol;
 import prm4j.logic.MonitorState;
 import prm4j.logic.StatefulSpec;
-import prm4j.logic.StatefulSpecProcessor;
 
 public class FSMSpecTest extends AbstractTest {
 
