@@ -18,6 +18,7 @@ public class DefaultMetaNode<A> implements MetaNode<A> {
 
     private MetaNode<A>[] successors;
     private NodePrototype<A> nodePrototype;
+    private ChainingData[] chainingData;
 
     public DefaultMetaNode(MetaNode<A>[] successors, NodePrototype<A> nodePrototype) {
 	super();
@@ -27,8 +28,7 @@ public class DefaultMetaNode<A> implements MetaNode<A> {
 
     @Override
     public ChainingData[] getChainingData() {
-	// TODO Auto-generated method stub
-	return null;
+	return chainingData;
     }
 
     @Override
@@ -59,6 +59,10 @@ public class DefaultMetaNode<A> implements MetaNode<A> {
 
     public void setNodePrototype(NodePrototype<A> nodePrototype) {
 	this.nodePrototype = nodePrototype;
+    }
+
+    public void setChainingData(ChainingData[] chainingData) {
+	this.chainingData = chainingData;
     }
 
 }
