@@ -99,6 +99,39 @@ public abstract class AbstractTest {
     }
 
     /**
+     * Watches for <code>e1e3</code> traces. Taken from
+     * "Efficient Formalism-Independent Monitoring of Parametric Properties".
+     */
+    public static abstract class FSM_e1e3 {
+
+	public final Alphabet alphabet = new Alphabet();
+
+	public final Parameter<String> p1 = alphabet.createParameter("p1", String.class);
+	public final Parameter<String> p2 = alphabet.createParameter("p2", String.class);
+
+	public final Symbol1<String> e1 = alphabet.createSymbol1("e1", p1);
+	public final Symbol1<String> e2 = alphabet.createSymbol1("e2", p2);
+	public final Symbol2<String, String> e3 = alphabet.createSymbol2("e3", p1, p2);
+
+	public final FSM<Void> fsm = new FSM<Void>(alphabet);
+
+	public final FSMState<Void> initial = fsm.createInitialState();
+	public final FSMState<Void> s1 = fsm.createState();
+	public final FSMState<Void> error = fsm.createFinalState(new MatchHandler0() {
+	    @Override
+	    public void handleMatch() {
+	    }
+	});
+
+	public FSM_e1e3() {
+	    initial.addTransition(e1, s1);
+	    initial.addTransition(e2, initial); // self-loop
+	    s1.addTransition(e3, error);
+	}
+
+    }
+
+    /**
      * Downcast SymbolN to Symbol.
      *
      * @param values
