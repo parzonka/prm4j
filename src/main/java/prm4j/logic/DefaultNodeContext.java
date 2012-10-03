@@ -16,6 +16,9 @@ import prm4j.indexing.treebased.NodeMap;
 
 public class DefaultNodeContext<A> implements NodeContext<A>{
 
+    private NodeContext<A>[] successors;
+    private NodeFactory<A> nodeFactory;
+
     @Override
     public ChainingData[] getChainingData() {
 	// TODO Auto-generated method stub
@@ -30,14 +33,12 @@ public class DefaultNodeContext<A> implements NodeContext<A>{
 
     @Override
     public Node<A> createNode() {
-	// TODO Auto-generated method stub
-	return null;
+	return nodeFactory.createNode();
     }
 
     @Override
     public Node<A> createNode(int parameterId) {
-	// TODO Auto-generated method stub
-	return null;
+	return successors[parameterId].createNode();
     }
 
     @Override
