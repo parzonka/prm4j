@@ -87,7 +87,12 @@ public class StatefulSpecProcessor {
     }
 
     public Map<MonitorState<?>, Set<Set<Symbol>>> getStatePropertyCoEnableSets() {
-        return statePropertyCoEnableSets;
+	// state maps to all symbols, which have to be seen when accessing a error state
+	Map<MonitorState<?>, Set<Set<Symbol>>> result = new HashMap<MonitorState<?>, Set<Set<Symbol>>>();
+	for (MonitorState<?> state : states) {
+	    result.put(state, new HashSet<Set<Symbol>>());
+	}
+	return result;
     }
 
     public Map<MonitorState<?>, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
