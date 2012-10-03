@@ -14,12 +14,12 @@ import prm4j.indexing.treebased.MonitorSet;
 import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeMap;
 
-public class DefaultNodeContext<A> implements NodeContext<A> {
+public class DefaultMetaNode<A> implements MetaNode<A> {
 
-    private NodeContext<A>[] successors;
+    private MetaNode<A>[] successors;
     private NodePrototype<A> nodePrototype;
 
-    public DefaultNodeContext(NodeContext<A>[] successors, NodePrototype<A> nodePrototype) {
+    public DefaultMetaNode(MetaNode<A>[] successors, NodePrototype<A> nodePrototype) {
 	super();
 	this.successors = successors;
 	this.nodePrototype = nodePrototype;
@@ -53,7 +53,7 @@ public class DefaultNodeContext<A> implements NodeContext<A> {
 	return null;
     }
 
-    public void setSuccessor(int parameterId, NodeContext<A> nodeContext) {
+    public void setSuccessor(int parameterId, MetaNode<A> nodeContext) {
 	this.successors[parameterId] = nodeContext;
     }
 

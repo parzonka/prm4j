@@ -14,27 +14,27 @@ import prm4j.indexing.AbstractBaseMonitor;
 import prm4j.indexing.treebased.MonitorSet;
 import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeMap;
-import prm4j.logic.NodeContext;
+import prm4j.logic.MetaNode;
 import prm4j.logic.NodePrototype;
 
 public class DefaultNode<A> implements Node<A>, NodePrototype<A> {
 
-    private final NodeContext<A> nodeContext;
+    private final MetaNode<A> metaNode;
     private final MonitorSet<A>[] monitorSets;
 
     private NodeMap<A> nodeMap;
     private AbstractBaseMonitor<A> monitor;
 
     @SuppressWarnings("unchecked")
-    public DefaultNode(NodeContext<A> nodeContext, int monitorSetCount) {
+    public DefaultNode(MetaNode<A> nodeContext, int monitorSetCount) {
 	super();
-	this.nodeContext = nodeContext;
+	this.metaNode = nodeContext;
 	this.monitorSets = new MonitorSet[monitorSetCount];
     }
 
     @Override
-    public NodeContext<A> getNodeContext() {
-	return nodeContext;
+    public MetaNode<A> getNodeContext() {
+	return metaNode;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class DefaultNode<A> implements Node<A>, NodePrototype<A> {
     public NodeMap<A> getNodeMap() {
 	// lazy creation
 	if (nodeMap == null) {
-	    nodeMap = nodeContext.createNodeMap();
+	    nodeMap = metaNode.createNodeMap();
 	}
 	return nodeMap;
     }
@@ -61,7 +61,7 @@ public class DefaultNode<A> implements Node<A>, NodePrototype<A> {
 	// lazy creation
 	MonitorSet<A> monitorSet = monitorSets[parameterSetId];
 	if (monitorSet == null) {
-	    monitorSet = nodeContext.createMonitorSet();
+	    monitorSet = metaNode.createMonitorSet();
 	    monitorSets[parameterSetId] = monitorSet;
 	}
 	return monitorSet;

@@ -15,13 +15,13 @@ import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeMap;
 
 /**
- * Every {@link Node} is equipped with a NodeContext, containing factory methods and providing statically computed
+ * Every {@link Node} is equipped with a MetaNode, containing factory methods and providing statically computed
  * algorithm logic.
  *
  * @param <A>
  *            the type of the auxiliary data usable by base monitors
  */
-public interface NodeContext<A> {
+public interface MetaNode<A> {
 
     public ChainingData[] getChainingData();
 

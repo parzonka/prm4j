@@ -21,7 +21,7 @@ package prm4j.indexing.treebased;
  * Mateusz Parzonka - initial API and implementation
  */
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.logic.NodeContext;
+import prm4j.logic.MetaNode;
 
 /**
  * @param <A>
@@ -29,7 +29,7 @@ import prm4j.logic.NodeContext;
  */
 public interface Node<A> {
 
-    public NodeContext<A> getNodeContext();
+    public MetaNode<A> getNodeContext();
 
     /**
      *
