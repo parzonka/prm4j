@@ -24,11 +24,11 @@ public class DefaultNode<A> implements Node<A> {
     private NodeMap<A> nodeMap;
     private AbstractBaseMonitor<A> monitor;
 
-    public DefaultNode(NodeContext<A> nodeContext, NodeMap<A> nodeMap, MonitorSet<A>[] monitorSets) {
+    @SuppressWarnings("unchecked")
+    public DefaultNode(NodeContext<A> nodeContext, int monitorSetCount) {
 	super();
 	this.nodeContext = nodeContext;
-	this.nodeMap = nodeMap;
-	this.monitorSets = monitorSets;
+	this.monitorSets = new MonitorSet[monitorSetCount];
     }
 
     @Override
