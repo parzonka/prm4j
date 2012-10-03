@@ -17,9 +17,11 @@ import java.util.Map;
 import java.util.Set;
 
 import prm4j.api.Alphabet;
+import prm4j.api.MatchHandler0;
 import prm4j.api.MatchHandler1;
 import prm4j.api.Parameter;
 import prm4j.api.Symbol;
+import prm4j.api.Symbol0;
 import prm4j.api.Symbol1;
 import prm4j.api.Symbol2;
 import prm4j.api.fsm.FSM;
@@ -67,6 +69,33 @@ public abstract class AbstractTest {
 	    s3.addTransition(useIter, error);
 	}
 
+    }
+
+    /**
+     * Twos <b>A</b>s trigger the error state, a <b>B</b> will end in a dead state.
+     */
+    public static abstract class AbstractFSM_2symbols3states {
+
+	public final Alphabet alphabet = new Alphabet();
+
+	public final Symbol0 a = alphabet.createSymbol0("a");
+	public final Symbol0 b = alphabet.createSymbol0("b");
+
+	public final FSM<Void> fsm = new FSM<Void>(alphabet);
+
+	public final FSMState<Void> initial = fsm.createInitialState();
+	public final FSMState<Void> s1 = fsm.createState();
+	public final FSMState<Void> error = fsm.createFinalState(new MatchHandler0() {
+	    @Override
+	    public void handleMatch() {
+	    }
+	});
+
+	public AbstractFSM_2symbols3states() {
+	    setupTransitions();
+	}
+
+	public abstract void setupTransitions();
     }
 
     /**
