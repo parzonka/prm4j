@@ -65,6 +65,49 @@ public class FSMSpecTest extends AbstractTest {
     }
 
     @Test
+    public void getCreationSymbols_AAnoB_withInitialBLoop() {
+	AbstractFSM_2symbols3states u = new AbstractFSM_2symbols3states() {
+	    @Override
+	    public void setupTransitions() {
+		initial.addTransition(a, s1);
+		initial.addTransition(b, initial); // loop on initial
+		s1.addTransition(a, error);
+		// s1 -b-> dead
+	    }
+
+	};
+	StatefulSpec fsmSpec = new FSMSpec<Void>(u.fsm);
+	Set<Symbol> actual = fsmSpec.getCreationSymbols();
+
+	Set<Symbol> expected = new HashSet<Symbol>();
+	expected.add(u.a);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getCreationSymbols_AAnoB_withoutInitialBLoop() {
+	AbstractFSM_2symbols3states u = new AbstractFSM_2symbols3states() {
+	    @Override
+	    public void setupTransitions() {
+		initial.addTransition(a, s1);
+		// initial -b-> dead
+		s1.addTransition(a, error);
+		// s1 -b-> dead
+	    }
+
+	};
+	StatefulSpec fsmSpec = new FSMSpec<Void>(u.fsm);
+	Set<Symbol> actual = fsmSpec.getCreationSymbols();
+
+	Set<Symbol> expected = new HashSet<Symbol>();
+	expected.add(u.a);
+	expected.add(u.b);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
     public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM<Void> fsm = u.fsm;
@@ -73,7 +116,7 @@ public class FSMSpecTest extends AbstractTest {
 	Map<MonitorState<?>, Set<Set<Symbol>>> actual = fsmSpec.getStatePropertyCoEnableSets();
 
 	Map<MonitorState<?>, Set<Set<Symbol>>> expected = new HashMap<MonitorState<?>, Set<Set<Symbol>>>();
-	for (MonitorState<?> state : u.fsm.getStates()){
+	for (MonitorState<?> state : u.fsm.getStates()) {
 	    expected.put(state, new HashSet<Set<Symbol>>());
 	}
 	expected.get(u.initial).add(asSet(u.createColl, u.createIter, u.updateMap, u.useIter));
