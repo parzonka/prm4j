@@ -24,14 +24,14 @@ import prm4j.AbstractTest;
 import prm4j.api.Parameter;
 import prm4j.api.Symbol;
 import prm4j.api.fsm.FSM;
-import prm4j.api.fsm.FSMSpec;
+import prm4j.api.fsm.FSMSpec_deprecated;
 
 public class StatefulSpecProcessorTest extends AbstractTest {
 
     @Test
     public void accessors_unsafeMapIterator() throws Exception {
 	FSM fsm = new FSM_unsafeMapIterator().fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec_deprecated(fsm));
 
 	assertEquals(ssp.getInitialState(), fsm.getInitialState());
 	assertEquals(ssp.getBaseEvents(), fsm.getAlphabet().getSymbols());
@@ -41,7 +41,7 @@ public class StatefulSpecProcessorTest extends AbstractTest {
     public void getPropertyEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec_deprecated(fsm));
 
 	Map<Symbol, Set<Set<Symbol>>> actual = ssp.getPropertyEnableSets();
 
@@ -65,7 +65,7 @@ public class StatefulSpecProcessorTest extends AbstractTest {
     public void getParameterEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec_deprecated(fsm));
 
 	Map<Symbol, Set<Set<Parameter<?>>>> actual = ssp.getParameterEnableSets();
 
@@ -86,7 +86,7 @@ public class StatefulSpecProcessorTest extends AbstractTest {
     public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec_deprecated(fsm));
 
 	Map<MonitorState, Set<Set<Symbol>>> actual = ssp.getStatePropertyCoEnableSets();
 

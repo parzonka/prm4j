@@ -31,7 +31,7 @@ public class FSMSpecTest extends AbstractTest {
     @Test
     public void getPropertyEnableSet_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	StatefulSpec fsmSpec = new FSMSpec(u.fsm);
+	StatefulSpec fsmSpec = new FSMSpec_deprecated(u.fsm);
 	Map<Symbol, Set<Set<Symbol>>> actual = fsmSpec.getPropertyEnableSets();
 
 	Map<Symbol, Set<Set<Symbol>>> expected = new HashMap<Symbol, Set<Set<Symbol>>>();
@@ -53,7 +53,7 @@ public class FSMSpecTest extends AbstractTest {
     @Test
     public void getCreationSymbols_unsafeMapIterator() {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	StatefulSpec fsmSpec = new FSMSpec(u.fsm);
+	StatefulSpec fsmSpec = new FSMSpec_deprecated(u.fsm);
 	Set<? extends BaseEvent> actual = fsmSpec.getBaseEvents();
 
 	Set<Symbol> expected = new HashSet<Symbol>();
@@ -77,7 +77,7 @@ public class FSMSpecTest extends AbstractTest {
 	    }
 
 	};
-	StatefulSpec fsmSpec = new FSMSpec(u.fsm);
+	StatefulSpec fsmSpec = new FSMSpec_deprecated(u.fsm);
 	Set<? extends BaseEvent> actual = fsmSpec.getBaseEvents();
 
 	Set<Symbol> expected = new HashSet<Symbol>();
@@ -98,7 +98,7 @@ public class FSMSpecTest extends AbstractTest {
 	    }
 
 	};
-	StatefulSpec fsmSpec = new FSMSpec(u.fsm);
+	StatefulSpec fsmSpec = new FSMSpec_deprecated(u.fsm);
 	Set<? extends BaseEvent> actual = fsmSpec.getCreationBaseEvents();
 
 	Set<Symbol> expected = new HashSet<Symbol>();
@@ -112,7 +112,7 @@ public class FSMSpecTest extends AbstractTest {
     public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
-	StatefulSpec fsmSpec = new FSMSpec(fsm);
+	StatefulSpec fsmSpec = new FSMSpec_deprecated(fsm);
 
 	Map<MonitorState, Set<Set<Symbol>>> actual = fsmSpec.getStatePropertyCoEnableSets();
 

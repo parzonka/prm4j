@@ -24,11 +24,12 @@ import prm4j.logic.StatefulSpec;
  * @param <E>
  *            the type of base event processed by monitors
  */
-public class FSMSpec implements StatefulSpec {
+@Deprecated
+public class FSMSpec_deprecated implements StatefulSpec {
 
     private FSM fsm;
 
-    public FSMSpec(FSM fsm) {
+    public FSMSpec_deprecated(FSM fsm) {
 	this.fsm = fsm;
     }
 
