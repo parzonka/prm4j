@@ -17,13 +17,13 @@ import prm4j.indexing.treebased.LowLevelBinding;
  * A concrete monitor instance, representing the internal state of a {@link ParametricMonitor} for one single concrete
  * variable binding.
  *
- * @param <A>
- *            the type of the auxiliary data usable by base monitors
+ * @param <E>
+ *            the type of base event processed by monitors
  */
-public abstract class AbstractBaseMonitor<A> implements BaseMonitor<A, AbstractBaseMonitor<A>> {
+public abstract class AbstractBaseMonitor<E> implements BaseMonitor<E, AbstractBaseMonitor<E>> {
 
     // low level access
-    private LowLevelBinding<A>[] bindings;
+    private LowLevelBinding<E>[] bindings;
     // low level access
     private long tau;
 
@@ -33,18 +33,18 @@ public abstract class AbstractBaseMonitor<A> implements BaseMonitor<A, AbstractB
      * @param bindings
      * @return
      */
-    public final AbstractBaseMonitor<A> copy(LowLevelBinding<A>[] bindings) {
-	AbstractBaseMonitor<A> copy = copy();
+    public final AbstractBaseMonitor<E> copy(LowLevelBinding<E>[] bindings) {
+	AbstractBaseMonitor<E> copy = copy();
 	copy.setBindings(bindings);
 	copy.setTau(tau);
 	return copy;
     }
 
-    private final void setBindings(LowLevelBinding<A>[] bindings) {
+    private final void setBindings(LowLevelBinding<E>[] bindings) {
 	this.bindings = bindings;
     }
 
-    public final LowLevelBinding<A>[] getLowLevelBindings() {
+    public final LowLevelBinding<E>[] getLowLevelBindings() {
 	return bindings;
     }
 

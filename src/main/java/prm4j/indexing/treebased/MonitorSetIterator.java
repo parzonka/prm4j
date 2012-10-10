@@ -12,11 +12,15 @@ package prm4j.indexing.treebased;
 
 import prm4j.indexing.AbstractBaseMonitor;
 
-public interface MonitorSetIterator<A> {
+/**
+ * @param <E>
+ *            the type of base event processed by monitors
+ */
+public interface MonitorSetIterator<E> {
 
-    public AbstractBaseMonitor<A> next();
+    public AbstractBaseMonitor<E> next();
 
-    public boolean hasNext(AbstractBaseMonitor<A> lastMonitor, boolean isLastMonitorAlive);
+    public boolean hasNext(AbstractBaseMonitor<E> lastMonitor, boolean isLastMonitorAlive);
 
     public void done();
 

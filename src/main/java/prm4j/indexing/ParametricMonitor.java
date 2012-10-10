@@ -14,16 +14,16 @@ package prm4j.indexing;
 /**
  * A parametric monitor can be thought as a set of base monitors running in parallel, one for each parameter instance.
  *
- * @param <A>
- *            the type of the auxiliary data usable by base monitors
+ * @param <E>
+ *            the type of base event processed by monitors
  * @param <M>
  *            the type of the base monitor
  */
-public interface ParametricMonitor<A, M extends BaseMonitor<A, M>> {
+public interface ParametricMonitor<E, M extends BaseMonitor<E, M>> {
 
     M createBaseMonitor();
 
-    void processEvent(Event<A> event);
+    void processEvent(Event<E> event);
 
     void reset();
 

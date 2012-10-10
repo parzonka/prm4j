@@ -17,13 +17,17 @@ import prm4j.logic.treebased.ChainingData;
 import prm4j.logic.treebased.MetaNode;
 import prm4j.logic.treebased.NodePrototype;
 
-public class DefaultMetaNode<A> implements MetaNode<A> {
+/**
+ * @param <E>
+ *            the type of base event processed by monitors
+ */
+public class DefaultMetaNode<E> implements MetaNode<E> {
 
-    private MetaNode<A>[] successors;
-    private NodePrototype<A> nodePrototype;
+    private MetaNode<E>[] successors;
+    private NodePrototype<E> nodePrototype;
     private ChainingData[] chainingData;
 
-    public DefaultMetaNode(MetaNode<A>[] successors, NodePrototype<A> nodePrototype) {
+    public DefaultMetaNode(MetaNode<E>[] successors, NodePrototype<E> nodePrototype) {
 	super();
 	this.successors = successors;
 	this.nodePrototype = nodePrototype;
@@ -35,32 +39,32 @@ public class DefaultMetaNode<A> implements MetaNode<A> {
     }
 
     @Override
-    public MonitorSet<A> createMonitorSet() {
+    public MonitorSet<E> createMonitorSet() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public Node<A> createNode() {
+    public Node<E> createNode() {
 	return nodePrototype.clonePrototype();
     }
 
     @Override
-    public Node<A> createNode(int parameterId) {
+    public Node<E> createNode(int parameterId) {
 	return successors[parameterId].createNode();
     }
 
     @Override
-    public NodeMap<A> createNodeMap() {
+    public NodeMap<E> createNodeMap() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
-    public void setSuccessor(int parameterId, MetaNode<A> nodeContext) {
+    public void setSuccessor(int parameterId, MetaNode<E> nodeContext) {
 	this.successors[parameterId] = nodeContext;
     }
 
-    public void setNodePrototype(NodePrototype<A> nodePrototype) {
+    public void setNodePrototype(NodePrototype<E> nodePrototype) {
 	this.nodePrototype = nodePrototype;
     }
 

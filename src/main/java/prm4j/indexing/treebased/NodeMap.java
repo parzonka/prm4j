@@ -10,14 +10,18 @@
  */
 package prm4j.indexing.treebased;
 
-public interface NodeMap<A> {
+/**
+ * @param <E>
+ *            the type of base event processed by monitors
+ */
+public interface NodeMap<E> {
 
-    // public MapReference<A> getReference(); // TODO resource registration
+    // public MapReference<E> getReference(); // TODO resource registration
 
-    public Node<A> getNode(LowLevelBinding<A> binding);
+    public Node<E> getNode(LowLevelBinding<E> binding);
 
-    public boolean containsKey(LowLevelBinding<A> binding);
+    public boolean containsKey(LowLevelBinding<E> binding);
 
-    public Node<A> removeKey(LowLevelBinding<A> binding);
+    public Node<E> removeKey(LowLevelBinding<E> binding);
 
 }

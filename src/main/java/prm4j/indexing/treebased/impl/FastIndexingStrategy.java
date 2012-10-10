@@ -22,18 +22,22 @@ import prm4j.logic.treebased.ChainingData;
 import prm4j.logic.treebased.EventContext;
 import prm4j.logic.treebased.JoinData;
 
-public class FastIndexingStrategy<A> implements IndexingStrategy<A> {
+/**
+ * @param <E>
+ *            the type of base event processed by monitors
+ */
+public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
 
-    private BindingStore<A> bindingStore;
-    private NodeStore<A> nodeStore;
+    private BindingStore<E> bindingStore;
+    private NodeStore<E> nodeStore;
     private EventContext eventContext;
 
     @Override
-    public void processEvent(Event<A> event) {
+    public void processEvent(Event<E> event) {
 
-	final LowLevelBinding<A>[] bindings = bindingStore.getBindings(event.getBoundObjects());
-	final Node<A> instanceNode = nodeStore.getNode(bindings);
-	final AbstractBaseMonitor<A> instanceMonitor = instanceNode.getMonitor();
+	final LowLevelBinding<E>[] bindings = bindingStore.getBindings(event.getBoundObjects());
+	final Node<E> instanceNode = nodeStore.getNode(bindings);
+	final AbstractBaseMonitor<E> instanceMonitor = instanceNode.getMonitor();
 
 	if (instanceMonitor == null) {
 	    // TODO join and chain with implicit update
@@ -47,16 +51,16 @@ public class FastIndexingStrategy<A> implements IndexingStrategy<A> {
 
     }
 
-    private void joinWithAllCompatibleInstances(final JoinData joinData, final LowLevelBinding<A>[] bindings,
-	    final Event<A> event) {
+    private void joinWithAllCompatibleInstances(final JoinData joinData, final LowLevelBinding<E>[] bindings,
+	    final Event<E> event) {
 
-	final Node<A> compatibleNode = nodeStore.getNode(bindings, joinData.getTraversalMask());
+	final Node<E> compatibleNode = nodeStore.getNode(bindings, joinData.getTraversalMask());
 	// calculate once the bindings to be joined with the whole monitor set
-	final LowLevelBinding<A>[] joinableBindings = getJoinableBindings(bindings, joinData.getJoinTargetPattern());
+	final LowLevelBinding<E>[] joinableBindings = getJoinableBindings(bindings, joinData.getJoinTargetPattern());
 	for (int parameterSetId : joinData.getParameterSetIds()) {
 	    // iterate over all compatible nodes
-	    final MonitorSetIterator<A> iter = compatibleNode.getMonitorSet(parameterSetId).getIterator();
-	    AbstractBaseMonitor<A> compatibleMonitor = null;
+	    final MonitorSetIterator<E> iter = compatibleNode.getMonitorSet(parameterSetId).getIterator();
+	    AbstractBaseMonitor<E> compatibleMonitor = null;
 	    boolean isCompatibleMonitorAlive = false;
 	    while (iter.hasNext(compatibleMonitor, isCompatibleMonitorAlive)) {
 		compatibleMonitor = iter.next();
@@ -74,9 +78,9 @@ public class FastIndexingStrategy<A> implements IndexingStrategy<A> {
      *            allows transformation of the binding to a joinable binding
      * @return a joinable binding
      */
-    static <A> LowLevelBinding<A>[] getJoinableBindings(LowLevelBinding<A>[] binding, int[] joinTargetPattern) {
+    static <E> LowLevelBinding<E>[] getJoinableBindings(LowLevelBinding<E>[] binding, int[] joinTargetPattern) {
 	@SuppressWarnings("unchecked")
-	final LowLevelBinding<A>[] result = new LowLevelBinding[joinTargetPattern.length];
+	final LowLevelBinding<E>[] result = new LowLevelBinding[joinTargetPattern.length];
 	for (int i = 0; i < joinTargetPattern.length; i++) {
 	    final int destination = joinTargetPattern[i];
 	    if (destination >= 0) // pointers to -1 encode null in the result
@@ -110,8 +114,8 @@ public class FastIndexingStrategy<A> implements IndexingStrategy<A> {
      *         state or similar).<br>
      *         In case of <code>false</code>, no new monitor will be stored, because it would be dead from the start.
      */
-    protected boolean expand(AbstractBaseMonitor<A> oldMonitor, LowLevelBinding<A>[] joinableBindings,
-	    int[] joinSourcePattern, int[] disableMask, Event<A> event) {
+    protected boolean expand(AbstractBaseMonitor<E> oldMonitor, LowLevelBinding<E>[] joinableBindings,
+	    int[] joinSourcePattern, int[] disableMask, Event<E> event) {
 
 	// OPTIONAL: Uses co-enable set: check if old monitor is alive
 	if (!oldMonitor.isFinalStateReachable()) {
@@ -132,17 +136,17 @@ public class FastIndexingStrategy<A> implements IndexingStrategy<A> {
 	}
 
 	// create a duplicate of the joinableBindings which will be set in the new monitor
-	final LowLevelBinding<A>[] newBindings = createJoin(joinableBindings, oldMonitor.getLowLevelBindings(),
+	final LowLevelBinding<E>[] newBindings = createJoin(joinableBindings, oldMonitor.getLowLevelBindings(),
 		joinSourcePattern);
 
 	// traverse to the last node, it will be created on the fly if not existent
-	final Node<A> lastNode = nodeStore.getNode(newBindings);
+	final Node<E> lastNode = nodeStore.getNode(newBindings);
 
 	if (lastNode.getMonitor() != null) {
 	    return true;
 	}
 
-	final AbstractBaseMonitor<A> newMonitor = oldMonitor.copy(newBindings);
+	final AbstractBaseMonitor<E> newMonitor = oldMonitor.copy(newBindings);
 
 	// process the event immediately, instead of doing it in the batch update phase after expansion
 	if (!newMonitor.processEvent(event.getSymbol())) {
@@ -165,9 +169,9 @@ public class FastIndexingStrategy<A> implements IndexingStrategy<A> {
     }
 
     @SuppressWarnings("unchecked")
-    private LowLevelBinding<A>[] createJoin(LowLevelBinding<A>[] joinableBindings,
-	    LowLevelBinding<A>[] joiningBindings, int[] joinSourcePattern) {
-	final LowLevelBinding<A>[] newBindings = new LowLevelBinding[joinableBindings.length];
+    private LowLevelBinding<E>[] createJoin(LowLevelBinding<E>[] joinableBindings,
+	    LowLevelBinding<E>[] joiningBindings, int[] joinSourcePattern) {
+	final LowLevelBinding<E>[] newBindings = new LowLevelBinding[joinableBindings.length];
 	System.arraycopy(joinableBindings, 0, newBindings, 0, joinableBindings.length);
 	// fill in the missing bindings into the duplicate from the old monitor
 	for (int j = 0; j < joinSourcePattern.length; j += 2) {
@@ -177,13 +181,13 @@ public class FastIndexingStrategy<A> implements IndexingStrategy<A> {
 	return newBindings;
     }
 
-    private void updateChainings(Node<A> node) {
+    private void updateChainings(Node<E> node) {
 
-	final AbstractBaseMonitor<A> monitor = node.getMonitor();
-	final LowLevelBinding<A>[] bindings = monitor.getLowLevelBindings();
+	final AbstractBaseMonitor<E> monitor = node.getMonitor();
+	final LowLevelBinding<E>[] bindings = monitor.getLowLevelBindings();
 
 	for (ChainingData chainingData : node.getNodeContext().getChainingData()) {
-	    Node<A> lessInformativeNode = nodeStore.getNode(bindings, chainingData.getParameterMask());
+	    Node<E> lessInformativeNode = nodeStore.getNode(bindings, chainingData.getParameterMask());
 	    // parameterSetId == 0 selects the set of strictly more informative instance monitors
 	    for (int parameterSetId : chainingData.getParameterSetIds()) {
 		lessInformativeNode.getMonitorSet(parameterSetId).add(monitor);

@@ -24,23 +24,23 @@ import prm4j.indexing.AbstractBaseMonitor;
 import prm4j.logic.treebased.MetaNode;
 
 /**
- * @param <A>
- *            the type of the auxiliary data usable by base monitors
+ * @param <E>
+ *            the type of base event processed by monitors
  */
-public interface Node<A> {
+public interface Node<E> {
 
-    public MetaNode<A> getNodeContext();
+    public MetaNode<E> getNodeContext();
 
     /**
      *
      * @return monitor matching the node's binding or <code>null</code>, if the queried path is no prefix of a final
      *         path.
      */
-    public AbstractBaseMonitor<A> getMonitor();
+    public AbstractBaseMonitor<E> getMonitor();
 
-    public void setMonitor(AbstractBaseMonitor<A> monitor);
+    public void setMonitor(AbstractBaseMonitor<E> monitor);
 
-    public NodeMap<A> getNodeMap();
+    public NodeMap<E> getNodeMap();
 
     /**
      * Returns a monitor set which represents a (sometimes not real) subset of instances which are more informative than
@@ -55,13 +55,13 @@ public interface Node<A> {
      *            all a1b1d
      * @return
      */
-    public MonitorSet<A> getMonitorSet(int parameterSetId);
+    public MonitorSet<E> getMonitorSet(int parameterSetId);
 
     /**
      * The node is used in {@link NodeMap}s with similar functionality as map entries.
      *
      * @return TODO comment
      */
-    public Node<A> next();
+    public Node<E> next();
 
 }

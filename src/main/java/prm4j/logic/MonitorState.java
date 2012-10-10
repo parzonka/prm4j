@@ -14,12 +14,12 @@ import prm4j.api.MatchHandler;
 import prm4j.api.Symbol;
 
 /**
- * @param <A>
- *            the type of the auxiliary data usable by base monitors
+ * @param <E>
+ *            the type of base event processed by monitors
  */
-public interface MonitorState<A> {
+public interface MonitorState<E> {
 
-    public abstract MonitorState<A> getSuccessor(Symbol symbol);
+    public abstract MonitorState<E> getSuccessor(Symbol symbol);
 
     public abstract boolean isFinal();
 

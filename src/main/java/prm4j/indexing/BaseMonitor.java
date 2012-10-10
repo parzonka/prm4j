@@ -20,7 +20,7 @@ package prm4j.indexing;
  * monitors associated with those strategies instead.
  *
  * @param <E>
- *            the type of the base event processed by monitors
+ *            the type of base event processed by monitors
  * @param <M>
  *            the type of the base monitor
  */

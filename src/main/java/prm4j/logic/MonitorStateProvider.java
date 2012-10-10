@@ -10,7 +10,11 @@
  */
 package prm4j.logic;
 
-public interface MonitorStateProvider<A> {
+/**
+ * @param <E>
+ *            the type of base event processed by monitors
+ */
+public interface MonitorStateProvider<E> {
 
     /**
      * Returns an initial monitor state. Clients assume, that changes to this state are not possible or have no side
@@ -18,6 +22,6 @@ public interface MonitorStateProvider<A> {
      *
      * @return an initial state
      */
-    public MonitorState<A> getInitialState();
+    public MonitorState<E> getInitialState();
 
 }

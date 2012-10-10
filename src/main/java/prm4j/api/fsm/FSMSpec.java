@@ -19,11 +19,15 @@ import prm4j.api.Symbol;
 import prm4j.logic.MonitorState;
 import prm4j.logic.StatefulSpec;
 
-public class FSMSpec<A> implements StatefulSpec {
+/**
+ * @param <E>
+ *            the type of base event processed by monitors
+ */
+public class FSMSpec<E> implements StatefulSpec {
 
-    private FSM<A> fsm;
+    private FSM<E> fsm;
 
-    public FSMSpec(FSM<A> fsm) {
+    public FSMSpec(FSM<E> fsm) {
 	this.fsm = fsm;
     }
 
@@ -54,7 +58,7 @@ public class FSMSpec<A> implements StatefulSpec {
 
     @Override
     public Map<Symbol, Set<Set<Symbol>>> getPropertyEnableSets() {
-	return new PropertyEnableSetCalculator<A>(fsm).getEnableSets();
+	return new PropertyEnableSetCalculator<E>(fsm).getEnableSets();
     }
 
     @Override
@@ -69,24 +73,24 @@ public class FSMSpec<A> implements StatefulSpec {
 	return fsm.getInitialState();
     }
 
-    private static class PropertyEnableSetCalculator<A> {
+    private static class PropertyEnableSetCalculator<E> {
 
-	private final MonitorState<A> initialState;
+	private final MonitorState<E> initialState;
 	private final Set<Symbol> symbols;
-	private final Set<FSMState<A>> states;
+	private final Set<FSMState<E>> states;
 	private final Map<Symbol, Set<Set<Symbol>>> enableSets;
-	private final Map<FSMState<A>, Set<Set<Symbol>>> stateToSeenSymbols;
+	private final Map<FSMState<E>, Set<Set<Symbol>>> stateToSeenSymbols;
 
-	public PropertyEnableSetCalculator(FSM<A> fsm) {
+	public PropertyEnableSetCalculator(FSM<E> fsm) {
 	    this.initialState = fsm.getInitialState();
 	    this.symbols = fsm.getAlphabet().getSymbols();
 	    this.states = fsm.getStates();
 	    this.enableSets = new HashMap<Symbol, Set<Set<Symbol>>>();
-	    this.stateToSeenSymbols = new HashMap<FSMState<A>, Set<Set<Symbol>>>();
+	    this.stateToSeenSymbols = new HashMap<FSMState<E>, Set<Set<Symbol>>>();
 	    for (Symbol symbol : this.symbols) {
 		this.enableSets.put(symbol, new HashSet<Set<Symbol>>());
 	    }
-	    for (FSMState<A> state : this.states) {
+	    for (FSMState<E> state : this.states) {
 		this.stateToSeenSymbols.put(state, new HashSet<Set<Symbol>>());
 	    }
 	}
@@ -96,7 +100,7 @@ public class FSMSpec<A> implements StatefulSpec {
 	    return this.enableSets;
 	}
 
-	private void computeEnableSets(MonitorState<A> state, Set<Symbol> seenSymbols) {
+	private void computeEnableSets(MonitorState<E> state, Set<Symbol> seenSymbols) {
 	    if (state == null)
 		throw new NullPointerException("state may not be null!");
 	    for (Symbol symbol : this.symbols) {

@@ -17,12 +17,12 @@ import prm4j.api.Symbol;
 import prm4j.logic.MonitorState;
 
 /**
- * @param <A>
- *            the type of the auxiliary data usable by base monitors
+ * @param <E>
+ *            the type of base event processed by monitors
  */
-public class FSMState<A> implements MonitorState<A> {
+public class FSMState<E> implements MonitorState<E> {
 
-    private FSMState<A>[] successorTable;
+    private FSMState<E>[] successorTable;
     private final boolean isFinal;
     private final String label;// for display purposes only
     private final Alphabet alphabet;
@@ -37,7 +37,7 @@ public class FSMState<A> implements MonitorState<A> {
 	this.successorTable = new FSMState[alphabet.size()];
     }
 
-    public void addTransition(Symbol symbol, FSMState<A> successor) {
+    public void addTransition(Symbol symbol, FSMState<E> successor) {
 	assert this.successorTable[symbol.getIndex()] == null : "successor already set";
 	if (!this.alphabet.getSymbols().contains(symbol)) {
 	    throw new IllegalArgumentException("Symbol for transition is not contained in alphabet!");
@@ -46,7 +46,7 @@ public class FSMState<A> implements MonitorState<A> {
     }
 
     @Override
-    public MonitorState<A> getSuccessor(Symbol symbol) {
+    public MonitorState<E> getSuccessor(Symbol symbol) {
 	return this.successorTable[symbol.getIndex()];
     }
 

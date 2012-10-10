@@ -10,7 +10,11 @@
  */
 package prm4j.indexing.treebased;
 
-public interface BindingStore<A> {
+/**
+ * @param <E>
+ *            the type of base event processed by monitors
+ */
+public interface BindingStore<E> {
 
     /**
      * Returns an instance for the given bound objects.
@@ -18,7 +22,7 @@ public interface BindingStore<A> {
      * @param boundObjects
      * @return
      */
-    public LowLevelBinding<A>[] getBindings(Object[] boundObjects);
+    public LowLevelBinding<E>[] getBindings(Object[] boundObjects);
 
     /**
      * Tests if a {@link LowLevelBinding} exists for the given object associated to the parameter with given id. As a
@@ -37,6 +41,6 @@ public interface BindingStore<A> {
      * @param boundObject
      * @return
      */
-    public LowLevelBinding<A> getBinding(int parameterId, Object boundObject);
+    public LowLevelBinding<E> getBinding(int parameterId, Object boundObject);
 
 }

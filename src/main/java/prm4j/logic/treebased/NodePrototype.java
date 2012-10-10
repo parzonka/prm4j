@@ -12,8 +12,12 @@ package prm4j.logic.treebased;
 
 import prm4j.indexing.treebased.Node;
 
-public interface NodePrototype<A> {
+/**
+ * @param <E>
+ *            the type of base event processed by monitors
+ */
+public interface NodePrototype<E> {
 
-    public Node<A> clonePrototype();
+    public Node<E> clonePrototype();
 
 }

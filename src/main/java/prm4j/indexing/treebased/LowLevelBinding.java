@@ -13,10 +13,10 @@ package prm4j.indexing.treebased;
 /**
  * A binding used by optimized indexing strategies.
  *
- * @param <A>
- *            the type of the auxiliary data usable by base monitors
+ * @param <E>
+ *            the type of base event processed by monitors
  */
-public interface LowLevelBinding<A> extends prm4j.indexing.Binding {
+public interface LowLevelBinding<E> extends prm4j.indexing.Binding {
 
     /**
      * Releases all resources used in the indexing data structure and/or notifies monitors about unreachability of the
@@ -29,14 +29,14 @@ public interface LowLevelBinding<A> extends prm4j.indexing.Binding {
      *
      * @param mapReference
      */
-//    void registerMap(MapReference<A> mapReference); // TODO resource registration
+//    void registerMap(MapReference<E> mapReference); // TODO resource registration
 
     /**
      * Return the node representing the instance this binding can form.
      *
      * @return
      */
-    Node<A> getBaseNode();
+    Node<E> getBaseNode();
 
     long getDisable();
 

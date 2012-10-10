@@ -14,22 +14,26 @@ import prm4j.indexing.treebased.LowLevelBinding;
 import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeStore;
 
-public class DefaultNodeStore<A> implements NodeStore<A> {
+/**
+ * @param <E>
+ *            the type of base event processed by monitors
+ */
+public class DefaultNodeStore<E> implements NodeStore<E> {
 
-    private Node<A> rootNode;
+    private Node<E> rootNode;
 
     public DefaultNodeStore() {
-//	this.rootNode = rootNode; // TODO
+	// this.rootNode = rootNode; // TODO
     }
 
     @Override
-    public Node<A> getNode(LowLevelBinding<A>[] bindings) {
+    public Node<E> getNode(LowLevelBinding<E>[] bindings) {
 	// fast track for the parameterless instance
 	if (bindings.length == 0) {
 	    return rootNode;
 	}
 	// retrieve the head of the array pointing to the first node we will use
-	Node<A> node = bindings[0].getBaseNode();
+	Node<E> node = bindings[0].getBaseNode();
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 1; i < bindings.length; i++) {
 	    // traverse the node tree until the parameter instance is fully realized
@@ -39,13 +43,13 @@ public class DefaultNodeStore<A> implements NodeStore<A> {
     }
 
     @Override
-    public Node<A> getNode(LowLevelBinding<A>[] bindings, int[] parameterMask) {
+    public Node<E> getNode(LowLevelBinding<E>[] bindings, int[] parameterMask) {
 	// fast track for the parameterless instance
 	if (parameterMask.length == 0) {
 	    return rootNode;
 	}
 	// retrieve the head of the array pointing to the first node we will use
-	Node<A> node = bindings[parameterMask[0]].getBaseNode();
+	Node<E> node = bindings[parameterMask[0]].getBaseNode();
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 1; i < parameterMask.length; i++) {
 	    // traverse the node tree until the parameter instance is fully realized

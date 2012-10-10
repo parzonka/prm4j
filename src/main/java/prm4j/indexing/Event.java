@@ -16,7 +16,7 @@ import prm4j.api.Symbol;
  * A event contains a {@link Symbol} and a number of {@link Binding}s.
  *
  * @param <E>
- *            the type of the base event processed by monitors
+ *            the type of base event processed by monitors
  */
 public class Event<E> {
 

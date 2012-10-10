@@ -21,20 +21,20 @@ import prm4j.logic.MonitorStateProvider;
 /**
  * A finite state automaton.
  *
- * @param <A>
- *            the type of the auxiliary data usable by base monitors
+ * @param <E>
+ *            the type of base event processed by monitors
  */
-public class FSM<A> implements MonitorStateProvider<A> {
+public class FSM<E> implements MonitorStateProvider<E> {
 
     private final Alphabet alphabet;
-    private final Set<FSMState<A>> states;
+    private final Set<FSMState<E>> states;
     private final Set<String> usedNames;
     private int stateCount = 0;
-    private FSMState<A> initialState;
+    private FSMState<E> initialState;
 
     public FSM(Alphabet alphabet) {
 	this.alphabet = alphabet;
-	this.states = new HashSet<FSMState<A>>();
+	this.states = new HashSet<FSMState<E>>();
 	this.usedNames = new HashSet<String>();
     }
 
@@ -43,7 +43,7 @@ public class FSM<A> implements MonitorStateProvider<A> {
      *
      * @return the created state
      */
-    public FSMState<A> createInitialState() {
+    public FSMState<E> createInitialState() {
 	if (this.initialState != null)
 	    throw new IllegalStateException("Initial state already created!");
 	this.initialState = createState("initial");
@@ -55,7 +55,7 @@ public class FSM<A> implements MonitorStateProvider<A> {
      *
      * @return the created state
      */
-    public FSMState<A> createState() {
+    public FSMState<E> createState() {
 	return createState(generateStateName());
     }
 
@@ -64,7 +64,7 @@ public class FSM<A> implements MonitorStateProvider<A> {
      *
      * @return the created state
      */
-    public FSMState<A> createState(String optionalName) {
+    public FSMState<E> createState(String optionalName) {
 	return createState(false, null, optionalName);
     }
 
@@ -73,7 +73,7 @@ public class FSM<A> implements MonitorStateProvider<A> {
      *
      * @return the created final state
      */
-    public FSMState<A> createFinalState(MatchHandler matchHandler) {
+    public FSMState<E> createFinalState(MatchHandler matchHandler) {
 	return createFinalState(matchHandler, generateFinalStateName());
     }
 
@@ -82,7 +82,7 @@ public class FSM<A> implements MonitorStateProvider<A> {
      *
      * @return the created state
      */
-    public FSMState<A> createFinalState(MatchHandler matchHandler, String optionalName) {
+    public FSMState<E> createFinalState(MatchHandler matchHandler, String optionalName) {
 	if (matchHandler == null) {
 	    throw new NullPointerException("MatchHandler may not be null!");
 	}
@@ -97,11 +97,11 @@ public class FSM<A> implements MonitorStateProvider<A> {
 	return "state " + this.stateCount + " (final)";
     }
 
-    private FSMState<A> createState(boolean isFinal, MatchHandler eventHandler, String name) {
+    private FSMState<E> createState(boolean isFinal, MatchHandler eventHandler, String name) {
 	if (this.usedNames.contains(name))
 	    throw new IllegalArgumentException("The name [" + name + "] has already been used!");
 	this.usedNames.add(name);
-	FSMState<A> state = new FSMState<A>(this.alphabet, false, eventHandler, name);
+	FSMState<E> state = new FSMState<E>(this.alphabet, false, eventHandler, name);
 	this.states.add(state);
 	this.stateCount++;
 	return state;
@@ -121,7 +121,7 @@ public class FSM<A> implements MonitorStateProvider<A> {
      *
      * @return an unmodifiable set of created states
      */
-    public Set<FSMState<A>> getStates() {
+    public Set<FSMState<E>> getStates() {
 	return this.states;
     }
 
@@ -149,7 +149,7 @@ public class FSM<A> implements MonitorStateProvider<A> {
      * @return the initial state
      */
     @Override
-    public FSMState<A> getInitialState() {
+    public FSMState<E> getInitialState() {
 	if (this.initialState == null)
 	    throw new IllegalStateException("No initial state created!");
 	return this.initialState;

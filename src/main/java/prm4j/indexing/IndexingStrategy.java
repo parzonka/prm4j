@@ -25,10 +25,10 @@ package prm4j.indexing;
  * Indexing is tricky to get both correct and efficient. Therefore there can be multiple different indexing strategies.
  * However, they all should be equivalent with respect to their externally visible behavior.
  *
- * @param <A>
- *            the type of the auxiliary data usable by base monitors
+ * @param <E>
+ *            the type of base event processed by monitors
  */
-public interface IndexingStrategy<A> {
+public interface IndexingStrategy<E> {
 
     /**
      * Update the internal state of all related monitors by sending the parameter event to the respective monitors.
@@ -38,6 +38,6 @@ public interface IndexingStrategy<A> {
      * @param binding
      *            The variable binding at this event.
      */
-    void processEvent(Event<A> event);
+    void processEvent(Event<E> event);
 
 }
