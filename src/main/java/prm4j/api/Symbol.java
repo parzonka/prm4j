@@ -14,11 +14,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import prm4j.indexing.BaseEvent;
+
 /**
  * Immutable.<br>
  * TODO ensure a symbol can be used only be one strategy
  */
-public abstract class Symbol {
+public abstract class Symbol implements BaseEvent {
 
     private final Alphabet alphabet;
     private final int index;
@@ -35,11 +37,7 @@ public abstract class Symbol {
 	this.parameterCount = parameterCount;
     }
 
-    /**
-     * Returns the unique index for this symbol.
-     *
-     * @return unique index number
-     */
+    @Override
     public int getIndex() {
 	return index;
     }
@@ -56,20 +54,12 @@ public abstract class Symbol {
 	boundObjects[parameter.getParameterId()] = object;
     }
 
-    /**
-     * Returns a immutable representation of the associated parameters for this symbol.
-     *
-     * @return immutable set of symbols
-     */
+    @Override
     public Set<Parameter<?>> getParameters() {
 	return Collections.unmodifiableSet(parameters);
     }
 
-    /**
-     * Returns the number of parameters which this symbol is able to bind.
-     *
-     * @return the parameter count
-     */
+    @Override
     public int getParameterCount() {
 	return parameterCount;
     }
