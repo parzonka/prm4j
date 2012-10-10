@@ -15,33 +15,21 @@ import prm4j.api.Symbol;
 /**
  * A event contains a {@link Symbol} and a number of {@link Binding}s.
  *
- * @param <A>
- *            the type of the auxiliary data usable by base monitors
+ * @param <E>
+ *            the type of the base event processed by monitors
  */
-public class Event<A> {
+public class Event<E> {
 
-    private final Symbol symbol;
-    private final A auxiliaryData;
+    private final E baseEvent;
     private final Object[] boundObjects;
 
-    public Event(Symbol symbol, Object[] parameterObjects) {
-	this.symbol = symbol;
-	this.auxiliaryData = null;
-	this.boundObjects = parameterObjects;
+    public Event(E baseEvent, Object[] parameterValues) {
+	this.baseEvent = baseEvent;
+	this.boundObjects = parameterValues;
     }
 
-    public Event(Symbol symbol, A auxiliaryData, Object[] parameterObjects) {
-	this.symbol = symbol;
-	this.auxiliaryData = auxiliaryData;
-	this.boundObjects = parameterObjects;
-    }
-
-    public Symbol getSymbol() {
-	return this.symbol;
-    }
-
-    public A getAuxiliaryData() {
-	return this.auxiliaryData;
+    public E getSymbol() {
+	return baseEvent;
     }
 
     public Object getBoundObject(int parameterId) {

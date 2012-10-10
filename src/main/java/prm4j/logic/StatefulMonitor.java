@@ -11,26 +11,25 @@
 package prm4j.logic;
 
 import prm4j.api.MatchHandler;
+import prm4j.api.Symbol;
 import prm4j.indexing.AbstractBaseMonitor;
 import prm4j.indexing.Event;
 
 /**
  * A base monitor holding a {@link MonitorState} which is updated when processing {@link Event}s.
  *
- * @param <A>
- *            the type of the auxiliary data usable by base monitors
  */
-public class StatefulMonitor<A> extends AbstractBaseMonitor<A> {
+public class StatefulMonitor extends AbstractBaseMonitor<Symbol> {
 
-    private MonitorState<A> state;
+    private MonitorState<Symbol> state;
 
-    public StatefulMonitor(MonitorState<A> state) {
+    public StatefulMonitor(MonitorState<Symbol> state) {
 	this.state = state;
     }
 
     @Override
-    public boolean processEvent(Event<A> event) {
-	this.state = state.getSuccessor(event.getSymbol());
+    public boolean processEvent(Symbol baseEvent) {
+	state = state.getSuccessor(baseEvent);
 	MatchHandler matchHandler = state.getMatchHandler();
 	if (matchHandler != null) {
 	    matchHandler.handleMatch(getBindings());
@@ -41,8 +40,8 @@ public class StatefulMonitor<A> extends AbstractBaseMonitor<A> {
     }
 
     @Override
-    public StatefulMonitor<A> copy() {
-	return new StatefulMonitor<A>(this.state);
+    public StatefulMonitor copy() {
+	return new StatefulMonitor(state);
     }
 
     @Override

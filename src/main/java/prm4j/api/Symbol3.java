@@ -29,20 +29,12 @@ public class Symbol3<P1, P2, P3> extends Symbol {
 	parameters.add(param3);
     }
 
-    public Event<Void> createEvent(P1 obj1, P2 obj2, P3 obj3) {
+    public Event<Symbol> createEvent(P1 obj1, P2 obj2, P3 obj3) {
 	Object[] boundObjects = createObjectArray();
 	bindObject(this.param1, obj1, boundObjects);
 	bindObject(this.param2, obj2, boundObjects);
 	bindObject(this.param3, obj3, boundObjects);
-	return new Event<Void>(this, boundObjects);
-    }
-
-    public <L> Event<L> createLabeledEvent(L label, P1 obj1, P2 obj2, P3 obj3) {
-	Object[] boundObjects = createObjectArray();
-	bindObject(this.param1, obj1, boundObjects);
-	bindObject(this.param2, obj2, boundObjects);
-	bindObject(this.param3, obj3, boundObjects);
-	return new Event<L>(this, label, boundObjects);
+	return new Event<Symbol>(this, boundObjects);
     }
 
 }

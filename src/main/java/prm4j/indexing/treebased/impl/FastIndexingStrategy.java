@@ -145,7 +145,7 @@ public class FastIndexingStrategy<A> implements IndexingStrategy<A> {
 	final AbstractBaseMonitor<A> newMonitor = oldMonitor.copy(newBindings);
 
 	// process the event immediately, instead of doing it in the batch update phase after expansion
-	if (!newMonitor.processEvent(event)) {
+	if (!newMonitor.processEvent(event.getSymbol())) {
 	    return false;
 	}
 
