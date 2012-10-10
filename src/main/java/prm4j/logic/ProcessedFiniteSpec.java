@@ -42,6 +42,14 @@ public class ProcessedFiniteSpec {
 	stateParameterCoEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(statePropertyCoEnableSets));
     }
 
+    /**
+     * Creation events are events for which the successor of the initial state is:
+     * <ul>
+     * <li>not a dead state</li>
+     * <li>not the initial state itself (self-loop)</li>
+     * </ul>
+     * @return the creation events
+     */
     private Set<BaseEvent> calculateCreationEvents() {
 	Set<BaseEvent> creationSymbols = new HashSet<BaseEvent>();
 	MonitorState initialState = finiteSpec.getInitialState();
@@ -132,6 +140,14 @@ public class ProcessedFiniteSpec {
 	return Collections.unmodifiableSet(maxSet);
     }
 
+    /**
+     * Creation events are events for which the successor of the initial state is:
+     * <ul>
+     * <li>not a dead state</li>
+     * <li>not the initial state itself (self-loop)</li>
+     * </ul>
+     * @return the creation events
+     */
     public Set<BaseEvent> getCreationEvents() {
 	return creationEvents;
     }
