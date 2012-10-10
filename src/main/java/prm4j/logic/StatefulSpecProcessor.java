@@ -19,16 +19,17 @@ import java.util.Set;
 
 import prm4j.api.Parameter;
 import prm4j.api.Symbol;
+import prm4j.indexing.BaseEvent;
 
 public class StatefulSpecProcessor {
 
     private final Map<Symbol, Set<Set<Symbol>>> propertyEnableSets;
     private final Map<Symbol, Set<Set<Parameter<?>>>> parameterEnableSets;
-    private final Map<MonitorState<?>, Set<Set<Symbol>>> statePropertyCoEnableSets;
-    private final Map<MonitorState<?>, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
-    private final MonitorState<?> initialState;
-    private final Set<MonitorState<?>> states;
-    private final Set<Symbol> symbols;
+    private final Map<MonitorState, Set<Set<Symbol>>> statePropertyCoEnableSets;
+    private final Map<MonitorState, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
+    private final MonitorState initialState;
+    private final Set<MonitorState> states;
+    private final Set<? extends BaseEvent> baseEvents;
 
     public StatefulSpecProcessor(StatefulSpec spec) {
 	propertyEnableSets = spec.getPropertyEnableSets();
@@ -37,7 +38,7 @@ public class StatefulSpecProcessor {
 	stateParameterCoEnableSets = toMap2SetOfSetOfParameters(statePropertyCoEnableSets);
 	initialState = spec.getInitialState();
 	states = spec.getStates();
-	symbols = spec.getSymbols();
+	baseEvents = spec.getBaseEvents();
     }
 
     private static <T> Map<T, Set<Set<Parameter<?>>>> toMap2SetOfSetOfParameters(
@@ -86,25 +87,25 @@ public class StatefulSpecProcessor {
 	return parameterEnableSets;
     }
 
-    public Map<MonitorState<?>, Set<Set<Symbol>>> getStatePropertyCoEnableSets() {
+    public Map<MonitorState, Set<Set<Symbol>>> getStatePropertyCoEnableSets() {
 	// state maps to all symbols, which have to be seen when accessing a error state
-	Map<MonitorState<?>, Set<Set<Symbol>>> result = new HashMap<MonitorState<?>, Set<Set<Symbol>>>();
-	for (MonitorState<?> state : states) {
+	Map<MonitorState, Set<Set<Symbol>>> result = new HashMap<MonitorState, Set<Set<Symbol>>>();
+	for (MonitorState state : states) {
 	    result.put(state, new HashSet<Set<Symbol>>());
 	}
 	return result;
     }
 
-    public Map<MonitorState<?>, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
+    public Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
 	return stateParameterCoEnableSets;
     }
 
-    public MonitorState<?> getInitialState() {
+    public MonitorState getInitialState() {
 	return initialState;
     }
 
-    public Set<Symbol> getSymbols() {
-	return symbols;
+    public Set<? extends BaseEvent> getBaseEvents() {
+	return baseEvents;
     }
 
 }

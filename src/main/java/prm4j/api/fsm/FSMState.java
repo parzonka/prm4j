@@ -14,55 +14,51 @@ package prm4j.api.fsm;
 import prm4j.api.Alphabet;
 import prm4j.api.MatchHandler;
 import prm4j.api.Symbol;
+import prm4j.indexing.BaseEvent;
 import prm4j.logic.MonitorState;
 
-/**
- * @param <E>
- *            the type of base event processed by monitors
- */
-public class FSMState<E> implements MonitorState<E> {
+public class FSMState implements MonitorState {
 
-    private FSMState<E>[] successorTable;
+    private FSMState[] successorTable;
     private final boolean isFinal;
     private final String label;// for display purposes only
     private final Alphabet alphabet;
     private final MatchHandler matchHandler;
 
-    @SuppressWarnings("unchecked")
     public FSMState(Alphabet alphabet, boolean isFinal, MatchHandler matchHandler, String label) {
 	this.isFinal = isFinal;
 	this.label = label;
 	this.alphabet = alphabet;
 	this.matchHandler = matchHandler;
-	this.successorTable = new FSMState[alphabet.size()];
+	successorTable = new FSMState[alphabet.size()];
     }
 
-    public void addTransition(Symbol symbol, FSMState<E> successor) {
-	assert this.successorTable[symbol.getIndex()] == null : "successor already set";
-	if (!this.alphabet.getSymbols().contains(symbol)) {
+    public void addTransition(Symbol symbol, FSMState successor) {
+	assert successorTable[symbol.getIndex()] == null : "successor already set";
+	if (!alphabet.getSymbols().contains(symbol)) {
 	    throw new IllegalArgumentException("Symbol for transition is not contained in alphabet!");
 	}
-	this.successorTable[symbol.getIndex()] = successor;
+	successorTable[symbol.getIndex()] = successor;
     }
 
     @Override
-    public MonitorState<E> getSuccessor(Symbol symbol) {
-	return this.successorTable[symbol.getIndex()];
+    public MonitorState getSuccessor(BaseEvent baseEvent) {
+	return successorTable[baseEvent.getIndex()];
     }
 
     @Override
     public String toString() {
-	return this.label;
+	return label;
     }
 
     @Override
     public boolean isFinal() {
-	return this.isFinal;
+	return isFinal;
     }
 
     @Override
     public MatchHandler getMatchHandler() {
-	return this.matchHandler;
+	return matchHandler;
     }
 
 }

@@ -21,9 +21,9 @@ import prm4j.indexing.Event;
  */
 public class StatefulMonitor extends AbstractBaseMonitor<Symbol> {
 
-    private MonitorState<Symbol> state;
+    private MonitorState state;
 
-    public StatefulMonitor(MonitorState<Symbol> state) {
+    public StatefulMonitor(MonitorState state) {
 	this.state = state;
     }
 

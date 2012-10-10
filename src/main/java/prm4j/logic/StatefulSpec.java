@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import prm4j.api.Symbol;
+import prm4j.indexing.BaseEvent;
 
 /**
  * A specification which can be implemented by classes which provide parameters, symbols and have a finite number of
@@ -26,16 +27,16 @@ public interface StatefulSpec {
      *
      * @return all symbols
      */
-    public Set<Symbol> getSymbols();
+    public Set<? extends BaseEvent> getBaseEvents();
 
     /**
      * Get all states.
      *
      * @return all states
      */
-    public Set<MonitorState<?>> getStates();
+    public Set<MonitorState> getStates();
 
-    public Set<Symbol> getCreationSymbols();
+    public Set<? extends BaseEvent> getCreationBaseEvents();
 
     /**
      * Returns the property enable set. It maps each symbol S into a set of symbol sets, where each symbol have to be
@@ -51,13 +52,13 @@ public interface StatefulSpec {
      *
      * @return the state co-enable set
      */
-    public Map<MonitorState<?>, Set<Set<Symbol>>> getStatePropertyCoEnableSets();
+    public Map<MonitorState, Set<Set<Symbol>>> getStatePropertyCoEnableSets();
 
     /**
      * Returns the initial state.
      *
      * @return the initial state
      */
-    public MonitorState<?> getInitialState();
+    public MonitorState getInitialState();
 
 }

@@ -11,15 +11,13 @@
 package prm4j.logic;
 
 import prm4j.api.MatchHandler;
-import prm4j.api.Symbol;
+import prm4j.indexing.BaseEvent;
 
 /**
- * @param <E>
- *            the type of base event processed by monitors
  */
-public interface MonitorState<E> {
+public interface MonitorState {
 
-    public abstract MonitorState<E> getSuccessor(Symbol symbol);
+    public abstract MonitorState getSuccessor(BaseEvent baseEvent);
 
     public abstract boolean isFinal();
 

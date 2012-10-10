@@ -39,13 +39,13 @@ public abstract class FSMDefinitions {
 	public final Symbol1<Map> updateMap = alphabet.createSymbol1("updateMap", m);
 	public final Symbol1<Iterator> useIter = alphabet.createSymbol1("useIter", i);
 
-	public final FSM<Void> fsm = new FSM<Void>(alphabet);
+	public final FSM fsm = new FSM(alphabet);
 
-	public final FSMState<Void> initial = fsm.createInitialState();
-	public final FSMState<Void> s1 = fsm.createState();
-	public final FSMState<Void> s2 = fsm.createState();
-	public final FSMState<Void> s3 = fsm.createState();
-	public final FSMState<Void> error = fsm.createFinalState(MatchHandler.NO_OP);
+	public final FSMState initial = fsm.createInitialState();
+	public final FSMState s1 = fsm.createState();
+	public final FSMState s2 = fsm.createState();
+	public final FSMState s3 = fsm.createState();
+	public final FSMState error = fsm.createFinalState(MatchHandler.NO_OP);
 
 	public FSM_unsafeMapIterator() {
 	    initial.addTransition(createColl, s1);
@@ -69,11 +69,11 @@ public abstract class FSMDefinitions {
 	public final Symbol0 a = alphabet.createSymbol0("a");
 	public final Symbol0 b = alphabet.createSymbol0("b");
 
-	public final FSM<Void> fsm = new FSM<Void>(alphabet);
+	public final FSM fsm = new FSM(alphabet);
 
-	public final FSMState<Void> initial = fsm.createInitialState();
-	public final FSMState<Void> s1 = fsm.createState();
-	public final FSMState<Void> error = fsm.createFinalState(MatchHandler.NO_OP);
+	public final FSMState initial = fsm.createInitialState();
+	public final FSMState s1 = fsm.createState();
+	public final FSMState error = fsm.createFinalState(MatchHandler.NO_OP);
 
 	public AbstractFSM_2symbols3states() {
 	    setupTransitions();
@@ -97,11 +97,11 @@ public abstract class FSMDefinitions {
 	public final Symbol1<String> e2 = alphabet.createSymbol1("e2", p2);
 	public final Symbol2<String, String> e3 = alphabet.createSymbol2("e3", p1, p2);
 
-	public final FSM<Void> fsm = new FSM<Void>(alphabet);
+	public final FSM fsm = new FSM(alphabet);
 
-	public final FSMState<Void> initial = fsm.createInitialState();
-	public final FSMState<Void> s1 = fsm.createState();
-	public final FSMState<Void> error = fsm.createFinalState(MatchHandler.NO_OP);
+	public final FSMState initial = fsm.createInitialState();
+	public final FSMState s1 = fsm.createState();
+	public final FSMState error = fsm.createFinalState(MatchHandler.NO_OP);
 
 	public FSM_e1e3() {
 	    initial.addTransition(e1, s1);

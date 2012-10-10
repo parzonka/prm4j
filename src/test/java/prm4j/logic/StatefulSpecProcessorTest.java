@@ -30,18 +30,18 @@ public class StatefulSpecProcessorTest extends AbstractTest {
 
     @Test
     public void accessors_unsafeMapIterator() throws Exception {
-	FSM<Void> fsm = new FSM_unsafeMapIterator().fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec<Void>(fsm));
+	FSM fsm = new FSM_unsafeMapIterator().fsm;
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
 
 	assertEquals(ssp.getInitialState(), fsm.getInitialState());
-	assertEquals(ssp.getSymbols(), fsm.getAlphabet().getSymbols());
+	assertEquals(ssp.getBaseEvents(), fsm.getAlphabet().getSymbols());
     }
 
     @Test
     public void getPropertyEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	FSM<Void> fsm = u.fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec<Void>(fsm));
+	FSM fsm = u.fsm;
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
 
 	Map<Symbol, Set<Set<Symbol>>> actual = ssp.getPropertyEnableSets();
 
@@ -64,8 +64,8 @@ public class StatefulSpecProcessorTest extends AbstractTest {
     @Test
     public void getParameterEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	FSM<Void> fsm = u.fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec<Void>(fsm));
+	FSM fsm = u.fsm;
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
 
 	Map<Symbol, Set<Set<Parameter<?>>>> actual = ssp.getParameterEnableSets();
 
@@ -85,13 +85,13 @@ public class StatefulSpecProcessorTest extends AbstractTest {
     @Test
     public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	FSM<Void> fsm = u.fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec<Void>(fsm));
+	FSM fsm = u.fsm;
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
 
-	Map<MonitorState<?>, Set<Set<Symbol>>> actual = ssp.getStatePropertyCoEnableSets();
+	Map<MonitorState, Set<Set<Symbol>>> actual = ssp.getStatePropertyCoEnableSets();
 
-	Map<MonitorState<?>, Set<Set<Symbol>>> expected = new HashMap<MonitorState<?>, Set<Set<Symbol>>>();
-	for (MonitorState<?> state : u.fsm.getStates()){
+	Map<MonitorState, Set<Set<Symbol>>> expected = new HashMap<MonitorState, Set<Set<Symbol>>>();
+	for (MonitorState state : u.fsm.getStates()){
 	    expected.put(state, new HashSet<Set<Symbol>>());
 	}
 	expected.get(u.initial).add(asSet(u.createColl, u.createIter, u.updateMap, u.useIter));

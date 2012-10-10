@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import prm4j.AbstractTest;
 import prm4j.api.Symbol;
+import prm4j.indexing.BaseEvent;
 import prm4j.logic.MonitorState;
 import prm4j.logic.StatefulSpec;
 
@@ -30,7 +31,7 @@ public class FSMSpecTest extends AbstractTest {
     @Test
     public void getPropertyEnableSet_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	StatefulSpec fsmSpec = new FSMSpec<Void>(u.fsm);
+	StatefulSpec fsmSpec = new FSMSpec(u.fsm);
 	Map<Symbol, Set<Set<Symbol>>> actual = fsmSpec.getPropertyEnableSets();
 
 	Map<Symbol, Set<Set<Symbol>>> expected = new HashMap<Symbol, Set<Set<Symbol>>>();
@@ -52,8 +53,8 @@ public class FSMSpecTest extends AbstractTest {
     @Test
     public void getCreationSymbols_unsafeMapIterator() {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	StatefulSpec fsmSpec = new FSMSpec<Void>(u.fsm);
-	Set<Symbol> actual = fsmSpec.getCreationSymbols();
+	StatefulSpec fsmSpec = new FSMSpec(u.fsm);
+	Set<? extends BaseEvent> actual = fsmSpec.getBaseEvents();
 
 	Set<Symbol> expected = new HashSet<Symbol>();
 	expected.add(u.createColl);
@@ -76,8 +77,8 @@ public class FSMSpecTest extends AbstractTest {
 	    }
 
 	};
-	StatefulSpec fsmSpec = new FSMSpec<Void>(u.fsm);
-	Set<Symbol> actual = fsmSpec.getCreationSymbols();
+	StatefulSpec fsmSpec = new FSMSpec(u.fsm);
+	Set<? extends BaseEvent> actual = fsmSpec.getBaseEvents();
 
 	Set<Symbol> expected = new HashSet<Symbol>();
 	expected.add(u.a);
@@ -97,8 +98,8 @@ public class FSMSpecTest extends AbstractTest {
 	    }
 
 	};
-	StatefulSpec fsmSpec = new FSMSpec<Void>(u.fsm);
-	Set<Symbol> actual = fsmSpec.getCreationSymbols();
+	StatefulSpec fsmSpec = new FSMSpec(u.fsm);
+	Set<? extends BaseEvent> actual = fsmSpec.getCreationBaseEvents();
 
 	Set<Symbol> expected = new HashSet<Symbol>();
 	expected.add(u.a);
@@ -110,13 +111,13 @@ public class FSMSpecTest extends AbstractTest {
     @Test
     public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	FSM<Void> fsm = u.fsm;
-	StatefulSpec fsmSpec = new FSMSpec<Void>(fsm);
+	FSM fsm = u.fsm;
+	StatefulSpec fsmSpec = new FSMSpec(fsm);
 
-	Map<MonitorState<?>, Set<Set<Symbol>>> actual = fsmSpec.getStatePropertyCoEnableSets();
+	Map<MonitorState, Set<Set<Symbol>>> actual = fsmSpec.getStatePropertyCoEnableSets();
 
-	Map<MonitorState<?>, Set<Set<Symbol>>> expected = new HashMap<MonitorState<?>, Set<Set<Symbol>>>();
-	for (MonitorState<?> state : u.fsm.getStates()) {
+	Map<MonitorState, Set<Set<Symbol>>> expected = new HashMap<MonitorState, Set<Set<Symbol>>>();
+	for (MonitorState state : u.fsm.getStates()) {
 	    expected.put(state, new HashSet<Set<Symbol>>());
 	}
 	expected.get(u.initial).add(asSet(u.createColl, u.createIter, u.updateMap, u.useIter));
