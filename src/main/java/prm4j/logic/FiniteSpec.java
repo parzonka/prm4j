@@ -12,12 +12,9 @@ package prm4j.logic;
 
 import java.util.Set;
 
-import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
 
 public interface FiniteSpec {
-
-    public Set<Parameter<?>> getParameter();
 
     public Set<? extends BaseEvent> getBaseEvents();
 
