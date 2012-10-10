@@ -26,6 +26,7 @@ import prm4j.indexing.BaseEvent;
 public class ProcessedFiniteSpec {
 
     private final FiniteSpec finiteSpec;
+    private final Set<BaseEvent> creationEvents;
     private final Map<BaseEvent, Set<Set<BaseEvent>>> propertyEnableSets;
     private final Map<BaseEvent, Set<Set<Parameter<?>>>> parameterEnableSets;
     private final Map<MonitorState, Set<Set<BaseEvent>>> statePropertyCoEnableSets;
@@ -33,11 +34,24 @@ public class ProcessedFiniteSpec {
 
     public ProcessedFiniteSpec(FiniteSpec finiteSpec) {
 	this.finiteSpec = finiteSpec;
+	creationEvents = calculateCreationEvents();
 	propertyEnableSets = Collections.unmodifiableMap(new PropertyEnableSetCalculator().getEnableSets());
 	parameterEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(propertyEnableSets));
 	// TODO statePropertyCoEnableSets
 	statePropertyCoEnableSets = Collections.unmodifiableMap(new HashMap<MonitorState, Set<Set<BaseEvent>>>());
 	stateParameterCoEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(statePropertyCoEnableSets));
+    }
+
+    private Set<BaseEvent> calculateCreationEvents() {
+	Set<BaseEvent> creationSymbols = new HashSet<BaseEvent>();
+	MonitorState initialState = finiteSpec.getInitialState();
+	for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
+	    MonitorState successor = initialState.getSuccessor(symbol);
+	    if (successor == null || !successor.equals(initialState)) {
+		creationSymbols.add(symbol);
+	    }
+	}
+	return creationSymbols;
     }
 
     private class PropertyEnableSetCalculator {
@@ -116,6 +130,10 @@ public class ProcessedFiniteSpec {
 	    }
 	}
 	return Collections.unmodifiableSet(maxSet);
+    }
+
+    public Set<BaseEvent> getCreationEvents() {
+	return creationEvents;
     }
 
     public Map<BaseEvent, Set<Set<BaseEvent>>> getPropertyEnableSets() {
