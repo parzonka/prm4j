@@ -35,7 +35,7 @@ public class ProcessedFiniteSpec {
     public ProcessedFiniteSpec(FiniteSpec finiteSpec) {
 	this.finiteSpec = finiteSpec;
 	creationEvents = calculateCreationEvents();
-	propertyEnableSets = Collections.unmodifiableMap(new PropertyEnableSetCalculator().getEnableSets());
+	propertyEnableSets = Collections.unmodifiableMap(new PropertyEnableSetCalculator().calculateEnableSets());
 	parameterEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(propertyEnableSets));
 	// TODO statePropertyCoEnableSets
 	statePropertyCoEnableSets = Collections.unmodifiableMap(new HashMap<MonitorState, Set<Set<BaseEvent>>>());
@@ -70,7 +70,7 @@ public class ProcessedFiniteSpec {
 	    }
 	}
 
-	public Map<BaseEvent, Set<Set<BaseEvent>>> getEnableSets() {
+	public Map<BaseEvent, Set<Set<BaseEvent>>> calculateEnableSets() {
 	    computeEnableSets(finiteSpec.getInitialState(), new HashSet<BaseEvent>());
 	    return enableSets;
 	}
