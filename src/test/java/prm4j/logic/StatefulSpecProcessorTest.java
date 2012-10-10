@@ -24,14 +24,15 @@ import prm4j.AbstractTest;
 import prm4j.api.Parameter;
 import prm4j.api.Symbol;
 import prm4j.api.fsm.FSM;
-import prm4j.api.fsm.FSMSpec_deprecated;
+import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.BaseEvent;
 
 public class StatefulSpecProcessorTest extends AbstractTest {
 
     @Test
     public void accessors_unsafeMapIterator() throws Exception {
 	FSM fsm = new FSM_unsafeMapIterator().fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec_deprecated(fsm));
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
 
 	assertEquals(ssp.getInitialState(), fsm.getInitialState());
 	assertEquals(ssp.getBaseEvents(), fsm.getAlphabet().getSymbols());
@@ -41,9 +42,9 @@ public class StatefulSpecProcessorTest extends AbstractTest {
     public void getPropertyEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec_deprecated(fsm));
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
 
-	Map<Symbol, Set<Set<Symbol>>> actual = ssp.getPropertyEnableSets();
+	Map<BaseEvent, Set<Set<BaseEvent>>> actual = ssp.getPropertyEnableSets();
 
 	Map<Symbol, Set<Set<Symbol>>> expected = new HashMap<Symbol, Set<Set<Symbol>>>();
 	for (Symbol symbol : u.alphabet.getSymbols()) {
@@ -65,9 +66,9 @@ public class StatefulSpecProcessorTest extends AbstractTest {
     public void getParameterEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec_deprecated(fsm));
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
 
-	Map<Symbol, Set<Set<Parameter<?>>>> actual = ssp.getParameterEnableSets();
+	Map<BaseEvent, Set<Set<Parameter<?>>>> actual = ssp.getParameterEnableSets();
 
 	Map<Symbol, Set<Set<Parameter<?>>>> expected = new HashMap<Symbol, Set<Set<Parameter<?>>>>();
 	for (Symbol symbol : u.alphabet.getSymbols()) {
@@ -86,12 +87,12 @@ public class StatefulSpecProcessorTest extends AbstractTest {
     public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
-	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec_deprecated(fsm));
+	StatefulSpecProcessor ssp = new StatefulSpecProcessor(new FSMSpec(fsm));
 
-	Map<MonitorState, Set<Set<Symbol>>> actual = ssp.getStatePropertyCoEnableSets();
+	Map<MonitorState, Set<Set<BaseEvent>>> actual = ssp.getStatePropertyCoEnableSets();
 
 	Map<MonitorState, Set<Set<Symbol>>> expected = new HashMap<MonitorState, Set<Set<Symbol>>>();
-	for (MonitorState state : u.fsm.getStates()){
+	for (MonitorState state : u.fsm.getStates()) {
 	    expected.put(state, new HashSet<Set<Symbol>>());
 	}
 	expected.get(u.initial).add(asSet(u.createColl, u.createIter, u.updateMap, u.useIter));
@@ -100,6 +101,7 @@ public class StatefulSpecProcessorTest extends AbstractTest {
 	expected.get(u.s3).add(asSet(u.useIter));
 	expected.get(u.error).add(Collections.<Symbol> emptySet());
 
+	// TODO failing test: implement functionality
 	assertEquals(expected, actual);
     }
 

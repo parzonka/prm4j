@@ -18,44 +18,83 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import prm4j.api.Parameter;
-import prm4j.api.Symbol;
 import prm4j.indexing.BaseEvent;
 
+/**
+ * Immutable calculation result.
+ */
 public class StatefulSpecProcessor {
 
-    private final Map<Symbol, Set<Set<Symbol>>> propertyEnableSets;
-    private final Map<Symbol, Set<Set<Parameter<?>>>> parameterEnableSets;
-    private final Map<MonitorState, Set<Set<Symbol>>> statePropertyCoEnableSets;
+    private final FiniteSpec finiteSpec;
+    private final Map<BaseEvent, Set<Set<BaseEvent>>> propertyEnableSets;
+    private final Map<BaseEvent, Set<Set<Parameter<?>>>> parameterEnableSets;
+    private final Map<MonitorState, Set<Set<BaseEvent>>> statePropertyCoEnableSets;
     private final Map<MonitorState, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
-    private final MonitorState initialState;
-    private final Set<MonitorState> states;
-    private final Set<? extends BaseEvent> baseEvents;
 
-    public StatefulSpecProcessor(StatefulSpec spec) {
-	propertyEnableSets = spec.getPropertyEnableSets();
-	parameterEnableSets = toMap2SetOfSetOfParameters(propertyEnableSets);
-	statePropertyCoEnableSets = spec.getStatePropertyCoEnableSets();
-	stateParameterCoEnableSets = toMap2SetOfSetOfParameters(statePropertyCoEnableSets);
-	initialState = spec.getInitialState();
-	states = spec.getStates();
-	baseEvents = spec.getBaseEvents();
+    public StatefulSpecProcessor(FiniteSpec finiteSpec) {
+	this.finiteSpec = finiteSpec;
+	propertyEnableSets = Collections.unmodifiableMap(new PropertyEnableSetCalculator().getEnableSets());
+	parameterEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(propertyEnableSets));
+	// TODO statePropertyCoEnableSets
+	statePropertyCoEnableSets = Collections.unmodifiableMap(new HashMap<MonitorState, Set<Set<BaseEvent>>>());
+	stateParameterCoEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(statePropertyCoEnableSets));
+    }
+
+    private class PropertyEnableSetCalculator {
+
+	private final Map<BaseEvent, Set<Set<BaseEvent>>> enableSets;
+	private final Map<MonitorState, Set<Set<BaseEvent>>> stateToSeenBaseEvents;
+
+	public PropertyEnableSetCalculator() {
+	    enableSets = new HashMap<BaseEvent, Set<Set<BaseEvent>>>();
+	    stateToSeenBaseEvents = new HashMap<MonitorState, Set<Set<BaseEvent>>>();
+	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
+		enableSets.put(baseEvent, new HashSet<Set<BaseEvent>>());
+	    }
+	    for (MonitorState state : finiteSpec.getStates()) {
+		stateToSeenBaseEvents.put(state, new HashSet<Set<BaseEvent>>());
+	    }
+	}
+
+	public Map<BaseEvent, Set<Set<BaseEvent>>> getEnableSets() {
+	    computeEnableSets(finiteSpec.getInitialState(), new HashSet<BaseEvent>());
+	    return enableSets;
+	}
+
+	private void computeEnableSets(MonitorState state, Set<BaseEvent> seenBaseEvents) {
+	    if (state == null)
+		throw new NullPointerException("state may not be null!");
+	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
+		if (state.getSuccessor(baseEvent) != null) {
+		    final Set<BaseEvent> seenBaseEventsWithoutSelfloop = new HashSet<BaseEvent>(seenBaseEvents);
+		    seenBaseEventsWithoutSelfloop.remove(baseEvent);
+		    enableSets.get(baseEvent).add(seenBaseEventsWithoutSelfloop);
+		    final Set<BaseEvent> nextSeenBaseEvents = new HashSet<BaseEvent>(seenBaseEvents);
+		    nextSeenBaseEvents.add(baseEvent);
+		    if (!stateToSeenBaseEvents.get(state).contains(nextSeenBaseEvents)) {
+			stateToSeenBaseEvents.get(state).add(nextSeenBaseEvents);
+			computeEnableSets(state.getSuccessor(baseEvent), nextSeenBaseEvents);
+		    }
+		}
+	    }
+	}
     }
 
     private static <T> Map<T, Set<Set<Parameter<?>>>> toMap2SetOfSetOfParameters(
-	    Map<T, Set<Set<Symbol>>> symbol2setOfSetOfSymbol) {
+	    Map<T, Set<Set<BaseEvent>>> baseEvent2setOfSetOfBaseEvent) {
 	Map<T, Set<Set<Parameter<?>>>> result = new HashMap<T, Set<Set<Parameter<?>>>>();
-	for (Entry<T, Set<Set<Symbol>>> entry : symbol2setOfSetOfSymbol.entrySet()) {
+	for (Entry<T, Set<Set<BaseEvent>>> entry : baseEvent2setOfSetOfBaseEvent.entrySet()) {
 	    result.put(entry.getKey(), toParameterSets(entry.getValue()));
 	}
 	return result;
     }
 
-    private static Set<Set<Parameter<?>>> toParameterSets(Set<Set<Symbol>> propertyEnableSet) {
+    private static Set<Set<Parameter<?>>> toParameterSets(Set<Set<BaseEvent>> propertyEnableSet) {
 	Set<Set<Parameter<?>>> result = new HashSet<Set<Parameter<?>>>();
-	for (Set<Symbol> set : propertyEnableSet) {
+	for (Set<BaseEvent> set : propertyEnableSet) {
 	    Set<Parameter<?>> parameterSet = new HashSet<Parameter<?>>();
-	    for (Symbol symbol : set) {
-		parameterSet.addAll(symbol.getParameters());
+	    for (BaseEvent baseEvent : set) {
+		parameterSet.addAll(baseEvent.getParameters());
 	    }
 	    result.add(parameterSet);
 	}
@@ -70,7 +109,7 @@ public class StatefulSpecProcessor {
     public Set<Parameter<?>> getLongestMatchingInstance() {
 	int maxSize = -1;
 	Set<Parameter<?>> maxSet = null;
-	for (Set<Parameter<?>> set : stateParameterCoEnableSets.get(initialState)) {
+	for (Set<Parameter<?>> set : stateParameterCoEnableSets.get(finiteSpec.getInitialState())) {
 	    if (maxSize < set.size()) {
 		maxSize = set.size();
 		maxSet = set;
@@ -79,21 +118,16 @@ public class StatefulSpecProcessor {
 	return Collections.unmodifiableSet(maxSet);
     }
 
-    public Map<Symbol, Set<Set<Symbol>>> getPropertyEnableSets() {
+    public Map<BaseEvent, Set<Set<BaseEvent>>> getPropertyEnableSets() {
 	return propertyEnableSets;
     }
 
-    public Map<Symbol, Set<Set<Parameter<?>>>> getParameterEnableSets() {
+    public Map<BaseEvent, Set<Set<Parameter<?>>>> getParameterEnableSets() {
 	return parameterEnableSets;
     }
 
-    public Map<MonitorState, Set<Set<Symbol>>> getStatePropertyCoEnableSets() {
-	// state maps to all symbols, which have to be seen when accessing a error state
-	Map<MonitorState, Set<Set<Symbol>>> result = new HashMap<MonitorState, Set<Set<Symbol>>>();
-	for (MonitorState state : states) {
-	    result.put(state, new HashSet<Set<Symbol>>());
-	}
-	return result;
+    public Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets() {
+	return statePropertyCoEnableSets;
     }
 
     public Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
@@ -101,11 +135,11 @@ public class StatefulSpecProcessor {
     }
 
     public MonitorState getInitialState() {
-	return initialState;
+	return finiteSpec.getInitialState();
     }
 
     public Set<? extends BaseEvent> getBaseEvents() {
-	return baseEvents;
+	return finiteSpec.getBaseEvents();
     }
 
 }
