@@ -18,7 +18,7 @@ public interface FiniteSpec {
 
     public Set<? extends BaseEvent> getBaseEvents();
 
-    public Set<MonitorState> getStates();
+    public Set<? extends MonitorState> getStates();
 
     public MonitorState getInitialState();
 
