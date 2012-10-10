@@ -21,9 +21,9 @@ import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
 
 /**
- * Immutable calculation result.
+ * Immutable self-calculating data object.
  */
-public class StatefulSpecProcessor {
+public class ProcessedFiniteSpec {
 
     private final FiniteSpec finiteSpec;
     private final Map<BaseEvent, Set<Set<BaseEvent>>> propertyEnableSets;
@@ -31,7 +31,7 @@ public class StatefulSpecProcessor {
     private final Map<MonitorState, Set<Set<BaseEvent>>> statePropertyCoEnableSets;
     private final Map<MonitorState, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
 
-    public StatefulSpecProcessor(FiniteSpec finiteSpec) {
+    public ProcessedFiniteSpec(FiniteSpec finiteSpec) {
 	this.finiteSpec = finiteSpec;
 	propertyEnableSets = Collections.unmodifiableMap(new PropertyEnableSetCalculator().getEnableSets());
 	parameterEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(propertyEnableSets));
