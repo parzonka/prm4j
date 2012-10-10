@@ -35,8 +35,7 @@ public class StatefulMonitor<A> extends AbstractBaseMonitor<A> {
 	if (matchHandler != null) {
 	    matchHandler.handleMatch(getBindings());
 	    // when a state is a final state it is still possible we will reach another final state (or loop on the a
-	    // final state)
-	    return true;
+	    // final state), so we don't return false here
 	}
 	return true;
     }
