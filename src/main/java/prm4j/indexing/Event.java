@@ -28,7 +28,7 @@ public class Event<E> {
 	this.boundObjects = parameterValues;
     }
 
-    public E getSymbol() {
+    public E getBaseEvent() {
 	return baseEvent;
     }
 
