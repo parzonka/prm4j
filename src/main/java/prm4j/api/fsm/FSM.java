@@ -16,12 +16,11 @@ import java.util.Set;
 
 import prm4j.api.Alphabet;
 import prm4j.api.MatchHandler;
-import prm4j.logic.MonitorStateProvider;
 
 /**
  * A finite state automaton.
  */
-public class FSM implements MonitorStateProvider {
+public class FSM {
 
     private final Alphabet alphabet;
     private final Set<FSMState> states;
@@ -145,7 +144,6 @@ public class FSM implements MonitorStateProvider {
      *
      * @return the initial state
      */
-    @Override
     public FSMState getInitialState() {
 	if (initialState == null)
 	    throw new IllegalStateException("No initial state created!");
