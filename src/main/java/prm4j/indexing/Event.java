@@ -10,10 +10,9 @@
  */
 package prm4j.indexing;
 
-import prm4j.api.Symbol;
 
 /**
- * A event contains a {@link Symbol} and a number of {@link Binding}s.
+ * An event contains a generic base event and a number of {@link Binding}s.
  *
  * @param <E>
  *            the type of base event processed by monitors
