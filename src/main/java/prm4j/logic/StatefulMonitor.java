@@ -13,10 +13,9 @@ package prm4j.logic;
 import prm4j.api.MatchHandler;
 import prm4j.api.Symbol;
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.indexing.Event;
 
 /**
- * A base monitor holding a {@link MonitorState} which is updated when processing {@link Event}s.
+ * A base monitor holding a {@link MonitorState} which is updated when processing {@link Symbol}s.
  *
  */
 public class StatefulMonitor extends AbstractBaseMonitor<Symbol> {
