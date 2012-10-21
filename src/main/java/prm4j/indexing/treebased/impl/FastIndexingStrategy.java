@@ -57,9 +57,9 @@ public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
 	final Node<E> compatibleNode = nodeStore.getNode(bindings, joinData.getNodeMask());
 	// calculate once the bindings to be joined with the whole monitor set
 	final LowLevelBinding<E>[] joinableBindings = getJoinableBindings(bindings, joinData.getExtensionPattern());
-	for (int parameterSetId : joinData.getMonitorSetIds()) {
+	for (int monitorSetId : joinData.getMonitorSetIds()) {
 	    // iterate over all compatible nodes
-	    final MonitorSetIterator<E> iter = compatibleNode.getMonitorSet(parameterSetId).getIterator();
+	    final MonitorSetIterator<E> iter = compatibleNode.getMonitorSet(monitorSetId).getIterator();
 	    AbstractBaseMonitor<E> compatibleMonitor = null;
 	    boolean isCompatibleMonitorAlive = false;
 	    while (iter.hasNext(compatibleMonitor, isCompatibleMonitorAlive)) {
@@ -189,10 +189,10 @@ public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
 	final LowLevelBinding<E>[] bindings = monitor.getLowLevelBindings();
 
 	for (ChainingData chainingData : node.getNodeContext().getChainingData()) {
-	    Node<E> lessInformativeNode = nodeStore.getNode(bindings, chainingData.getParameterMask());
-	    // parameterSetId == 0 selects the set of strictly more informative instance monitors
-	    for (int parameterSetId : chainingData.getParameterSetIds()) {
-		lessInformativeNode.getMonitorSet(parameterSetId).add(monitor);
+	    Node<E> lessInformativeNode = nodeStore.getNode(bindings, chainingData.getNodeMask());
+	    // monitorSetId == 0 selects the set of strictly more informative instance monitors
+	    for (int monitorSetId : chainingData.getMonitorSetIds()) {
+		lessInformativeNode.getMonitorSet(monitorSetId).add(monitor);
 	    }
 	}
     }
