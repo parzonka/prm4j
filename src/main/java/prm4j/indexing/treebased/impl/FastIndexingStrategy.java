@@ -73,20 +73,22 @@ public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
     /**
      * Returns an array of bindings containing "gaps" enabling efficient joins by filling these gaps.
      *
-     * @param binding
-     * @param expansionPattern
-     *            allows transformation of the binding to a joinable binding
-     * @return a joinable binding
+     * @param bindings
+     * @param extensionPattern
+     *            allows transformation of the bindings to joinable bindings
+     * @return joinable bindings
      */
-    static <E> LowLevelBinding<E>[] getJoinableBindings(LowLevelBinding<E>[] binding, int[] expansionPattern) {
+    static <E> LowLevelBinding<E>[] getJoinableBindings(LowLevelBinding<E>[] bindings, boolean[] extensionPattern) {
 	@SuppressWarnings("unchecked")
-	final LowLevelBinding<E>[] result = new LowLevelBinding[expansionPattern.length];
-	for (int i = 0; i < expansionPattern.length; i++) {
-	    final int destination = expansionPattern[i];
-	    if (destination >= 0) // pointers to -1 encode null in the result
-		result[i] = binding[destination];
+	final LowLevelBinding<E>[] joinableBindings = new LowLevelBinding[extensionPattern.length];
+	int sourceIndex = 0;
+	for (int i = 0; i < extensionPattern.length; i++) {
+	    if (extensionPattern[i]) {
+		joinableBindings[i] = bindings[sourceIndex++];
+	    }
 	}
-	return result;
+	assert sourceIndex == bindings.length : "All bindings have to be taken into account.";
+	return joinableBindings;
     }
 
     /**
