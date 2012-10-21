@@ -74,15 +74,15 @@ public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
      * Returns an array of bindings containing "gaps" enabling efficient joins by filling these gaps.
      *
      * @param binding
-     * @param joinTargetPattern
+     * @param expansionPattern
      *            allows transformation of the binding to a joinable binding
      * @return a joinable binding
      */
-    static <E> LowLevelBinding<E>[] getJoinableBindings(LowLevelBinding<E>[] binding, int[] joinTargetPattern) {
+    static <E> LowLevelBinding<E>[] getJoinableBindings(LowLevelBinding<E>[] binding, int[] expansionPattern) {
 	@SuppressWarnings("unchecked")
-	final LowLevelBinding<E>[] result = new LowLevelBinding[joinTargetPattern.length];
-	for (int i = 0; i < joinTargetPattern.length; i++) {
-	    final int destination = joinTargetPattern[i];
+	final LowLevelBinding<E>[] result = new LowLevelBinding[expansionPattern.length];
+	for (int i = 0; i < expansionPattern.length; i++) {
+	    final int destination = expansionPattern[i];
 	    if (destination >= 0) // pointers to -1 encode null in the result
 		result[i] = binding[destination];
 	}
@@ -105,7 +105,7 @@ public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
      *            bindings which reserved space for the join
      * @param rootNode
      *            the node associated with the parameterless instance
-     * @param joinSourcePattern
+     * @param copyPattern
      *            integer pattern to perform an efficient join operation
      * @param event
      *            the current event
@@ -115,7 +115,7 @@ public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
      *         In case of <code>false</code>, no new monitor will be stored, because it would be dead from the start.
      */
     protected boolean expand(AbstractBaseMonitor<E> oldMonitor, LowLevelBinding<E>[] joinableBindings,
-	    int[] joinSourcePattern, int[] disableMask, Event<E> event) {
+	    int[] copyPattern, int[] diffMask, Event<E> event) {
 
 	// OPTIONAL: Uses co-enable set: check if old monitor is alive
 	if (!oldMonitor.isFinalStateReachable()) {
@@ -126,7 +126,7 @@ public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
 	}
 
 	// OPTIONAL: Uses enable set
-	for (int paramId : disableMask) {
+	for (int paramId : diffMask) {
 	    if (joinableBindings[paramId].getDisable() > oldMonitor.getTau()
 		    || (joinableBindings[paramId].getTau() > 0 && joinableBindings[paramId].getTau() < oldMonitor
 			    .getTau())) {
@@ -137,7 +137,7 @@ public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
 
 	// create a duplicate of the joinableBindings which will be set in the new monitor
 	final LowLevelBinding<E>[] newBindings = createJoin(joinableBindings, oldMonitor.getLowLevelBindings(),
-		joinSourcePattern);
+		copyPattern);
 
 	// traverse to the last node, it will be created on the fly if not existent
 	final Node<E> lastNode = nodeStore.getNode(newBindings);
@@ -170,13 +170,13 @@ public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
 
     @SuppressWarnings("unchecked")
     private LowLevelBinding<E>[] createJoin(LowLevelBinding<E>[] joinableBindings,
-	    LowLevelBinding<E>[] joiningBindings, int[] joinSourcePattern) {
+	    LowLevelBinding<E>[] joiningBindings, int[] copyPattern) {
 	final LowLevelBinding<E>[] newBindings = new LowLevelBinding[joinableBindings.length];
 	System.arraycopy(joinableBindings, 0, newBindings, 0, joinableBindings.length);
 	// fill in the missing bindings into the duplicate from the old monitor
-	for (int j = 0; j < joinSourcePattern.length; j += 2) {
+	for (int j = 0; j < copyPattern.length; j += 2) {
 	    // copy from j to j+1
-	    newBindings[joinSourcePattern[j + 1]] = joiningBindings[joinSourcePattern[j]];
+	    newBindings[copyPattern[j + 1]] = joiningBindings[copyPattern[j]];
 	}
 	return newBindings;
     }
