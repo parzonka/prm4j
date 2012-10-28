@@ -24,7 +24,7 @@ import prm4j.indexing.BaseEvent;
 /**
  * Immutable self-calculating data object.
  */
-public class ProcessedFiniteSpec implements ParametricProperty{
+public class ParametricPropertyImpl implements ParametricProperty {
 
     private final FiniteSpec finiteSpec;
     private final Set<BaseEvent> creationEvents;
@@ -32,10 +32,16 @@ public class ProcessedFiniteSpec implements ParametricProperty{
     private final Map<BaseEvent, Set<Set<Parameter<?>>>> parameterEnableSets;
     private final Map<MonitorState, Set<Set<BaseEvent>>> statePropertyCoEnableSets;
     private final Map<MonitorState, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
+    private Set<BaseEvent> disablingEvents;
+    private Map<BaseEvent, List<ParameterSet>> enablingInstances;
+    private Map<BaseEvent, List<ParameterSetTuple>> joinableInstances;
+    private Map<ParameterSet, Set<ParameterSetTuple>> chainableInstances;
+    private Map<ParameterSet, Set<ParameterSet>> monitorSets;
 
-    public ProcessedFiniteSpec(FiniteSpec finiteSpec) {
+    public ParametricPropertyImpl(FiniteSpec finiteSpec) {
 	this.finiteSpec = finiteSpec;
 	creationEvents = calculateCreationEvents();
+	calculateRelations();
 	propertyEnableSets = Collections.unmodifiableMap(new PropertyEnableSetCalculator().calculateEnableSets());
 	parameterEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(propertyEnableSets));
 	// TODO statePropertyCoEnableSets
@@ -49,6 +55,7 @@ public class ProcessedFiniteSpec implements ParametricProperty{
      * <li>not a dead state</li>
      * <li>not the initial state itself (self-loop)</li>
      * </ul>
+     *
      * @return the creation events
      */
     private Set<BaseEvent> calculateCreationEvents() {
@@ -62,6 +69,16 @@ public class ProcessedFiniteSpec implements ParametricProperty{
 	}
 	return creationSymbols;
     }
+
+    private void calculateRelations() {
+  	Set<ParameterSetTuple> temp = new HashSet<ParameterSetTuple>(); // line 2
+  	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // line 3
+  	    Set<Parameter<?>> parameters = baseEvent.getParameters(); // line 4
+  	    for (BaseEvent baseEvent2 : finiteSpec.getBaseEvents()) {
+	    }
+	}
+
+      }
 
     private class PropertyEnableSetCalculator {
 
@@ -149,32 +166,51 @@ public class ProcessedFiniteSpec implements ParametricProperty{
 
     @Override
     public Set<BaseEvent> getDisablingEvents() {
-	// TODO Auto-generated method stub
-	return null;
+	return disablingEvents;
     }
 
     @Override
     public Map<BaseEvent, List<ParameterSet>> getEnablingInstances() {
-	// TODO Auto-generated method stub
-	return null;
+	return enablingInstances;
     }
 
     @Override
     public Map<BaseEvent, List<ParameterSetTuple>> getJoinableInstances() {
-	// TODO Auto-generated method stub
-	return null;
+	return joinableInstances;
     }
 
     @Override
     public Map<ParameterSet, Set<ParameterSetTuple>> getChainableSubinstances() {
-	// TODO Auto-generated method stub
-	return null;
+	return chainableInstances;
     }
 
     @Override
     public Map<ParameterSet, Set<ParameterSet>> getMonitorSets() {
-	// TODO Auto-generated method stub
-	return null;
+	return monitorSets;
+    }
+
+    Map<BaseEvent, Set<Set<BaseEvent>>> getPropertyEnableSets() {
+	return propertyEnableSets;
+    }
+
+    Map<BaseEvent, Set<Set<Parameter<?>>>> getParameterEnableSets() {
+	return parameterEnableSets;
+    }
+
+    Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets() {
+	return statePropertyCoEnableSets;
+    }
+
+    Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
+	return stateParameterCoEnableSets;
+    }
+
+    MonitorState getInitialState() {
+	return finiteSpec.getInitialState();
+    }
+
+    Set<? extends BaseEvent> getBaseEvents() {
+	return finiteSpec.getBaseEvents();
     }
 
 }
