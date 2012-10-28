@@ -10,6 +10,7 @@
  */
 package prm4j.logic;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,8 +19,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import static prm4j.logic.SetUtil.*;
+
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
+import prm4j.logic.SetUtil.Tuple;
 
 /**
  * Immutable self-calculating data object.
@@ -70,16 +74,6 @@ public class ParametricPropertyImpl implements ParametricProperty {
 	return creationSymbols;
     }
 
-    private void calculateRelations() {
-  	Set<ParameterSetTuple> temp = new HashSet<ParameterSetTuple>(); // line 2
-  	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // line 3
-  	    Set<Parameter<?>> parameters = baseEvent.getParameters(); // line 4
-  	    for (BaseEvent baseEvent2 : finiteSpec.getBaseEvents()) {
-	    }
-	}
-
-      }
-
     private class PropertyEnableSetCalculator {
 
 	private final Map<BaseEvent, Set<Set<BaseEvent>>> enableSets;
@@ -118,7 +112,6 @@ public class ParametricPropertyImpl implements ParametricProperty {
 		}
 	    }
 	}
-
     }
 
     private static <T> Map<T, Set<Set<Parameter<?>>>> toMap2SetOfSetOfParameters(
@@ -141,6 +134,39 @@ public class ParametricPropertyImpl implements ParametricProperty {
 	}
 	return result;
     }
+
+    private void calculateRelations() { // 1
+   	Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> temp = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>(); // 2
+   	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
+   	    Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
+   	    for (BaseEvent baseEvent2 : finiteSpec.getBaseEvents()) { // 5
+   		Set<Parameter<?>> parameterSet2 = baseEvent2.getParameters(); // 5
+   		if (SetUtil.isSubset(parameterSet2, parameterSet)) { // 6
+   		    temp.add(SetUtil.tuple(parameterSet2, parameterSet)); // 7
+   		} // 8
+   	    } // 9
+   	    List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
+   		    parameterEnableSets.get(baseEvent)); // 10
+   	    Collections.sort(enableSetInReverseTopolicalOrdering, SetUtil.REVERSE_TOPOLOGICAL_SET_COMPARATOR); // 10
+   	    for (Set<Parameter<?>> enablingParameterSet : enableSetInReverseTopolicalOrdering) { // 10
+   		if (isSubset(enablingParameterSet, parameterSet)) { // 11
+   		    enablingInstances.get(baseEvent).add(enablingParameterSet); // 12
+   		} else {
+   		    Set<Parameter<?>> compatibleSubset = intersection(parameterSet, enablingParameterSet); // 14
+   		    joinableInstances.get(baseEvent).add(tuple(compatibleSubset, enablingParameterSet)); // 15
+   		    chainableInstances.get(enablingParameterSet).add(tuple(compatibleSubset, enablingParameterSet)); // 16
+   		    monitorSets.get(compatibleSubset).add(enablingParameterSet); // 17
+   		} // 18
+   	    } // 19
+   	} // 20
+   	final Set<Parameter<?>> emptySet = new HashSet<Parameter<?>>();
+   	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : temp) { // 21
+   	    if (!monitorSets.get(tuple.getLeft()).contains(tuple.getRight())) { // 22
+   		chainableInstances.get(tuple.getRight()).add(tuple(tuple.getLeft(), emptySet)); // 23
+   		monitorSets.get(tuple.getLeft()).add(emptySet); // 24
+   	    } // 25
+   	} // 26
+       } // 27
 
     /**
      * Calculate the largest set of parameters which is needed to trigger a match.
