@@ -190,9 +190,7 @@ public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
 	for (ChainingData chainingData : node.getNodeContext().getChainingData()) {
 	    Node<E> lessInformativeNode = nodeStore.getNode(bindings, chainingData.getNodeMask());
 	    // monitorSetId == 0 selects the set of strictly more informative instance monitors
-	    for (int monitorSetId : chainingData.getMonitorSetIds()) {
-		lessInformativeNode.getMonitorSet(monitorSetId).add(monitor);
-	    }
+	    lessInformativeNode.getMonitorSet(chainingData.getMonitorSetId()).add(monitor);
 	}
     }
 

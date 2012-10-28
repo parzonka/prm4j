@@ -17,20 +17,20 @@ package prm4j.logic.treebased;
 public class ChainingData {
 
     private final int[] nodeMask;
-    private final int[] monitorSetIds;
+    private final int monitorSetId;
 
-    public ChainingData(int[] nodeMask, int[] monitorSetIds) {
+    public ChainingData(int[] nodeMask, int monitorSetId) {
 	super();
 	this.nodeMask = nodeMask;
-	this.monitorSetIds = monitorSetIds;
+	this.monitorSetId = monitorSetId;
     }
 
     public int[] getNodeMask() {
 	return nodeMask;
     }
 
-    public int[] getMonitorSetIds() {
-	return monitorSetIds;
+    public int getMonitorSetId() {
+	return monitorSetId;
     }
 
 }
