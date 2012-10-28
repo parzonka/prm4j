@@ -10,6 +10,10 @@
  */
 package prm4j.logic;
 
+import static prm4j.logic.SetUtil.intersection;
+import static prm4j.logic.SetUtil.isSubset;
+import static prm4j.logic.SetUtil.tuple;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,11 +23,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import static prm4j.logic.SetUtil.*;
-
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
 import prm4j.logic.SetUtil.Tuple;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimap;
 
 /**
  * Immutable self-calculating data object.
@@ -37,17 +44,17 @@ public class ParametricPropertyImpl implements ParametricProperty {
     private final Map<MonitorState, Set<Set<BaseEvent>>> statePropertyCoEnableSets;
     private final Map<MonitorState, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
     private Set<BaseEvent> disablingEvents;
-    private Map<BaseEvent, List<Set<Parameter<?>>>> enablingInstances;
-    private Map<BaseEvent, List<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>> joinableInstances;
-    private Map<Set<Parameter<?>>, Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>> chainableInstances;
-    private Map<Set<Parameter<?>>, Set<Set<Parameter<?>>>> monitorSets;
+    private ListMultimap<BaseEvent, Set<Parameter<?>>> enablingInstances;
+    private ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinableInstances;
+    private Multimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainableInstances;
+    private Multimap<Set<Parameter<?>>, Set<Parameter<?>>> monitorSets;
 
     public ParametricPropertyImpl(FiniteSpec finiteSpec) {
 	this.finiteSpec = finiteSpec;
 	creationEvents = calculateCreationEvents();
-	calculateRelations();
 	propertyEnableSets = Collections.unmodifiableMap(new PropertyEnableSetCalculator().calculateEnableSets());
 	parameterEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(propertyEnableSets));
+	calculateRelations();
 	// TODO statePropertyCoEnableSets
 	statePropertyCoEnableSets = Collections.unmodifiableMap(new HashMap<MonitorState, Set<Set<BaseEvent>>>());
 	stateParameterCoEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(statePropertyCoEnableSets));
@@ -136,37 +143,41 @@ public class ParametricPropertyImpl implements ParametricProperty {
     }
 
     private void calculateRelations() { // 1
-   	Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> temp = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>(); // 2
-   	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
-   	    Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
-   	    for (BaseEvent baseEvent2 : finiteSpec.getBaseEvents()) { // 5
-   		Set<Parameter<?>> parameterSet2 = baseEvent2.getParameters(); // 5
-   		if (SetUtil.isSubset(parameterSet2, parameterSet)) { // 6
-   		    temp.add(SetUtil.tuple(parameterSet2, parameterSet)); // 7
-   		} // 8
-   	    } // 9
-   	    List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
-   		    parameterEnableSets.get(baseEvent)); // 10
-   	    Collections.sort(enableSetInReverseTopolicalOrdering, SetUtil.REVERSE_TOPOLOGICAL_SET_COMPARATOR); // 10
-   	    for (Set<Parameter<?>> enablingParameterSet : enableSetInReverseTopolicalOrdering) { // 10
-   		if (isSubset(enablingParameterSet, parameterSet)) { // 11
-   		    enablingInstances.get(baseEvent).add(enablingParameterSet); // 12
-   		} else {
-   		    Set<Parameter<?>> compatibleSubset = intersection(parameterSet, enablingParameterSet); // 14
-   		    joinableInstances.get(baseEvent).add(tuple(compatibleSubset, enablingParameterSet)); // 15
-   		    chainableInstances.get(enablingParameterSet).add(tuple(compatibleSubset, enablingParameterSet)); // 16
-   		    monitorSets.get(compatibleSubset).add(enablingParameterSet); // 17
-   		} // 18
-   	    } // 19
-   	} // 20
-   	final Set<Parameter<?>> emptySet = new HashSet<Parameter<?>>();
-   	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : temp) { // 21
-   	    if (!monitorSets.get(tuple.getLeft()).contains(tuple.getRight())) { // 22
-   		chainableInstances.get(tuple.getRight()).add(tuple(tuple.getLeft(), emptySet)); // 23
-   		monitorSets.get(tuple.getLeft()).add(emptySet); // 24
-   	    } // 25
-   	} // 26
-       } // 27
+	enablingInstances = ArrayListMultimap.create();
+	joinableInstances = ArrayListMultimap.create();
+	chainableInstances = HashMultimap.create();
+	monitorSets = HashMultimap.create();
+	Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> temp = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>(); // 2
+	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
+	    Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
+	    for (BaseEvent baseEvent2 : finiteSpec.getBaseEvents()) { // 5
+		Set<Parameter<?>> parameterSet2 = baseEvent2.getParameters(); // 5
+		if (SetUtil.isSubset(parameterSet2, parameterSet)) { // 6
+		    temp.add(SetUtil.tuple(parameterSet2, parameterSet)); // 7
+		} // 8
+	    } // 9
+	    List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
+		    parameterEnableSets.get(baseEvent)); // 10
+	    Collections.sort(enableSetInReverseTopolicalOrdering, SetUtil.REVERSE_TOPOLOGICAL_SET_COMPARATOR); // 10
+	    for (Set<Parameter<?>> enablingParameterSet : enableSetInReverseTopolicalOrdering) { // 10
+		if (isSubset(enablingParameterSet, parameterSet)) { // 11
+		    enablingInstances.get(baseEvent).add(enablingParameterSet); // 12
+		} else { // 13
+		    Set<Parameter<?>> compatibleSubset = intersection(parameterSet, enablingParameterSet); // 14
+		    joinableInstances.put(baseEvent, tuple(compatibleSubset, enablingParameterSet)); // 15
+		    chainableInstances.put(enablingParameterSet, tuple(compatibleSubset, enablingParameterSet)); // 16
+		    monitorSets.put(compatibleSubset, enablingParameterSet); // 17
+		} // 18
+	    } // 19
+	} // 20
+	final Set<Parameter<?>> emptySet = new HashSet<Parameter<?>>();
+	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : temp) { // 21
+	    if (!monitorSets.get(tuple.getLeft()).contains(tuple.getRight())) { // 22
+		chainableInstances.get(tuple.getRight()).add(tuple(tuple.getLeft(), emptySet)); // 23
+		monitorSets.get(tuple.getLeft()).add(emptySet); // 24
+	    } // 25
+	} // 26
+    } // 27
 
     /**
      * Calculate the largest set of parameters which is needed to trigger a match.
@@ -196,22 +207,22 @@ public class ParametricPropertyImpl implements ParametricProperty {
     }
 
     @Override
-    public Map<BaseEvent, List<Set<Parameter<?>>>> getEnablingInstances() {
+    public ListMultimap<BaseEvent, Set<Parameter<?>>> getEnablingInstances() {
 	return enablingInstances;
     }
 
     @Override
-    public Map<BaseEvent, List<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>> getJoinableInstances() {
+    public ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinableInstances() {
 	return joinableInstances;
     }
 
     @Override
-    public Map<Set<Parameter<?>>, Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>> getChainableSubinstances() {
+    public Multimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainableSubinstances() {
 	return chainableInstances;
     }
 
     @Override
-    public Map<Set<Parameter<?>>, Set<Set<Parameter<?>>>> getMonitorSets() {
+    public Multimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSets() {
 	return monitorSets;
     }
 

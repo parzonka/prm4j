@@ -10,13 +10,14 @@
  */
 package prm4j.logic;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
 import prm4j.logic.SetUtil.Tuple;
+
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimap;
 
 public interface ParametricProperty {
 
@@ -35,21 +36,21 @@ public interface ParametricProperty {
     /**
      * @return mapping of base events to a list of subinstances in its enabling set
      */
-    public Map<BaseEvent, List<Set<Parameter<?>>>> getEnablingInstances();
+    public ListMultimap<BaseEvent, Set<Parameter<?>>> getEnablingInstances();
 
     /**
      * @return mapping of base events to tuples representing a set of compatible joinable instances
      */
-    public Map<BaseEvent, List<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>> getJoinableInstances();
+    public ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinableInstances();
 
     /**
      * @return mapping from instances to their subinstances which have associated base events
      */
-    public Map<Set<Parameter<?>>, Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>> getChainableSubinstances();
+    public Multimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainableSubinstances();
 
     /**
      * @return mapping from instances to sets of instances representing sets of monitors
      */
-    public Map<Set<Parameter<?>>, Set<Set<Parameter<?>>>> getMonitorSets();
+    public Multimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSets();
 
 }
