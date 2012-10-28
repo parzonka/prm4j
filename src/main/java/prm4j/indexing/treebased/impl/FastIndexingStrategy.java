@@ -57,16 +57,15 @@ public class FastIndexingStrategy<E> implements IndexingStrategy<E> {
 	final Node<E> compatibleNode = nodeStore.getNode(bindings, joinData.getNodeMask());
 	// calculate once the bindings to be joined with the whole monitor set
 	final LowLevelBinding<E>[] joinableBindings = getJoinableBindings(bindings, joinData.getExtensionPattern());
-	for (int monitorSetId : joinData.getMonitorSetIds()) {
-	    // iterate over all compatible nodes
-	    final MonitorSetIterator<E> iter = compatibleNode.getMonitorSet(monitorSetId).getIterator();
-	    AbstractBaseMonitor<E> compatibleMonitor = null;
-	    boolean isCompatibleMonitorAlive = false;
-	    while (iter.hasNext(compatibleMonitor, isCompatibleMonitorAlive)) {
-		compatibleMonitor = iter.next();
-		isCompatibleMonitorAlive = expand(compatibleMonitor, joinableBindings, joinData.getCopyPattern(),
-			joinData.getDiffMask(), event);
-	    }
+	// iterate over all compatible nodes
+	final MonitorSetIterator<E> iter = compatibleNode.getMonitorSet(joinData.getMonitorSetId()).getIterator();
+	AbstractBaseMonitor<E> compatibleMonitor = null;
+	boolean isCompatibleMonitorAlive = false;
+	// iterate over all compatible nodes
+	while (iter.hasNext(compatibleMonitor, isCompatibleMonitorAlive)) {
+	    compatibleMonitor = iter.next();
+	    isCompatibleMonitorAlive = expand(compatibleMonitor, joinableBindings, joinData.getCopyPattern(),
+		    joinData.getDiffMask(), event);
 	}
     }
 

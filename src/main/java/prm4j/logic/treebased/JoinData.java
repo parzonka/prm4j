@@ -19,9 +19,9 @@ public class JoinData {
 
     // identifies the node, which represents the compatible part of the instance, we want to join with
     private final int[] nodeMask;
-    // identifies the monitor sets, which are associated with the bindings we will join with (the are strictly more
+    // identifies the monitor set, which contains the monitors carrying the bindings we will join with (they are strictly more
     // informative than the node, selected by the nodeMask)
-    private final int[] monitorSetIds;
+    private final int monitorSetId;
     // prepares the event bindings for the join
     private final boolean[] extensionPattern;
     // identifies the bindings which will be used for the join, picking out only "new" parameters
@@ -29,11 +29,11 @@ public class JoinData {
     // identifies the bindings which are in given binding without joining binding; used for disable-calculation
     private final int[] diffMask;
 
-    public JoinData(int[] nodeMask, int[] monitorSetIds, boolean[] extensionPattern, int[] copyPattern,
+    public JoinData(int[] nodeMask, int monitorSetId, boolean[] extensionPattern, int[] copyPattern,
 	    int[] diffMask) {
 	super();
 	this.nodeMask = nodeMask;
-	this.monitorSetIds = monitorSetIds;
+	this.monitorSetId = monitorSetId;
 	this.extensionPattern = extensionPattern;
 	this.copyPattern = copyPattern;
 	this.diffMask = diffMask;
@@ -43,8 +43,8 @@ public class JoinData {
 	return nodeMask;
     }
 
-    public int[] getMonitorSetIds() {
-	return monitorSetIds;
+    public int getMonitorSetId() {
+	return monitorSetId;
     }
 
     public boolean[] getExtensionPattern() {
