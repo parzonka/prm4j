@@ -10,14 +10,18 @@
  */
 package prm4j.logic;
 
-import java.util.Set;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Set;
 
 public class SetUtil {
 
     private SetUtil() {
 	// not instantiable
     }
+
+    public static Comparator<Set<?>> TOPOLOGICAL_SET_COMPARATOR = new TopologicalSetComparator();
+    public static Comparator<Set<?>> REVERSE_TOPOLOGICAL_SET_COMPARATOR = new ReversesTopologicalSetComparator();
 
     public static <T> Set<T> union(Set<T> set1, Set<T> set2) {
 	Set<T> result = new HashSet<T>(set1);
@@ -45,6 +49,20 @@ public class SetUtil {
 
     public static <T> boolean isSuperset(Set<T> set1, Set<T> set2) {
 	return set1.containsAll(set2);
+    }
+
+    static class TopologicalSetComparator implements Comparator<Set<?>>{
+	@Override
+	public int compare(Set<?> set1, Set<?> set2) {
+	    return set2.size() - set1.size();
+	}
+    }
+
+    static class ReversesTopologicalSetComparator implements Comparator<Set<?>>{
+	@Override
+	public int compare(Set<?> set1, Set<?> set2) {
+	    return set1.size() - set2.size();
+	}
     }
 
 }
