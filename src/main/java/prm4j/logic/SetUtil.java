@@ -51,18 +51,43 @@ public class SetUtil {
 	return set1.containsAll(set2);
     }
 
-    static class TopologicalSetComparator implements Comparator<Set<?>>{
+    static class TopologicalSetComparator implements Comparator<Set<?>> {
 	@Override
 	public int compare(Set<?> set1, Set<?> set2) {
 	    return set2.size() - set1.size();
 	}
     }
 
-    static class ReversesTopologicalSetComparator implements Comparator<Set<?>>{
+    static class ReversesTopologicalSetComparator implements Comparator<Set<?>> {
 	@Override
 	public int compare(Set<?> set1, Set<?> set2) {
 	    return set1.size() - set2.size();
 	}
+    }
+
+    public static <T1, T2> Tuple<T1, T2> tuple(T1 left, T2 right) {
+	return new Tuple<T1, T2>(left, right);
+    }
+
+    static class Tuple<T1, T2> {
+
+	private final T1 left;
+	private final T2 right;
+
+	public Tuple(T1 left, T2 right) {
+	    super();
+	    this.left = left;
+	    this.right = right;
+	}
+
+	public T1 getLeft() {
+	    return left;
+	}
+
+	public T2 getRight() {
+	    return right;
+	}
+
     }
 
 }
