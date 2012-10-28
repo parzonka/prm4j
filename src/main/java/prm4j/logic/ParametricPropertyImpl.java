@@ -33,10 +33,10 @@ public class ParametricPropertyImpl implements ParametricProperty {
     private final Map<MonitorState, Set<Set<BaseEvent>>> statePropertyCoEnableSets;
     private final Map<MonitorState, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
     private Set<BaseEvent> disablingEvents;
-    private Map<BaseEvent, List<ParameterSet>> enablingInstances;
-    private Map<BaseEvent, List<ParameterSetTuple>> joinableInstances;
-    private Map<ParameterSet, Set<ParameterSetTuple>> chainableInstances;
-    private Map<ParameterSet, Set<ParameterSet>> monitorSets;
+    private Map<BaseEvent, List<Set<Parameter<?>>>> enablingInstances;
+    private Map<BaseEvent, List<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>> joinableInstances;
+    private Map<Set<Parameter<?>>, Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>> chainableInstances;
+    private Map<Set<Parameter<?>>, Set<Set<Parameter<?>>>> monitorSets;
 
     public ParametricPropertyImpl(FiniteSpec finiteSpec) {
 	this.finiteSpec = finiteSpec;
@@ -170,22 +170,22 @@ public class ParametricPropertyImpl implements ParametricProperty {
     }
 
     @Override
-    public Map<BaseEvent, List<ParameterSet>> getEnablingInstances() {
+    public Map<BaseEvent, List<Set<Parameter<?>>>> getEnablingInstances() {
 	return enablingInstances;
     }
 
     @Override
-    public Map<BaseEvent, List<ParameterSetTuple>> getJoinableInstances() {
+    public Map<BaseEvent, List<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>> getJoinableInstances() {
 	return joinableInstances;
     }
 
     @Override
-    public Map<ParameterSet, Set<ParameterSetTuple>> getChainableSubinstances() {
+    public Map<Set<Parameter<?>>, Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>> getChainableSubinstances() {
 	return chainableInstances;
     }
 
     @Override
-    public Map<ParameterSet, Set<ParameterSet>> getMonitorSets() {
+    public Map<Set<Parameter<?>>, Set<Set<Parameter<?>>>> getMonitorSets() {
 	return monitorSets;
     }
 
