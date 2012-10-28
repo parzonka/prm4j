@@ -179,23 +179,6 @@ public class ParametricPropertyImpl implements ParametricProperty {
 	} // 26
     } // 27
 
-    /**
-     * Calculate the largest set of parameters which is needed to trigger a match.
-     *
-     * @return
-     */
-    public Set<Parameter<?>> getLongestMatchingInstance() {
-	int maxSize = -1;
-	Set<Parameter<?>> maxSet = null;
-	for (Set<Parameter<?>> set : stateParameterCoEnableSets.get(finiteSpec.getInitialState())) {
-	    if (maxSize < set.size()) {
-		maxSize = set.size();
-		maxSet = set;
-	    }
-	}
-	return Collections.unmodifiableSet(maxSet);
-    }
-
     @Override
     public Set<BaseEvent> getCreationEvents() {
 	return creationEvents;
