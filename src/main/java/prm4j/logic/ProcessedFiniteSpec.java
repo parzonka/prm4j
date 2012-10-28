@@ -13,6 +13,7 @@ package prm4j.logic;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -23,7 +24,7 @@ import prm4j.indexing.BaseEvent;
 /**
  * Immutable self-calculating data object.
  */
-public class ProcessedFiniteSpec {
+public class ProcessedFiniteSpec implements ParametricProperty{
 
     private final FiniteSpec finiteSpec;
     private final Set<BaseEvent> creationEvents;
@@ -141,40 +142,39 @@ public class ProcessedFiniteSpec {
 	return Collections.unmodifiableSet(maxSet);
     }
 
-    /**
-     * Creation events are events for which the successor of the initial state is:
-     * <ul>
-     * <li>not a dead state</li>
-     * <li>not the initial state itself (self-loop)</li>
-     * </ul>
-     * @return the creation events
-     */
+    @Override
     public Set<BaseEvent> getCreationEvents() {
 	return creationEvents;
     }
 
-    public Map<BaseEvent, Set<Set<BaseEvent>>> getPropertyEnableSets() {
-	return propertyEnableSets;
+    @Override
+    public Set<BaseEvent> getDisablingEvents() {
+	// TODO Auto-generated method stub
+	return null;
     }
 
-    public Map<BaseEvent, Set<Set<Parameter<?>>>> getParameterEnableSets() {
-	return parameterEnableSets;
+    @Override
+    public Map<BaseEvent, List<ParameterSet>> getEnablingInstances() {
+	// TODO Auto-generated method stub
+	return null;
     }
 
-    public Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets() {
-	return statePropertyCoEnableSets;
+    @Override
+    public Map<BaseEvent, List<ParameterSetTuple>> getJoinableInstances() {
+	// TODO Auto-generated method stub
+	return null;
     }
 
-    public Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
-	return stateParameterCoEnableSets;
+    @Override
+    public Map<ParameterSet, Set<ParameterSetTuple>> getChainableSubinstances() {
+	// TODO Auto-generated method stub
+	return null;
     }
 
-    public MonitorState getInitialState() {
-	return finiteSpec.getInitialState();
-    }
-
-    public Set<? extends BaseEvent> getBaseEvents() {
-	return finiteSpec.getBaseEvents();
+    @Override
+    public Map<ParameterSet, Set<ParameterSet>> getMonitorSets() {
+	// TODO Auto-generated method stub
+	return null;
     }
 
 }

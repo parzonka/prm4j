@@ -20,6 +20,14 @@ public interface ParametricProperty {
 
     public Set<BaseEvent> getDisablingEvents();
 
+    /**
+     * Creation events are events for which the successor of the initial state is:
+     * <ul>
+     * <li>not a dead state</li>
+     * <li>not the initial state itself (self-loop)</li>
+     * </ul>
+     * @return the creation events
+     */
     public Set<BaseEvent> getCreationEvents();
 
     /**
