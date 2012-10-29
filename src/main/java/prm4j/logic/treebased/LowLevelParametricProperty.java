@@ -23,18 +23,25 @@ import prm4j.logic.ParametricProperty;
 import prm4j.logic.SetUtil;
 import prm4j.logic.SetUtil.Tuple;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Table;
 
 public class LowLevelParametricProperty {
 
-    private ListMultimap<BaseEvent, EnableData> enableData;
-    private ListMultimap<BaseEvent, JoinData> joinData;
-    private SetMultimap<Set<Parameter<?>>, ChainingData> chainingData;
-    private Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
+    private final ListMultimap<BaseEvent, EnableData> enableData;
+    private final ListMultimap<BaseEvent, JoinData> joinData;
+    private final SetMultimap<Set<Parameter<?>>, ChainingData> chainingData;
+    private final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
 
     public LowLevelParametricProperty(ParametricProperty pp) {
+	enableData = ArrayListMultimap.create();
+	joinData = ArrayListMultimap.create();
+	chainingData = HashMultimap.create();
+	monitorSetIds = HashBasedTable.create();
 	convert(pp);
     }
 
