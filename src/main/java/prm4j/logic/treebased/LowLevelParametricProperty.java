@@ -59,7 +59,8 @@ public class LowLevelParametricProperty {
 		    final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
 		    final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight());
 		    final int[] diffMask = parameterMask(SetUtil.difference(baseEvent.getParameters(), tuple.getLeft()));
-		    joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
+		    joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern,
+			    diffMask));
 		}
 	    }
 	}
@@ -82,9 +83,20 @@ public class LowLevelParametricProperty {
 	return toPrimitiveBooleanArray(result);
     }
 
-    private int[] getCopyPattern(Set<Parameter<?>> parameters, Set<Parameter<?>> right) {
-	// TODO Auto-generated method stub
-	return null;
+    protected static int[] getCopyPattern(Set<Parameter<?>> ps1, Set<Parameter<?>> ps2) {
+	List<Integer> result = new ArrayList<Integer>();
+	int i = 0;
+	int j = 0;
+	while (i < ps1.size()) {
+	    if (j >= ps2.size() || parameterMask(ps1)[i] <= parameterMask(ps2)[j]) {
+		i++;
+	    } else {
+		result.add(j); // source
+		result.add(i); // target
+		j++;
+	    }
+	}
+	return toPrimitiveIntegerArray(result);
     }
 
     private static boolean[] toPrimitiveBooleanArray(Collection<Boolean> collection) {
@@ -92,6 +104,15 @@ public class LowLevelParametricProperty {
 	int i = 0;
 	for (Boolean b : collection) {
 	    result[i++] = b;
+	}
+	return result;
+    }
+
+    private static int[] toPrimitiveIntegerArray(Collection<Integer> collection) {
+	int[] result = new int[collection.size()];
+	int i = 0;
+	for (Integer n : collection) {
+	    result[i++] = n;
 	}
 	return result;
     }
