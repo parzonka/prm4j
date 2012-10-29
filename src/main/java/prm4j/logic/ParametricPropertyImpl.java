@@ -44,17 +44,24 @@ public class ParametricPropertyImpl implements ParametricProperty {
     private final Map<MonitorState, Set<Set<BaseEvent>>> statePropertyCoEnableSets;
     private final Map<MonitorState, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
     private Set<BaseEvent> disablingEvents;
-    private ListMultimap<BaseEvent, Set<Parameter<?>>> enablingInstances;
-    private ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinableInstances;
-    private SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainableInstances;
-    private SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> monitorSets;
+    private final ListMultimap<BaseEvent, Set<Parameter<?>>> enablingInstances;
+    private final ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinableInstances;
+    private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainableInstances;
+    private final SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> monitorSets;
 
     public ParametricPropertyImpl(FiniteSpec finiteSpec) {
+
 	this.finiteSpec = finiteSpec;
 	creationEvents = calculateCreationEvents();
 	propertyEnableSets = Collections.unmodifiableMap(new PropertyEnableSetCalculator().calculateEnableSets());
 	parameterEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(propertyEnableSets));
+
+	enablingInstances = ArrayListMultimap.create();
+	joinableInstances = ArrayListMultimap.create();
+	chainableInstances = HashMultimap.create();
+	monitorSets = HashMultimap.create();
 	calculateRelations();
+
 	// TODO statePropertyCoEnableSets
 	statePropertyCoEnableSets = Collections.unmodifiableMap(new HashMap<MonitorState, Set<Set<BaseEvent>>>());
 	stateParameterCoEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(statePropertyCoEnableSets));
@@ -143,10 +150,6 @@ public class ParametricPropertyImpl implements ParametricProperty {
     }
 
     private void calculateRelations() { // 1
-	enablingInstances = ArrayListMultimap.create();
-	joinableInstances = ArrayListMultimap.create();
-	chainableInstances = HashMultimap.create();
-	monitorSets = HashMultimap.create();
 	Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> temp = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>(); // 2
 	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
 	    Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
