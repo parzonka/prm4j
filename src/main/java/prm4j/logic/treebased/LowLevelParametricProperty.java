@@ -47,24 +47,29 @@ public class LowLevelParametricProperty {
 	    for (Set<Parameter<?>> set : sortedSets) {
 		monitorSetIds.put(entry.getKey(), set, i++);
 	    }
-	    for (BaseEvent baseEvent : pp.getBaseEvents()) {
-		for (Set<Parameter<?>> parameterSet : pp.getEnablingInstances().get(baseEvent)) {
-		    final int[] nodeMask = parameterMask(parameterSet);
-		    final int[] diffMask = parameterMask(SetUtil.difference(baseEvent.getParameters(), parameterSet));
-		    enableData.put(baseEvent, new EnableData(nodeMask, diffMask));
-		}
-		for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinableInstances().get(baseEvent)) {
-		    final int[] nodeMask = parameterMask(tuple.getLeft());
-		    final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
-		    final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
-		    final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight());
-		    final int[] diffMask = parameterMask(SetUtil.difference(baseEvent.getParameters(), tuple.getLeft()));
-		    joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern,
-			    diffMask));
-		}
+	}
+	for (BaseEvent baseEvent : pp.getBaseEvents()) {
+	    for (Set<Parameter<?>> parameterSet : pp.getEnablingInstances().get(baseEvent)) {
+		final int[] nodeMask = parameterMask(parameterSet);
+		final int[] diffMask = parameterMask(SetUtil.difference(baseEvent.getParameters(), parameterSet));
+		enableData.put(baseEvent, new EnableData(nodeMask, diffMask));
+	    }
+	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinableInstances().get(baseEvent)) {
+		final int[] nodeMask = parameterMask(tuple.getLeft());
+		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
+		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
+		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight());
+		final int[] diffMask = parameterMask(SetUtil.difference(baseEvent.getParameters(), tuple.getLeft()));
+		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
 	    }
 	}
-
+	for (Set<Parameter<?>> parameterSet : pp.getChainableSubinstances().keys()) {
+	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getChainableSubinstances().get(parameterSet)) {
+		final int[] nodeMask = parameterMask(parameterSet);
+		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
+		chainingData.put(parameterSet, new ChainingData(nodeMask, monitorSetId));
+	    }
+	}
     }
 
     protected static boolean[] getExtensionPattern(Set<Parameter<?>> ps1, Set<Parameter<?>> ps2) {
