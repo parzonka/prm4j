@@ -10,6 +10,7 @@
  */
 package prm4j.logic.treebased;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
@@ -54,7 +55,7 @@ public class LowLevelParametricProperty {
 		for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinableInstances().get(baseEvent)) {
 		    final int[] nodeMask = parameterMask(tuple.getLeft());
 		    final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
-		    final boolean[] extensionPattern = extensionPattern(baseEvent.getParameters(), tuple.getRight());
+		    final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
 		    final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight());
 		    final int[] diffMask = parameterMask(SetUtil.difference(baseEvent.getParameters(), tuple.getLeft()));
 		    joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
@@ -64,14 +65,33 @@ public class LowLevelParametricProperty {
 
     }
 
-    private boolean[] extensionPattern(Set<Parameter<?>> parameters, Set<Parameter<?>> right) {
-	// TODO Auto-generated method stub
-	return null;
+    protected static boolean[] getExtensionPattern(Set<Parameter<?>> ps1, Set<Parameter<?>> ps2) {
+	List<Boolean> result = new ArrayList<Boolean>();
+	int i = 0;
+	int j = 0;
+	while (i < ps1.size()) {
+	    if (j >= ps2.size() || parameterMask(ps1)[i] <= parameterMask(ps2)[j]) {
+		result.add(true);
+		i++;
+	    } else {
+		result.add(false);
+		j++;
+	    }
+	}
+	return toPrimitive(result.toArray(new Boolean[0]));
     }
 
     private int[] getCopyPattern(Set<Parameter<?>> parameters, Set<Parameter<?>> right) {
 	// TODO Auto-generated method stub
 	return null;
+    }
+
+    private static boolean[] toPrimitive(Boolean[] array) {
+	boolean[] result = new boolean[array.length];
+	for (int i = 0; i < result.length; i++) {
+	    result[i] = array[i];
+	}
+	return result;
     }
 
     /**
