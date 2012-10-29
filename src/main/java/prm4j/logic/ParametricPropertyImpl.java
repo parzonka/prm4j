@@ -30,7 +30,7 @@ import prm4j.logic.SetUtil.Tuple;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.SetMultimap;
 
 /**
  * Immutable self-calculating data object.
@@ -46,8 +46,8 @@ public class ParametricPropertyImpl implements ParametricProperty {
     private Set<BaseEvent> disablingEvents;
     private ListMultimap<BaseEvent, Set<Parameter<?>>> enablingInstances;
     private ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinableInstances;
-    private Multimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainableInstances;
-    private Multimap<Set<Parameter<?>>, Set<Parameter<?>>> monitorSets;
+    private SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainableInstances;
+    private SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> monitorSets;
 
     public ParametricPropertyImpl(FiniteSpec finiteSpec) {
 	this.finiteSpec = finiteSpec;
@@ -200,12 +200,12 @@ public class ParametricPropertyImpl implements ParametricProperty {
     }
 
     @Override
-    public Multimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainableSubinstances() {
+    public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainableSubinstances() {
 	return chainableInstances;
     }
 
     @Override
-    public Multimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSets() {
+    public SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSets() {
 	return monitorSets;
     }
 

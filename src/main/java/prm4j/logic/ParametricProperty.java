@@ -17,7 +17,7 @@ import prm4j.indexing.BaseEvent;
 import prm4j.logic.SetUtil.Tuple;
 
 import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.SetMultimap;
 
 public interface ParametricProperty {
 
@@ -48,11 +48,11 @@ public interface ParametricProperty {
     /**
      * @return mapping from instances to their subinstances which have associated base events
      */
-    public Multimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainableSubinstances();
+    public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainableSubinstances();
 
     /**
      * @return mapping from instances to sets of instances representing sets of monitors
      */
-    public Multimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSets();
+    public SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSets();
 
 }
