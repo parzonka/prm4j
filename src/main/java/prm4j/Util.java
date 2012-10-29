@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.logic;
+package prm4j;
 
 import java.util.Collections;
 import java.util.Comparator;

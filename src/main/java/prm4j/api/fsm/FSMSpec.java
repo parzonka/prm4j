@@ -10,7 +10,7 @@
  */
 package prm4j.api.fsm;
 
-import static prm4j.logic.Util.covariantUnmodifiableSet;
+import static prm4j.Util.covariantUnmodifiableSet;
 
 import java.util.Set;
 

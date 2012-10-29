@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import prm4j.Util;
+import prm4j.Util.Tuple;
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
 import prm4j.logic.ParametricProperty;
-import prm4j.logic.Util;
-import prm4j.logic.Util.Tuple;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashBasedTable;

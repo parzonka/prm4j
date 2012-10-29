@@ -10,9 +10,9 @@
  */
 package prm4j.logic;
 
-import static prm4j.logic.Util.intersection;
-import static prm4j.logic.Util.isSubset;
-import static prm4j.logic.Util.tuple;
+import static prm4j.Util.intersection;
+import static prm4j.Util.isSubset;
+import static prm4j.Util.tuple;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,9 +23,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import prm4j.Util;
+import prm4j.Util.Tuple;
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
-import prm4j.logic.Util.Tuple;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;

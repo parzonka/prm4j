@@ -12,9 +12,9 @@ package prm4j.logic;
 
 import java.util.Set;
 
+import prm4j.Util.Tuple;
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
-import prm4j.logic.Util.Tuple;
 
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
