@@ -14,7 +14,7 @@ import java.util.Set;
 
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
-import prm4j.logic.SetUtil.Tuple;
+import prm4j.logic.Util.Tuple;
 
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;

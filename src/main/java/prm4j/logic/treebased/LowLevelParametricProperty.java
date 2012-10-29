@@ -20,8 +20,8 @@ import java.util.Set;
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
 import prm4j.logic.ParametricProperty;
-import prm4j.logic.SetUtil;
-import prm4j.logic.SetUtil.Tuple;
+import prm4j.logic.Util;
+import prm4j.logic.Util.Tuple;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashBasedTable;
@@ -49,7 +49,7 @@ public class LowLevelParametricProperty {
 	for (Entry<Set<Parameter<?>>, Set<Parameter<?>>> entry : pp.getMonitorSets().entries()) {
 	    @SuppressWarnings("unchecked")
 	    Set<Parameter<?>>[] sortedSets = entry.getValue().toArray(new Set[0]);
-	    Arrays.sort(sortedSets, SetUtil.TOPOLOGICAL_SET_COMPARATOR);
+	    Arrays.sort(sortedSets, Util.TOPOLOGICAL_SET_COMPARATOR);
 	    int i = 0;
 	    for (Set<Parameter<?>> set : sortedSets) {
 		monitorSetIds.put(entry.getKey(), set, i++);
@@ -58,7 +58,7 @@ public class LowLevelParametricProperty {
 	for (BaseEvent baseEvent : pp.getBaseEvents()) {
 	    for (Set<Parameter<?>> parameterSet : pp.getEnablingInstances().get(baseEvent)) {
 		final int[] nodeMask = parameterMask(parameterSet);
-		final int[] diffMask = parameterMask(SetUtil.difference(baseEvent.getParameters(), parameterSet));
+		final int[] diffMask = parameterMask(Util.difference(baseEvent.getParameters(), parameterSet));
 		enableData.put(baseEvent, new EnableData(nodeMask, diffMask));
 	    }
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinableInstances().get(baseEvent)) {
@@ -66,7 +66,7 @@ public class LowLevelParametricProperty {
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
 		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight());
-		final int[] diffMask = parameterMask(SetUtil.difference(baseEvent.getParameters(), tuple.getLeft()));
+		final int[] diffMask = parameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft()));
 		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
 	    }
 	}

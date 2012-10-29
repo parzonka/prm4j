@@ -10,9 +10,9 @@
  */
 package prm4j.logic;
 
-import static prm4j.logic.SetUtil.intersection;
-import static prm4j.logic.SetUtil.isSubset;
-import static prm4j.logic.SetUtil.tuple;
+import static prm4j.logic.Util.intersection;
+import static prm4j.logic.Util.isSubset;
+import static prm4j.logic.Util.tuple;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +25,7 @@ import java.util.Set;
 
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
-import prm4j.logic.SetUtil.Tuple;
+import prm4j.logic.Util.Tuple;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
@@ -155,13 +155,13 @@ public class ParametricPropertyImpl implements ParametricProperty {
 	    Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
 	    for (BaseEvent baseEvent2 : finiteSpec.getBaseEvents()) { // 5
 		Set<Parameter<?>> parameterSet2 = baseEvent2.getParameters(); // 5
-		if (SetUtil.isSubset(parameterSet2, parameterSet)) { // 6
-		    temp.add(SetUtil.tuple(parameterSet2, parameterSet)); // 7
+		if (Util.isSubset(parameterSet2, parameterSet)) { // 6
+		    temp.add(Util.tuple(parameterSet2, parameterSet)); // 7
 		} // 8
 	    } // 9
 	    List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
 		    parameterEnableSets.get(baseEvent)); // 10
-	    Collections.sort(enableSetInReverseTopolicalOrdering, SetUtil.REVERSE_TOPOLOGICAL_SET_COMPARATOR); // 10
+	    Collections.sort(enableSetInReverseTopolicalOrdering, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR); // 10
 	    for (Set<Parameter<?>> enablingParameterSet : enableSetInReverseTopolicalOrdering) { // 10
 		if (isSubset(enablingParameterSet, parameterSet)) { // 11
 		    enablingInstances.get(baseEvent).add(enablingParameterSet); // 12
