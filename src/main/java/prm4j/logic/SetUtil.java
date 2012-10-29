@@ -10,6 +10,7 @@
  */
 package prm4j.logic;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -63,6 +64,10 @@ public class SetUtil {
 	public int compare(Set<?> set1, Set<?> set2) {
 	    return set1.size() - set2.size();
 	}
+    }
+
+    public static <S, T extends S> Set<S> covariantUnmodifiableSet(Set<T> set) {
+	return Collections.unmodifiableSet(new HashSet<S>(set));
     }
 
     public static <T1, T2> Tuple<T1, T2> tuple(T1 left, T2 right) {

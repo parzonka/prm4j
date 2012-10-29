@@ -21,6 +21,8 @@ import com.google.common.collect.Multimap;
 
 public interface ParametricProperty {
 
+    public Set<BaseEvent> getBaseEvents();
+
     public Set<BaseEvent> getDisablingEvents();
 
     /**

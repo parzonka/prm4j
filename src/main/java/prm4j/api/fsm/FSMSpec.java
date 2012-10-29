@@ -10,7 +10,8 @@
  */
 package prm4j.api.fsm;
 
-import java.util.Collections;
+import static prm4j.logic.SetUtil.covariantUnmodifiableSet;
+
 import java.util.Set;
 
 import prm4j.indexing.BaseEvent;
@@ -19,23 +20,23 @@ import prm4j.logic.MonitorState;
 
 public class FSMSpec implements FiniteSpec {
 
-    private final Set<? extends BaseEvent> baseEvents;
-    private final Set<? extends MonitorState> states;
+    private final Set<BaseEvent> baseEvents;
+    private final Set<MonitorState> states;
     private final MonitorState initialState;
 
     public FSMSpec(FSM fsm) {
-	baseEvents = Collections.unmodifiableSet(fsm.getAlphabet().getSymbols());
-	states = Collections.unmodifiableSet(fsm.getStates());
+	baseEvents = covariantUnmodifiableSet(fsm.getAlphabet().getSymbols());
+	states = covariantUnmodifiableSet(fsm.getStates());
 	initialState = fsm.getInitialState();
     }
 
     @Override
-    public Set<? extends BaseEvent> getBaseEvents() {
+    public Set<BaseEvent> getBaseEvents() {
 	return baseEvents;
     }
 
     @Override
-    public Set<? extends MonitorState> getStates() {
+    public Set<MonitorState> getStates() {
 	return states;
     }
 

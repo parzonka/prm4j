@@ -229,7 +229,8 @@ public class ParametricPropertyImpl implements ParametricProperty {
 	return finiteSpec.getInitialState();
     }
 
-    Set<? extends BaseEvent> getBaseEvents() {
+    @Override
+    public Set<BaseEvent> getBaseEvents() {
 	return finiteSpec.getBaseEvents();
     }
 

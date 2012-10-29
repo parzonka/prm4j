@@ -16,9 +16,9 @@ import prm4j.indexing.BaseEvent;
 
 public interface FiniteSpec {
 
-    public Set<? extends BaseEvent> getBaseEvents();
+    public Set<BaseEvent> getBaseEvents();
 
-    public Set<? extends MonitorState> getStates();
+    public Set<MonitorState> getStates();
 
     public MonitorState getInitialState();
 
