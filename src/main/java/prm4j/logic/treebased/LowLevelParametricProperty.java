@@ -44,8 +44,29 @@ public class LowLevelParametricProperty {
 	    for (Set<Parameter<?>> set : sortedSets) {
 		monitorSetIds.put(entry.getKey(), set, i++);
 	    }
+	    for (BaseEvent baseEvent : pp.getBaseEvents()) {
+		for (Set<Parameter<?>> parameterSet : pp.getEnablingInstances().get(baseEvent)) {
+		    final int[] nodeMask = parameterMask(parameterSet);
+		    final int[] diffMask = parameterMask(SetUtil.difference(baseEvent.getParameters(), parameterSet));
+		    enableData.put(baseEvent, new EnableData(nodeMask, diffMask));
+		}
+	    }
 	}
 
+    }
+
+    /**
+     * @param parameterSet
+     * @return an array representation of the parameter ids of the given parameter set (sorted)
+     */
+    private static int[] parameterMask(Set<Parameter<?>> parameterSet) {
+	int[] result = new int[parameterSet.size()];
+	int i = 0;
+	for (Parameter<?> parameter : parameterSet) {
+	    result[i++] = parameter.getParameterId();
+	}
+	Arrays.sort(result);
+	return result;
     }
 
     public List<EnableData> getEnableData(BaseEvent baseEvent) {

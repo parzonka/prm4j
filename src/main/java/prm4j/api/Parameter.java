@@ -26,7 +26,7 @@ public class Parameter<T> {
 	this.uniqueName = uniqueName;
     }
 
-    protected final int getParameterId() {
+    public final int getParameterId() {
 	return this.parameterId;
     }
 
