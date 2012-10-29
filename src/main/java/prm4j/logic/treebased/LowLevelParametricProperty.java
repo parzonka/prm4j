@@ -12,6 +12,7 @@ package prm4j.logic.treebased;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -78,7 +79,7 @@ public class LowLevelParametricProperty {
 		j++;
 	    }
 	}
-	return toPrimitive(result.toArray(new Boolean[0]));
+	return toPrimitiveBooleanArray(result);
     }
 
     private int[] getCopyPattern(Set<Parameter<?>> parameters, Set<Parameter<?>> right) {
@@ -86,10 +87,11 @@ public class LowLevelParametricProperty {
 	return null;
     }
 
-    private static boolean[] toPrimitive(Boolean[] array) {
-	boolean[] result = new boolean[array.length];
-	for (int i = 0; i < result.length; i++) {
-	    result[i] = array[i];
+    private static boolean[] toPrimitiveBooleanArray(Collection<Boolean> collection) {
+	boolean[] result = new boolean[collection.size()];
+	int i = 0;
+	for (Boolean b : collection) {
+	    result[i++] = b;
 	}
 	return result;
     }
