@@ -74,7 +74,7 @@ public class SetUtil {
 	return new Tuple<T1, T2>(left, right);
     }
 
-    static class Tuple<T1, T2> {
+    public static class Tuple<T1, T2> {
 
 	private final T1 left;
 	private final T2 right;

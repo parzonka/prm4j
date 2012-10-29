@@ -19,6 +19,7 @@ import prm4j.api.Parameter;
 import prm4j.indexing.BaseEvent;
 import prm4j.logic.ParametricProperty;
 import prm4j.logic.SetUtil;
+import prm4j.logic.SetUtil.Tuple;
 
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
@@ -50,9 +51,27 @@ public class LowLevelParametricProperty {
 		    final int[] diffMask = parameterMask(SetUtil.difference(baseEvent.getParameters(), parameterSet));
 		    enableData.put(baseEvent, new EnableData(nodeMask, diffMask));
 		}
+		for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinableInstances().get(baseEvent)) {
+		    final int[] nodeMask = parameterMask(tuple.getLeft());
+		    final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
+		    final boolean[] extensionPattern = extensionPattern(baseEvent.getParameters(), tuple.getRight());
+		    final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight());
+		    final int[] diffMask = parameterMask(SetUtil.difference(baseEvent.getParameters(), tuple.getLeft()));
+		    joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
+		}
 	    }
 	}
 
+    }
+
+    private boolean[] extensionPattern(Set<Parameter<?>> parameters, Set<Parameter<?>> right) {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    private int[] getCopyPattern(Set<Parameter<?>> parameters, Set<Parameter<?>> right) {
+	// TODO Auto-generated method stub
+	return null;
     }
 
     /**
