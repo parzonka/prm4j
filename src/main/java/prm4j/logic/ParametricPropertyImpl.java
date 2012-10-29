@@ -173,8 +173,8 @@ public class ParametricPropertyImpl implements ParametricProperty {
 	final Set<Parameter<?>> emptySet = new HashSet<Parameter<?>>();
 	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : temp) { // 21
 	    if (!monitorSets.get(tuple.getLeft()).contains(tuple.getRight())) { // 22
-		chainableInstances.get(tuple.getRight()).add(tuple(tuple.getLeft(), emptySet)); // 23
-		monitorSets.get(tuple.getLeft()).add(emptySet); // 24
+		chainableInstances.put(tuple.getRight(), tuple(tuple.getLeft(), emptySet)); // 23
+		monitorSets.put(tuple.getLeft(), emptySet); // 24
 	    } // 25
 	} // 26
     } // 27
