@@ -17,10 +17,16 @@ public class Event {
 
     private final BaseEvent baseEvent;
     private final Object[] boundObjects;
+    private final Object auxiliaryData;
 
     public Event(BaseEvent baseEvent, Object[] parameterValues) {
+	this(baseEvent, parameterValues, null);
+    }
+
+    public Event(BaseEvent baseEvent, Object[] parameterValues, Object auxiliaryData) {
 	this.baseEvent = baseEvent;
 	boundObjects = parameterValues;
+	this.auxiliaryData = auxiliaryData;
     }
 
     public BaseEvent getBaseEvent() {
@@ -33,6 +39,10 @@ public class Event {
 
     public Object[] getBoundObjects() {
 	return boundObjects;
+    }
+
+    public Object getAuxiliaryData() {
+	return auxiliaryData;
     }
 
 }
