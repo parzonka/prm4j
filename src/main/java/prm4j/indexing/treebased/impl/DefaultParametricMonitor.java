@@ -11,7 +11,6 @@
 package prm4j.indexing.treebased.impl;
 
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.Event;
 import prm4j.indexing.ParametricMonitor;
 import prm4j.indexing.treebased.BindingStore;
@@ -23,14 +22,14 @@ import prm4j.logic.treebased.ChainingData;
 import prm4j.logic.treebased.EventContext;
 import prm4j.logic.treebased.JoinData;
 
-public class DefaultParametricMonitor<M extends BaseMonitor<M>> implements ParametricMonitor<M> {
+public class DefaultParametricMonitor implements ParametricMonitor {
 
-    private final M monitorPrototype;
+    private final AbstractBaseMonitor monitorPrototype;
     private BindingStore bindingStore;
     private NodeStore nodeStore;
     private final EventContext eventContext;
 
-    public DefaultParametricMonitor(EventContext eventContext, M monitorPrototype) {
+    public DefaultParametricMonitor(EventContext eventContext, AbstractBaseMonitor monitorPrototype) {
 	this.eventContext = eventContext;
 	this.monitorPrototype = monitorPrototype;
     }
@@ -196,7 +195,7 @@ public class DefaultParametricMonitor<M extends BaseMonitor<M>> implements Param
     }
 
     @Override
-    public M createBaseMonitor() {
+    public AbstractBaseMonitor createBaseMonitor() {
 	return monitorPrototype.copy();
     }
 

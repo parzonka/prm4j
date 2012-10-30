@@ -17,9 +17,9 @@ package prm4j.indexing;
  * @param <M>
  *            the type of the base monitor
  */
-public interface ParametricMonitor<M extends BaseMonitor<M>> {
+public interface ParametricMonitor {
 
-    M createBaseMonitor();
+    AbstractBaseMonitor createBaseMonitor();
 
     void processEvent(Event event);
 

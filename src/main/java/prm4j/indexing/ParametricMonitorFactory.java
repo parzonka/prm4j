@@ -18,9 +18,9 @@ import prm4j.logic.treebased.LowLevelParametricProperty;
 
 public class ParametricMonitorFactory {
 
-    public ParametricMonitor<AbstractBaseMonitor> createParametricMonitor(FiniteSpec finiteSpec) {
+    public ParametricMonitor createParametricMonitor(FiniteSpec finiteSpec) {
 	LowLevelParametricProperty pp = new LowLevelParametricProperty(new FiniteParametricProperty(finiteSpec));
-	return new DefaultParametricMonitor<AbstractBaseMonitor>(pp, new StatefulMonitor(finiteSpec.getInitialState()));
+	return new DefaultParametricMonitor(pp, new StatefulMonitor(finiteSpec.getInitialState()));
     }
 
 }
