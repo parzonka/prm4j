@@ -22,10 +22,6 @@ import prm4j.logic.treebased.ChainingData;
 import prm4j.logic.treebased.EventContext;
 import prm4j.logic.treebased.JoinData;
 
-/**
- * @param
-
- */
 public class FastIndexingStrategy implements IndexingStrategy {
 
     private BindingStore bindingStore;
@@ -149,7 +145,7 @@ public class FastIndexingStrategy implements IndexingStrategy {
 	final AbstractBaseMonitor newMonitor = oldMonitor.copy(newBindings);
 
 	// process the event immediately, instead of doing it in the batch update phase after expansion
-	if (!newMonitor.processEvent(event.getBaseEvent())) {
+	if (!newMonitor.processEvent(event)) {
 	    return false;
 	}
 

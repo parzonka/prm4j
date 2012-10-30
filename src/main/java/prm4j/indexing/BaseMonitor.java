@@ -30,7 +30,7 @@ public interface BaseMonitor<M extends BaseMonitor<M>> {
      *
      * @return <code>true</code> if a the monitor is still alive
      */
-    public abstract boolean processEvent(BaseEvent baseEvent);
+    public abstract boolean processEvent(Event event);
 
     /**
      * The monitor decides if a final state is reachable based on its current internal state. This allows efficient
