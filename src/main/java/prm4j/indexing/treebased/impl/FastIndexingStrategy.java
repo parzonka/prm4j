@@ -11,8 +11,9 @@
 package prm4j.indexing.treebased.impl;
 
 import prm4j.indexing.AbstractBaseMonitor;
+import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.Event;
-import prm4j.indexing.IndexingStrategy;
+import prm4j.indexing.ParametricMonitor;
 import prm4j.indexing.treebased.BindingStore;
 import prm4j.indexing.treebased.LowLevelBinding;
 import prm4j.indexing.treebased.MonitorSetIterator;
@@ -22,11 +23,17 @@ import prm4j.logic.treebased.ChainingData;
 import prm4j.logic.treebased.EventContext;
 import prm4j.logic.treebased.JoinData;
 
-public class FastIndexingStrategy implements IndexingStrategy {
+public class FastIndexingStrategy<M extends BaseMonitor<M>> implements ParametricMonitor<M> {
 
+    private final M monitorPrototype;
     private BindingStore bindingStore;
     private NodeStore nodeStore;
-    private EventContext eventContext;
+    private final EventContext eventContext;
+
+    public FastIndexingStrategy(EventContext eventContext, M monitorPrototype) {
+	this.eventContext = eventContext;
+	this.monitorPrototype = monitorPrototype;
+    }
 
     @Override
     public void processEvent(Event event) {
@@ -73,7 +80,7 @@ public class FastIndexingStrategy implements IndexingStrategy {
      *            allows transformation of the bindings to joinable bindings
      * @return joinable bindings
      */
-    static  LowLevelBinding[] getJoinableBindings(LowLevelBinding[] bindings, boolean[] extensionPattern) {
+    static LowLevelBinding[] getJoinableBindings(LowLevelBinding[] bindings, boolean[] extensionPattern) {
 	final LowLevelBinding[] joinableBindings = new LowLevelBinding[extensionPattern.length];
 	int sourceIndex = 0;
 	for (int i = 0; i < extensionPattern.length; i++) {
@@ -110,8 +117,8 @@ public class FastIndexingStrategy implements IndexingStrategy {
      *         state or similar).<br>
      *         In case of <code>false</code>, no new monitor will be stored, because it would be dead from the start.
      */
-    protected boolean expand(AbstractBaseMonitor oldMonitor, LowLevelBinding[] joinableBindings,
-	    int[] copyPattern, int[] diffMask, Event event) {
+    protected boolean expand(AbstractBaseMonitor oldMonitor, LowLevelBinding[] joinableBindings, int[] copyPattern,
+	    int[] diffMask, Event event) {
 
 	// OPTIONAL: Uses co-enable set: check if old monitor is alive
 	if (!oldMonitor.isFinalStateReachable()) {
@@ -164,8 +171,8 @@ public class FastIndexingStrategy implements IndexingStrategy {
 	return true;
     }
 
-    private LowLevelBinding[] createJoin(LowLevelBinding[] joinableBindings,
-	    LowLevelBinding[] joiningBindings, int[] copyPattern) {
+    private LowLevelBinding[] createJoin(LowLevelBinding[] joinableBindings, LowLevelBinding[] joiningBindings,
+	    int[] copyPattern) {
 	final LowLevelBinding[] newBindings = new LowLevelBinding[joinableBindings.length];
 	System.arraycopy(joinableBindings, 0, newBindings, 0, joinableBindings.length);
 	// fill in the missing bindings into the duplicate from the old monitor
@@ -186,6 +193,16 @@ public class FastIndexingStrategy implements IndexingStrategy {
 	    // monitorSetId == 0 selects the set of strictly more informative instance monitors
 	    lessInformativeNode.getMonitorSet(chainingData.getMonitorSetId()).add(monitor);
 	}
+    }
+
+    @Override
+    public M createBaseMonitor() {
+	return monitorPrototype.copy();
+    }
+
+    @Override
+    public void reset() {
+	// TODO Auto-generated method stub
     }
 
 }
