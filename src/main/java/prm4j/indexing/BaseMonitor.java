@@ -19,12 +19,10 @@ package prm4j.indexing;
  * implement custom monitors to work with the provided indexing strategies, users should subclass the abstract base
  * monitors associated with those strategies instead.
  *
- * @param <E>
- *            the type of base event processed by monitors
  * @param <M>
  *            the type of the base monitor
  */
-public interface BaseMonitor<E, M extends BaseMonitor<E, M>> {
+public interface BaseMonitor<M extends BaseMonitor<M>> {
 
     /**
      * Updates the base monitors internal state by consuming an base event. After processing the event, the monitor is
@@ -32,7 +30,7 @@ public interface BaseMonitor<E, M extends BaseMonitor<E, M>> {
      *
      * @return <code>true</code> if a the monitor is still alive
      */
-    public abstract boolean processEvent(E baseEvent);
+    public abstract boolean processEvent(BaseEvent baseEvent);
 
     /**
      * The monitor decides if a final state is reachable based on its current internal state. This allows efficient

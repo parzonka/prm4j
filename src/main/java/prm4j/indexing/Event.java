@@ -10,33 +10,29 @@
  */
 package prm4j.indexing;
 
-
 /**
  * An event contains a generic base event and a number of {@link Binding}s.
- *
- * @param <E>
- *            the type of base event processed by monitors
  */
-public class Event<E> {
+public class Event {
 
-    private final E baseEvent;
+    private final BaseEvent baseEvent;
     private final Object[] boundObjects;
 
-    public Event(E baseEvent, Object[] parameterValues) {
+    public Event(BaseEvent baseEvent, Object[] parameterValues) {
 	this.baseEvent = baseEvent;
-	this.boundObjects = parameterValues;
+	boundObjects = parameterValues;
     }
 
-    public E getBaseEvent() {
+    public BaseEvent getBaseEvent() {
 	return baseEvent;
     }
 
     public Object getBoundObject(int parameterId) {
-	return this.boundObjects[parameterId];
+	return boundObjects[parameterId];
     }
 
     public Object[] getBoundObjects() {
-	return this.boundObjects;
+	return boundObjects;
     }
 
 }

@@ -13,8 +13,6 @@ package prm4j.logic;
 import prm4j.api.MatchHandler;
 import prm4j.indexing.BaseEvent;
 
-/**
- */
 public interface MonitorState {
 
     public abstract MonitorState getSuccessor(BaseEvent baseEvent);

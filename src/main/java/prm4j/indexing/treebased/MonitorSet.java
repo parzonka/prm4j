@@ -13,16 +13,12 @@ package prm4j.indexing.treebased;
 import prm4j.indexing.AbstractBaseMonitor;
 import prm4j.indexing.Event;
 
-/**
- * @param <E>
- *            the type of base event processed by monitors
- */
-public interface MonitorSet<E> {
+public interface MonitorSet {
 
-    public void add(AbstractBaseMonitor<E> monitor);
+    public void add(AbstractBaseMonitor monitor);
 
-    public void processEvent(Event<E> event);
+    public void processEvent(Event event);
 
-    public MonitorSetIterator<E> getIterator();
+    public MonitorSetIterator getIterator();
 
 }

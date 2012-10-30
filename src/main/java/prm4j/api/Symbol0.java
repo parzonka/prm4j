@@ -21,9 +21,9 @@ public class Symbol0 extends Symbol {
 	super(alphabet, uniqueId, uniqueName, 0);
     }
 
-    public Event<Symbol> createEvent() {
+    public Event createEvent() {
 	Object[] boundObjects = createObjectArray();
-	return new Event<Symbol>(this, boundObjects);
+	return new Event(this, boundObjects);
     }
 
 }

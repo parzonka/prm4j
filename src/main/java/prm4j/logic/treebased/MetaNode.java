@@ -18,19 +18,17 @@ import prm4j.indexing.treebased.NodeMap;
  * Every {@link Node} is equipped with a MetaNode, containing factory methods and providing statically computed
  * algorithm logic.
  *
- * @param <E>
- *            the type of base event processed by monitors
  */
-public interface MetaNode<E> {
+public interface MetaNode {
 
     public ChainingData[] getChainingData();
 
-    public MonitorSet<E> createMonitorSet();
+    public MonitorSet createMonitorSet();
 
-    public Node<E> createNode();
+    public Node createNode();
 
-    public Node<E> createNode(int parameterId);
+    public Node createNode(int parameterId);
 
-    public NodeMap<E> createNodeMap();
+    public NodeMap createNodeMap();
 
 }

@@ -17,42 +17,37 @@ import prm4j.indexing.treebased.NodeMap;
 import prm4j.logic.treebased.MetaNode;
 import prm4j.logic.treebased.NodePrototype;
 
-/**
- * @param <E>
- *            the type of base event processed by monitors
- */
-public class DefaultNode<E> implements Node<E>, NodePrototype<E> {
+public class DefaultNode implements Node, NodePrototype {
 
-    private final MetaNode<E> metaNode;
-    private final MonitorSet<E>[] monitorSets;
+    private final MetaNode metaNode;
+    private final MonitorSet[] monitorSets;
 
-    private NodeMap<E> nodeMap;
-    private AbstractBaseMonitor<E> monitor;
+    private NodeMap nodeMap;
+    private AbstractBaseMonitor monitor;
 
-    @SuppressWarnings("unchecked")
-    public DefaultNode(MetaNode<E> nodeContext, int monitorSetCount) {
+    public DefaultNode(MetaNode nodeContext, int monitorSetCount) {
 	super();
-	this.metaNode = nodeContext;
-	this.monitorSets = new MonitorSet[monitorSetCount];
+	metaNode = nodeContext;
+	monitorSets = new MonitorSet[monitorSetCount];
     }
 
     @Override
-    public MetaNode<E> getNodeContext() {
+    public MetaNode getNodeContext() {
 	return metaNode;
     }
 
     @Override
-    public AbstractBaseMonitor<E> getMonitor() {
+    public AbstractBaseMonitor getMonitor() {
 	return monitor;
     }
 
     @Override
-    public void setMonitor(AbstractBaseMonitor<E> monitor) {
+    public void setMonitor(AbstractBaseMonitor monitor) {
 	this.monitor = monitor;
     }
 
     @Override
-    public NodeMap<E> getNodeMap() {
+    public NodeMap getNodeMap() {
 	// lazy creation
 	if (nodeMap == null) {
 	    nodeMap = metaNode.createNodeMap();
@@ -61,9 +56,9 @@ public class DefaultNode<E> implements Node<E>, NodePrototype<E> {
     }
 
     @Override
-    public MonitorSet<E> getMonitorSet(int parameterSetId) {
+    public MonitorSet getMonitorSet(int parameterSetId) {
 	// lazy creation
-	MonitorSet<E> monitorSet = monitorSets[parameterSetId];
+	MonitorSet monitorSet = monitorSets[parameterSetId];
 	if (monitorSet == null) {
 	    monitorSet = metaNode.createMonitorSet();
 	    monitorSets[parameterSetId] = monitorSet;
@@ -72,16 +67,15 @@ public class DefaultNode<E> implements Node<E>, NodePrototype<E> {
     }
 
     @Override
-    public Node<E> next() {
+    public Node next() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Node<E> clonePrototype() {
+    public Node clonePrototype() {
 	try {
-	    return (Node<E>) this.clone();
+	    return (Node) this.clone();
 	} catch (CloneNotSupportedException e) {
 	    throw new IllegalStateException(e);
 	}

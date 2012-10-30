@@ -11,7 +11,6 @@
  */
 package prm4j.indexing;
 
-
 /**
  * An indexing strategy has the single purpose of dispatching a parametric event, represented by instances of the type
  * {@link Event}, to all monitors corresponding to compatible variable bindings.
@@ -25,10 +24,8 @@ package prm4j.indexing;
  * Indexing is tricky to get both correct and efficient. Therefore there can be multiple different indexing strategies.
  * However, they all should be equivalent with respect to their externally visible behavior.
  *
- * @param <E>
- *            the type of base event processed by monitors
  */
-public interface IndexingStrategy<E> {
+public interface IndexingStrategy {
 
     /**
      * Update the internal state of all related monitors by sending the parameter event to the respective monitors.
@@ -38,6 +35,6 @@ public interface IndexingStrategy<E> {
      * @param binding
      *            The variable binding at this event.
      */
-    void processEvent(Event<E> event);
+    void processEvent(Event event);
 
 }

@@ -31,6 +31,7 @@ public interface ParametricProperty {
      * <li>not a dead state</li>
      * <li>not the initial state itself (self-loop)</li>
      * </ul>
+     *
      * @return the creation events
      */
     public Set<BaseEvent> getCreationEvents();

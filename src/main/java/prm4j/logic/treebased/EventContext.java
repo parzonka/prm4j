@@ -14,6 +14,6 @@ import prm4j.indexing.Event;
 
 public interface EventContext {
 
-    public JoinData[] getJoinData(Event<?> event);
+    public JoinData[] getJoinData(Event event);
 
 }

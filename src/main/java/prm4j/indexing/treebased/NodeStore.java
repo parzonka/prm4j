@@ -10,14 +10,10 @@
  */
 package prm4j.indexing.treebased;
 
-/**
- * @param <E>
- *            the type of base event processed by monitors
- */
-public interface NodeStore<E> {
+public interface NodeStore {
 
-    public Node<E> getNode(LowLevelBinding<E>[] bindings);
+    public Node getNode(LowLevelBinding[] bindings);
 
-    public Node<E> getNode(LowLevelBinding<E>[] bindings, int[] parameterMask);
+    public Node getNode(LowLevelBinding[] bindings, int[] parameterMask);
 
 }

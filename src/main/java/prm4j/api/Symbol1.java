@@ -22,10 +22,10 @@ public class Symbol1<P1> extends Symbol {
 	parameters.add(param1);
     }
 
-    public Event<Symbol> createEvent(P1 obj1) {
+    public Event createEvent(P1 obj1) {
 	Object[] boundObjects = createObjectArray();
 	bindObject(this.param1, obj1, boundObjects);
-	return new Event<Symbol>(this, boundObjects);
+	return new Event(this, boundObjects);
     }
 
 }
