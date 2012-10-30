@@ -10,10 +10,12 @@
  */
 package prm4j.logic.treebased;
 
-import prm4j.indexing.Event;
+import java.util.List;
+
+import prm4j.indexing.BaseEvent;
 
 public interface EventContext {
 
-    public JoinData[] getJoinData(Event event);
+    public List<JoinData> getJoinData(BaseEvent baseEvent);
 
 }

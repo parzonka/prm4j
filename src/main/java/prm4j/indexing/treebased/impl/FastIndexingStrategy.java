@@ -37,7 +37,7 @@ public class FastIndexingStrategy implements IndexingStrategy {
 
 	if (instanceMonitor == null) {
 	    // TODO join and chain with implicit update
-	    for (JoinData joinData : eventContext.getJoinData(event)) {
+	    for (JoinData joinData : eventContext.getJoinData(event.getBaseEvent())) {
 		joinWithAllCompatibleInstances(joinData, bindings, event);
 	    }
 
