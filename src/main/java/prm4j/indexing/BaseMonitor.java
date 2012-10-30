@@ -11,13 +11,15 @@
  */
 package prm4j.indexing;
 
+import prm4j.indexing.treebased.impl.DefaultParametricMonitor;
+
 /**
  * An {@link BaseMonitor} is a concrete monitor instance, representing the internal state of an
  * {@link ParametricMonitor} for one single concrete variable binding.
  * <p>
- * Usage: This interface may be implemented by custom monitors to enable interplay with custom indexing strategies. To
- * implement custom monitors to work with the provided indexing strategies, users should subclass the abstract base
- * monitors associated with those strategies instead.
+ * Usage: This interface may be implemented by custom monitors to enable interplay with custom parametric monitors. To
+ * implement custom monitors to work with the provided {@link DefaultParametricMonitor}, users should subclass the
+ * {@link AbstractBaseMonitor} instead.
  *
  * @param <M>
  *            the type of the base monitor
@@ -25,8 +27,8 @@ package prm4j.indexing;
 public interface BaseMonitor<M extends BaseMonitor<M>> {
 
     /**
-     * Updates the base monitors internal state by consuming an base event. After processing the event, the monitor is
-     * either alive or dead. A dead monitor will no longer process events.
+     * Updates the base monitors internal state by consuming an event. After processing the event, the monitor is either
+     * alive or dead. A dead monitor will no longer process events.
      *
      * @return <code>true</code> if a the monitor is still alive
      */
@@ -34,9 +36,8 @@ public interface BaseMonitor<M extends BaseMonitor<M>> {
 
     /**
      * The monitor decides if a final state is reachable based on its current internal state. This allows efficient
-     * indexing strategies to remove the monitor instance in case it should be impossible to reach any final state.
+     * parametric monitors to remove the monitor instance in case it should be impossible to reach any final state.
      *
-     * @param bindings
      * @return <code>true</code> if a final state is still reachable
      */
     public abstract boolean isFinalStateReachable();
