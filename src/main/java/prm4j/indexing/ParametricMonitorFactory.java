@@ -10,7 +10,7 @@
  */
 package prm4j.indexing;
 
-import prm4j.indexing.treebased.impl.FastIndexingStrategy;
+import prm4j.indexing.treebased.impl.DefaultParametricMonitor;
 import prm4j.logic.FiniteParametricProperty;
 import prm4j.logic.FiniteSpec;
 import prm4j.logic.StatefulMonitor;
@@ -20,7 +20,7 @@ public class ParametricMonitorFactory {
 
     public ParametricMonitor<AbstractBaseMonitor> createParametricMonitor(FiniteSpec finiteSpec) {
 	LowLevelParametricProperty pp = new LowLevelParametricProperty(new FiniteParametricProperty(finiteSpec));
-	return new FastIndexingStrategy<AbstractBaseMonitor>(pp, new StatefulMonitor(finiteSpec.getInitialState()));
+	return new DefaultParametricMonitor<AbstractBaseMonitor>(pp, new StatefulMonitor(finiteSpec.getInitialState()));
     }
 
 }

@@ -23,14 +23,14 @@ import prm4j.logic.treebased.ChainingData;
 import prm4j.logic.treebased.EventContext;
 import prm4j.logic.treebased.JoinData;
 
-public class FastIndexingStrategy<M extends BaseMonitor<M>> implements ParametricMonitor<M> {
+public class DefaultParametricMonitor<M extends BaseMonitor<M>> implements ParametricMonitor<M> {
 
     private final M monitorPrototype;
     private BindingStore bindingStore;
     private NodeStore nodeStore;
     private final EventContext eventContext;
 
-    public FastIndexingStrategy(EventContext eventContext, M monitorPrototype) {
+    public DefaultParametricMonitor(EventContext eventContext, M monitorPrototype) {
 	this.eventContext = eventContext;
 	this.monitorPrototype = monitorPrototype;
     }
