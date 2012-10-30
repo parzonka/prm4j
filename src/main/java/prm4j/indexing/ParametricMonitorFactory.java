@@ -11,13 +11,13 @@
 package prm4j.indexing;
 
 import prm4j.logic.FiniteSpec;
-import prm4j.logic.ParametricPropertyImpl;
+import prm4j.logic.FiniteParametricProperty;
 import prm4j.logic.treebased.LowLevelParametricProperty;
 
 public class ParametricMonitorFactory {
 
     public <M extends BaseMonitor<M>> ParametricMonitor<M> createParametricMonitor(FiniteSpec finiteSpec, Class<M> baseMonitorType) {
-	LowLevelParametricProperty pp = new LowLevelParametricProperty(new ParametricPropertyImpl(finiteSpec));
+	LowLevelParametricProperty pp = new LowLevelParametricProperty(new FiniteParametricProperty(finiteSpec));
 
 	return null;
     }

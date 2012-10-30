@@ -36,7 +36,7 @@ import com.google.common.collect.SetMultimap;
 /**
  * Immutable self-calculating data object.
  */
-public class ParametricPropertyImpl implements ParametricProperty {
+public class FiniteParametricProperty implements ParametricProperty {
 
     private final FiniteSpec finiteSpec;
     private final Set<BaseEvent> creationEvents;
@@ -50,7 +50,7 @@ public class ParametricPropertyImpl implements ParametricProperty {
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainableInstances;
     private final SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> monitorSets;
 
-    public ParametricPropertyImpl(FiniteSpec finiteSpec) {
+    public FiniteParametricProperty(FiniteSpec finiteSpec) {
 
 	this.finiteSpec = finiteSpec;
 	creationEvents = calculateCreationEvents();

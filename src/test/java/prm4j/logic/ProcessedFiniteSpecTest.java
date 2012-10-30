@@ -32,7 +32,7 @@ public class ProcessedFiniteSpecTest extends AbstractTest {
     @Test
     public void accessors_unsafeMapIterator() throws Exception {
 	FSM fsm = new FSM_unsafeMapIterator().fsm;
-	ParametricPropertyImpl fs = new ParametricPropertyImpl(new FSMSpec(fsm));
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
 	assertEquals(fs.getInitialState(), fsm.getInitialState());
 	assertEquals(fs.getBaseEvents(), fsm.getAlphabet().getSymbols());
@@ -42,7 +42,7 @@ public class ProcessedFiniteSpecTest extends AbstractTest {
     public void getPropertyEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
-	ParametricPropertyImpl fs = new ParametricPropertyImpl(new FSMSpec(fsm));
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
 	Map<BaseEvent, Set<Set<BaseEvent>>> actual = fs.getPropertyEnableSets();
 
@@ -66,7 +66,7 @@ public class ProcessedFiniteSpecTest extends AbstractTest {
     public void getParameterEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
-	ParametricPropertyImpl fs = new ParametricPropertyImpl(new FSMSpec(fsm));
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
 	Map<BaseEvent, Set<Set<Parameter<?>>>> actual = fs.getParameterEnableSets();
 
@@ -87,7 +87,7 @@ public class ProcessedFiniteSpecTest extends AbstractTest {
     public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
-	ParametricPropertyImpl fs = new ParametricPropertyImpl(new FSMSpec(fsm));
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
 	Map<MonitorState, Set<Set<BaseEvent>>> actual = fs.getStatePropertyCoEnableSets();
 
