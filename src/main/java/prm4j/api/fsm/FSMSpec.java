@@ -14,9 +14,11 @@ import static prm4j.Util.covariantUnmodifiableSet;
 
 import java.util.Set;
 
+import prm4j.indexing.AbstractBaseMonitor;
 import prm4j.indexing.BaseEvent;
 import prm4j.logic.FiniteSpec;
 import prm4j.logic.MonitorState;
+import prm4j.logic.StatefulMonitor;
 
 public class FSMSpec implements FiniteSpec {
 
@@ -43,6 +45,11 @@ public class FSMSpec implements FiniteSpec {
     @Override
     public MonitorState getInitialState() {
 	return initialState;
+    }
+
+    @Override
+    public AbstractBaseMonitor getInitialMonitor() {
+	return new StatefulMonitor(getInitialState());
     }
 
 }

@@ -12,8 +12,15 @@ package prm4j.logic;
 
 import java.util.Set;
 
-public interface FiniteSpec extends Spec{
+import prm4j.indexing.AbstractBaseMonitor;
+import prm4j.indexing.BaseEvent;
 
-    public Set<MonitorState> getStates();
+public interface Spec {
+
+    public Set<BaseEvent> getBaseEvents();
+
+    public MonitorState getInitialState();
+
+    public AbstractBaseMonitor getInitialMonitor();
 
 }
