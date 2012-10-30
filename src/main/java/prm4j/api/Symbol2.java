@@ -32,4 +32,11 @@ public class Symbol2<P1, P2> extends Symbol {
 	return new Event(this, boundObjects);
     }
 
+    public Event createEvent(P1 obj1, P2 obj2, Object auxiliaryData) {
+	Object[] boundObjects = createObjectArray();
+	bindObject(this.param1, obj1, boundObjects);
+	bindObject(this.param2, obj2, boundObjects);
+	return new Event(this, boundObjects, auxiliaryData);
+    }
+
 }

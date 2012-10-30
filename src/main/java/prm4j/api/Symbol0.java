@@ -26,4 +26,9 @@ public class Symbol0 extends Symbol {
 	return new Event(this, boundObjects);
     }
 
+    public Event createEvent(Object auxiliaryData) {
+	Object[] boundObjects = createObjectArray();
+	return new Event(this, boundObjects, auxiliaryData);
+    }
+
 }
