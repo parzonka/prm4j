@@ -10,12 +10,29 @@
  */
 package prm4j.logic.treebased;
 
-import java.util.List;
+import com.google.common.collect.ListMultimap;
 
 import prm4j.indexing.BaseEvent;
 
-public interface EventContext {
+public class EventContext {
 
-    public List<JoinData> getJoinData(BaseEvent baseEvent);
+    private final JoinData[][] joinDataArray;
+    private final boolean[] disablingEvents;
+
+    public EventContext(ListMultimap<BaseEvent,JoinData> joinData, Object object) {
+	joinDataArray = new JoinData[joinData.keys().size()][];
+	for (BaseEvent baseEvent : joinData.keys()) {
+	    joinDataArray[baseEvent.getIndex()] = joinData.get(baseEvent).toArray(new JoinData[0]);
+	}
+	disablingEvents = null; // TODO
+    }
+
+    public JoinData[] getJoinData(BaseEvent baseEvent) {
+	return joinDataArray[baseEvent.getIndex()];
+    }
+
+    public boolean isDisablingEvent(BaseEvent baseEvent) {
+	return disablingEvents[baseEvent.getIndex()];
+    }
 
 }

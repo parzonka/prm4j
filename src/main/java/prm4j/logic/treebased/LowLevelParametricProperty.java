@@ -30,7 +30,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Table;
 
-public class LowLevelParametricProperty implements EventContext {
+public class LowLevelParametricProperty {
 
     private final ListMultimap<BaseEvent, EnableData> enableData;
     private final ListMultimap<BaseEvent, JoinData> joinData;
@@ -147,9 +147,8 @@ public class LowLevelParametricProperty implements EventContext {
 	return enableData.get(baseEvent);
     }
 
-    @Override
-    public List<JoinData> getJoinData(BaseEvent baseEvent) {
-	return joinData.get(baseEvent);
+    public EventContext getEventContext() {
+	return new EventContext(joinData, null); // TODO disablingEvents
     }
 
     public Set<ChainingData> getChainingData(Set<Parameter<?>> parameterSet) {
