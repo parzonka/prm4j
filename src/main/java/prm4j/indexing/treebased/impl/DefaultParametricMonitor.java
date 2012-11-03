@@ -187,7 +187,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	final AbstractBaseMonitor monitor = node.getMonitor();
 	final LowLevelBinding[] bindings = monitor.getLowLevelBindings();
 
-	for (ChainData chainingData : node.getNodeContext().getChainingData()) {
+	for (ChainData chainingData : node.getNodeContext().getChainData()) {
 	    Node lessInformativeNode = nodeStore.getNode(bindings, chainingData.getNodeMask());
 	    // monitorSetId == 0 selects the set of strictly more informative instance monitors
 	    lessInformativeNode.getMonitorSet(chainingData.getMonitorSetId()).add(monitor);

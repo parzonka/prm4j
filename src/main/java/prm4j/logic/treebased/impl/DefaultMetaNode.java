@@ -30,7 +30,7 @@ public class DefaultMetaNode implements MetaNode {
     }
 
     @Override
-    public ChainData[] getChainingData() {
+    public ChainData[] getChainData() {
 	return chainingData;
     }
 
