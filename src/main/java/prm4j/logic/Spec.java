@@ -15,6 +15,9 @@ import java.util.Set;
 import prm4j.indexing.AbstractBaseMonitor;
 import prm4j.indexing.BaseEvent;
 
+/**
+ * Represents a specification of a property. May have a infinite number of states.
+ */
 public interface Spec {
 
     public Set<BaseEvent> getBaseEvents();
