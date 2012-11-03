@@ -40,32 +40,32 @@ public class FiniteParametricProperty implements ParametricProperty {
 
     private final FiniteSpec finiteSpec;
     private final Set<BaseEvent> creationEvents;
-    private final Map<BaseEvent, Set<Set<BaseEvent>>> propertyEnableSets;
-    private final Map<BaseEvent, Set<Set<Parameter<?>>>> parameterEnableSets;
-    private final Map<MonitorState, Set<Set<BaseEvent>>> statePropertyCoEnableSets;
-    private final Map<MonitorState, Set<Set<Parameter<?>>>> stateParameterCoEnableSets;
     private Set<BaseEvent> disablingEvents;
-    private final ListMultimap<BaseEvent, Set<Parameter<?>>> enablingInstances;
-    private final ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinableInstances;
-    private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainableInstances;
-    private final SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> monitorSets;
+    private final Map<BaseEvent, Set<Set<BaseEvent>>> enablingEventSets;
+    private final Map<BaseEvent, Set<Set<Parameter<?>>>> enablingParameterSets;
+    private final Map<MonitorState, Set<Set<BaseEvent>>> coenablingEventSets; // TODO
+    private final Map<MonitorState, Set<Set<Parameter<?>>>> coenablingParameterSets; // TODO
+    private final ListMultimap<BaseEvent, Set<Parameter<?>>> maxData;
+    private final ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinData;
+    private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainData;
+    private final SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> monitorSetData;
 
     public FiniteParametricProperty(FiniteSpec finiteSpec) {
 
 	this.finiteSpec = finiteSpec;
 	creationEvents = calculateCreationEvents();
-	propertyEnableSets = Collections.unmodifiableMap(new PropertyEnableSetCalculator().calculateEnableSets());
-	parameterEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(propertyEnableSets));
+	enablingEventSets = Collections.unmodifiableMap(new PropertyEnableSetCalculator().calculateEnableSets());
+	enablingParameterSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(enablingEventSets));
 
-	enablingInstances = ArrayListMultimap.create();
-	joinableInstances = ArrayListMultimap.create();
-	chainableInstances = HashMultimap.create();
-	monitorSets = HashMultimap.create();
+	maxData = ArrayListMultimap.create();
+	joinData = ArrayListMultimap.create();
+	chainData = HashMultimap.create();
+	monitorSetData = HashMultimap.create();
 	calculateRelations();
 
 	// TODO statePropertyCoEnableSets
-	statePropertyCoEnableSets = Collections.unmodifiableMap(new HashMap<MonitorState, Set<Set<BaseEvent>>>());
-	stateParameterCoEnableSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(statePropertyCoEnableSets));
+	coenablingEventSets = Collections.unmodifiableMap(new HashMap<MonitorState, Set<Set<BaseEvent>>>());
+	coenablingParameterSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(coenablingEventSets));
     }
 
     /**
@@ -151,34 +151,34 @@ public class FiniteParametricProperty implements ParametricProperty {
     }
 
     private void calculateRelations() { // 1
-	Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> temp = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>(); // 2
+	Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>(); // 2
 	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
 	    Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
 	    for (BaseEvent baseEvent2 : finiteSpec.getBaseEvents()) { // 5
 		Set<Parameter<?>> parameterSet2 = baseEvent2.getParameters(); // 5
 		if (Util.isSubset(parameterSet2, parameterSet)) { // 6
-		    temp.add(Util.tuple(parameterSet2, parameterSet)); // 7
+		    updates.add(Util.tuple(parameterSet2, parameterSet)); // 7
 		} // 8
 	    } // 9
 	    List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
-		    parameterEnableSets.get(baseEvent)); // 10
+		    enablingParameterSets.get(baseEvent)); // 10
 	    Collections.sort(enableSetInReverseTopolicalOrdering, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR); // 10
 	    for (Set<Parameter<?>> enablingParameterSet : enableSetInReverseTopolicalOrdering) { // 10
 		if (isSubset(enablingParameterSet, parameterSet)) { // 11
-		    enablingInstances.get(baseEvent).add(enablingParameterSet); // 12
+		    maxData.get(baseEvent).add(enablingParameterSet); // 12
 		} else { // 13
 		    Set<Parameter<?>> compatibleSubset = intersection(parameterSet, enablingParameterSet); // 14
-		    joinableInstances.put(baseEvent, tuple(compatibleSubset, enablingParameterSet)); // 15
-		    chainableInstances.put(enablingParameterSet, tuple(compatibleSubset, enablingParameterSet)); // 16
-		    monitorSets.put(compatibleSubset, enablingParameterSet); // 17
+		    joinData.put(baseEvent, tuple(compatibleSubset, enablingParameterSet)); // 15
+		    chainData.put(enablingParameterSet, tuple(compatibleSubset, enablingParameterSet)); // 16
+		    monitorSetData.put(compatibleSubset, enablingParameterSet); // 17
 		} // 18
 	    } // 19
 	} // 20
 	final Set<Parameter<?>> emptySet = new HashSet<Parameter<?>>();
-	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : temp) { // 21
-	    if (!monitorSets.get(tuple.getLeft()).contains(tuple.getRight())) { // 22
-		chainableInstances.put(tuple.getRight(), tuple(tuple.getLeft(), emptySet)); // 23
-		monitorSets.put(tuple.getLeft(), emptySet); // 24
+	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : updates) { // 21
+	    if (!monitorSetData.get(tuple.getLeft()).contains(tuple.getRight())) { // 22
+		chainData.put(tuple.getRight(), tuple(tuple.getLeft(), emptySet)); // 23
+		monitorSetData.put(tuple.getLeft(), emptySet); // 24
 	    } // 25
 	} // 26
     } // 27
@@ -195,38 +195,38 @@ public class FiniteParametricProperty implements ParametricProperty {
 
     @Override
     public ListMultimap<BaseEvent, Set<Parameter<?>>> getEnablingInstances() {
-	return enablingInstances;
+	return maxData;
     }
 
     @Override
     public ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinableInstances() {
-	return joinableInstances;
+	return joinData;
     }
 
     @Override
     public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainableSubinstances() {
-	return chainableInstances;
+	return chainData;
     }
 
     @Override
     public SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSets() {
-	return monitorSets;
+	return monitorSetData;
     }
 
     Map<BaseEvent, Set<Set<BaseEvent>>> getPropertyEnableSets() {
-	return propertyEnableSets;
+	return enablingEventSets;
     }
 
     Map<BaseEvent, Set<Set<Parameter<?>>>> getParameterEnableSets() {
-	return parameterEnableSets;
+	return enablingParameterSets;
     }
 
     Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets() {
-	return statePropertyCoEnableSets;
+	return coenablingEventSets;
     }
 
     Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
-	return stateParameterCoEnableSets;
+	return coenablingParameterSets;
     }
 
     MonitorState getInitialState() {
