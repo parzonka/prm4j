@@ -21,7 +21,7 @@ public abstract class AbstractBaseMonitor implements BaseMonitor<AbstractBaseMon
     // low level access
     private LowLevelBinding[] bindings;
     // low level access
-    private long tau;
+    private long creationTime;
 
     /**
      * Creates a low level deep copy of this monitor.
@@ -32,7 +32,7 @@ public abstract class AbstractBaseMonitor implements BaseMonitor<AbstractBaseMon
     public final AbstractBaseMonitor copy(LowLevelBinding[] bindings) {
 	AbstractBaseMonitor copy = copy();
 	copy.setBindings(bindings);
-	copy.setTau(tau);
+	copy.setCreationTime(creationTime);
 	return copy;
     }
 
@@ -49,12 +49,12 @@ public abstract class AbstractBaseMonitor implements BaseMonitor<AbstractBaseMon
 	return bindings;
     }
 
-    public final long getTau() {
-	return tau;
+    public final long getCreationTime() {
+	return creationTime;
     }
 
-    final void setTau(long tau) {
-	this.tau = tau;
+    final void setCreationTime(long creationTime) {
+	this.creationTime = creationTime;
     }
 
 }

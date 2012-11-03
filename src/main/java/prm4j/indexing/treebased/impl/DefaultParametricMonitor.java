@@ -129,9 +129,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
 	// OPTIONAL: Uses enable set
 	for (int paramId : diffMask) {
-	    if (joinableBindings[paramId].getDisable() > oldMonitor.getTau()
+	    if (joinableBindings[paramId].getDisable() > oldMonitor.getCreationTime()
 		    || (joinableBindings[paramId].getTau() > 0 && joinableBindings[paramId].getTau() < oldMonitor
-			    .getTau())) {
+			    .getCreationTime())) {
 		// don't create a new monitor but the old one is alright
 		return true;
 	    }
