@@ -17,18 +17,27 @@ import prm4j.indexing.BaseEvent;
 public class EventContext {
 
     private final JoinData[][] joinDataArray;
+    private final MaxData[][] maxDataArray;
     private final boolean[] disablingEvents;
 
-    public EventContext(ListMultimap<BaseEvent,JoinData> joinData, Object object) {
+    public EventContext(ListMultimap<BaseEvent,JoinData> joinData, ListMultimap<BaseEvent,MaxData> maxData, Object object) {
 	joinDataArray = new JoinData[joinData.keys().size()][];
 	for (BaseEvent baseEvent : joinData.keys()) {
 	    joinDataArray[baseEvent.getIndex()] = joinData.get(baseEvent).toArray(new JoinData[0]);
+	}
+	maxDataArray = new MaxData[maxData.keys().size()][];
+	for (BaseEvent baseEvent : maxData.keys()) {
+	    maxDataArray[baseEvent.getIndex()] = maxData.get(baseEvent).toArray(new MaxData[0]);
 	}
 	disablingEvents = null; // TODO
     }
 
     public JoinData[] getJoinData(BaseEvent baseEvent) {
 	return joinDataArray[baseEvent.getIndex()];
+    }
+
+    public MaxData[] getMaxData(BaseEvent baseEvent) {
+	return maxDataArray[baseEvent.getIndex()];
     }
 
     public boolean isDisablingEvent(BaseEvent baseEvent) {

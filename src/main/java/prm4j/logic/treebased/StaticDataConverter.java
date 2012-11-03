@@ -148,7 +148,7 @@ public class StaticDataConverter {
     }
 
     public EventContext getEventContext() {
-	return new EventContext(joinData, null); // TODO disablingEvents
+	return new EventContext(joinData, maxData, null); // TODO disablingEvents
     }
 
     public Set<ChainData> getChainData(Set<Parameter<?>> parameterSet) {
