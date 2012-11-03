@@ -226,27 +226,33 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return monitorSetData;
     }
 
-    Map<BaseEvent, Set<Set<BaseEvent>>> getEnablingEventSets() {
+    @Override
+    public Map<BaseEvent, Set<Set<BaseEvent>>> getEnablingEventSets() {
 	return enablingEventSets;
     }
 
+    @Override
     public Set<Set<Parameter<?>>> getPossibleParameterSets() {
 	return possibleParameterSets;
     }
 
-    Map<BaseEvent, Set<Set<Parameter<?>>>> getEnablingParameterSets() {
+    @Override
+    public Map<BaseEvent, Set<Set<Parameter<?>>>> getEnablingParameterSets() {
 	return enablingParameterSets;
     }
 
-    Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets() {
+    @Override
+    public Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets() {
 	return coenablingEventSets;
     }
 
-    Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
+    @Override
+    public Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
 	return coenablingParameterSets;
     }
 
-    MonitorState getInitialState() {
+    @Override
+    public MonitorState getInitialState() {
 	return finiteSpec.getInitialState();
     }
 

@@ -10,6 +10,7 @@
  */
 package prm4j.logic;
 
+import java.util.Map;
 import java.util.Set;
 
 import prm4j.Util.Tuple;
@@ -55,5 +56,17 @@ public interface ParametricProperty {
      * @return mapping from instances to sets of instances representing sets of monitors
      */
     public SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSetData();
+
+    public MonitorState getInitialState();
+
+    public Map<BaseEvent, Set<Set<BaseEvent>>> getEnablingEventSets();
+
+    public Set<Set<Parameter<?>>> getPossibleParameterSets();
+
+    public Map<BaseEvent, Set<Set<Parameter<?>>>> getEnablingParameterSets();
+
+    public Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets();
+
+    public Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets();
 
 }
