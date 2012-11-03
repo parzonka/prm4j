@@ -13,9 +13,6 @@ package prm4j.indexing;
 
 /**
  * A parametric monitor can be thought as a set of base monitors running in parallel, one for each parameter instance.
- *
- * @param <M>
- *            the type of the base monitor
  */
 public interface ParametricMonitor {
 
