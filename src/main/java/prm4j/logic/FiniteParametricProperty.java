@@ -43,6 +43,7 @@ public class FiniteParametricProperty implements ParametricProperty {
     private Set<BaseEvent> disablingEvents;
     private final Map<BaseEvent, Set<Set<BaseEvent>>> enablingEventSets;
     private final Map<BaseEvent, Set<Set<Parameter<?>>>> enablingParameterSets;
+    private final Set<Set<Parameter<?>>> possibleParameterSets;
     private final Map<MonitorState, Set<Set<BaseEvent>>> coenablingEventSets; // TODO
     private final Map<MonitorState, Set<Set<Parameter<?>>>> coenablingParameterSets; // TODO
     private final ListMultimap<BaseEvent, Set<Parameter<?>>> maxData;
@@ -54,7 +55,10 @@ public class FiniteParametricProperty implements ParametricProperty {
 
 	this.finiteSpec = finiteSpec;
 	creationEvents = calculateCreationEvents();
-	enablingEventSets = Collections.unmodifiableMap(new PropertyEnableSetCalculator().calculateEnableSets());
+
+	PossibleParameterAndEnablingEventSetCalculator p = new PossibleParameterAndEnablingEventSetCalculator();
+	enablingEventSets = Collections.unmodifiableMap(p.getEnablingEventSets());
+	possibleParameterSets = Collections.unmodifiableSet(p.getPossibleParameterSets());
 	enablingParameterSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(enablingEventSets));
 
 	maxData = ArrayListMultimap.create();
@@ -89,44 +93,53 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return creationSymbols;
     }
 
-    private class PropertyEnableSetCalculator {
+    private class PossibleParameterAndEnablingEventSetCalculator {
 
-	private final Map<BaseEvent, Set<Set<BaseEvent>>> enableSets;
+	private final Map<BaseEvent, Set<Set<BaseEvent>>> enablingEventSets;
+	private final Set<Set<Parameter<?>>> possibleParameterSets;
 	private final Map<MonitorState, Set<Set<BaseEvent>>> stateToSeenBaseEvents;
 
-	public PropertyEnableSetCalculator() {
-	    enableSets = new HashMap<BaseEvent, Set<Set<BaseEvent>>>();
+	public PossibleParameterAndEnablingEventSetCalculator() {
+	    enablingEventSets = new HashMap<BaseEvent, Set<Set<BaseEvent>>>();
+	    possibleParameterSets = new HashSet<Set<Parameter<?>>>();
 	    stateToSeenBaseEvents = new HashMap<MonitorState, Set<Set<BaseEvent>>>();
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
-		enableSets.put(baseEvent, new HashSet<Set<BaseEvent>>());
+		enablingEventSets.put(baseEvent, new HashSet<Set<BaseEvent>>());
 	    }
 	    for (MonitorState state : finiteSpec.getStates()) {
 		stateToSeenBaseEvents.put(state, new HashSet<Set<BaseEvent>>());
 	    }
+	    computeEnableSets(finiteSpec.getInitialState(), new HashSet<BaseEvent>(), new HashSet<Parameter<?>>()); // 2
 	}
 
-	public Map<BaseEvent, Set<Set<BaseEvent>>> calculateEnableSets() {
-	    computeEnableSets(finiteSpec.getInitialState(), new HashSet<BaseEvent>());
-	    return enableSets;
+	public Map<BaseEvent, Set<Set<BaseEvent>>> getEnablingEventSets() {
+	    return enablingEventSets;
 	}
 
-	private void computeEnableSets(MonitorState state, Set<BaseEvent> seenBaseEvents) {
+	public Set<Set<Parameter<?>>> getPossibleParameterSets() {
+	    return possibleParameterSets;
+	}
+
+	private void computeEnableSets(MonitorState state, Set<BaseEvent> seenBaseEvents, Set<Parameter<?>> parameterSet) { // 5
 	    if (state == null)
 		throw new NullPointerException("state may not be null!");
-	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
-		if (state.getSuccessor(baseEvent) != null) {
-		    final Set<BaseEvent> seenBaseEventsWithoutSelfloop = new HashSet<BaseEvent>(seenBaseEvents);
-		    seenBaseEventsWithoutSelfloop.remove(baseEvent);
-		    enableSets.get(baseEvent).add(seenBaseEventsWithoutSelfloop);
-		    final Set<BaseEvent> nextSeenBaseEvents = new HashSet<BaseEvent>(seenBaseEvents);
-		    nextSeenBaseEvents.add(baseEvent);
-		    if (!stateToSeenBaseEvents.get(state).contains(nextSeenBaseEvents)) {
-			stateToSeenBaseEvents.get(state).add(nextSeenBaseEvents);
-			computeEnableSets(state.getSuccessor(baseEvent), nextSeenBaseEvents);
-		    }
-		}
-	    }
-	}
+	    stateToSeenBaseEvents.get(state).add(seenBaseEvents); // 6
+	    possibleParameterSets.add(parameterSet); // 7
+	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 8
+		if (state.getSuccessor(baseEvent) != null) { // 9 TODO path to accepting state
+		    final Set<BaseEvent> seenBaseEventsWithoutSelfloop = new HashSet<BaseEvent>(seenBaseEvents); // 10
+		    seenBaseEventsWithoutSelfloop.remove(baseEvent); // 10
+		    enablingEventSets.get(baseEvent).add(seenBaseEventsWithoutSelfloop); // 10
+		    final Set<BaseEvent> nextSeenBaseEvents = new HashSet<BaseEvent>(seenBaseEvents); // 11
+		    nextSeenBaseEvents.add(baseEvent); // 11
+		    if (!stateToSeenBaseEvents.get(state).contains(nextSeenBaseEvents)) { // 11
+			Set<Parameter<?>> nextParameterSet = new HashSet<Parameter<?>>(parameterSet); // 12
+			nextParameterSet.addAll(baseEvent.getParameters()); // 12
+			computeEnableSets(state.getSuccessor(baseEvent), nextSeenBaseEvents, nextParameterSet); // 12
+		    } // 13
+		} // 14
+	    } // 15
+	} // 16
     }
 
     private static <T> Map<T, Set<Set<Parameter<?>>>> toMap2SetOfSetOfParameters(
