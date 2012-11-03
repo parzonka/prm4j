@@ -20,22 +20,28 @@ import prm4j.indexing.BaseEvent;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
 
+/**
+ * Instances of this interface fully specify a parametric property to be monitored.
+ */
 public interface ParametricProperty {
 
     public Set<BaseEvent> getBaseEvents();
 
+    public MonitorState getInitialState();
+
+    public Set<BaseEvent> getCreationEvents();
+
     public Set<BaseEvent> getDisablingEvents();
 
-    /**
-     * Creation events are events for which the successor of the initial state is:
-     * <ul>
-     * <li>not a dead state</li>
-     * <li>not the initial state itself (self-loop)</li>
-     * </ul>
-     *
-     * @return the creation events
-     */
-    public Set<BaseEvent> getCreationEvents();
+    public Set<Set<Parameter<?>>> getPossibleParameterSets();
+
+    public Map<BaseEvent, Set<Set<BaseEvent>>> getEnablingEventSets();
+
+    public Map<BaseEvent, Set<Set<Parameter<?>>>> getEnablingParameterSets();
+
+    // public Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets();
+
+    // public Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets();
 
     /**
      * @return mapping of base events to a list of subinstances in its enabling set
@@ -56,17 +62,5 @@ public interface ParametricProperty {
      * @return mapping from instances to sets of instances representing sets of monitors
      */
     public SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSetData();
-
-    public MonitorState getInitialState();
-
-    public Map<BaseEvent, Set<Set<BaseEvent>>> getEnablingEventSets();
-
-    public Set<Set<Parameter<?>>> getPossibleParameterSets();
-
-    public Map<BaseEvent, Set<Set<Parameter<?>>>> getEnablingParameterSets();
-
-    public Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets();
-
-    public Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets();
 
 }

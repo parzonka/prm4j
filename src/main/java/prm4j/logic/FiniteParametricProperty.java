@@ -196,6 +196,15 @@ public class FiniteParametricProperty implements ParametricProperty {
 	} // 26
     } // 27
 
+    /**
+     * Creation events are events for which the successor of the initial state is:
+     * <ul>
+     * <li>not a dead state</li>
+     * <li>not the initial state itself (self-loop)</li>
+     * </ul>
+     *
+     * @return the creation events
+     */
     @Override
     public Set<BaseEvent> getCreationEvents() {
 	return creationEvents;
@@ -241,12 +250,12 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return enablingParameterSets;
     }
 
-    @Override
+    // @Override
     public Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets() {
 	return coenablingEventSets;
     }
 
-    @Override
+    // @Override
     public Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
 	return coenablingParameterSets;
     }
