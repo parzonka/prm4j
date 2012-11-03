@@ -30,14 +30,14 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Table;
 
-public class LowLevelParametricProperty {
+public class StaticDataConverter {
 
     private final ListMultimap<BaseEvent, MaxData> maxData;
     private final ListMultimap<BaseEvent, JoinData> joinData;
     private final SetMultimap<Set<Parameter<?>>, ChainData> chainData;
     private final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
 
-    public LowLevelParametricProperty(ParametricProperty pp) {
+    public StaticDataConverter(ParametricProperty pp) {
 	maxData = ArrayListMultimap.create();
 	joinData = ArrayListMultimap.create();
 	chainData = HashMultimap.create();

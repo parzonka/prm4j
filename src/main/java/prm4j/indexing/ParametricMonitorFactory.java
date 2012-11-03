@@ -13,12 +13,12 @@ package prm4j.indexing;
 import prm4j.indexing.treebased.impl.DefaultParametricMonitor;
 import prm4j.logic.FiniteParametricProperty;
 import prm4j.logic.FiniteSpec;
-import prm4j.logic.treebased.LowLevelParametricProperty;
+import prm4j.logic.treebased.StaticDataConverter;
 
 public class ParametricMonitorFactory {
 
     public ParametricMonitor createParametricMonitor(FiniteSpec finiteSpec) {
-	LowLevelParametricProperty pp = new LowLevelParametricProperty(new FiniteParametricProperty(finiteSpec));
+	StaticDataConverter pp = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
 	return new DefaultParametricMonitor(pp.getEventContext(), finiteSpec.getInitialMonitor());
     }
 
