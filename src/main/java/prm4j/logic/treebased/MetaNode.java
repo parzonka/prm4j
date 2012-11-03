@@ -21,7 +21,7 @@ import prm4j.indexing.treebased.NodeMap;
  */
 public interface MetaNode {
 
-    public ChainingData[] getChainingData();
+    public ChainData[] getChainingData();
 
     public MonitorSet createMonitorSet();
 

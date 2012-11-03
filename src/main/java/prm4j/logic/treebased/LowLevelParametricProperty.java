@@ -32,15 +32,15 @@ import com.google.common.collect.Table;
 
 public class LowLevelParametricProperty {
 
-    private final ListMultimap<BaseEvent, EnableData> enableData;
+    private final ListMultimap<BaseEvent, MaxData> maxData;
     private final ListMultimap<BaseEvent, JoinData> joinData;
-    private final SetMultimap<Set<Parameter<?>>, ChainingData> chainingData;
+    private final SetMultimap<Set<Parameter<?>>, ChainData> chainData;
     private final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
 
     public LowLevelParametricProperty(ParametricProperty pp) {
-	enableData = ArrayListMultimap.create();
+	maxData = ArrayListMultimap.create();
 	joinData = ArrayListMultimap.create();
-	chainingData = HashMultimap.create();
+	chainData = HashMultimap.create();
 	monitorSetIds = HashBasedTable.create();
 	convert(pp);
     }
@@ -59,7 +59,7 @@ public class LowLevelParametricProperty {
 	    for (Set<Parameter<?>> parameterSet : pp.getMaxData().get(baseEvent)) {
 		final int[] nodeMask = parameterMask(parameterSet);
 		final int[] diffMask = parameterMask(Util.difference(baseEvent.getParameters(), parameterSet));
-		enableData.put(baseEvent, new EnableData(nodeMask, diffMask));
+		maxData.put(baseEvent, new MaxData(nodeMask, diffMask));
 	    }
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) {
 		final int[] nodeMask = parameterMask(tuple.getLeft());
@@ -74,7 +74,7 @@ public class LowLevelParametricProperty {
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getChainData().get(parameterSet)) {
 		final int[] nodeMask = parameterMask(parameterSet);
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
-		chainingData.put(parameterSet, new ChainingData(nodeMask, monitorSetId));
+		chainData.put(parameterSet, new ChainData(nodeMask, monitorSetId));
 	    }
 	}
     }
@@ -143,16 +143,16 @@ public class LowLevelParametricProperty {
 	return result;
     }
 
-    public List<EnableData> getEnableData(BaseEvent baseEvent) {
-	return enableData.get(baseEvent);
+    public List<MaxData> getMaxData(BaseEvent baseEvent) {
+	return maxData.get(baseEvent);
     }
 
     public EventContext getEventContext() {
 	return new EventContext(joinData, null); // TODO disablingEvents
     }
 
-    public Set<ChainingData> getChainingData(Set<Parameter<?>> parameterSet) {
-	return chainingData.get(parameterSet);
+    public Set<ChainData> getChainData(Set<Parameter<?>> parameterSet) {
+	return chainData.get(parameterSet);
     }
 
 }

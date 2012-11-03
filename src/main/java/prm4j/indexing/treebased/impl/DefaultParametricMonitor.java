@@ -18,7 +18,7 @@ import prm4j.indexing.treebased.LowLevelBinding;
 import prm4j.indexing.treebased.MonitorSetIterator;
 import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeStore;
-import prm4j.logic.treebased.ChainingData;
+import prm4j.logic.treebased.ChainData;
 import prm4j.logic.treebased.EventContext;
 import prm4j.logic.treebased.JoinData;
 
@@ -187,7 +187,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	final AbstractBaseMonitor monitor = node.getMonitor();
 	final LowLevelBinding[] bindings = monitor.getLowLevelBindings();
 
-	for (ChainingData chainingData : node.getNodeContext().getChainingData()) {
+	for (ChainData chainingData : node.getNodeContext().getChainingData()) {
 	    Node lessInformativeNode = nodeStore.getNode(bindings, chainingData.getNodeMask());
 	    // monitorSetId == 0 selects the set of strictly more informative instance monitors
 	    lessInformativeNode.getMonitorSet(chainingData.getMonitorSetId()).add(monitor);

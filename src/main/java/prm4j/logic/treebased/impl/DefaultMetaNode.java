@@ -13,7 +13,7 @@ package prm4j.logic.treebased.impl;
 import prm4j.indexing.treebased.MonitorSet;
 import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeMap;
-import prm4j.logic.treebased.ChainingData;
+import prm4j.logic.treebased.ChainData;
 import prm4j.logic.treebased.MetaNode;
 import prm4j.logic.treebased.NodePrototype;
 
@@ -21,7 +21,7 @@ public class DefaultMetaNode implements MetaNode {
 
     private MetaNode[] successors;
     private NodePrototype nodePrototype;
-    private ChainingData[] chainingData;
+    private ChainData[] chainingData;
 
     public DefaultMetaNode(MetaNode[] successors, NodePrototype nodePrototype) {
 	super();
@@ -30,7 +30,7 @@ public class DefaultMetaNode implements MetaNode {
     }
 
     @Override
-    public ChainingData[] getChainingData() {
+    public ChainData[] getChainingData() {
 	return chainingData;
     }
 
@@ -64,7 +64,7 @@ public class DefaultMetaNode implements MetaNode {
 	this.nodePrototype = nodePrototype;
     }
 
-    public void setChainingData(ChainingData[] chainingData) {
+    public void setChainingData(ChainData[] chainingData) {
 	this.chainingData = chainingData;
     }
 

@@ -10,27 +10,23 @@
  */
 package prm4j.logic.treebased;
 
-/**
- * Represents all less informative instances of the event instance which match its enable sets and are associated with
- * symbols, PLUS the compatible partial instances which map to parameter sets to fully instantiate joinable instances.
- */
-public class ChainingData {
+public class MaxData {
 
     private final int[] nodeMask;
-    private final int monitorSetId;
+    private final int[] diffMask;
 
-    public ChainingData(int[] nodeMask, int monitorSetId) {
+    public MaxData(int[] nodeMask, int[] diffMask) {
 	super();
 	this.nodeMask = nodeMask;
-	this.monitorSetId = monitorSetId;
+	this.diffMask = diffMask;
     }
 
     public int[] getNodeMask() {
 	return nodeMask;
     }
 
-    public int getMonitorSetId() {
-	return monitorSetId;
+    public int[] getDiffMask() {
+	return diffMask;
     }
 
 }
