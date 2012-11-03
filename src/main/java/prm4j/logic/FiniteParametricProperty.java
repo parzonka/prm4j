@@ -207,30 +207,34 @@ public class FiniteParametricProperty implements ParametricProperty {
     }
 
     @Override
-    public ListMultimap<BaseEvent, Set<Parameter<?>>> getEnablingInstances() {
+    public ListMultimap<BaseEvent, Set<Parameter<?>>> getMaxData() {
 	return maxData;
     }
 
     @Override
-    public ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinableInstances() {
+    public ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinData() {
 	return joinData;
     }
 
     @Override
-    public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainableSubinstances() {
+    public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainData() {
 	return chainData;
     }
 
     @Override
-    public SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSets() {
+    public SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSetData() {
 	return monitorSetData;
     }
 
-    Map<BaseEvent, Set<Set<BaseEvent>>> getPropertyEnableSets() {
+    Map<BaseEvent, Set<Set<BaseEvent>>> getEnablingEventSets() {
 	return enablingEventSets;
     }
 
-    Map<BaseEvent, Set<Set<Parameter<?>>>> getParameterEnableSets() {
+    public Set<Set<Parameter<?>>> getPossibleParameterSets() {
+	return possibleParameterSets;
+    }
+
+    Map<BaseEvent, Set<Set<Parameter<?>>>> getEnablingParameterSets() {
 	return enablingParameterSets;
     }
 

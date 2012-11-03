@@ -44,7 +44,7 @@ public class ProcessedFiniteSpecTest extends AbstractTest {
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
-	Map<BaseEvent, Set<Set<BaseEvent>>> actual = fs.getPropertyEnableSets();
+	Map<BaseEvent, Set<Set<BaseEvent>>> actual = fs.getEnablingEventSets();
 
 	Map<Symbol, Set<Set<Symbol>>> expected = new HashMap<Symbol, Set<Set<Symbol>>>();
 	for (Symbol symbol : u.alphabet.getSymbols()) {
@@ -68,7 +68,7 @@ public class ProcessedFiniteSpecTest extends AbstractTest {
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
-	Map<BaseEvent, Set<Set<Parameter<?>>>> actual = fs.getParameterEnableSets();
+	Map<BaseEvent, Set<Set<Parameter<?>>>> actual = fs.getEnablingParameterSets();
 
 	Map<Symbol, Set<Set<Parameter<?>>>> expected = new HashMap<Symbol, Set<Set<Parameter<?>>>>();
 	for (Symbol symbol : u.alphabet.getSymbols()) {

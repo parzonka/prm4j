@@ -39,21 +39,21 @@ public interface ParametricProperty {
     /**
      * @return mapping of base events to a list of subinstances in its enabling set
      */
-    public ListMultimap<BaseEvent, Set<Parameter<?>>> getEnablingInstances();
+    public ListMultimap<BaseEvent, Set<Parameter<?>>> getMaxData();
 
     /**
      * @return mapping of base events to tuples representing a set of compatible joinable instances
      */
-    public ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinableInstances();
+    public ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinData();
 
     /**
      * @return mapping from instances to their subinstances which have associated base events
      */
-    public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainableSubinstances();
+    public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainData();
 
     /**
      * @return mapping from instances to sets of instances representing sets of monitors
      */
-    public SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSets();
+    public SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSetData();
 
 }

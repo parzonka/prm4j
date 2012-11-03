@@ -46,7 +46,7 @@ public class LowLevelParametricProperty {
     }
 
     private void convert(ParametricProperty pp) {
-	for (Entry<Set<Parameter<?>>, Set<Parameter<?>>> entry : pp.getMonitorSets().entries()) {
+	for (Entry<Set<Parameter<?>>, Set<Parameter<?>>> entry : pp.getMonitorSetData().entries()) {
 	    @SuppressWarnings("unchecked")
 	    Set<Parameter<?>>[] sortedSets = entry.getValue().toArray(new Set[0]);
 	    Arrays.sort(sortedSets, Util.TOPOLOGICAL_SET_COMPARATOR);
@@ -56,12 +56,12 @@ public class LowLevelParametricProperty {
 	    }
 	}
 	for (BaseEvent baseEvent : pp.getBaseEvents()) {
-	    for (Set<Parameter<?>> parameterSet : pp.getEnablingInstances().get(baseEvent)) {
+	    for (Set<Parameter<?>> parameterSet : pp.getMaxData().get(baseEvent)) {
 		final int[] nodeMask = parameterMask(parameterSet);
 		final int[] diffMask = parameterMask(Util.difference(baseEvent.getParameters(), parameterSet));
 		enableData.put(baseEvent, new EnableData(nodeMask, diffMask));
 	    }
-	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinableInstances().get(baseEvent)) {
+	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) {
 		final int[] nodeMask = parameterMask(tuple.getLeft());
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
 		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
@@ -70,8 +70,8 @@ public class LowLevelParametricProperty {
 		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
 	    }
 	}
-	for (Set<Parameter<?>> parameterSet : pp.getChainableSubinstances().keys()) {
-	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getChainableSubinstances().get(parameterSet)) {
+	for (Set<Parameter<?>> parameterSet : pp.getChainData().keys()) {
+	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getChainData().get(parameterSet)) {
 		final int[] nodeMask = parameterMask(parameterSet);
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
 		chainingData.put(parameterSet, new ChainingData(nodeMask, monitorSetId));
