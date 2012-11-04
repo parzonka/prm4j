@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing;
+package prm4j.api;
 
 /**
  * An event contains a generic base event and a number of {@link Binding}s.

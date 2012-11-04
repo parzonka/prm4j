@@ -14,7 +14,7 @@ import java.util.Set;
 
 import com.google.common.collect.ListMultimap;
 
-import prm4j.indexing.BaseEvent;
+import prm4j.api.BaseEvent;
 
 public class EventContext {
 

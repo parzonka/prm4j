@@ -10,10 +10,10 @@
  */
 package prm4j.logic;
 
+import prm4j.api.BaseEvent;
+import prm4j.api.Event;
 import prm4j.api.MatchHandler;
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.indexing.BaseEvent;
-import prm4j.indexing.Event;
 
 /**
  * A base monitor holding a {@link MonitorState} which is updated when processing {@link BaseEvent}s.

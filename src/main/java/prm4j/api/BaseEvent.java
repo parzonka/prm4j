@@ -8,11 +8,10 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing;
+package prm4j.api;
 
 import java.util.Set;
 
-import prm4j.api.Parameter;
 
 public interface BaseEvent {
 

@@ -10,8 +10,8 @@
  */
 package prm4j.logic;
 
+import prm4j.api.BaseEvent;
 import prm4j.api.MatchHandler;
-import prm4j.indexing.BaseEvent;
 
 public interface MonitorState {
 

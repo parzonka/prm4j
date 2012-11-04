@@ -21,11 +21,11 @@ import java.util.Set;
 import org.junit.Test;
 
 import prm4j.AbstractTest;
+import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.api.Symbol;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.BaseEvent;
 
 public class ProcessedFiniteSpecTest extends AbstractTest {
 

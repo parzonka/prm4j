@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import prm4j.indexing.BaseEvent;
 
 /**
  * Immutable.<br>

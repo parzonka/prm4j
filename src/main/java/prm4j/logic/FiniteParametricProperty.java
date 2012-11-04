@@ -25,8 +25,8 @@ import java.util.Set;
 
 import prm4j.Util;
 import prm4j.Util.Tuple;
+import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.BaseEvent;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;

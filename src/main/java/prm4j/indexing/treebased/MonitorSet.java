@@ -10,8 +10,8 @@
  */
 package prm4j.indexing.treebased;
 
+import prm4j.api.Event;
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.indexing.Event;
 
 public interface MonitorSet {
 

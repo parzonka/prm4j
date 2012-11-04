@@ -10,10 +10,10 @@
  */
 package prm4j.indexing.treebased.impl;
 
+import prm4j.api.BaseEvent;
+import prm4j.api.Event;
+import prm4j.api.ParametricMonitor;
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.indexing.BaseEvent;
-import prm4j.indexing.Event;
-import prm4j.indexing.ParametricMonitor;
 import prm4j.indexing.treebased.BindingStore;
 import prm4j.indexing.treebased.LowLevelBinding;
 import prm4j.indexing.treebased.MonitorSet;

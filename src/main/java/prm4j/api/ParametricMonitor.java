@@ -6,19 +6,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- * Mateusz Parzonka - initial API and implementation
+ * Eric Bodden - initial API and implementation
+ * Mateusz Parzonka - adapted API and implementation
  */
-package prm4j.indexing;
-
-import prm4j.api.Parameter;
+package prm4j.api;
 
 /**
- * Represents the association of a {@link Parameter} to an object.
+ * A parametric monitor can be thought as a set of base monitors running in parallel, one for each parameter instance.
  */
-public interface Binding {
+public interface ParametricMonitor {
 
-    public int getParameterId();
+    void processEvent(Event event);
 
-    public Object get();
+    void reset();
 
 }

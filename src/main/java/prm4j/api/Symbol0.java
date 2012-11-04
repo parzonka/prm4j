@@ -10,7 +10,6 @@
  */
 package prm4j.api;
 
-import prm4j.indexing.Event;
 
 /**
  * Parameterless symbol.

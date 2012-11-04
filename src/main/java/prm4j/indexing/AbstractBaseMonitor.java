@@ -10,6 +10,7 @@
  */
 package prm4j.indexing;
 
+import prm4j.api.ParametricMonitor;
 import prm4j.indexing.treebased.LowLevelBinding;
 
 /**
@@ -51,7 +52,7 @@ public abstract class AbstractBaseMonitor implements BaseMonitor<AbstractBaseMon
 	return bindings;
     }
 
-    protected final prm4j.indexing.Binding[] getBindings() {
+    protected final prm4j.api.Binding[] getBindings() {
 	// upcast
 	return bindings;
     }

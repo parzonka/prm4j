@@ -11,6 +11,8 @@
  */
 package prm4j.indexing;
 
+import prm4j.api.Event;
+import prm4j.api.ParametricMonitor;
 import prm4j.indexing.treebased.impl.DefaultParametricMonitor;
 
 /**
