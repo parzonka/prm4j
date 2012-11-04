@@ -8,12 +8,9 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing.treebased.impl;
+package prm4j.indexing.realtime;
 
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.indexing.realtime.MonitorSet;
-import prm4j.indexing.realtime.Node;
-import prm4j.indexing.realtime.NodeMap;
 import prm4j.logic.treebased.MetaNode;
 import prm4j.logic.treebased.NodePrototype;
 

@@ -8,11 +8,8 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing.treebased.impl;
+package prm4j.indexing.realtime;
 
-import prm4j.indexing.realtime.LowLevelBinding;
-import prm4j.indexing.realtime.Node;
-import prm4j.indexing.realtime.NodeStore;
 
 public class DefaultNodeStore implements NodeStore {
 

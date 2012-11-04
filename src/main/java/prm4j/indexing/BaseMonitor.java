@@ -13,7 +13,7 @@ package prm4j.indexing;
 
 import prm4j.api.Event;
 import prm4j.api.ParametricMonitor;
-import prm4j.indexing.treebased.impl.DefaultParametricMonitor;
+import prm4j.indexing.realtime.DefaultParametricMonitor;
 
 /**
  * An {@link BaseMonitor} is a concrete monitor instance, representing the internal state of an

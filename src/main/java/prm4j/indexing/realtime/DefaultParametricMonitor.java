@@ -8,18 +8,12 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing.treebased.impl;
+package prm4j.indexing.realtime;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.Event;
 import prm4j.api.ParametricMonitor;
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.indexing.realtime.BindingStore;
-import prm4j.indexing.realtime.LowLevelBinding;
-import prm4j.indexing.realtime.MonitorSet;
-import prm4j.indexing.realtime.MonitorSetIterator;
-import prm4j.indexing.realtime.Node;
-import prm4j.indexing.realtime.NodeStore;
 import prm4j.logic.treebased.ChainData;
 import prm4j.logic.treebased.EventContext;
 import prm4j.logic.treebased.JoinData;
