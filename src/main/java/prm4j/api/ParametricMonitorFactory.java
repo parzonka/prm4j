@@ -8,9 +8,8 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing;
+package prm4j.api;
 
-import prm4j.api.ParametricMonitor;
 import prm4j.indexing.realtime.DefaultParametricMonitor;
 import prm4j.logic.FiniteParametricProperty;
 import prm4j.logic.FiniteSpec;
