@@ -32,12 +32,14 @@ import com.google.common.collect.Table;
 
 public class StaticDataConverter {
 
+    private final ParametricProperty pp;
     private final ListMultimap<BaseEvent, MaxData> maxData;
     private final ListMultimap<BaseEvent, JoinData> joinData;
     private final SetMultimap<Set<Parameter<?>>, ChainData> chainData;
     private final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
 
     public StaticDataConverter(ParametricProperty pp) {
+	this.pp = pp;
 	maxData = ArrayListMultimap.create();
 	joinData = ArrayListMultimap.create();
 	chainData = HashMultimap.create();
@@ -148,7 +150,8 @@ public class StaticDataConverter {
     }
 
     public EventContext getEventContext() {
-	return new EventContext(joinData, maxData, null); // TODO disablingEvents
+	return new EventContext(pp.getBaseEvents(), joinData, maxData,
+		pp.getCreationEvents(), pp.getDisablingEvents());
     }
 
     public Set<ChainData> getChainData(Set<Parameter<?>> parameterSet) {

@@ -10,6 +10,8 @@
  */
 package prm4j.logic.treebased;
 
+import java.util.Set;
+
 import com.google.common.collect.ListMultimap;
 
 import prm4j.indexing.BaseEvent;
@@ -18,26 +20,33 @@ public class EventContext {
 
     private final JoinData[][] joinDataArray;
     private final MaxData[][] maxDataArray;
+    private final boolean[] creationEvents;
     private final boolean[] disablingEvents;
 
-    public EventContext(ListMultimap<BaseEvent,JoinData> joinData, ListMultimap<BaseEvent,MaxData> maxData, Object object) {
-	joinDataArray = new JoinData[joinData.keys().size()][];
-	for (BaseEvent baseEvent : joinData.keys()) {
-	    joinDataArray[baseEvent.getIndex()] = joinData.get(baseEvent).toArray(new JoinData[0]);
+    public EventContext(Set<BaseEvent> baseEvents, ListMultimap<BaseEvent, JoinData> joinData, ListMultimap<BaseEvent, MaxData> maxData,
+	    Set<BaseEvent> creationEvents, Set<BaseEvent> disablingEvents) {
+	joinDataArray = new JoinData[baseEvents.size()][];
+	maxDataArray = new MaxData[baseEvents.size()][];
+	this.creationEvents = new boolean[baseEvents.size()];
+	this.disablingEvents = new boolean[baseEvents.size()];
+	for (BaseEvent baseEvent : baseEvents) {
+	    maxDataArray[baseEvent.getIndex()] = maxData.get(baseEvent) != null ? maxData.get(baseEvent).toArray(new MaxData[0]) : null;
+	    joinDataArray[baseEvent.getIndex()] = joinData.get(baseEvent) != null ? joinData.get(baseEvent).toArray(new JoinData[0]) : null;
+	    this.creationEvents[baseEvent.getIndex()] = creationEvents.contains(baseEvent);
+	    this.disablingEvents[baseEvent.getIndex()] = disablingEvents.contains(baseEvent);
 	}
-	maxDataArray = new MaxData[maxData.keys().size()][];
-	for (BaseEvent baseEvent : maxData.keys()) {
-	    maxDataArray[baseEvent.getIndex()] = maxData.get(baseEvent).toArray(new MaxData[0]);
-	}
-	disablingEvents = null; // TODO
-    }
-
-    public JoinData[] getJoinData(BaseEvent baseEvent) {
-	return joinDataArray[baseEvent.getIndex()];
     }
 
     public MaxData[] getMaxData(BaseEvent baseEvent) {
 	return maxDataArray[baseEvent.getIndex()];
+    }
+
+    public JoinData[] getJoinData(BaseEvent baseEvent) {
+   	return joinDataArray[baseEvent.getIndex()];
+       }
+
+    public boolean isCreationEvent(BaseEvent baseEvent) {
+	return creationEvents[baseEvent.getIndex()];
     }
 
     public boolean isDisablingEvent(BaseEvent baseEvent) {
