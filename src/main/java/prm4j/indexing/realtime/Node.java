@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing.treebased;
+package prm4j.indexing.realtime;
 
 import prm4j.indexing.AbstractBaseMonitor;
 import prm4j.logic.treebased.MetaNode;

@@ -11,7 +11,7 @@
 package prm4j.indexing;
 
 import prm4j.api.ParametricMonitor;
-import prm4j.indexing.treebased.LowLevelBinding;
+import prm4j.indexing.realtime.LowLevelBinding;
 
 /**
  * A concrete monitor instance, representing the internal state of a {@link ParametricMonitor} for one single concrete

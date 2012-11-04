@@ -8,16 +8,12 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing.treebased;
+package prm4j.indexing.realtime;
 
-public interface NodeMap {
+public interface NodeStore {
 
-    // public MapReference getReference(); // TODO resource registration
+    public Node getNode(LowLevelBinding[] bindings);
 
-    public Node getNode(LowLevelBinding binding);
-
-    public boolean containsKey(LowLevelBinding binding);
-
-    public Node removeKey(LowLevelBinding binding);
+    public Node getNode(LowLevelBinding[] bindings, int[] parameterMask);
 
 }

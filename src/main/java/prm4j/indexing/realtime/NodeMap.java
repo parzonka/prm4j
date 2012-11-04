@@ -8,16 +8,16 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing.treebased;
+package prm4j.indexing.realtime;
 
-import prm4j.indexing.AbstractBaseMonitor;
+public interface NodeMap {
 
-public interface MonitorSetIterator {
+    // public MapReference getReference(); // TODO resource registration
 
-    public AbstractBaseMonitor next();
+    public Node getNode(LowLevelBinding binding);
 
-    public boolean hasNext(AbstractBaseMonitor lastMonitor, boolean isLastMonitorAlive);
+    public boolean containsKey(LowLevelBinding binding);
 
-    public void done();
+    public Node removeKey(LowLevelBinding binding);
 
 }

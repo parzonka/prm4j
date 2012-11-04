@@ -10,9 +10,9 @@
  */
 package prm4j.logic.treebased;
 
-import prm4j.indexing.treebased.MonitorSet;
-import prm4j.indexing.treebased.Node;
-import prm4j.indexing.treebased.NodeMap;
+import prm4j.indexing.realtime.MonitorSet;
+import prm4j.indexing.realtime.Node;
+import prm4j.indexing.realtime.NodeMap;
 
 /**
  * Every {@link Node} is equipped with a MetaNode, containing factory methods and providing statically computed

@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing.treebased;
+package prm4j.indexing.realtime;
 
 public interface BindingStore {
 

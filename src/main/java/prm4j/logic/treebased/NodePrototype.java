@@ -10,7 +10,7 @@
  */
 package prm4j.logic.treebased;
 
-import prm4j.indexing.treebased.Node;
+import prm4j.indexing.realtime.Node;
 
 public interface NodePrototype {
 

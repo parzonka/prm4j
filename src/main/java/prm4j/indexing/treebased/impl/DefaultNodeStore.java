@@ -10,9 +10,9 @@
  */
 package prm4j.indexing.treebased.impl;
 
-import prm4j.indexing.treebased.LowLevelBinding;
-import prm4j.indexing.treebased.Node;
-import prm4j.indexing.treebased.NodeStore;
+import prm4j.indexing.realtime.LowLevelBinding;
+import prm4j.indexing.realtime.Node;
+import prm4j.indexing.realtime.NodeStore;
 
 public class DefaultNodeStore implements NodeStore {
 

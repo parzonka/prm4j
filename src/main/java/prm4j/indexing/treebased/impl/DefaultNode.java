@@ -11,9 +11,9 @@
 package prm4j.indexing.treebased.impl;
 
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.indexing.treebased.MonitorSet;
-import prm4j.indexing.treebased.Node;
-import prm4j.indexing.treebased.NodeMap;
+import prm4j.indexing.realtime.MonitorSet;
+import prm4j.indexing.realtime.Node;
+import prm4j.indexing.realtime.NodeMap;
 import prm4j.logic.treebased.MetaNode;
 import prm4j.logic.treebased.NodePrototype;
 
