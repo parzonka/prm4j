@@ -81,4 +81,9 @@ public class DefaultNode implements Node, NodePrototype {
 	}
     }
 
+    @Override
+    public MonitorSet[] getMonitorSets() {
+	return monitorSets;
+    }
+
 }

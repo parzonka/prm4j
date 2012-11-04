@@ -36,6 +36,13 @@ public abstract class AbstractBaseMonitor implements BaseMonitor<AbstractBaseMon
 	return copy;
     }
 
+    public final AbstractBaseMonitor copy(LowLevelBinding[] bindings, long timestamp) {
+	AbstractBaseMonitor copy = copy();
+	copy.setBindings(bindings);
+	copy.setCreationTime(timestamp);
+	return copy;
+    }
+
     private final void setBindings(LowLevelBinding[] bindings) {
 	this.bindings = bindings;
     }

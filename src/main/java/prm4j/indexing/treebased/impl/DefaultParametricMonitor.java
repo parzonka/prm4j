@@ -11,16 +11,19 @@
 package prm4j.indexing.treebased.impl;
 
 import prm4j.indexing.AbstractBaseMonitor;
+import prm4j.indexing.BaseEvent;
 import prm4j.indexing.Event;
 import prm4j.indexing.ParametricMonitor;
 import prm4j.indexing.treebased.BindingStore;
 import prm4j.indexing.treebased.LowLevelBinding;
+import prm4j.indexing.treebased.MonitorSet;
 import prm4j.indexing.treebased.MonitorSetIterator;
 import prm4j.indexing.treebased.Node;
 import prm4j.indexing.treebased.NodeStore;
 import prm4j.logic.treebased.ChainData;
 import prm4j.logic.treebased.EventContext;
 import prm4j.logic.treebased.JoinData;
+import prm4j.logic.treebased.MaxData;
 
 public class DefaultParametricMonitor implements ParametricMonitor {
 
@@ -28,6 +31,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     private BindingStore bindingStore;
     private NodeStore nodeStore;
     private final EventContext eventContext;
+    private long timestamp = 0L;
 
     public DefaultParametricMonitor(EventContext eventContext, AbstractBaseMonitor monitorPrototype) {
 	this.eventContext = eventContext;
@@ -38,37 +42,106 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     public void processEvent(Event event) {
 
 	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
+	final BaseEvent baseEvent = event.getBaseEvent();
 	final Node instanceNode = nodeStore.getNode(bindings);
 	final AbstractBaseMonitor instanceMonitor = instanceNode.getMonitor();
 
-	if (instanceMonitor == null) {
-	    // TODO join and chain with implicit update
-	    for (JoinData joinData : eventContext.getJoinData(event.getBaseEvent())) {
-		joinWithAllCompatibleInstances(joinData, bindings, event);
+	if (eventContext.isDisablingEvent(event.getBaseEvent())) { // 2
+	    for (LowLevelBinding binding : bindings) { // 3
+		binding.setDisable(true); // 4
+	    } // 5
+	} // 6
+
+	if (instanceMonitor == null) { // 7
+	    findMaxPhase: for (MaxData maxData : eventContext.getMaxData(baseEvent)) { // 8
+		AbstractBaseMonitor m = nodeStore.getNode(bindings, maxData.getNodeMask()).getMonitor(); // 9
+		if (m != null) { // 10
+		    for (int i : maxData.getDiffMask()) { // 11
+			LowLevelBinding b = bindings[i];
+			if (b.getTimestamp() < timestamp && (b.getTimestamp() > m.getCreationTime() || b.getDisable())) { // 12
+			    continue findMaxPhase; // 13
+			}
+		    }
+		    // inlined DefineTo from 73
+		    AbstractBaseMonitor monitor = m.copy(); // 102-105
+		    monitor.processEvent(event); // 103
+		    instanceNode.setMonitor(monitor); // 106
+		    chain(bindings, monitor); // 107
+		    break findMaxPhase;
+		}
 	    }
-
+	    monitorCreation: if (instanceNode.getMonitor() == null) {
+		if (eventContext.isCreationEvent(baseEvent)) { // 20
+		    for (LowLevelBinding b : bindings) { // 21
+			if (b.getDisable()) { // 22
+			    break monitorCreation; // 23
+			}
+		    }
+		    // inlined DefineNew from 93
+		    AbstractBaseMonitor monitor = monitorPrototype.copy(bindings, timestamp); // 94 - 97
+		    monitor.processEvent(event); // 95
+		    instanceNode.setMonitor(monitor); // 98
+		    chain(bindings, monitor); // 99
+		}
+	    }
+	    // inlined Join from 42
+	    joinPhase: for (JoinData joinData : eventContext.getJoinData(baseEvent)) { // 43
+		long tmax = 0L; // 44
+		for (int i : joinData.getDiffMask()) { // 45
+		    final LowLevelBinding b = bindings[i];
+		    final long bTimestamp = b.getTimestamp();
+		    if (bTimestamp < timestamp) { // 46
+			if (b.getDisable()) { // 47
+			    continue joinPhase; // 48
+			} else if (tmax < bTimestamp) { // 49
+			    tmax = bTimestamp; // 50
+			} // 51
+		    } // 52
+		} // 53
+		final boolean someBindingsAreKnown = tmax < timestamp;
+		final Node compatibleNode = nodeStore.getNode(bindings, joinData.getNodeMask());
+		// calculate once the bindings to be joined with the whole monitor set
+		final LowLevelBinding[] joinableBindings = createJoinableBindings(bindings,
+			joinData.getExtensionPattern()); // 56 - 61
+		// iterate over all compatible nodes
+		final MonitorSetIterator iter = compatibleNode.getMonitorSet(joinData.getMonitorSetId()).getIterator();
+		AbstractBaseMonitor compatibleMonitor = null;
+		boolean isCompatibleMonitorAlive = false;
+		// iterate over all compatible nodes
+		LowLevelBinding[] joinable = joinableBindings.clone(); // 62
+		monitorSetIteration: while (iter.hasNext(compatibleMonitor, isCompatibleMonitorAlive)) { // 63
+		    compatibleMonitor = iter.next();
+		    isCompatibleMonitorAlive = true;
+		    if (someBindingsAreKnown && compatibleMonitor.getCreationTime() < tmax) { // 64
+			continue monitorSetIteration; // 65
+		    }
+		    createJoin(joinable, compatibleMonitor.getLowLevelBindings(), joinData.getCopyPattern()); // 67 - 71
+		    final Node lastNode = nodeStore.getNode(joinable);
+		    if (lastNode.getMonitor() == null) { // 72
+			// inlined DefineTo // 73
+			AbstractBaseMonitor monitor = compatibleMonitor.copy(joinable); // 102-105
+			monitor.processEvent(event); // 103
+			lastNode.setMonitor(monitor); // 106
+			chain(joinable, monitor); // 99
+			joinable = joinableBindings.clone(); // 74
+		    }
+		}
+	    }
 	} else {
-	    // TODO just update
+	    // update phase
+	    for (MonitorSet monitorSet : instanceNode.getMonitorSets()) { // 30 - 32
+		MonitorSetIterator iter = monitorSet.getIterator();
+		AbstractBaseMonitor monitor = null;
+		boolean isMonitorAlive = false;
+		while (iter.hasNext(monitor, isMonitorAlive)) {
+		    isMonitorAlive = iter.next().processEvent(event); // 33
+		}
+	    }
 	}
-
-    }
-
-    private void joinWithAllCompatibleInstances(final JoinData joinData, final LowLevelBinding[] bindings,
-	    final Event event) {
-
-	final Node compatibleNode = nodeStore.getNode(bindings, joinData.getNodeMask());
-	// calculate once the bindings to be joined with the whole monitor set
-	final LowLevelBinding[] joinableBindings = getJoinableBindings(bindings, joinData.getExtensionPattern());
-	// iterate over all compatible nodes
-	final MonitorSetIterator iter = compatibleNode.getMonitorSet(joinData.getMonitorSetId()).getIterator();
-	AbstractBaseMonitor compatibleMonitor = null;
-	boolean isCompatibleMonitorAlive = false;
-	// iterate over all compatible nodes
-	while (iter.hasNext(compatibleMonitor, isCompatibleMonitorAlive)) {
-	    compatibleMonitor = iter.next();
-	    isCompatibleMonitorAlive = expand(compatibleMonitor, joinableBindings, joinData.getCopyPattern(),
-		    joinData.getDiffMask(), event);
-	}
+	for (LowLevelBinding b : bindings) { // 37
+	    b.setTimestamp(timestamp); // 38
+	} // 39
+	timestamp++; // 40
     }
 
     /**
@@ -79,7 +152,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
      *            allows transformation of the bindings to joinable bindings
      * @return joinable bindings
      */
-    static LowLevelBinding[] getJoinableBindings(LowLevelBinding[] bindings, boolean[] extensionPattern) {
+    static LowLevelBinding[] createJoinableBindings(LowLevelBinding[] bindings, boolean[] extensionPattern) {
 	final LowLevelBinding[] joinableBindings = new LowLevelBinding[extensionPattern.length];
 	int sourceIndex = 0;
 	for (int i = 0; i < extensionPattern.length; i++) {
@@ -91,106 +164,19 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	return joinableBindings;
     }
 
-    /**
-     * Operation which<br>
-     * <ol>
-     * <li>joins the given bindings with the bindings of the given oldMonitor to create a new monitor associated with
-     * these bindings
-     * <li>processes the given current event with the new monitor
-     * <li>stores the new monitor in its associated node
-     * <li>evaluates if the oldMonitor should be removed from the containing monitor set
-     * </ol>
-     *
-     * @param oldMonitor
-     *            the old monitor which is the source for the join
-     * @param joinableBindings
-     *            bindings which reserved space for the join
-     * @param rootNode
-     *            the node associated with the parameterless instance
-     * @param copyPattern
-     *            integer pattern to perform an efficient join operation
-     * @param event
-     *            the current event
-     * @return <code>true</code> if oldMonitor is still alive, or <code>false</code> if it should be removed from the
-     *         monitorSet instead. A monitor is dead, if it can't reach a final state anymore (it is caught in a dead
-     *         state or similar).<br>
-     *         In case of <code>false</code>, no new monitor will be stored, because it would be dead from the start.
-     */
-    protected boolean expand(AbstractBaseMonitor oldMonitor, LowLevelBinding[] joinableBindings, int[] copyPattern,
-	    int[] diffMask, Event event) {
-
-	// OPTIONAL: Uses co-enable set: check if old monitor is alive
-	if (!oldMonitor.isFinalStateReachable()) {
-	    // in this case this monitor and all derived monitors are dead
-	    return false;
-	    // this could be merged with the join reducing time complexity, but would create another array, so its
-	    // probably not better
-	}
-
-	// OPTIONAL: Uses enable set
-	for (int paramId : diffMask) {
-	    if (joinableBindings[paramId].getDisable() > oldMonitor.getCreationTime()
-		    || (joinableBindings[paramId].getTau() > 0 && joinableBindings[paramId].getTau() < oldMonitor
-			    .getCreationTime())) {
-		// don't create a new monitor but the old one is alright
-		return true;
-	    }
-	}
-
-	// create a duplicate of the joinableBindings which will be set in the new monitor
-	final LowLevelBinding[] newBindings = createJoin(joinableBindings, oldMonitor.getLowLevelBindings(),
-		copyPattern);
-
-	// traverse to the last node, it will be created on the fly if not existent
-	final Node lastNode = nodeStore.getNode(newBindings);
-
-	if (lastNode.getMonitor() != null) {
-	    return true;
-	}
-
-	final AbstractBaseMonitor newMonitor = oldMonitor.copy(newBindings);
-
-	// process the event immediately, instead of doing it in the batch update phase after expansion
-	if (!newMonitor.processEvent(event)) {
-	    return false;
-	}
-
-	// OPTIONAL own optimization, proof needed
-	if (!newMonitor.isFinalStateReachable()) {
-	    // DISCUSS prevent adding the monitor to the node if its final state is not reachable anyway
-	    // but we end up with a node without monitor... we have to proof this is sound - the new bindings are now
-	    // disabled
-	    return true;
-	}
-
-	lastNode.setMonitor(newMonitor);
-
-	// update chaining table with crosslinks
-	updateChainings(lastNode);
-	return true;
-    }
-
-    private LowLevelBinding[] createJoin(LowLevelBinding[] joinableBindings, LowLevelBinding[] joiningBindings,
+    private static void createJoin(LowLevelBinding[] joinableBindings, LowLevelBinding[] joiningBindings,
 	    int[] copyPattern) {
-	final LowLevelBinding[] newBindings = new LowLevelBinding[joinableBindings.length];
-	System.arraycopy(joinableBindings, 0, newBindings, 0, joinableBindings.length);
 	// fill in the missing bindings into the duplicate from the old monitor
 	for (int j = 0; j < copyPattern.length; j += 2) {
 	    // copy from j to j+1
-	    newBindings[copyPattern[j + 1]] = joiningBindings[copyPattern[j]];
+	    joinableBindings[copyPattern[j + 1]] = joiningBindings[copyPattern[j]];
 	}
-	return newBindings;
     }
 
-    private void updateChainings(Node node) {
-
-	final AbstractBaseMonitor monitor = node.getMonitor();
-	final LowLevelBinding[] bindings = monitor.getLowLevelBindings();
-
-	for (ChainData chainingData : node.getNodeContext().getChainData()) {
-	    Node lessInformativeNode = nodeStore.getNode(bindings, chainingData.getNodeMask());
-	    // monitorSetId == 0 selects the set of strictly more informative instance monitors
-	    lessInformativeNode.getMonitorSet(chainingData.getMonitorSetId()).add(monitor);
+    private void chain(LowLevelBinding[] bindings, AbstractBaseMonitor monitor) {
+	for (ChainData chainData : nodeStore.getNode(bindings).getNodeContext().getChainData()) {
+	    nodeStore.getNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
+		    .add(monitor);
 	}
     }
 

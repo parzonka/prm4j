@@ -35,12 +35,12 @@ public interface LowLevelBinding extends prm4j.indexing.Binding {
      */
     Node getBaseNode();
 
-    long getDisable();
+    boolean getDisable();
 
-    void setDisable(long disable);
+    void setDisable(boolean disable);
 
-    long getTau();
+    long getTimestamp();
 
-    void setTau(long tau);
+    void setTimestamp(long timestamp);
 
 }

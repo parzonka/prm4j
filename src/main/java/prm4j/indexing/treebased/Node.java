@@ -43,6 +43,8 @@ public interface Node {
      */
     public MonitorSet getMonitorSet(int parameterSetId);
 
+    public MonitorSet[] getMonitorSets();
+
     /**
      * The node is used in {@link NodeMap}s with similar functionality as map entries.
      *
