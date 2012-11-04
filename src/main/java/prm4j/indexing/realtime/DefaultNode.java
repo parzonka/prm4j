@@ -11,7 +11,7 @@
 package prm4j.indexing.realtime;
 
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.logic.treebased.MetaNode;
+import prm4j.indexing.staticdata.MetaNode;
 import prm4j.logic.treebased.NodePrototype;
 
 public class DefaultNode implements Node, NodePrototype {

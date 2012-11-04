@@ -8,25 +8,29 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.logic.treebased;
+package prm4j.indexing.staticdata;
 
-public class MaxData {
+/**
+ * Represents all less informative instances of the event instance which match its enable sets and are associated with
+ * symbols, PLUS the compatible partial instances which map to parameter sets to fully instantiate joinable instances.
+ */
+public class ChainData {
 
     private final int[] nodeMask;
-    private final int[] diffMask;
+    private final int monitorSetId;
 
-    public MaxData(int[] nodeMask, int[] diffMask) {
+    public ChainData(int[] nodeMask, int monitorSetId) {
 	super();
 	this.nodeMask = nodeMask;
-	this.diffMask = diffMask;
+	this.monitorSetId = monitorSetId;
     }
 
     public int[] getNodeMask() {
 	return nodeMask;
     }
 
-    public int[] getDiffMask() {
-	return diffMask;
+    public int getMonitorSetId() {
+	return monitorSetId;
     }
 
 }

@@ -14,10 +14,10 @@ import prm4j.api.BaseEvent;
 import prm4j.api.Event;
 import prm4j.api.ParametricMonitor;
 import prm4j.indexing.AbstractBaseMonitor;
-import prm4j.logic.treebased.ChainData;
-import prm4j.logic.treebased.EventContext;
-import prm4j.logic.treebased.JoinData;
-import prm4j.logic.treebased.MaxData;
+import prm4j.indexing.staticdata.ChainData;
+import prm4j.indexing.staticdata.EventContext;
+import prm4j.indexing.staticdata.JoinData;
+import prm4j.indexing.staticdata.MaxData;
 
 public class DefaultParametricMonitor implements ParametricMonitor {
 

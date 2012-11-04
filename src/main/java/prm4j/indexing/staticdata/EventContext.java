@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.logic.treebased;
+package prm4j.indexing.staticdata;
 
 import java.util.Set;
 

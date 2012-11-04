@@ -13,8 +13,8 @@ package prm4j.logic.treebased.impl;
 import prm4j.indexing.realtime.MonitorSet;
 import prm4j.indexing.realtime.Node;
 import prm4j.indexing.realtime.NodeMap;
-import prm4j.logic.treebased.ChainData;
-import prm4j.logic.treebased.MetaNode;
+import prm4j.indexing.staticdata.ChainData;
+import prm4j.indexing.staticdata.MetaNode;
 import prm4j.logic.treebased.NodePrototype;
 
 public class DefaultMetaNode implements MetaNode {
