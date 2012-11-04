@@ -16,8 +16,6 @@ package prm4j.indexing;
  */
 public interface ParametricMonitor {
 
-    AbstractBaseMonitor createBaseMonitor();
-
     void processEvent(Event event);
 
     void reset();

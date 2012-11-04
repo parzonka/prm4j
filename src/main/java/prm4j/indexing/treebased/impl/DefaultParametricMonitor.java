@@ -181,11 +181,6 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     }
 
     @Override
-    public AbstractBaseMonitor createBaseMonitor() {
-	return monitorPrototype.copy();
-    }
-
-    @Override
     public void reset() {
 	// TODO Auto-generated method stub
     }
