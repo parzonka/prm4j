@@ -10,7 +10,11 @@
  */
 package prm4j.indexing.staticdata;
 
-import prm4j.indexing.realtime.MonitorSet;
+import java.util.HashSet;
+import java.util.Set;
+
+import prm4j.api.Parameter;
+import prm4j.indexing.realtime.DefaultNode;
 import prm4j.indexing.realtime.Node;
 import prm4j.indexing.realtime.NodeMap;
 
@@ -19,16 +23,71 @@ import prm4j.indexing.realtime.NodeMap;
  * algorithm logic.
  *
  */
-public interface MetaNode {
+public class MetaNode {
 
-    public ChainData[] getChainData();
+    private MetaNode[] successors;
+    private ChainData[] chainData;
+    private Set<Parameter<?>> parameterSet;
+    private boolean isConfigured = false;
+    private int monitorSetCount;
 
-    public MonitorSet createMonitorSet();
+    public MetaNode(Set<Parameter<?>> parameterSet) {
+	super();
+	this.parameterSet = parameterSet;
+    }
 
-    public Node createNode();
+    public ChainData[] getChainData() {
+	return chainData;
+    }
 
-    public Node createNode(int parameterId);
+    public Node createNode() {
+	return new DefaultNode(this);
+    }
 
-    public NodeMap createNodeMap();
+    public Node createNode(int parameterId) {
+	return successors[parameterId].createNode();
+    }
+
+    public NodeMap createNodeMap() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    void setChainingData(ChainData[] chainingData) {
+	chainData = chainingData;
+    }
+
+    public MetaNode getMetaNode(Parameter<?> parameter) {
+	MetaNode node = successors[parameter.getParameterId()];
+	if (node == null) {
+	    Set<Parameter<?>> parameterSet = new HashSet<Parameter<?>>();
+	    parameterSet.addAll(this.parameterSet);
+	    assert !parameterSet.contains(parameter) : "Parameter set could not have had contained new parameter.";
+	    parameterSet.add(parameter);
+	    node = new MetaNode(parameterSet);
+	    successors[parameter.getParameterId()] = node;
+	}
+	return node;
+    }
+
+    public Set<Parameter<?>> getParameterSet() {
+        return parameterSet;
+    }
+
+    boolean isConfigured() {
+	return isConfigured;
+    }
+
+    void setConfigured(boolean isConfigured) {
+	this.isConfigured = isConfigured;
+    }
+
+    public int getMonitorSetCount() {
+	return monitorSetCount;
+    }
+
+    public void setMonitorSetCount(int monitorSetCount) {
+	this.monitorSetCount = monitorSetCount;
+    }
 
 }

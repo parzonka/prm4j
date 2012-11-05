@@ -13,6 +13,8 @@ package prm4j.indexing.staticdata;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -37,6 +39,7 @@ public class StaticDataConverter {
     private final ListMultimap<BaseEvent, JoinData> joinData;
     private final SetMultimap<Set<Parameter<?>>, ChainData> chainData;
     private final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
+    private final MetaNode rootNode;
 
     public StaticDataConverter(ParametricProperty pp) {
 	this.pp = pp;
@@ -45,6 +48,8 @@ public class StaticDataConverter {
 	chainData = HashMultimap.create();
 	monitorSetIds = HashBasedTable.create();
 	convert(pp);
+	rootNode = new MetaNode(new HashSet<Parameter<?>>());
+	calculateMetaTree();
     }
 
     private void convert(ParametricProperty pp) {
@@ -131,6 +136,24 @@ public class StaticDataConverter {
 	return result;
     }
 
+    private void calculateMetaTree() {
+	for (Set<Parameter<?>> parameterSet : pp.getPossibleParameterSets()) {
+	    List<Parameter<?>> parameterList = new ArrayList<Parameter<?>>(parameterSet);
+	    Collections.sort(parameterList);
+	    MetaNode node = rootNode;
+	    for (Parameter<?> parameter : parameterList) {
+		node = node.getMetaNode(parameter);
+		if (!node.isConfigured()) {
+		    node.setChainingData(chainData.get(node.getParameterSet()).toArray(new ChainData[0]));
+		    node.setMonitorSetCount(monitorSetIds.row(node.getParameterSet()).size());
+		    node.setConfigured(true);
+		}
+
+	    }
+	}
+
+    }
+
     /**
      * @param parameterSet
      * @return an array representation of the parameter ids of the given parameter set (sorted)
@@ -150,12 +173,15 @@ public class StaticDataConverter {
     }
 
     public EventContext getEventContext() {
-	return new EventContext(pp.getBaseEvents(), joinData, maxData,
-		pp.getCreationEvents(), pp.getDisablingEvents());
+	return new EventContext(pp.getBaseEvents(), joinData, maxData, pp.getCreationEvents(), pp.getDisablingEvents());
     }
 
     public Set<ChainData> getChainData(Set<Parameter<?>> parameterSet) {
 	return chainData.get(parameterSet);
+    }
+
+    public MetaNode getMetaTree() {
+	return rootNode;
     }
 
 }

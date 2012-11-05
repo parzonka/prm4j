@@ -22,10 +22,15 @@ public class DefaultNode implements Node, NodePrototype {
     private NodeMap nodeMap;
     private AbstractBaseMonitor monitor;
 
-    public DefaultNode(MetaNode nodeContext, int monitorSetCount) {
+    public DefaultNode(MetaNode metaNode, int monitorSetCount) {
 	super();
-	metaNode = nodeContext;
+	this.metaNode = metaNode;
 	monitorSets = new MonitorSet[monitorSetCount];
+    }
+
+    public DefaultNode(MetaNode metaNode) {
+	this.metaNode = metaNode;
+	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
     }
 
     @Override
@@ -57,7 +62,7 @@ public class DefaultNode implements Node, NodePrototype {
 	// lazy creation
 	MonitorSet monitorSet = monitorSets[parameterSetId];
 	if (monitorSet == null) {
-	    monitorSet = metaNode.createMonitorSet();
+	    monitorSet = new MonitorSet();
 	    monitorSets[parameterSetId] = monitorSet;
 	}
 	return monitorSet;

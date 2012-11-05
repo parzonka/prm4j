@@ -18,8 +18,8 @@ import prm4j.logic.FiniteSpec;
 public class ParametricMonitorFactory {
 
     public ParametricMonitor createParametricMonitor(FiniteSpec finiteSpec) {
-	StaticDataConverter pp = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
-	return new DefaultParametricMonitor(pp.getEventContext(), finiteSpec.getInitialMonitor());
+	StaticDataConverter converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
+	return new DefaultParametricMonitor(converter.getEventContext(), finiteSpec.getInitialMonitor());
     }
 
 }

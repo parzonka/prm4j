@@ -13,12 +13,18 @@ package prm4j.indexing.realtime;
 import prm4j.api.Event;
 import prm4j.indexing.AbstractBaseMonitor;
 
-public interface MonitorSet {
+public class MonitorSet {
 
-    public void add(AbstractBaseMonitor monitor);
+    public void add(AbstractBaseMonitor monitor) {
 
-    public void processEvent(Event event);
+    }
 
-    public MonitorSetIterator getIterator();
+    public void processEvent(Event event) {
+
+    }
+
+    public MonitorSetIterator getIterator() {
+	return null;
+    }
 
 }
