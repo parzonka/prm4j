@@ -27,7 +27,7 @@ import prm4j.Util;
 import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.MonitorState;
+import prm4j.indexing.BaseMonitorState;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
@@ -45,8 +45,8 @@ public class FiniteParametricProperty implements ParametricProperty {
     private final Map<BaseEvent, Set<Set<BaseEvent>>> enablingEventSets;
     private final Map<BaseEvent, Set<Set<Parameter<?>>>> enablingParameterSets;
     private final Set<Set<Parameter<?>>> possibleParameterSets;
-    private final Map<MonitorState, Set<Set<BaseEvent>>> coenablingEventSets; // TODO
-    private final Map<MonitorState, Set<Set<Parameter<?>>>> coenablingParameterSets; // TODO
+    private final Map<BaseMonitorState, Set<Set<BaseEvent>>> coenablingEventSets; // TODO
+    private final Map<BaseMonitorState, Set<Set<Parameter<?>>>> coenablingParameterSets; // TODO
     private final ListMultimap<BaseEvent, Set<Parameter<?>>> maxData;
     private final ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinData;
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainData;
@@ -69,7 +69,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	calculateRelations();
 
 	// TODO statePropertyCoEnableSets
-	coenablingEventSets = Collections.unmodifiableMap(new HashMap<MonitorState, Set<Set<BaseEvent>>>());
+	coenablingEventSets = Collections.unmodifiableMap(new HashMap<BaseMonitorState, Set<Set<BaseEvent>>>());
 	coenablingParameterSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(coenablingEventSets));
     }
 
@@ -84,9 +84,9 @@ public class FiniteParametricProperty implements ParametricProperty {
      */
     private Set<BaseEvent> calculateCreationEvents() {
 	Set<BaseEvent> creationSymbols = new HashSet<BaseEvent>();
-	MonitorState initialState = finiteSpec.getInitialState();
+	BaseMonitorState initialState = finiteSpec.getInitialState();
 	for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
-	    MonitorState successor = initialState.getSuccessor(symbol);
+	    BaseMonitorState successor = initialState.getSuccessor(symbol);
 	    if (successor == null || !successor.equals(initialState)) {
 		creationSymbols.add(symbol);
 	    }
@@ -98,16 +98,16 @@ public class FiniteParametricProperty implements ParametricProperty {
 
 	private final Map<BaseEvent, Set<Set<BaseEvent>>> enablingEventSets;
 	private final Set<Set<Parameter<?>>> possibleParameterSets;
-	private final Map<MonitorState, Set<Set<BaseEvent>>> stateToSeenBaseEvents;
+	private final Map<BaseMonitorState, Set<Set<BaseEvent>>> stateToSeenBaseEvents;
 
 	public PossibleParameterAndEnablingEventSetCalculator() {
 	    enablingEventSets = new HashMap<BaseEvent, Set<Set<BaseEvent>>>();
 	    possibleParameterSets = new HashSet<Set<Parameter<?>>>();
-	    stateToSeenBaseEvents = new HashMap<MonitorState, Set<Set<BaseEvent>>>();
+	    stateToSeenBaseEvents = new HashMap<BaseMonitorState, Set<Set<BaseEvent>>>();
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
 		enablingEventSets.put(baseEvent, new HashSet<Set<BaseEvent>>());
 	    }
-	    for (MonitorState state : finiteSpec.getStates()) {
+	    for (BaseMonitorState state : finiteSpec.getStates()) {
 		stateToSeenBaseEvents.put(state, new HashSet<Set<BaseEvent>>());
 	    }
 	    computeEnableSets(finiteSpec.getInitialState(), new HashSet<BaseEvent>(), new HashSet<Parameter<?>>()); // 2
@@ -121,7 +121,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    return possibleParameterSets;
 	}
 
-	private void computeEnableSets(MonitorState state, Set<BaseEvent> seenBaseEvents, Set<Parameter<?>> parameterSet) { // 5
+	private void computeEnableSets(BaseMonitorState state, Set<BaseEvent> seenBaseEvents, Set<Parameter<?>> parameterSet) { // 5
 	    if (state == null)
 		throw new NullPointerException("state may not be null!");
 	    stateToSeenBaseEvents.get(state).add(seenBaseEvents); // 6
@@ -252,17 +252,17 @@ public class FiniteParametricProperty implements ParametricProperty {
     }
 
     // @Override
-    public Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets() {
+    public Map<BaseMonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets() {
 	return coenablingEventSets;
     }
 
     // @Override
-    public Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
+    public Map<BaseMonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
 	return coenablingParameterSets;
     }
 
     @Override
-    public MonitorState getInitialState() {
+    public BaseMonitorState getInitialState() {
 	return finiteSpec.getInitialState();
     }
 

@@ -13,9 +13,9 @@ package prm4j.indexing;
 import prm4j.api.BaseEvent;
 import prm4j.api.MatchHandler;
 
-public interface MonitorState {
+public interface BaseMonitorState {
 
-    public abstract MonitorState getSuccessor(BaseEvent baseEvent);
+    public abstract BaseMonitorState getSuccessor(BaseEvent baseEvent);
 
     public abstract boolean isFinal();
 

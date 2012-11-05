@@ -16,15 +16,15 @@ import java.util.Set;
 
 import prm4j.api.BaseEvent;
 import prm4j.indexing.BaseMonitor;
-import prm4j.indexing.MonitorState;
+import prm4j.indexing.BaseMonitorState;
 import prm4j.indexing.StatefulMonitor;
 import prm4j.logic.FiniteSpec;
 
 public class FSMSpec implements FiniteSpec {
 
     private final Set<BaseEvent> baseEvents;
-    private final Set<MonitorState> states;
-    private final MonitorState initialState;
+    private final Set<BaseMonitorState> states;
+    private final BaseMonitorState initialState;
 
     public FSMSpec(FSM fsm) {
 	baseEvents = covariantUnmodifiableSet(fsm.getAlphabet().getSymbols());
@@ -38,12 +38,12 @@ public class FSMSpec implements FiniteSpec {
     }
 
     @Override
-    public Set<MonitorState> getStates() {
+    public Set<BaseMonitorState> getStates() {
 	return states;
     }
 
     @Override
-    public MonitorState getInitialState() {
+    public BaseMonitorState getInitialState() {
 	return initialState;
     }
 

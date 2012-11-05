@@ -26,7 +26,7 @@ import prm4j.api.Parameter;
 import prm4j.api.Symbol;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.MonitorState;
+import prm4j.indexing.BaseMonitorState;
 
 public class ProcessedFiniteSpecTest extends AbstractTest {
 
@@ -90,10 +90,10 @@ public class ProcessedFiniteSpecTest extends AbstractTest {
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
-	Map<MonitorState, Set<Set<BaseEvent>>> actual = fs.getStatePropertyCoEnableSets();
+	Map<BaseMonitorState, Set<Set<BaseEvent>>> actual = fs.getStatePropertyCoEnableSets();
 
-	Map<MonitorState, Set<Set<Symbol>>> expected = new HashMap<MonitorState, Set<Set<Symbol>>>();
-	for (MonitorState state : u.fsm.getStates()) {
+	Map<BaseMonitorState, Set<Set<Symbol>>> expected = new HashMap<BaseMonitorState, Set<Set<Symbol>>>();
+	for (BaseMonitorState state : u.fsm.getStates()) {
 	    expected.put(state, new HashSet<Set<Symbol>>());
 	}
 	expected.get(u.initial).add(asSet(u.createColl, u.createIter, u.updateMap, u.useIter));
