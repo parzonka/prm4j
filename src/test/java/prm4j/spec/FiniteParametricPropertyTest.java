@@ -29,7 +29,7 @@ import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.BaseMonitorState;
 import prm4j.spec.FiniteParametricProperty;
 
-public class ProcessedFiniteSpecTest extends AbstractTest {
+public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void accessors_unsafeMapIterator() throws Exception {
