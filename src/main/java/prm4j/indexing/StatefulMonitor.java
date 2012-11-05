@@ -8,12 +8,12 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.logic;
+package prm4j.indexing;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.Event;
 import prm4j.api.MatchHandler;
-import prm4j.indexing.AbstractBaseMonitor;
+import prm4j.logic.MonitorState;
 
 /**
  * A base monitor holding a {@link MonitorState} which is updated when processing {@link BaseEvent}s.
