@@ -35,9 +35,9 @@ public interface LowLevelBinding extends prm4j.api.Binding {
      */
     Node getBaseNode();
 
-    boolean getDisable();
+    boolean isDisabled();
 
-    void setDisable(boolean disable);
+    void setDisabled(boolean disable);
 
     long getTimestamp();
 

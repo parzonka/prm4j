@@ -12,9 +12,8 @@ package prm4j.indexing.realtime;
 
 import prm4j.indexing.AbstractBaseMonitor;
 import prm4j.indexing.staticdata.MetaNode;
-import prm4j.logic.treebased.NodePrototype;
 
-public class DefaultNode implements Node, NodePrototype {
+public class DefaultNode implements Node {
 
     private final MetaNode metaNode;
     private final MonitorSet[] monitorSets;
@@ -72,15 +71,6 @@ public class DefaultNode implements Node, NodePrototype {
     public Node next() {
 	// TODO Auto-generated method stub
 	return null;
-    }
-
-    @Override
-    public Node clonePrototype() {
-	try {
-	    return (Node) this.clone();
-	} catch (CloneNotSupportedException e) {
-	    throw new IllegalStateException(e);
-	}
     }
 
     @Override

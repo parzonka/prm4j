@@ -42,7 +42,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
 	if (eventContext.isDisablingEvent(event.getBaseEvent())) { // 2
 	    for (LowLevelBinding binding : bindings) { // 3
-		binding.setDisable(true); // 4
+		binding.setDisabled(true); // 4
 	    } // 5
 	} // 6
 
@@ -52,7 +52,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		if (m != null) { // 10
 		    for (int i : maxData.getDiffMask()) { // 11
 			LowLevelBinding b = bindings[i];
-			if (b.getTimestamp() < timestamp && (b.getTimestamp() > m.getCreationTime() || b.getDisable())) { // 12
+			if (b.getTimestamp() < timestamp && (b.getTimestamp() > m.getCreationTime() || b.isDisabled())) { // 12
 			    continue findMaxPhase; // 13
 			}
 		    }
@@ -67,7 +67,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    monitorCreation: if (instanceNode.getMonitor() == null) {
 		if (eventContext.isCreationEvent(baseEvent)) { // 20
 		    for (LowLevelBinding b : bindings) { // 21
-			if (b.getDisable()) { // 22
+			if (b.isDisabled()) { // 22
 			    break monitorCreation; // 23
 			}
 		    }
@@ -85,7 +85,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    final LowLevelBinding b = bindings[i];
 		    final long bTimestamp = b.getTimestamp();
 		    if (bTimestamp < timestamp) { // 46
-			if (b.getDisable()) { // 47
+			if (b.isDisabled()) { // 47
 			    continue joinPhase; // 48
 			} else if (tmax < bTimestamp) { // 49
 			    tmax = bTimestamp; // 50
