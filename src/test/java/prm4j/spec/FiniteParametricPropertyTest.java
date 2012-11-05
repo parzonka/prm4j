@@ -41,6 +41,20 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     }
 
     @Test
+    public void getCreationEvents_unsafeMapIterator() throws Exception {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	FiniteParametricProperty pp = new FiniteParametricProperty(new FSMSpec(fsm));
+
+	Set<BaseEvent> actual = pp.getCreationEvents();
+
+	Set<BaseEvent> expected = new HashSet<BaseEvent>();
+	expected.add(u.createColl);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
     public void getPropertyEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
