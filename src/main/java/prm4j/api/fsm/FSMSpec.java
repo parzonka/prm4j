@@ -16,9 +16,9 @@ import java.util.Set;
 
 import prm4j.api.BaseEvent;
 import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.MonitorState;
 import prm4j.indexing.StatefulMonitor;
 import prm4j.logic.FiniteSpec;
-import prm4j.logic.MonitorState;
 
 public class FSMSpec implements FiniteSpec {
 

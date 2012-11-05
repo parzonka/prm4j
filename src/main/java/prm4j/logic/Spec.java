@@ -14,6 +14,7 @@ import java.util.Set;
 
 import prm4j.api.BaseEvent;
 import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.MonitorState;
 
 /**
  * Represents a specification of a property. May have a infinite number of states.

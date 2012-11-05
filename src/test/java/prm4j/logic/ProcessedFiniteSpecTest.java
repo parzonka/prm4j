@@ -26,6 +26,7 @@ import prm4j.api.Parameter;
 import prm4j.api.Symbol;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.MonitorState;
 
 public class ProcessedFiniteSpecTest extends AbstractTest {
 
