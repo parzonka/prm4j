@@ -32,6 +32,9 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Table;
 
+/**
+ * Converts a {@link ParametricProperty} to an {@link EventContext} and a tree of {@link MetaNode}s.
+ */
 public class StaticDataConverter {
 
     private final ParametricProperty pp;
@@ -47,12 +50,15 @@ public class StaticDataConverter {
 	joinData = ArrayListMultimap.create();
 	chainData = HashMultimap.create();
 	monitorSetIds = HashBasedTable.create();
-	convert(pp);
+	convertToLowLevelStaticData();
 	rootNode = new MetaNode(new HashSet<Parameter<?>>());
-	calculateMetaTree();
+	createMetaTree();
     }
 
-    private void convert(ParametricProperty pp) {
+    /**
+     * Creates arrays of maxData, joinData, chainData.
+     */
+    private void convertToLowLevelStaticData() {
 	for (Entry<Set<Parameter<?>>, Set<Parameter<?>>> entry : pp.getMonitorSetData().entries()) {
 	    @SuppressWarnings("unchecked")
 	    Set<Parameter<?>>[] sortedSets = entry.getValue().toArray(new Set[0]);
@@ -66,7 +72,7 @@ public class StaticDataConverter {
 	    for (Set<Parameter<?>> parameterSet : pp.getMaxData().get(baseEvent)) {
 		final int[] nodeMask = parameterMask(parameterSet);
 		final int[] diffMask = parameterMask(Util.difference(baseEvent.getParameters(), parameterSet));
-		maxData.put(baseEvent, new MaxData(nodeMask, diffMask));
+		getMaxData().put(baseEvent, new MaxData(nodeMask, diffMask));
 	    }
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) {
 		final int[] nodeMask = parameterMask(tuple.getLeft());
@@ -74,7 +80,8 @@ public class StaticDataConverter {
 		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight());
 		final int[] diffMask = parameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft()));
-		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
+		getJoinData().put(baseEvent,
+			new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
 	    }
 	}
 	for (Set<Parameter<?>> parameterSet : pp.getChainData().keys()) {
@@ -136,7 +143,10 @@ public class StaticDataConverter {
 	return result;
     }
 
-    private void calculateMetaTree() {
+    /**
+     * Creates a tree of meta nodes
+     */
+    private void createMetaTree() {
 	for (Set<Parameter<?>> parameterSet : pp.getPossibleParameterSets()) {
 	    List<Parameter<?>> parameterList = new ArrayList<Parameter<?>>(parameterSet);
 	    Collections.sort(parameterList);
@@ -148,10 +158,8 @@ public class StaticDataConverter {
 		    node.setMonitorSetCount(monitorSetIds.row(node.getParameterSet()).size());
 		    node.setConfigured(true);
 		}
-
 	    }
 	}
-
     }
 
     /**
@@ -168,20 +176,28 @@ public class StaticDataConverter {
 	return result;
     }
 
-    public List<MaxData> getMaxData(BaseEvent baseEvent) {
-	return maxData.get(baseEvent);
-    }
-
     public EventContext getEventContext() {
-	return new EventContext(pp.getBaseEvents(), joinData, maxData, pp.getCreationEvents(), pp.getDisablingEvents());
+	return new EventContext(pp.getBaseEvents(), getJoinData(), getMaxData(), pp.getCreationEvents(),
+		pp.getDisablingEvents());
     }
 
-    public Set<ChainData> getChainData(Set<Parameter<?>> parameterSet) {
+    /**
+     * @return the rootnode of the tree of meta nodes
+     */
+    public MetaNode getMetaTree() {
+	return rootNode;
+    }
+
+    protected Set<ChainData> getChainData(Set<Parameter<?>> parameterSet) {
 	return chainData.get(parameterSet);
     }
 
-    public MetaNode getMetaTree() {
-	return rootNode;
+    protected ListMultimap<BaseEvent, MaxData> getMaxData() {
+	return maxData;
+    }
+
+    protected ListMultimap<BaseEvent, JoinData> getJoinData() {
+	return joinData;
     }
 
 }
