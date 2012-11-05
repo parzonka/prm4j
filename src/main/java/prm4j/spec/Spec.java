@@ -8,17 +8,26 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.logic;
+package prm4j.spec;
 
 import java.util.Set;
 
+import prm4j.api.BaseEvent;
+import prm4j.api.Parameter;
+import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.BaseMonitorState;
 
 /**
- * Represents a specification of a property with finite number of states.
+ * Represents a specification of a property. May have a infinite number of states.
  */
-public interface FiniteSpec extends Spec{
+public interface Spec {
 
-    public Set<BaseMonitorState> getStates();
+    public Set<BaseEvent> getBaseEvents();
+
+    public Set<Parameter<?>> getParameters();
+
+    public BaseMonitorState getInitialState();
+
+    public BaseMonitor getInitialMonitor();
 
 }

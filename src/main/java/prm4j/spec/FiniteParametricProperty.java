@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.logic;
+package prm4j.spec;
 
 import static prm4j.Util.intersection;
 import static prm4j.Util.isSubset;

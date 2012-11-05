@@ -12,8 +12,8 @@ package prm4j.api;
 
 import prm4j.indexing.realtime.DefaultParametricMonitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
-import prm4j.logic.FiniteParametricProperty;
-import prm4j.logic.FiniteSpec;
+import prm4j.spec.FiniteParametricProperty;
+import prm4j.spec.FiniteSpec;
 
 public class ParametricMonitorFactory {
 

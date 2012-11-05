@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.logic;
+package prm4j.spec;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,6 +27,7 @@ import prm4j.api.Symbol;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.BaseMonitorState;
+import prm4j.spec.FiniteParametricProperty;
 
 public class ProcessedFiniteSpecTest extends AbstractTest {
 

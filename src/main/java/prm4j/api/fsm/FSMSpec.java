@@ -19,7 +19,7 @@ import prm4j.api.Parameter;
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.BaseMonitorState;
 import prm4j.indexing.StatefulMonitor;
-import prm4j.logic.FiniteSpec;
+import prm4j.spec.FiniteSpec;
 
 public class FSMSpec implements FiniteSpec {
 
