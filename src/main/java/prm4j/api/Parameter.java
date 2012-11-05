@@ -16,7 +16,7 @@ package prm4j.api;
  * @param <T>
  *            the type of the object which can be bound to this parameter
  */
-public class Parameter<T> {
+public class Parameter<T> implements Comparable<Parameter<T>>{
 
     private int parameterId = -1;
     private final String uniqueName;
@@ -45,6 +45,11 @@ public class Parameter<T> {
     @Override
     public String toString() {
 	return this.uniqueName;
+    }
+
+    @Override
+    public int compareTo(Parameter<T> o) {
+	return parameterId - o.getParameterId();
     }
 
 }
