@@ -10,7 +10,7 @@
  */
 package prm4j.indexing.realtime;
 
-import prm4j.indexing.AbstractBaseMonitor;
+import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.MetaNode;
 
 public interface Node {
@@ -22,9 +22,9 @@ public interface Node {
      * @return monitor matching the node's binding or <code>null</code>, if the queried path is no prefix of a final
      *         path.
      */
-    public AbstractBaseMonitor getMonitor();
+    public BaseMonitor getMonitor();
 
-    public void setMonitor(AbstractBaseMonitor monitor);
+    public void setMonitor(BaseMonitor monitor);
 
     public NodeMap getNodeMap();
 

@@ -6,27 +6,65 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- * Eric Bodden - initial API
- * Mateusz Parzonka - adapted API
+ * Mateusz Parzonka - initial API and implementation
  */
 package prm4j.indexing;
 
 import prm4j.api.Event;
 import prm4j.api.ParametricMonitor;
-import prm4j.indexing.realtime.DefaultParametricMonitor;
+import prm4j.indexing.realtime.LowLevelBinding;
 
 /**
- * An {@link BaseMonitor} is a concrete monitor instance, representing the internal state of an
- * {@link ParametricMonitor} for one single concrete variable binding.
- * <p>
- * Usage: This interface may be implemented by custom monitors to enable interplay with custom parametric monitors. To
- * implement custom monitors to work with the provided {@link DefaultParametricMonitor}, users should subclass the
- * {@link AbstractBaseMonitor} instead.
- *
- * @param <M>
- *            the type of the base monitor
+ * Abstract base class for a concrete monitor instance, representing the internal state of a {@link ParametricMonitor}
+ * for one single concrete variable binding.
  */
-public interface BaseMonitor<M extends BaseMonitor<M>> {
+public abstract class BaseMonitor {
+
+    // low level access
+    private LowLevelBinding[] bindings;
+    // low level access
+    private long creationTime;
+
+    /**
+     * Creates a low level deep copy of this monitor.
+     *
+     * @param bindings
+     * @return
+     */
+    public final BaseMonitor copy(LowLevelBinding[] bindings) {
+	BaseMonitor copy = copy();
+	copy.setBindings(bindings);
+	copy.setCreationTime(creationTime);
+	return copy;
+    }
+
+    public final BaseMonitor copy(LowLevelBinding[] bindings, long timestamp) {
+	BaseMonitor copy = copy();
+	copy.setBindings(bindings);
+	copy.setCreationTime(timestamp);
+	return copy;
+    }
+
+    private final void setBindings(LowLevelBinding[] bindings) {
+	this.bindings = bindings;
+    }
+
+    public final LowLevelBinding[] getLowLevelBindings() {
+	return bindings;
+    }
+
+    protected final prm4j.api.Binding[] getBindings() {
+	// upcast
+	return bindings;
+    }
+
+    public final long getCreationTime() {
+	return creationTime;
+    }
+
+    final void setCreationTime(long creationTime) {
+	this.creationTime = creationTime;
+    }
 
     /**
      * Updates the base monitors internal state by consuming an event. After processing the event, the monitor is either
@@ -47,6 +85,6 @@ public interface BaseMonitor<M extends BaseMonitor<M>> {
     /**
      * Creates a deep copy of this base monitor.
      */
-    public abstract M copy();
+    public abstract BaseMonitor copy();
 
 }

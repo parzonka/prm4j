@@ -13,7 +13,7 @@ package prm4j.logic;
 import java.util.Set;
 
 import prm4j.api.BaseEvent;
-import prm4j.indexing.AbstractBaseMonitor;
+import prm4j.indexing.BaseMonitor;
 
 /**
  * Represents a specification of a property. May have a infinite number of states.
@@ -24,6 +24,6 @@ public interface Spec {
 
     public MonitorState getInitialState();
 
-    public AbstractBaseMonitor getInitialMonitor();
+    public BaseMonitor getInitialMonitor();
 
 }

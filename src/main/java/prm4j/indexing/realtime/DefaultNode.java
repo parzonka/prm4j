@@ -10,7 +10,7 @@
  */
 package prm4j.indexing.realtime;
 
-import prm4j.indexing.AbstractBaseMonitor;
+import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.MetaNode;
 
 public class DefaultNode implements Node {
@@ -19,7 +19,7 @@ public class DefaultNode implements Node {
     private final MonitorSet[] monitorSets;
 
     private NodeMap nodeMap;
-    private AbstractBaseMonitor monitor;
+    private BaseMonitor monitor;
 
     public DefaultNode(MetaNode metaNode, int monitorSetCount) {
 	super();
@@ -38,12 +38,12 @@ public class DefaultNode implements Node {
     }
 
     @Override
-    public AbstractBaseMonitor getMonitor() {
+    public BaseMonitor getMonitor() {
 	return monitor;
     }
 
     @Override
-    public void setMonitor(AbstractBaseMonitor monitor) {
+    public void setMonitor(BaseMonitor monitor) {
 	this.monitor = monitor;
     }
 

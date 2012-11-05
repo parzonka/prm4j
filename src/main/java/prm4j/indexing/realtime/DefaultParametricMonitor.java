@@ -13,7 +13,7 @@ package prm4j.indexing.realtime;
 import prm4j.api.BaseEvent;
 import prm4j.api.Event;
 import prm4j.api.ParametricMonitor;
-import prm4j.indexing.AbstractBaseMonitor;
+import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.ChainData;
 import prm4j.indexing.staticdata.EventContext;
 import prm4j.indexing.staticdata.JoinData;
@@ -21,13 +21,13 @@ import prm4j.indexing.staticdata.MaxData;
 
 public class DefaultParametricMonitor implements ParametricMonitor {
 
-    private final AbstractBaseMonitor monitorPrototype;
+    private final BaseMonitor monitorPrototype;
     private BindingStore bindingStore;
     private NodeStore nodeStore;
     private final EventContext eventContext;
     private long timestamp = 0L;
 
-    public DefaultParametricMonitor(EventContext eventContext, AbstractBaseMonitor monitorPrototype) {
+    public DefaultParametricMonitor(EventContext eventContext, BaseMonitor monitorPrototype) {
 	this.eventContext = eventContext;
 	this.monitorPrototype = monitorPrototype;
     }
@@ -38,7 +38,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
 	final BaseEvent baseEvent = event.getBaseEvent();
 	final Node instanceNode = nodeStore.getNode(bindings);
-	final AbstractBaseMonitor instanceMonitor = instanceNode.getMonitor();
+	final BaseMonitor instanceMonitor = instanceNode.getMonitor();
 
 	if (eventContext.isDisablingEvent(event.getBaseEvent())) { // 2
 	    for (LowLevelBinding binding : bindings) { // 3
@@ -48,7 +48,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
 	if (instanceMonitor == null) { // 7
 	    findMaxPhase: for (MaxData maxData : eventContext.getMaxData(baseEvent)) { // 8
-		AbstractBaseMonitor m = nodeStore.getNode(bindings, maxData.getNodeMask()).getMonitor(); // 9
+		BaseMonitor m = nodeStore.getNode(bindings, maxData.getNodeMask()).getMonitor(); // 9
 		if (m != null) { // 10
 		    for (int i : maxData.getDiffMask()) { // 11
 			LowLevelBinding b = bindings[i];
@@ -57,7 +57,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 			}
 		    }
 		    // inlined DefineTo from 73
-		    AbstractBaseMonitor monitor = m.copy(); // 102-105
+		    BaseMonitor monitor = m.copy(); // 102-105
 		    monitor.processEvent(event); // 103
 		    instanceNode.setMonitor(monitor); // 106
 		    chain(bindings, monitor); // 107
@@ -72,7 +72,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 			}
 		    }
 		    // inlined DefineNew from 93
-		    AbstractBaseMonitor monitor = monitorPrototype.copy(bindings, timestamp); // 94 - 97
+		    BaseMonitor monitor = monitorPrototype.copy(bindings, timestamp); // 94 - 97
 		    monitor.processEvent(event); // 95
 		    instanceNode.setMonitor(monitor); // 98
 		    chain(bindings, monitor); // 99
@@ -99,7 +99,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 			joinData.getExtensionPattern()); // 56 - 61
 		// iterate over all compatible nodes
 		final MonitorSetIterator iter = compatibleNode.getMonitorSet(joinData.getMonitorSetId()).getIterator();
-		AbstractBaseMonitor compatibleMonitor = null;
+		BaseMonitor compatibleMonitor = null;
 		boolean isCompatibleMonitorAlive = false;
 		// iterate over all compatible nodes
 		LowLevelBinding[] joinable = joinableBindings.clone(); // 62
@@ -113,7 +113,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    final Node lastNode = nodeStore.getNode(joinable);
 		    if (lastNode.getMonitor() == null) { // 72
 			// inlined DefineTo // 73
-			AbstractBaseMonitor monitor = compatibleMonitor.copy(joinable); // 102-105
+			BaseMonitor monitor = compatibleMonitor.copy(joinable); // 102-105
 			monitor.processEvent(event); // 103
 			lastNode.setMonitor(monitor); // 106
 			chain(joinable, monitor); // 99
@@ -125,7 +125,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    // update phase
 	    for (MonitorSet monitorSet : instanceNode.getMonitorSets()) { // 30 - 32
 		MonitorSetIterator iter = monitorSet.getIterator();
-		AbstractBaseMonitor monitor = null;
+		BaseMonitor monitor = null;
 		boolean isMonitorAlive = false;
 		while (iter.hasNext(monitor, isMonitorAlive)) {
 		    isMonitorAlive = iter.next().processEvent(event); // 33
@@ -167,7 +167,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	}
     }
 
-    private void chain(LowLevelBinding[] bindings, AbstractBaseMonitor monitor) {
+    private void chain(LowLevelBinding[] bindings, BaseMonitor monitor) {
 	for (ChainData chainData : nodeStore.getNode(bindings).getNodeContext().getChainData()) {
 	    nodeStore.getNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
 		    .add(monitor);

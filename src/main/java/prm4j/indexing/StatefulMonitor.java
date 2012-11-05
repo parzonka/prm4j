@@ -19,7 +19,7 @@ import prm4j.logic.MonitorState;
  * A base monitor holding a {@link MonitorState} which is updated when processing {@link BaseEvent}s.
  *
  */
-public class StatefulMonitor extends AbstractBaseMonitor {
+public class StatefulMonitor extends BaseMonitor {
 
     private MonitorState state;
 
