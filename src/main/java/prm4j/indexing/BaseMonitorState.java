@@ -13,7 +13,7 @@ package prm4j.indexing;
 import prm4j.api.BaseEvent;
 import prm4j.api.MatchHandler;
 
-public interface BaseMonitorState {
+public abstract class BaseMonitorState {
 
     public abstract BaseMonitorState getSuccessor(BaseEvent baseEvent);
 
