@@ -71,7 +71,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     }
 
     @Test
-    public void getPropertyEnableSets_unsafeMapIterator() throws Exception {
+    public void getEnablingEventSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
@@ -95,7 +95,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     }
 
     @Test
-    public void getParameterEnableSets_unsafeMapIterator() throws Exception {
+    public void getEnablingParameterSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
