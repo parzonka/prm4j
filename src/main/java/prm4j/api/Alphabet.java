@@ -150,6 +150,10 @@ public class Alphabet {
 	return symbolCount;
     }
 
+    public Set<Parameter<?>> getParameters() {
+	return parameters;
+    }
+
     public int getParameterCount() {
 	return parameterCount;
     }

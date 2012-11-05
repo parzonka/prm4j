@@ -71,7 +71,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	// TODO statePropertyCoEnableSets
 	coenablingEventSets = Collections.unmodifiableMap(new HashMap<BaseMonitorState, Set<Set<BaseEvent>>>());
 	coenablingParameterSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(coenablingEventSets));
-	calculateAliveParametersInStates();
+	calculateAcceptingParameters();
     }
 
     /**
@@ -199,8 +199,12 @@ public class FiniteParametricProperty implements ParametricProperty {
 	} // 26
     } // 27
 
-    private void calculateAliveParametersInStates() {
-	// TODO Auto-generated method stub
+    private void calculateAcceptingParameters() {
+	// TODO implement calculateAcceptingParameters
+	boolean[] acceptingParameters = new boolean[finiteSpec.getParameters().size()];
+	for (BaseMonitorState state : finiteSpec.getStates()) {
+	    state.setAcceptingParameters(acceptingParameters);
+	}
     }
 
     /**

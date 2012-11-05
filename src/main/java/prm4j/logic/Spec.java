@@ -13,6 +13,7 @@ package prm4j.logic;
 import java.util.Set;
 
 import prm4j.api.BaseEvent;
+import prm4j.api.Parameter;
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.BaseMonitorState;
 
@@ -22,6 +23,8 @@ import prm4j.indexing.BaseMonitorState;
 public interface Spec {
 
     public Set<BaseEvent> getBaseEvents();
+
+    public Set<Parameter<?>> getParameters();
 
     public BaseMonitorState getInitialState();
 
