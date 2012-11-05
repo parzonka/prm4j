@@ -25,7 +25,7 @@ public abstract class BaseMonitorState {
      * @param bindings bindings to be checked
      * @return true, if accepting state can be reached
      */
-    public boolean isFinalStateReachable(LowLevelBinding[] bindings) {
+    public boolean isAcceptingStateReachable(LowLevelBinding[] bindings) {
 	for (LowLevelBinding b : bindings) {
 	    if (acceptingParameters[b.getParameterId()]) {
 		if (b.get() == null)
@@ -37,7 +37,7 @@ public abstract class BaseMonitorState {
 
     public abstract BaseMonitorState getSuccessor(BaseEvent baseEvent);
 
-    public abstract boolean isFinal();
+    public abstract boolean isAccepting();
 
     public abstract MatchHandler getMatchHandler();
 

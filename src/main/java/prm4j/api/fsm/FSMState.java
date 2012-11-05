@@ -52,7 +52,7 @@ public class FSMState extends BaseMonitorState {
     }
 
     @Override
-    public boolean isFinal() {
+    public boolean isAccepting() {
 	return isFinal;
     }
 

@@ -75,12 +75,12 @@ public abstract class BaseMonitor {
     public abstract boolean processEvent(Event event);
 
     /**
-     * The monitor decides if a final state is reachable based on its current internal state. This allows efficient
-     * parametric monitors to remove the monitor instance in case it should be impossible to reach any final state.
+     * The monitor decides if am accepting state is reachable based on its current internal state. This allows efficient
+     * parametric monitors to remove the monitor instance in case it should be impossible to reach any accepting state.
      *
-     * @return <code>true</code> if a final state is still reachable
+     * @return <code>true</code> if an accepting state is still reachable
      */
-    public abstract boolean isFinalStateReachable();
+    public abstract boolean isAcceptingStateReachable();
 
     /**
      * Creates a deep copy of this base monitor.

@@ -45,7 +45,7 @@ public abstract class FSMDefinitions {
 	public final FSMState s1 = fsm.createState();
 	public final FSMState s2 = fsm.createState();
 	public final FSMState s3 = fsm.createState();
-	public final FSMState error = fsm.createFinalState(MatchHandler.NO_OP);
+	public final FSMState error = fsm.createAcceptingState(MatchHandler.NO_OP);
 
 	public FSM_unsafeMapIterator() {
 	    initial.addTransition(createColl, s1);
@@ -73,7 +73,7 @@ public abstract class FSMDefinitions {
 
 	public final FSMState initial = fsm.createInitialState();
 	public final FSMState s1 = fsm.createState();
-	public final FSMState error = fsm.createFinalState(MatchHandler.NO_OP);
+	public final FSMState error = fsm.createAcceptingState(MatchHandler.NO_OP);
 
 	public AbstractFSM_2symbols3states() {
 	    setupTransitions();
@@ -101,7 +101,7 @@ public abstract class FSMDefinitions {
 
 	public final FSMState initial = fsm.createInitialState();
 	public final FSMState s1 = fsm.createState();
-	public final FSMState error = fsm.createFinalState(MatchHandler.NO_OP);
+	public final FSMState error = fsm.createAcceptingState(MatchHandler.NO_OP);
 
 	public FSM_e1e3() {
 	    initial.addTransition(e1, s1);

@@ -65,20 +65,20 @@ public class FSM {
     }
 
     /**
-     * Create a new final state which is labeled with a generated name of the form <code>"state_NUMBER"</code>.
+     * Create a new accepting state which is labeled with a generated name of the form <code>"state_NUMBER"</code>.
      *
-     * @return the created final state
+     * @return the created accepting state
      */
-    public FSMState createFinalState(MatchHandler matchHandler) {
-	return createFinalState(matchHandler, generateFinalStateName());
+    public FSMState createAcceptingState(MatchHandler matchHandler) {
+	return createAcceptingState(matchHandler, generateFinalStateName());
     }
 
     /**
-     * Create a new final state labeled with the given optional name.
+     * Create a new accepting state labeled with the given optional name.
      *
-     * @return the created state
+     * @return the created accepting state
      */
-    public FSMState createFinalState(MatchHandler matchHandler, String optionalName) {
+    public FSMState createAcceptingState(MatchHandler matchHandler, String optionalName) {
 	if (matchHandler == null) {
 	    throw new NullPointerException("MatchHandler may not be null!");
 	}

@@ -44,7 +44,7 @@ public class StatefulMonitor extends BaseMonitor {
     }
 
     @Override
-    public boolean isFinalStateReachable() {
+    public boolean isAcceptingStateReachable() {
 	// TODO co-enable set calculation or similar
 	return true;
     }
