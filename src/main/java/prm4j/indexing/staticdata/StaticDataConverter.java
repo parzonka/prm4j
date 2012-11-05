@@ -170,7 +170,7 @@ public class StaticDataConverter {
 	int[] result = new int[parameterSet.size()];
 	int i = 0;
 	for (Parameter<?> parameter : parameterSet) {
-	    result[i++] = parameter.getParameterId();
+	    result[i++] = parameter.getIndex();
 	}
 	Arrays.sort(result);
 	return result;

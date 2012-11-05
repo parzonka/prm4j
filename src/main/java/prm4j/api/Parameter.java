@@ -18,7 +18,7 @@ package prm4j.api;
  */
 public class Parameter<T> implements Comparable<Parameter<T>>{
 
-    private int parameterId = -1;
+    private int parameterIndex = -1;
     private final String uniqueName;
     private boolean isStrong = false;
 
@@ -26,12 +26,17 @@ public class Parameter<T> implements Comparable<Parameter<T>>{
 	this.uniqueName = uniqueName;
     }
 
-    public final int getParameterId() {
-	return this.parameterId;
+    /**
+     * Returns a unique index for this parameter.
+     * It is mandatory that all indexes are in the interval [0, ..., n-1] with n = number of parameters.
+     * @return
+     */
+    public final int getIndex() {
+	return this.parameterIndex;
     }
 
-    protected void setParameterId(int parameterId) {
-	this.parameterId = parameterId;
+    protected void setIndex(int parameterIndex) {
+	this.parameterIndex = parameterIndex;
     }
 
     public boolean isStrong() {
@@ -49,7 +54,7 @@ public class Parameter<T> implements Comparable<Parameter<T>>{
 
     @Override
     public int compareTo(Parameter<T> o) {
-	return parameterId - o.getParameterId();
+	return parameterIndex - o.getIndex();
     }
 
 }

@@ -42,15 +42,15 @@ public abstract class Symbol implements BaseEvent {
     }
 
     /**
-     * Assigns the object to its position in boundObject identified by the given parameter id.
+     * Assigns the object to its position in boundObject identified by the index of the given parameter.
      *
      * @param parameter
      * @param object
      * @param boundObjects
      */
     protected static <P> void bindObject(Parameter<P> parameter, P object, Object[] boundObjects) {
-	assert boundObjects[parameter.getParameterId()] == null : "Each parameter can be bound only once.";
-	boundObjects[parameter.getParameterId()] = object;
+	assert boundObjects[parameter.getIndex()] == null : "Each parameter can be bound only once.";
+	boundObjects[parameter.getIndex()] = object;
     }
 
     @Override
