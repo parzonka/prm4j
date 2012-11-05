@@ -41,7 +41,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 
     private final FiniteSpec finiteSpec;
     private final Set<BaseEvent> creationEvents;
-    private Set<BaseEvent> disablingEvents;
+    private final Set<BaseEvent> disablingEvents;
     private final Map<BaseEvent, Set<Set<BaseEvent>>> enablingEventSets;
     private final Map<BaseEvent, Set<Set<Parameter<?>>>> enablingParameterSets;
     private final Set<Set<Parameter<?>>> possibleParameterSets;
@@ -56,6 +56,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 
 	this.finiteSpec = finiteSpec;
 	creationEvents = calculateCreationEvents();
+	disablingEvents = calculateDisablingEvents();
 
 	PossibleParameterAndEnablingEventSetCalculator p = new PossibleParameterAndEnablingEventSetCalculator();
 	enablingEventSets = Collections.unmodifiableMap(p.getEnablingEventSets());
@@ -84,15 +85,32 @@ public class FiniteParametricProperty implements ParametricProperty {
      * @return the creation events
      */
     private Set<BaseEvent> calculateCreationEvents() {
-	Set<BaseEvent> creationSymbols = new HashSet<BaseEvent>();
+	Set<BaseEvent> disablingEvents = new HashSet<BaseEvent>();
 	BaseMonitorState initialState = finiteSpec.getInitialState();
 	for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
 	    BaseMonitorState successor = initialState.getSuccessor(symbol);
 	    if (successor != null && !successor.equals(initialState)) {
-		creationSymbols.add(symbol);
+		disablingEvents.add(symbol);
 	    }
 	}
-	return creationSymbols;
+	return disablingEvents;
+    }
+
+    /**
+     * Disabling events are events for which the successor of the initial state is a dead state.
+     *
+     * @return the disabling events
+     */
+    private Set<BaseEvent> calculateDisablingEvents() {
+	Set<BaseEvent> disablingEvents = new HashSet<BaseEvent>();
+	BaseMonitorState initialState = finiteSpec.getInitialState();
+	for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
+	    BaseMonitorState successor = initialState.getSuccessor(symbol);
+	    if (successor == null) {
+		disablingEvents.add(symbol);
+	    }
+	}
+	return disablingEvents;
     }
 
     private class PossibleParameterAndEnablingEventSetCalculator {
@@ -221,6 +239,11 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return creationEvents;
     }
 
+    /**
+     * Disabling events are events for which the successor of the initial state is a dead state.
+     *
+     * @return the disabling events
+     */
     @Override
     public Set<BaseEvent> getDisablingEvents() {
 	return disablingEvents;
