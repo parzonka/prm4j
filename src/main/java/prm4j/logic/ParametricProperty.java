@@ -40,10 +40,6 @@ public interface ParametricProperty {
 
     public Map<BaseEvent, Set<Set<Parameter<?>>>> getEnablingParameterSets();
 
-    // public Map<MonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets();
-
-    // public Map<MonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets();
-
     /**
      * @return mapping of base events to a list of subinstances in its enabling set
      */

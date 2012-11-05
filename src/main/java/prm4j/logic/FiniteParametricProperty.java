@@ -71,6 +71,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	// TODO statePropertyCoEnableSets
 	coenablingEventSets = Collections.unmodifiableMap(new HashMap<BaseMonitorState, Set<Set<BaseEvent>>>());
 	coenablingParameterSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(coenablingEventSets));
+	calculateAliveParametersInStates();
     }
 
     /**
@@ -121,7 +122,8 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    return possibleParameterSets;
 	}
 
-	private void computeEnableSets(BaseMonitorState state, Set<BaseEvent> seenBaseEvents, Set<Parameter<?>> parameterSet) { // 5
+	private void computeEnableSets(BaseMonitorState state, Set<BaseEvent> seenBaseEvents,
+		Set<Parameter<?>> parameterSet) { // 5
 	    if (state == null)
 		throw new NullPointerException("state may not be null!");
 	    stateToSeenBaseEvents.get(state).add(seenBaseEvents); // 6
@@ -197,6 +199,10 @@ public class FiniteParametricProperty implements ParametricProperty {
 	} // 26
     } // 27
 
+    private void calculateAliveParametersInStates() {
+	// TODO Auto-generated method stub
+    }
+
     /**
      * Creation events are events for which the successor of the initial state is:
      * <ul>
@@ -251,13 +257,11 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return enablingParameterSets;
     }
 
-    // @Override
-    public Map<BaseMonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets() {
+    Map<BaseMonitorState, Set<Set<BaseEvent>>> getStatePropertyCoEnableSets() {
 	return coenablingEventSets;
     }
 
-    // @Override
-    public Map<BaseMonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
+    Map<BaseMonitorState, Set<Set<Parameter<?>>>> getStateParameterCoEnableSets() {
 	return coenablingParameterSets;
     }
 
