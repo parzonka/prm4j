@@ -38,6 +38,8 @@ public class StaticDataConverterTest extends AbstractTest {
 	p5.setIndex(5);
     }
 
+    // /////////////// getExtensionPattern ///////////////////////////
+
     @Test
     public void getExtensionPattern_p1p3_p3p3() {
 
@@ -130,9 +132,138 @@ public class StaticDataConverterTest extends AbstractTest {
     }
 
     @Test
-    public void getCopyPattern() {
+    public void getExtensionPattern_p3_p1p2p3() {
 
+	Set<Parameter<?>> ps1 = asSet(p3);
+	Set<Parameter<?>> ps2 = asSet(p1, p2, p3);
+
+	boolean[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
+
+	boolean[] expected = { false, false, true };
+
+	assertBooleanArrayEquals(expected, actual);
     }
+
+    // /////////////// getCopyPattern ///////////////////////////
+
+    @Test
+    public void getCopyPattern_p1_p5() {
+
+	Set<Parameter<?>> ps1 = asSet(p1);
+	Set<Parameter<?>> ps2 = asSet(p5);
+
+	int[] actual = StaticDataConverter.getCopyPattern(ps1, ps2);
+
+	int[] expected = { 0, 1 };
+
+	assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getCopyPattern_p1p5_p5() {
+
+	Set<Parameter<?>> ps1 = asSet(p2, p3);
+	Set<Parameter<?>> ps2 = asSet(p1, p2);
+
+	int[] actual = StaticDataConverter.getCopyPattern(ps1, ps2);
+
+	int[] expected = { 0, 0 };
+
+	assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getCopyPattern_p5_p1() {
+
+	Set<Parameter<?>> ps1 = asSet(p5);
+	Set<Parameter<?>> ps2 = asSet(p1);
+
+	int[] actual = StaticDataConverter.getCopyPattern(ps1, ps2);
+
+	int[] expected = { 0, 0 };
+
+	assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getCopyPattern_p1p3_p3p3() {
+
+	Set<Parameter<?>> ps1 = asSet(p1, p3);
+	Set<Parameter<?>> ps2 = asSet(p3, p5);
+
+	int[] actual = StaticDataConverter.getCopyPattern(ps1, ps2);
+
+	int[] expected = { 1, 2 };
+
+	assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getCopyPattern_p1p2p3p4_p2p3p4p5() {
+
+	Set<Parameter<?>> ps1 = asSet(p1, p2, p3, p4);
+	Set<Parameter<?>> ps2 = asSet(p2, p3, p4, p5);
+
+	int[] actual = StaticDataConverter.getCopyPattern(ps1, ps2);
+
+	int[] expected = { 3, 4 };
+
+	assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getCopyPattern_p3_p1p2p3() {
+
+	Set<Parameter<?>> ps1 = asSet(p3);
+	Set<Parameter<?>> ps2 = asSet(p1, p2, p3);
+
+	int[] actual = StaticDataConverter.getCopyPattern(ps1, ps2);
+
+	int[] expected = { 0, 0, 1, 1 };
+
+	assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getCopyPattern_p3_p1p2p3p4p5() {
+
+	Set<Parameter<?>> ps1 = asSet(p3);
+	Set<Parameter<?>> ps2 = asSet(p1, p2, p3, p4, p5);
+
+	int[] actual = StaticDataConverter.getCopyPattern(ps1, ps2);
+
+	int[] expected = { 0, 0, 1, 1, 3, 3, 4, 4 };
+
+	assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getCopyPattern_p1p2p5_p3p4p5() {
+
+	Set<Parameter<?>> ps1 = asSet(p1, p2, p5);
+	Set<Parameter<?>> ps2 = asSet(p3, p4, p5);
+
+	int[] actual = StaticDataConverter.getCopyPattern(ps1, ps2);
+
+	int[] expected = { 0, 2, 1, 3 };
+
+	assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getCopyPattern_p3p5_p1p2p4p5() {
+
+	Set<Parameter<?>> ps1 = asSet(p3, p5);
+	Set<Parameter<?>> ps2 = asSet(p1, p2, p4, p5);
+
+	int[] actual = StaticDataConverter.getCopyPattern(ps1, ps2);
+
+	int[] expected = { 0, 0, 1, 1, 2, 3 };
+
+	assertArrayEquals(expected, actual);
+    }
+
+    // /////////////// toParameterMask ///////////////////////////
 
     @Test
     public void toParameterMask_arbitrary() {
@@ -140,6 +271,16 @@ public class StaticDataConverterTest extends AbstractTest {
 	int[] actual = StaticDataConverter.toParameterMask(asSet(p2, p3, p5));
 
 	int[] expected = { 2, 3, 5 };
+
+	assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void toParameterMask_emptyset() {
+
+	int[] actual = StaticDataConverter.toParameterMask(EMPTY_PARAMETER_SET);
+
+	int[] expected = {};
 
 	assertArrayEquals(expected, actual);
     }
