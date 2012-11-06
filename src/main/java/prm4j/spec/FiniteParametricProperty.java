@@ -187,22 +187,27 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return result;
     }
 
+    /**
+     * Calculates maxData, joinData, chainData and monitorSetData. Numbers represent line numbers in the algorithm
+     * presented in thesis.
+     */
     private void calculateStaticData() { // 1
 	Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>(); // 2
 	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
 	    for (Set<Parameter<?>> parameterSet : possibleParameterSets) { // 4
 		if (isSubset(baseEvent.getParameters(), parameterSet)) { // 5
 		    updates.add(tuple(baseEvent.getParameters(), parameterSet)); // 6
-		}
-	    }
-	}
-	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
-	    Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
+		} // 7
+	    } // 8
+	} // 9
+	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 10
+	    Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 11
 	    List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
-		    enablingParameterSets.get(baseEvent)); // 10
-	    Collections.sort(enableSetInReverseTopolicalOrdering, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR); // 10
-	    for (Set<Parameter<?>> enablingParameterSet : enableSetInReverseTopolicalOrdering) { // 10
-		if (!enablingParameterSet.equals(EMPTY_PARAMETER_SET) && !isSubsetEq(parameterSet, enablingParameterSet)) { // 13
+		    enablingParameterSets.get(baseEvent));
+	    Collections.sort(enableSetInReverseTopolicalOrdering, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR);
+	    for (Set<Parameter<?>> enablingParameterSet : enableSetInReverseTopolicalOrdering) { // 12
+		if (!enablingParameterSet.equals(EMPTY_PARAMETER_SET)
+			&& !isSubsetEq(parameterSet, enablingParameterSet)) { // 13
 		    if (isSuperset(parameterSet, enablingParameterSet)) { // 14
 			maxData.get(baseEvent).add(enablingParameterSet); // 15
 		    } else { // 16
@@ -214,15 +219,15 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    } // 22
 	} // 23
 	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : updates) { // 24
+	    System.out.println(tuple);
 	    if (monitorSetData.get(tuple.getLeft()).contains(tuple.getRight())) { // 25
 		chainData.put(tuple.getRight(), tuple(tuple.getLeft(), tuple.getRight())); // 26
 	    } else { // 27
 		chainData.put(tuple.getRight(), tuple(tuple.getLeft(), EMPTY_PARAMETER_SET)); // 28
 		monitorSetData.put(tuple.getLeft(), EMPTY_PARAMETER_SET); // 29
-	    } // 25
-	} // 26
-
-    }// 27
+	    } // 30
+	} // 31
+    }// 32
 
     private void calculateAcceptingParameters() {
 	// TODO implement calculateAcceptingParameters
