@@ -39,8 +39,94 @@ public class StaticDataConverterTest extends AbstractTest {
     }
 
     @Test
-    public void getExtensionPattern() {
+    public void getExtensionPattern_p1p3_p3p3() {
 
+	Set<Parameter<?>> ps1 = asSet(p1, p3);
+	Set<Parameter<?>> ps2 = asSet(p3, p5);
+
+	boolean[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
+
+	boolean[] expected = { true, true, false };
+
+	assertBooleanArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getExtensionPattern_p1_p5() {
+
+	Set<Parameter<?>> ps1 = asSet(p1);
+	Set<Parameter<?>> ps2 = asSet(p5);
+
+	boolean[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
+
+	boolean[] expected = { true, false };
+
+	assertBooleanArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getExtensionPattern_p5_p1() {
+
+	Set<Parameter<?>> ps1 = asSet(p5);
+	Set<Parameter<?>> ps2 = asSet(p1);
+
+	boolean[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
+
+	boolean[] expected = { false, true };
+
+	assertBooleanArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getExtensionPattern_p3p5_p1p5() {
+
+	Set<Parameter<?>> ps1 = asSet(p3, p5);
+	Set<Parameter<?>> ps2 = asSet(p1, p5);
+
+	boolean[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
+
+	boolean[] expected = { false, true, true };
+
+	assertBooleanArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getExtensionPattern_p3p4p5_p1p2p5() {
+
+	Set<Parameter<?>> ps1 = asSet(p3, p4, p5);
+	Set<Parameter<?>> ps2 = asSet(p1, p2, p5);
+
+	boolean[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
+
+	boolean[] expected = { false, false, true, true, true };
+
+	assertBooleanArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getExtensionPattern_p2p4_p1p3p5() {
+
+	Set<Parameter<?>> ps1 = asSet(p2, p4);
+	Set<Parameter<?>> ps2 = asSet(p1, p3, p5);
+
+	boolean[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
+
+	boolean[] expected = { false, true, false, true, false };
+
+	assertBooleanArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getExtensionPattern_p1p2p3p4_p2p3p4p5() {
+
+	Set<Parameter<?>> ps1 = asSet(p1, p2, p3, p4);
+	Set<Parameter<?>> ps2 = asSet(p2, p3, p4, p5);
+
+	boolean[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
+
+	boolean[] expected = { true, true, true, true, false };
+
+	assertBooleanArrayEquals(expected, actual);
     }
 
     @Test
@@ -53,17 +139,7 @@ public class StaticDataConverterTest extends AbstractTest {
 
 	int[] actual = StaticDataConverter.toParameterMask(asSet(p2, p3, p5));
 
-	int[] expected = { 2, 3, 5};
-
-	assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void toParameterMask_emptyset() {
-
-	int[] actual = StaticDataConverter.toParameterMask(EMPTY_PARAMETER_SET);
-
-	int[] expected = { };
+	int[] expected = { 2, 3, 5 };
 
 	assertArrayEquals(expected, actual);
     }

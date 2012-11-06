@@ -60,8 +60,8 @@ public class StaticDataConverter {
      */
     private void convertToLowLevelStaticData() {
 	for (Set<Parameter<?>> parameterSet : pp.getMonitorSetData().keys()) {
-	    ArrayList<Tuple<Set<Parameter<?>>, Boolean>> tupleList = new ArrayList<Tuple<Set<Parameter<?>>, Boolean>>(pp
-		    .getMonitorSetData().get(parameterSet));
+	    ArrayList<Tuple<Set<Parameter<?>>, Boolean>> tupleList = new ArrayList<Tuple<Set<Parameter<?>>, Boolean>>(
+		    pp.getMonitorSetData().get(parameterSet));
 	    Collections.sort(tupleList, new Comparator<Tuple<Set<Parameter<?>>, Boolean>>() {
 		@Override
 		public int compare(Tuple<Set<Parameter<?>>, Boolean> t1, Tuple<Set<Parameter<?>>, Boolean> t2) {
@@ -102,8 +102,12 @@ public class StaticDataConverter {
 	List<Boolean> result = new ArrayList<Boolean>();
 	int i = 0;
 	int j = 0;
-	while (i < ps1.size()) {
-	    if (j >= ps2.size() || toParameterMask(ps1)[i] <= toParameterMask(ps2)[j]) {
+	while (i < ps1.size() || j < ps2.size()) {
+	    if (i < ps1.size() && j < ps2.size() && toParameterMask(ps1)[i] == toParameterMask(ps2)[j]) {
+		result.add(true);
+		i++;
+		j++;
+	    } else if (i < ps1.size() && (j >= ps2.size() || toParameterMask(ps1)[i] < toParameterMask(ps2)[j])) {
 		result.add(true);
 		i++;
 	    } else {
