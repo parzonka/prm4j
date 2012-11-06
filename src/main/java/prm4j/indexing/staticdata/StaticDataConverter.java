@@ -75,23 +75,23 @@ public class StaticDataConverter {
 	}
 	for (BaseEvent baseEvent : pp.getBaseEvents()) {
 	    for (Set<Parameter<?>> parameterSet : pp.getMaxData().get(baseEvent)) {
-		final int[] nodeMask = parameterMask(parameterSet);
-		final int[] diffMask = parameterMask(Util.difference(baseEvent.getParameters(), parameterSet));
+		final int[] nodeMask = toParameterMask(parameterSet);
+		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), parameterSet));
 		getMaxData().put(baseEvent, new MaxData(nodeMask, diffMask));
 	    }
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) {
-		final int[] nodeMask = parameterMask(tuple.getLeft());
+		final int[] nodeMask = toParameterMask(tuple.getLeft());
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
 		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight());
-		final int[] diffMask = parameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft()));
+		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft()));
 		getJoinData().put(baseEvent,
 			new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
 	    }
 	}
 	for (Set<Parameter<?>> parameterSet : pp.getChainData().keys()) {
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getChainData().get(parameterSet)) {
-		final int[] nodeMask = parameterMask(parameterSet);
+		final int[] nodeMask = toParameterMask(parameterSet);
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
 		chainData.put(parameterSet, new ChainData(nodeMask, monitorSetId));
 	    }
@@ -103,7 +103,7 @@ public class StaticDataConverter {
 	int i = 0;
 	int j = 0;
 	while (i < ps1.size()) {
-	    if (j >= ps2.size() || parameterMask(ps1)[i] <= parameterMask(ps2)[j]) {
+	    if (j >= ps2.size() || toParameterMask(ps1)[i] <= toParameterMask(ps2)[j]) {
 		result.add(true);
 		i++;
 	    } else {
@@ -119,7 +119,7 @@ public class StaticDataConverter {
 	int i = 0;
 	int j = 0;
 	while (i < ps1.size()) {
-	    if (j >= ps2.size() || parameterMask(ps1)[i] <= parameterMask(ps2)[j]) {
+	    if (j >= ps2.size() || toParameterMask(ps1)[i] <= toParameterMask(ps2)[j]) {
 		i++;
 	    } else {
 		result.add(j); // source
@@ -171,7 +171,7 @@ public class StaticDataConverter {
      * @param parameterSet
      * @return an array representation of the parameter ids of the given parameter set (sorted)
      */
-    private static int[] parameterMask(Set<Parameter<?>> parameterSet) {
+    protected static int[] toParameterMask(Set<Parameter<?>> parameterSet) {
 	int[] result = new int[parameterSet.size()];
 	int i = 0;
 	for (Parameter<?> parameter : parameterSet) {

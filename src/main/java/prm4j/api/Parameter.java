@@ -35,7 +35,7 @@ public class Parameter<T> implements Comparable<Parameter<T>>{
 	return this.parameterIndex;
     }
 
-    protected void setIndex(int parameterIndex) {
+    public void setIndex(int parameterIndex) {
 	this.parameterIndex = parameterIndex;
     }
 
