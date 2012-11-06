@@ -48,6 +48,10 @@ public class Util {
 	return set2.containsAll(set1);
     }
 
+    public static <T> boolean isSubsetEq(Set<T> set1, Set<T> set2) {
+	return set2.containsAll(set1) || set1.equals(set2);
+    }
+
     public static <T> boolean isSuperset(Set<T> set1, Set<T> set2) {
 	return set1.containsAll(set2);
     }
