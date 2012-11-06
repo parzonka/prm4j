@@ -22,6 +22,8 @@ import prm4j.util.FSMDefinitions;
  */
 public abstract class AbstractTest extends FSMDefinitions /* we mix in other definitions layer by layer */{
 
+    public final static Set<Parameter<?>> EMPTY_PARAMETER_SET = new HashSet<Parameter<?>>();
+
     /**
      * Downcast SymbolN to Symbol.
      *

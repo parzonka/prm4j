@@ -31,7 +31,9 @@ import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.BaseMonitorState;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.SetMultimap;
 
 public class FiniteParametricPropertyTest extends AbstractTest {
 
@@ -140,9 +142,37 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
 	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = fs.getJoinData();
 
-	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>  expected = ArrayListMultimap.create();
+	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = ArrayListMultimap.create();
 	expected.put(u.createIter, tuple(asSet(u.c), asSet(u.m, u.c)));
 
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getChainData_unsafeMapIterator() throws Exception {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
+
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = fs.getChainData();
+
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = HashMultimap.create();
+	// could be optimized away by self-loop detector
+	expected.put(asSet(u.m, u.c), tuple(asSet(u.m), EMPTY_PARAMETER_SET)); // m -> mc (update)
+	// TODO is currently doubled by bug
+	expected.put(asSet(u.m, u.c), tuple(asSet(u.m), EMPTY_PARAMETER_SET)); // m -> mc (update)
+	// TODO necessary for joins, but missing
+	expected.put(asSet(u.m, u.c), tuple(asSet(u.c), asSet(u.m, u.c))); // c -> mc (join)
+	// could be optimized away from a self-loop spec
+	expected.put(asSet(u.m, u.c, u.i), tuple(asSet(u.c, u.i), EMPTY_PARAMETER_SET)); // ci -> mci (update)
+	// could be optimized away from a self-loop spec, because mc is never in maxData(..., ci) or joinData(..., ci)
+	expected.put(asSet(u.m, u.c, u.i), tuple(asSet(u.c, u.m), EMPTY_PARAMETER_SET)); // mc -> mci (update)
+	// necessary
+	expected.put(asSet(u.m, u.c, u.i), tuple(asSet(u.m), EMPTY_PARAMETER_SET)); // m -> mci (update)
+	// necessary
+	expected.put(asSet(u.m, u.c, u.i), tuple(asSet(u.i), EMPTY_PARAMETER_SET)); // i -> mci (update)
+
+	// currently failing because of bug in algorithm
 	assertEquals(expected, actual);
     }
 
