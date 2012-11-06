@@ -170,7 +170,24 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	// necessary for updates
 	expected.put(asSet(u.m, u.c, u.i), tuple(asSet(u.i), EMPTY_PARAMETER_SET)); // i -> mci (update)
 
-	// currently failing because of bug in algorithm
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getMonitorSetData_unsafeMapIterator() throws Exception {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
+
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> actual = fs.getMonitorSetData();
+
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> expected = HashMultimap.create();
+	expected.put(asSet(u.c, u.i), tuple(EMPTY_PARAMETER_SET, true)); // ci has single update set
+	expected.put(asSet(u.c), tuple(asSet(u.c, u.m), false)); // c has single join set
+	expected.put(asSet(u.c, u.m), tuple(EMPTY_PARAMETER_SET, true)); // cm has single update set
+	expected.put(asSet(u.m), tuple(EMPTY_PARAMETER_SET, true)); // m has single update set
+	expected.put(asSet(u.i), tuple(EMPTY_PARAMETER_SET, true)); // i has single update set
+
 	assertEquals(expected, actual);
     }
 
