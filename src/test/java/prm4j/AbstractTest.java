@@ -10,6 +10,9 @@
  */
 package prm4j;
 
+import static org.junit.Assert.fail;
+
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,6 +47,22 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	    set.add(s);
 	}
 	return set;
+    }
+
+    /**
+     * assertArrayEquals(boolean[] a1, boolean[] a2) not implemented in jUnit for some reason, see
+     * https://github.com/KentBeck/junit/issues/86
+     *
+     * @param expected
+     * @param actual
+     */
+    public static void assertBooleanArrayEquals(boolean[] expected, boolean[] actual) {
+	if (expected.length != actual.length)
+	    fail("Expected:<" + Arrays.toString(expected) + "> but was: <" + Arrays.toString(actual) + ">");
+	for (int i = 0; i < expected.length; i++) {
+	    if (expected[i] != actual[i])
+		fail();
+	}
     }
 
 }
