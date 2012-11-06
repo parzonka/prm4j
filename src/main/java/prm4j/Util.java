@@ -55,14 +55,14 @@ public class Util {
     static class TopologicalSetComparator implements Comparator<Set<?>> {
 	@Override
 	public int compare(Set<?> set1, Set<?> set2) {
-	    return set2.size() - set1.size();
+	    return set1.size() - set2.size();
 	}
     }
 
     static class ReverseTopologicalSetComparator implements Comparator<Set<?>> {
 	@Override
 	public int compare(Set<?> set1, Set<?> set2) {
-	    return set1.size() - set2.size();
+	    return set2.size() - set1.size();
 	}
     }
 
