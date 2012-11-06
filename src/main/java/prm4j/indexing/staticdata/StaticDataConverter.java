@@ -122,13 +122,16 @@ public class StaticDataConverter {
 	List<Integer> result = new ArrayList<Integer>();
 	int i = 0;
 	int j = 0;
-	while (i < ps1.size()) {
-	    if (j >= ps2.size() || toParameterMask(ps1)[i] <= toParameterMask(ps2)[j]) {
+	int k = 0;
+	while (i < ps1.size() || j < ps2.size()) {
+	    if (i < ps1.size() && j < ps2.size() && toParameterMask(ps1)[i] == toParameterMask(ps2)[j]) {
+		i++;
+		j++;
+	    } else if (i < ps1.size() && (j >= ps2.size() || toParameterMask(ps1)[i] < toParameterMask(ps2)[j])) {
 		i++;
 	    } else {
-		result.add(j); // source
-		result.add(i); // target
-		j++;
+		result.add(j++);
+		result.add(i + k++);
 	    }
 	}
 	return toPrimitiveIntegerArray(result);
