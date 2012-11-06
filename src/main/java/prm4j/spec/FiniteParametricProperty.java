@@ -229,9 +229,6 @@ public class FiniteParametricProperty implements ParametricProperty {
 		monitorSetData.put(tuple.getLeft(), tuple(EMPTY_PARAMETER_SET, true)); // 30
 	    } // 30
 	} // 31
-	System.out.println("chaindata: " + chainData);
-	System.out.println("updates: " + updates);
-	System.out.println("monitorSetData: " + monitorSetData);
     }// 32
 
     private void calculateAcceptingParameters() {
