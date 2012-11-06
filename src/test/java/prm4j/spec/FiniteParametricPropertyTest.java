@@ -35,6 +35,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
 
+/**
+ * Unit tests for {@link FiniteParametricProperty}.
+ */
 public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
@@ -187,6 +190,22 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	expected.put(asSet(u.c, u.m), tuple(EMPTY_PARAMETER_SET, true)); // cm has single update set
 	expected.put(asSet(u.m), tuple(EMPTY_PARAMETER_SET, true)); // m has single update set
 	expected.put(asSet(u.i), tuple(EMPTY_PARAMETER_SET, true)); // i has single update set
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getPossibleParameterSets_unsafeMapIterator() throws Exception {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
+
+	Set<Set<Parameter<?>>> actual = fs.getPossibleParameterSets();
+
+	Set<Set<Parameter<?>>> expected = new HashSet<Set<Parameter<?>>>();
+	expected.add(EMPTY_PARAMETER_SET);
+	expected.add(asSet(u.m, u.c));
+	expected.add(asSet(u.m, u.c, u.i));
 
 	assertEquals(expected, actual);
     }
