@@ -22,7 +22,7 @@ public class Util {
     }
 
     public static Comparator<Set<?>> TOPOLOGICAL_SET_COMPARATOR = new TopologicalSetComparator();
-    public static Comparator<Set<?>> REVERSE_TOPOLOGICAL_SET_COMPARATOR = new ReversesTopologicalSetComparator();
+    public static Comparator<Set<?>> REVERSE_TOPOLOGICAL_SET_COMPARATOR = new ReverseTopologicalSetComparator();
 
     public static <T> Set<T> union(Set<T> set1, Set<T> set2) {
 	Set<T> result = new HashSet<T>(set1);
@@ -59,7 +59,7 @@ public class Util {
 	}
     }
 
-    static class ReversesTopologicalSetComparator implements Comparator<Set<?>> {
+    static class ReverseTopologicalSetComparator implements Comparator<Set<?>> {
 	@Override
 	public int compare(Set<?> set1, Set<?> set2) {
 	    return set1.size() - set2.size();
