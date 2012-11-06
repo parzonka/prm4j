@@ -11,6 +11,7 @@
 package prm4j.spec;
 
 import static org.junit.Assert.assertEquals;
+import static prm4j.Util.tuple;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,13 +22,16 @@ import java.util.Set;
 import org.junit.Test;
 
 import prm4j.AbstractTest;
+import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.api.Symbol;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.BaseMonitorState;
-import prm4j.spec.FiniteParametricProperty;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 
 public class FiniteParametricPropertyTest extends AbstractTest {
 
@@ -111,6 +115,33 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	expected.get(u.useIter).add(asSet(u.m, u.c, u.i));
 	expected.get(u.updateMap).add(asSet(u.m, u.c));
 	expected.get(u.updateMap).add(asSet(u.m, u.c, u.i));
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getMaxData_unsafeMapIterator() throws Exception {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
+
+	ListMultimap<BaseEvent, Set<Parameter<?>>> actual = fs.getMaxData();
+
+	ListMultimap<BaseEvent, Set<Parameter<?>>> expected = ArrayListMultimap.create();
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getJoinData_unsafeMapIterator() throws Exception {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
+
+	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = fs.getJoinData();
+
+	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>  expected = ArrayListMultimap.create();
+	expected.put(u.createIter, tuple(asSet(u.c), asSet(u.m, u.c)));
 
 	assertEquals(expected, actual);
     }
