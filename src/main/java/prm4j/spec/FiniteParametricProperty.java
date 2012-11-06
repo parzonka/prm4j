@@ -12,6 +12,8 @@ package prm4j.spec;
 
 import static prm4j.Util.intersection;
 import static prm4j.Util.isSubset;
+import static prm4j.Util.isSuperset;
+import static prm4j.Util.isSubsetEq;
 import static prm4j.Util.tuple;
 
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ public class FiniteParametricProperty implements ParametricProperty {
     private final ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinData;
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainData;
     private final SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> monitorSetData;
+    private final static Set<Parameter<?>> EMPTY_PARAMETER_SET = new HashSet<Parameter<?>>();
 
     public FiniteParametricProperty(FiniteSpec finiteSpec) {
 
@@ -67,7 +70,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	joinData = ArrayListMultimap.create();
 	chainData = HashMultimap.create();
 	monitorSetData = HashMultimap.create();
-	calculateRelations();
+	calculateStaticData();
 
 	// TODO statePropertyCoEnableSets
 	coenablingEventSets = Collections.unmodifiableMap(new HashMap<BaseMonitorState, Set<Set<BaseEvent>>>());
@@ -184,38 +187,42 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return result;
     }
 
-    private void calculateRelations() { // 1
+    private void calculateStaticData() { // 1
 	Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>(); // 2
 	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
+	    for (Set<Parameter<?>> parameterSet : possibleParameterSets) { // 4
+		if (isSubset(baseEvent.getParameters(), parameterSet)) { // 5
+		    updates.add(tuple(baseEvent.getParameters(), parameterSet)); // 6
+		}
+	    }
+	}
+	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
 	    Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
-	    for (BaseEvent baseEvent2 : finiteSpec.getBaseEvents()) { // 5
-		Set<Parameter<?>> parameterSet2 = baseEvent2.getParameters(); // 5
-		if (Util.isSubset(parameterSet2, parameterSet)) { // 6
-		    updates.add(Util.tuple(parameterSet2, parameterSet)); // 7
-		} // 8
-	    } // 9
 	    List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
 		    enablingParameterSets.get(baseEvent)); // 10
 	    Collections.sort(enableSetInReverseTopolicalOrdering, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR); // 10
 	    for (Set<Parameter<?>> enablingParameterSet : enableSetInReverseTopolicalOrdering) { // 10
-		if (isSubset(enablingParameterSet, parameterSet)) { // 11
-		    maxData.get(baseEvent).add(enablingParameterSet); // 12
-		} else { // 13
-		    Set<Parameter<?>> compatibleSubset = intersection(parameterSet, enablingParameterSet); // 14
-		    joinData.put(baseEvent, tuple(compatibleSubset, enablingParameterSet)); // 15
-		    chainData.put(enablingParameterSet, tuple(compatibleSubset, enablingParameterSet)); // 16
-		    monitorSetData.put(compatibleSubset, enablingParameterSet); // 17
-		} // 18
-	    } // 19
-	} // 20
-	final Set<Parameter<?>> emptySet = new HashSet<Parameter<?>>();
-	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : updates) { // 21
-	    if (!monitorSetData.get(tuple.getLeft()).contains(tuple.getRight())) { // 22
-		chainData.put(tuple.getRight(), tuple(tuple.getLeft(), emptySet)); // 23
-		monitorSetData.put(tuple.getLeft(), emptySet); // 24
+		if (!enablingParameterSet.equals(EMPTY_PARAMETER_SET) && !isSubsetEq(parameterSet, enablingParameterSet)) { // 13
+		    if (isSuperset(parameterSet, enablingParameterSet)) { // 14
+			maxData.get(baseEvent).add(enablingParameterSet); // 15
+		    } else { // 16
+			Set<Parameter<?>> compatibleSubset = intersection(parameterSet, enablingParameterSet); // 17
+			joinData.put(baseEvent, tuple(compatibleSubset, enablingParameterSet)); // 18
+			monitorSetData.put(compatibleSubset, enablingParameterSet); // 19
+		    } // 20
+		} // 21
+	    } // 22
+	} // 23
+	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : updates) { // 24
+	    if (monitorSetData.get(tuple.getLeft()).contains(tuple.getRight())) { // 25
+		chainData.put(tuple.getRight(), tuple(tuple.getLeft(), tuple.getRight())); // 26
+	    } else { // 27
+		chainData.put(tuple.getRight(), tuple(tuple.getLeft(), EMPTY_PARAMETER_SET)); // 28
+		monitorSetData.put(tuple.getLeft(), EMPTY_PARAMETER_SET); // 29
 	    } // 25
 	} // 26
-    } // 27
+
+    }// 27
 
     private void calculateAcceptingParameters() {
 	// TODO implement calculateAcceptingParameters
