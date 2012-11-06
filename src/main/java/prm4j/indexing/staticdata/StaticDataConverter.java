@@ -118,6 +118,16 @@ public class StaticDataConverter {
 	return toPrimitiveBooleanArray(result);
     }
 
+    /**
+     * Returns a pattern { s1, t1, ..., sN, tN } which represents a instruction to copy a binding from sourceBinding[s1]
+     * to targetBinding[t1] to perform a join.
+     *
+     * @param ps1
+     *            parameter set which masks the target binding
+     * @param ps2
+     *            parameter set which masks the source binding
+     * @return the pattern
+     */
     protected static int[] getCopyPattern(Set<Parameter<?>> ps1, Set<Parameter<?>> ps2) {
 	List<Integer> result = new ArrayList<Integer>();
 	int i = 0;
