@@ -159,17 +159,15 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = HashMultimap.create();
 	// could be optimized away by self-loop detector
 	expected.put(asSet(u.m, u.c), tuple(asSet(u.m), EMPTY_PARAMETER_SET)); // m -> mc (update)
-	// TODO is currently doubled by bug
-	expected.put(asSet(u.m, u.c), tuple(asSet(u.m), EMPTY_PARAMETER_SET)); // m -> mc (update)
-	// TODO necessary for joins, but missing
+	// necessary for joins
 	expected.put(asSet(u.m, u.c), tuple(asSet(u.c), asSet(u.m, u.c))); // c -> mc (join)
 	// could be optimized away from a self-loop spec
 	expected.put(asSet(u.m, u.c, u.i), tuple(asSet(u.c, u.i), EMPTY_PARAMETER_SET)); // ci -> mci (update)
 	// could be optimized away from a self-loop spec, because mc is never in maxData(..., ci) or joinData(..., ci)
 	expected.put(asSet(u.m, u.c, u.i), tuple(asSet(u.c, u.m), EMPTY_PARAMETER_SET)); // mc -> mci (update)
-	// necessary
+	// necessary for updates
 	expected.put(asSet(u.m, u.c, u.i), tuple(asSet(u.m), EMPTY_PARAMETER_SET)); // m -> mci (update)
-	// necessary
+	// necessary for updates
 	expected.put(asSet(u.m, u.c, u.i), tuple(asSet(u.i), EMPTY_PARAMETER_SET)); // i -> mci (update)
 
 	// currently failing because of bug in algorithm

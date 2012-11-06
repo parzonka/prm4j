@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
@@ -59,13 +60,18 @@ public class StaticDataConverter {
      * Creates arrays of maxData, joinData, chainData.
      */
     private void convertToLowLevelStaticData() {
-	for (Entry<Set<Parameter<?>>, Set<Parameter<?>>> entry : pp.getMonitorSetData().entries()) {
-	    @SuppressWarnings("unchecked")
-	    Set<Parameter<?>>[] sortedSets = entry.getValue().toArray(new Set[0]);
-	    Arrays.sort(sortedSets, Util.TOPOLOGICAL_SET_COMPARATOR);
+	for (Set<Parameter<?>> parameterSet : pp.getMonitorSetData().keys()) {
+	    ArrayList<Tuple<Set<Parameter<?>>, Boolean>> tupleList = new ArrayList<Tuple<Set<Parameter<?>>, Boolean>>(pp
+		    .getMonitorSetData().get(parameterSet));
+	    Collections.sort(tupleList, new Comparator<Tuple<Set<Parameter<?>>, Boolean>>() {
+		@Override
+		public int compare(Tuple<Set<Parameter<?>>, Boolean> t1, Tuple<Set<Parameter<?>>, Boolean> t2) {
+		    return t1.getLeft().size() - t2.getLeft().size();
+		}
+	    });
 	    int i = 0;
-	    for (Set<Parameter<?>> set : sortedSets) {
-		monitorSetIds.put(entry.getKey(), set, i++);
+	    for (Tuple<Set<Parameter<?>>, Boolean> tuple : tupleList) {
+		monitorSetIds.put(parameterSet, tuple.getLeft(), i++);
 	    }
 	}
 	for (BaseEvent baseEvent : pp.getBaseEvents()) {

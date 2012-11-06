@@ -58,6 +58,6 @@ public interface ParametricProperty {
     /**
      * @return mapping from instances to sets of instances representing sets of monitors
      */
-    public SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> getMonitorSetData();
+    public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> getMonitorSetData();
 
 }
