@@ -129,6 +129,11 @@ public class Util {
 	    return true;
 	}
 
+	@Override
+	public String toString() {
+	    return "(" + left + ", " + right + ")";
+	}
+
     }
 
 }
