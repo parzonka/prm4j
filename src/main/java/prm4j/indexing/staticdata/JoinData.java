@@ -10,6 +10,8 @@
  */
 package prm4j.indexing.staticdata;
 
+import java.util.Arrays;
+
 /**
  * Represents all instances which are compatible with the event instance.
  * <p>
@@ -56,5 +58,44 @@ public class JoinData {
     public int[] getCopyPattern() {
 	return copyPattern;
     }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + Arrays.hashCode(copyPattern);
+	result = prime * result + Arrays.hashCode(extensionPattern);
+	result = prime * result + monitorSetId;
+	result = prime * result + Arrays.hashCode(nodeMask);
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	JoinData other = (JoinData) obj;
+	if (!Arrays.equals(copyPattern, other.copyPattern))
+	    return false;
+	if (!Arrays.equals(extensionPattern, other.extensionPattern))
+	    return false;
+	if (monitorSetId != other.monitorSetId)
+	    return false;
+	if (!Arrays.equals(nodeMask, other.nodeMask))
+	    return false;
+	return true;
+    }
+
+    @Override
+    public String toString() {
+	return "JoinData [nodeMask=" + Arrays.toString(nodeMask) + ", monitorSetId=" + monitorSetId
+		+ ", extensionPattern=" + Arrays.toString(extensionPattern) + ", copyPattern="
+		+ Arrays.toString(copyPattern) + "]";
+    }
+
 
 }
