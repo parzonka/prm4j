@@ -54,9 +54,9 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
     public static <T> List<T> list(T... objects) {
 	List<T> result = new ArrayList<T>();
 	for (T t : objects)
-		result.add(t);
+	    result.add(t);
 	return result;
-}
+    }
 
     /**
      * assertArrayEquals(boolean[] a1, boolean[] a2) not implemented in jUnit for some reason, see
@@ -71,6 +71,22 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	for (int i = 0; i < expected.length; i++) {
 	    if (expected[i] != actual[i])
 		fail();
+	}
+    }
+
+    public static void assert2DimArrayEquals(Object[][] expected, Object[][] actual) {
+	if (expected.length != actual.length)
+	    fail("Expected:<" + Arrays.toString(expected) + "> but was: <" + Arrays.toString(actual) + ">");
+	for (int i = 0; i < expected.length; i++) {
+	    if (expected[i].length != actual[i].length)
+		fail("2-dim array differs in row " + i + ". Expected:<" + Arrays.toString(expected[i]) + "> but was: <"
+			+ Arrays.toString(actual[i]) + ">");
+	    for (int j = 0; j < expected[i].length; j++) {
+		if (!expected[i][j].equals(actual[i][j])) {
+		    fail("2-dim array differs in at [" + i + "][" + j + "]. Expected:<" + expected[i][j].toString()
+			    + "> but was: <" + actual[i][j].toString() + ">");
+		}
+	    }
 	}
     }
 
