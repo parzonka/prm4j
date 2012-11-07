@@ -53,7 +53,7 @@ public class MetaNode {
 	return null;
     }
 
-    void setChainingData(ChainData[] chainData) {
+    void setChainData(ChainData[] chainData) {
 	this.chainData = chainData;
     }
 

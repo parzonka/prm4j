@@ -177,7 +177,7 @@ public class StaticDataConverter {
 	    for (Parameter<?> parameter : parameterList) {
 		node = node.getMetaNode(parameter);
 		if (!node.isConfigured()) {
-		    node.setChainingData(chainData.get(node.getParameterSet()).toArray(new ChainData[0]));
+		    node.setChainData(chainData.get(node.getParameterSet()).toArray(new ChainData[0]));
 		    node.setMonitorSetCount(monitorSetIds.row(node.getParameterSet()).size());
 		    node.setConfigured(true);
 		}
