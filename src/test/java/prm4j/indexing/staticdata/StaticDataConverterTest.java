@@ -147,6 +147,24 @@ public class StaticDataConverterTest extends AbstractTest {
 	assertBooleanArrayEquals(expected, actual);
     }
 
+    @Test
+    public void getExtensionPattern_unsafeMapIterator() {
+
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	u.m.setIndex(0);
+	u.c.setIndex(1);
+	u.i.setIndex(2);
+
+	Set<Parameter<?>> ps1 = asSet(u.m, u.c);
+	Set<Parameter<?>> ps2 = asSet(u.c, u.i);
+
+	boolean[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
+
+	boolean[] expected = { true, true, false };
+
+	assertBooleanArrayEquals(expected, actual);
+    }
+
     // /////////////// getCopyPattern ///////////////////////////
 
     @Test
@@ -307,6 +325,37 @@ public class StaticDataConverterTest extends AbstractTest {
 	expected[u.useIter.getIndex()] = new MaxData[0];
 
 	assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getJoinData_unsafeMapIterator() {
+
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	u.m.setIndex(0);
+	u.c.setIndex(1);
+	u.i.setIndex(2);
+	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
+	StaticDataConverter sdc = new StaticDataConverter(fpp);
+
+	JoinData[][] actual = sdc.getJoinData();
+
+	JoinData[][] expected = new JoinData[fpp.getBaseEvents().size()][];
+	expected[u.createColl.getIndex()] = new JoinData[0];
+
+	expected[u.updateMap.getIndex()] = new JoinData[0];
+
+	JoinData[] jd = new JoinData[1];
+	int[] nodeMask = { u.c.getIndex() };
+	int monitorSetId = 0;
+	boolean[] extensionPattern = { true, true, false };
+	int[] copyPattern = { 1, 2 }; // copy source[1] on target[2]
+	jd[0] = new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern);
+	expected[u.createIter.getIndex()] = jd;
+
+	expected[u.useIter.getIndex()] = new JoinData[0];
+
+	assert2DimArrayEquals(expected, actual);
     }
 
 }
