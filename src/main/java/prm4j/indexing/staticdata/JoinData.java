@@ -26,17 +26,13 @@ public class JoinData {
     private final boolean[] extensionPattern;
     // identifies the bindings which will be used for the join, picking out only "new" parameters
     private final int[] copyPattern;
-    // identifies the bindings which are in given binding without joining binding; used for disable-calculation
-    private final int[] diffMask;
 
-    public JoinData(int[] nodeMask, int monitorSetId, boolean[] extensionPattern, int[] copyPattern,
-	    int[] diffMask) {
+    public JoinData(int[] nodeMask, int monitorSetId, boolean[] extensionPattern, int[] copyPattern) {
 	super();
 	this.nodeMask = nodeMask;
 	this.monitorSetId = monitorSetId;
 	this.extensionPattern = extensionPattern;
 	this.copyPattern = copyPattern;
-	this.diffMask = diffMask;
     }
 
     public int[] getNodeMask() {
@@ -59,10 +55,6 @@ public class JoinData {
      */
     public int[] getCopyPattern() {
 	return copyPattern;
-    }
-
-    public int[] getDiffMask() {
-	return diffMask;
     }
 
 }
