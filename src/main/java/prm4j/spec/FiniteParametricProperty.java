@@ -316,4 +316,9 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return finiteSpec.getBaseEvents();
     }
 
+    @Override
+    public Set<Parameter<?>> getParameters() {
+	return finiteSpec.getParameters();
+    }
+
 }

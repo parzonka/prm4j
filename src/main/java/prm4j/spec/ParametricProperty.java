@@ -28,6 +28,8 @@ public interface ParametricProperty {
 
     public Set<BaseEvent> getBaseEvents();
 
+    public Set<Parameter<?>> getParameters();
+
     public BaseMonitorState getInitialState();
 
     public Set<BaseEvent> getCreationEvents();
