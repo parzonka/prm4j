@@ -85,8 +85,8 @@ public class StaticDataConverter {
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) {
 		final int[] nodeMask = toParameterMask(tuple.getLeft());
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
-		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
-		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight());
+		final boolean[] extensionPattern = getExtensionPattern(tuple.getRight(), baseEvent.getParameters());
+		final int[] copyPattern = getCopyPattern(tuple.getRight(), baseEvent.getParameters());
 		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern));
 	    }
 	}
