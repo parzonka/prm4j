@@ -37,6 +37,9 @@ import com.google.common.collect.Table;
  */
 public class StaticDataConverter {
 
+    private final static MaxData[] EMPTY_MAX_DATA = new MaxData[0];
+    private final static JoinData[] EMPTY_JOIN_DATA = new JoinData[0];
+
     private final ParametricProperty pp;
     private final ListMultimap<BaseEvent, MaxData> maxData;
     private final ListMultimap<BaseEvent, JoinData> joinData;
@@ -52,7 +55,7 @@ public class StaticDataConverter {
 	monitorSetIds = HashBasedTable.create();
 	convertToLowLevelStaticData();
 	rootNode = new MetaNode(new HashSet<Parameter<?>>());
-	createMetaTree();
+	// TODO createMetaTree();
     }
 
     /**
@@ -77,7 +80,7 @@ public class StaticDataConverter {
 	    for (Set<Parameter<?>> parameterSet : pp.getMaxData().get(baseEvent)) {
 		final int[] nodeMask = toParameterMask(parameterSet);
 		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), parameterSet));
-		getMaxData().put(baseEvent, new MaxData(nodeMask, diffMask));
+		maxData.put(baseEvent, new MaxData(nodeMask, diffMask));
 	    }
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) {
 		final int[] nodeMask = toParameterMask(tuple.getLeft());
@@ -85,8 +88,7 @@ public class StaticDataConverter {
 		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight());
 		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft()));
-		getJoinData().put(baseEvent,
-			new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
+		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
 	    }
 	}
 	for (Set<Parameter<?>> parameterSet : pp.getChainData().keys()) {
@@ -199,8 +201,7 @@ public class StaticDataConverter {
     }
 
     public EventContext getEventContext() {
-	return new EventContext(pp.getBaseEvents(), getJoinData(), getMaxData(), pp.getCreationEvents(),
-		pp.getDisablingEvents());
+	return new EventContext(getJoinData(), getMaxData(), getCreationEvents(), getDisablingEvents());
     }
 
     /**
@@ -210,16 +211,41 @@ public class StaticDataConverter {
 	return rootNode;
     }
 
-    protected Set<ChainData> getChainData(Set<Parameter<?>> parameterSet) {
-	return chainData.get(parameterSet);
+    protected SetMultimap<Set<Parameter<?>>, ChainData> getChainData() {
+	return chainData;
     }
 
-    protected ListMultimap<BaseEvent, MaxData> getMaxData() {
-	return maxData;
+    protected MaxData[][] getMaxData() {
+	MaxData[][] maxDataArray = new MaxData[pp.getBaseEvents().size()][];
+	for (BaseEvent baseEvent : pp.getBaseEvents()) {
+	    maxDataArray[baseEvent.getIndex()] = maxData.get(baseEvent) != null ? maxData.get(baseEvent).toArray(
+		    EMPTY_MAX_DATA) : EMPTY_MAX_DATA;
+	}
+	return maxDataArray;
     }
 
-    protected ListMultimap<BaseEvent, JoinData> getJoinData() {
-	return joinData;
+    protected JoinData[][] getJoinData() {
+	JoinData[][] joinDataArray = new JoinData[pp.getBaseEvents().size()][];
+	for (BaseEvent baseEvent : pp.getBaseEvents()) {
+	    joinDataArray[baseEvent.getIndex()] = joinData.get(baseEvent) != null ? joinData.get(baseEvent).toArray(
+		    EMPTY_JOIN_DATA) : EMPTY_JOIN_DATA;
+	}
+	return joinDataArray;
     }
 
+    protected boolean[] getCreationEvents() {
+	boolean[] creationEvents = new boolean[pp.getBaseEvents().size()];
+	for (BaseEvent baseEvent : pp.getBaseEvents()) {
+	    creationEvents[baseEvent.getIndex()] = pp.getCreationEvents().contains(baseEvent);
+	}
+	return creationEvents;
+    }
+
+    protected boolean[] getDisablingEvents() {
+	boolean[] disablingEvents = new boolean[pp.getBaseEvents().size()];
+	for (BaseEvent baseEvent : pp.getBaseEvents()) {
+	    disablingEvents[baseEvent.getIndex()] = pp.getDisablingEvents().contains(baseEvent);
+	}
+	return disablingEvents;
+    }
 }

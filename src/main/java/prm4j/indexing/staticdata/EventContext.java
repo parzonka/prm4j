@@ -10,36 +10,22 @@
  */
 package prm4j.indexing.staticdata;
 
-import java.util.Set;
-
-import com.google.common.collect.ListMultimap;
-
 import prm4j.api.BaseEvent;
 
 public class EventContext {
-
-    private final static MaxData[] EMPTY_MAX_DATA = new MaxData[0];
-    private final static JoinData[] EMPTY_JOIN_DATA = new JoinData[0];
 
     private final JoinData[][] joinDataArray;
     private final MaxData[][] maxDataArray;
     private final boolean[] creationEvents;
     private final boolean[] disablingEvents;
 
-    public EventContext(Set<BaseEvent> baseEvents, ListMultimap<BaseEvent, JoinData> joinData,
-	    ListMultimap<BaseEvent, MaxData> maxData, Set<BaseEvent> creationEvents, Set<BaseEvent> disablingEvents) {
-	joinDataArray = new JoinData[baseEvents.size()][];
-	maxDataArray = new MaxData[baseEvents.size()][];
-	this.creationEvents = new boolean[baseEvents.size()];
-	this.disablingEvents = new boolean[baseEvents.size()];
-	for (BaseEvent baseEvent : baseEvents) {
-	    maxDataArray[baseEvent.getIndex()] = maxData.get(baseEvent) != null ? maxData.get(baseEvent).toArray(
-		    EMPTY_MAX_DATA) : EMPTY_MAX_DATA;
-	    joinDataArray[baseEvent.getIndex()] = joinData.get(baseEvent) != null ? joinData.get(baseEvent).toArray(
-		    EMPTY_JOIN_DATA) : EMPTY_JOIN_DATA;
-	    this.creationEvents[baseEvent.getIndex()] = creationEvents.contains(baseEvent);
-	    this.disablingEvents[baseEvent.getIndex()] = disablingEvents.contains(baseEvent);
-	}
+    public EventContext(JoinData[][] joinData,
+	    MaxData[][] maxData, boolean[] creationEvents, boolean[] disablingEvents) {
+	joinDataArray = joinData;
+	maxDataArray = maxData;
+	this.creationEvents = creationEvents;
+	this.disablingEvents = disablingEvents;
+
     }
 
     public MaxData[] getMaxData(BaseEvent baseEvent) {
