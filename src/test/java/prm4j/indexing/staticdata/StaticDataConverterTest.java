@@ -19,6 +19,9 @@ import org.junit.Test;
 
 import prm4j.AbstractTest;
 import prm4j.api.Parameter;
+import prm4j.api.fsm.FSM;
+import prm4j.api.fsm.FSMSpec;
+import prm4j.spec.FiniteParametricProperty;
 
 @SuppressWarnings("rawtypes")
 public class StaticDataConverterTest extends AbstractTest {
@@ -281,6 +284,27 @@ public class StaticDataConverterTest extends AbstractTest {
 	int[] actual = StaticDataConverter.toParameterMask(EMPTY_PARAMETER_SET);
 
 	int[] expected = {};
+
+	assertArrayEquals(expected, actual);
+    }
+
+    // /////////////// getMaxData ///////////////////////////
+
+    @Test
+    public void getMaxData_unsafeMapIterator() {
+
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
+	StaticDataConverter sdc = new StaticDataConverter(fpp);
+
+	MaxData[][] actual = sdc.getMaxData();
+
+	MaxData[][] expected = new MaxData[fpp.getBaseEvents().size()][];
+	expected[u.createColl.getIndex()] = new MaxData[0];
+	expected[u.updateMap.getIndex()] = new MaxData[0];
+	expected[u.createIter.getIndex()] = new MaxData[0];
+	expected[u.useIter.getIndex()] = new MaxData[0];
 
 	assertArrayEquals(expected, actual);
     }

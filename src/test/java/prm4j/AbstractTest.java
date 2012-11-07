@@ -12,8 +12,10 @@ package prm4j;
 
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import prm4j.api.Parameter;
@@ -48,6 +50,13 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	}
 	return set;
     }
+
+    public static <T> List<T> list(T... objects) {
+	List<T> result = new ArrayList<T>();
+	for (T t : objects)
+		result.add(t);
+	return result;
+}
 
     /**
      * assertArrayEquals(boolean[] a1, boolean[] a2) not implemented in jUnit for some reason, see
