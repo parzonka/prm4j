@@ -35,7 +35,17 @@ public class MetaNode {
     public MetaNode(Set<Parameter<?>> fullParameterSet) {
 	super();
 	this.fullParameterSet = fullParameterSet;
+	assert parameterIndexIsValid(fullParameterSet) : "Full parameter set must be valid.";
 	successors = new MetaNode[fullParameterSet.size()];
+    }
+
+    private static boolean parameterIndexIsValid(Set<Parameter<?>> fullParameterSet) {
+	for (Parameter<?> parameter : fullParameterSet) {
+	    if (parameter.getIndex() >= fullParameterSet.size()) {
+		return false;
+	    }
+	}
+	return true;
     }
 
     public ChainData[] getChainData() {
