@@ -26,15 +26,16 @@ import prm4j.indexing.realtime.NodeMap;
  */
 public class MetaNode {
 
-    private MetaNode[] successors;
+    private final MetaNode[] successors;
     private ChainData[] chainData;
-    private Set<Parameter<?>> parameterSet;
+    private Set<Parameter<?>> fullParameterSet;
     private boolean isConfigured = false;
     private int monitorSetCount;
 
-    public MetaNode(Set<Parameter<?>> parameterSet) {
+    public MetaNode(Set<Parameter<?>> fullParameterSet) {
 	super();
-	this.parameterSet = parameterSet;
+	this.fullParameterSet = fullParameterSet;
+	successors = new MetaNode[fullParameterSet.size()];
     }
 
     public ChainData[] getChainData() {
@@ -62,7 +63,7 @@ public class MetaNode {
 	MetaNode node = successors[parameter.getIndex()];
 	if (node == null) {
 	    Set<Parameter<?>> parameterSet = new HashSet<Parameter<?>>();
-	    parameterSet.addAll(this.parameterSet);
+	    parameterSet.addAll(fullParameterSet);
 	    assert !parameterSet.contains(parameter) : "Parameter set could not have had contained new parameter.";
 	    parameterSet.add(parameter);
 	    node = new MetaNode(parameterSet);
@@ -72,7 +73,7 @@ public class MetaNode {
     }
 
     public Set<Parameter<?>> getParameterSet() {
-        return parameterSet;
+	return fullParameterSet;
     }
 
     boolean isConfigured() {
@@ -98,7 +99,7 @@ public class MetaNode {
 	result = prime * result + Arrays.hashCode(chainData);
 	result = prime * result + (isConfigured ? 1231 : 1237);
 	result = prime * result + monitorSetCount;
-	result = prime * result + ((parameterSet == null) ? 0 : parameterSet.hashCode());
+	result = prime * result + ((fullParameterSet == null) ? 0 : fullParameterSet.hashCode());
 	result = prime * result + Arrays.hashCode(successors);
 	return result;
     }
@@ -118,10 +119,10 @@ public class MetaNode {
 	    return false;
 	if (monitorSetCount != other.monitorSetCount)
 	    return false;
-	if (parameterSet == null) {
-	    if (other.parameterSet != null)
+	if (fullParameterSet == null) {
+	    if (other.fullParameterSet != null)
 		return false;
-	} else if (!parameterSet.equals(other.parameterSet))
+	} else if (!fullParameterSet.equals(other.fullParameterSet))
 	    return false;
 	if (!Arrays.equals(successors, other.successors))
 	    return false;
@@ -131,7 +132,7 @@ public class MetaNode {
     @Override
     public String toString() {
 	return "MetaNode [successors=" + Arrays.toString(successors) + ", chainData=" + Arrays.toString(chainData)
-		+ ", parameterSet=" + parameterSet + ", isConfigured=" + isConfigured + ", monitorSetCount="
+		+ ", parameterSet=" + fullParameterSet + ", isConfigured=" + isConfigured + ", monitorSetCount="
 		+ monitorSetCount + "]";
     }
 
