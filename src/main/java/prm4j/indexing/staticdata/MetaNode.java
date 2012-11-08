@@ -10,6 +10,7 @@
  */
 package prm4j.indexing.staticdata;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -88,6 +89,50 @@ public class MetaNode {
 
     public void setMonitorSetCount(int monitorSetCount) {
 	this.monitorSetCount = monitorSetCount;
+    }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + Arrays.hashCode(chainData);
+	result = prime * result + (isConfigured ? 1231 : 1237);
+	result = prime * result + monitorSetCount;
+	result = prime * result + ((parameterSet == null) ? 0 : parameterSet.hashCode());
+	result = prime * result + Arrays.hashCode(successors);
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	MetaNode other = (MetaNode) obj;
+	if (!Arrays.equals(chainData, other.chainData))
+	    return false;
+	if (isConfigured != other.isConfigured)
+	    return false;
+	if (monitorSetCount != other.monitorSetCount)
+	    return false;
+	if (parameterSet == null) {
+	    if (other.parameterSet != null)
+		return false;
+	} else if (!parameterSet.equals(other.parameterSet))
+	    return false;
+	if (!Arrays.equals(successors, other.successors))
+	    return false;
+	return true;
+    }
+
+    @Override
+    public String toString() {
+	return "MetaNode [successors=" + Arrays.toString(successors) + ", chainData=" + Arrays.toString(chainData)
+		+ ", parameterSet=" + parameterSet + ", isConfigured=" + isConfigured + ", monitorSetCount="
+		+ monitorSetCount + "]";
     }
 
 }
