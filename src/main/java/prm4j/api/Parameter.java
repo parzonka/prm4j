@@ -64,7 +64,10 @@ public class Parameter<T> implements Comparable<Parameter<T>> {
 	if (parameterIndex < 0) {
 	    throw new IllegalStateException("Parameter index was not set yet.");
 	}
-	return o.getIndex() - parameterIndex;
+	if (parameterIndex == o.getIndex()) {
+	    throw new IllegalStateException("Indices must be different.");
+	}
+	return parameterIndex - o.getIndex();
     }
 
 }
