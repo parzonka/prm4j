@@ -211,6 +211,23 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     }
 
     @Test
+    public void getParameters_unsafeMapIterator() throws Exception {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
+
+	Set<Parameter<?>> actual = fs.getParameters();
+
+	Set<Parameter<?>> expected = new HashSet<Parameter<?>>();
+
+	expected.add(u.c);
+	expected.add(u.m);
+	expected.add(u.i);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
     public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
@@ -231,5 +248,4 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	// TODO failing test: implement functionality
 	assertEquals(expected, actual);
     }
-
 }
