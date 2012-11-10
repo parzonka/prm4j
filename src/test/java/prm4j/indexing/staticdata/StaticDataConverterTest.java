@@ -306,13 +306,16 @@ public class StaticDataConverterTest extends AbstractTest {
 	assertArrayEquals(expected, actual);
     }
 
-    // /////////////// getMaxData ///////////////////////////
+    // /////////////// others ///////////////////////////
 
     @Test
     public void getMaxData_unsafeMapIterator() {
 
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
+	u.m.setIndex(0);
+	u.c.setIndex(1);
+	u.i.setIndex(2);
 	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 
