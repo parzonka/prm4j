@@ -170,14 +170,17 @@ public class StaticDataConverter {
      * Creates a tree of meta nodes
      */
     private void createMetaTree() {
-	for (Set<Parameter<?>> parameterSet : pp.getPossibleParameterSets()) {
+	Set<Set<Parameter<?>>> allParameterSets = new HashSet<Set<Parameter<?>>>();
+	allParameterSets.addAll(pp.getMonitorSetData().keys());
+	allParameterSets.addAll(pp.getPossibleParameterSets());
+	for (Set<Parameter<?>> parameterSet : allParameterSets) {
 	    List<Parameter<?>> parameterList = new ArrayList<Parameter<?>>(parameterSet);
 	    Collections.sort(parameterList);
 	    MetaNode node = rootNode;
 	    for (Parameter<?> parameter : parameterList) {
 		node = node.getMetaNode(parameter);
-		    node.setChainData(chainData.get(node.getParameterSet()).toArray(new ChainData[0]));
-		    node.setMonitorSetCount(monitorSetIds.row(node.getParameterSet()).size());
+		node.setChainData(chainData.get(node.getParameterSet()).toArray(new ChainData[0]));
+		node.setMonitorSetCount(monitorSetIds.row(node.getParameterSet()).size());
 	    }
 	}
     }
@@ -244,4 +247,5 @@ public class StaticDataConverter {
 	}
 	return disablingEvents;
     }
+
 }
