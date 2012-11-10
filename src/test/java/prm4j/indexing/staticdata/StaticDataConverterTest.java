@@ -24,6 +24,9 @@ import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.spec.FiniteParametricProperty;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.SetMultimap;
+
 @SuppressWarnings("rawtypes")
 public class StaticDataConverterTest extends AbstractTest {
 
@@ -326,6 +329,61 @@ public class StaticDataConverterTest extends AbstractTest {
 	expected[u.useIter.getIndex()] = new MaxData[0];
 
 	assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getJoinData_unsafeMapIterator() {
+
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	u.m.setIndex(0);
+	u.c.setIndex(1);
+	u.i.setIndex(2);
+	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
+	StaticDataConverter sdc = new StaticDataConverter(fpp);
+
+	JoinData[][] actual = sdc.getJoinData();
+
+	JoinData[][] expected = new JoinData[fpp.getBaseEvents().size()][];
+	expected[u.createColl.getIndex()] = new JoinData[0];
+
+	expected[u.updateMap.getIndex()] = new JoinData[0];
+
+	JoinData[] jd = new JoinData[1];
+	int[] nodeMask = { u.c.getIndex() };
+	int monitorSetId = 0;
+	boolean[] extensionPattern = { true, true, false };
+	int[] copyPattern = { 1, 2 }; // copy source[1] on target[2]
+	jd[0] = new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern);
+	expected[u.createIter.getIndex()] = jd;
+
+	expected[u.useIter.getIndex()] = new JoinData[0];
+
+	assert2DimArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getChainData_unsafeMapIterator() {
+
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	u.m.setIndex(0);
+	u.c.setIndex(1);
+	u.i.setIndex(2);
+	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
+	StaticDataConverter sdc = new StaticDataConverter(fpp);
+
+	SetMultimap<Set<Parameter<?>>, ChainData> actual = sdc.getChainData();
+
+	SetMultimap<Set<Parameter<?>>, ChainData> expected = HashMultimap.create();
+	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(0), 0));
+	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(2), 0));
+	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(0, 1), 0));
+	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(1, 2), 0));
+	expected.put(asSet(u.m, u.c), new ChainData(list(0), 0));
+	expected.put(asSet(u.m, u.c), new ChainData(list(1), 0));
+
+	assertEquals(expected, actual);
     }
 
     @Test
