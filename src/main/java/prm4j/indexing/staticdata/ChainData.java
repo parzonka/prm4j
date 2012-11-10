@@ -11,6 +11,9 @@
 package prm4j.indexing.staticdata;
 
 import java.util.Arrays;
+import java.util.List;
+
+import prm4j.Util;
 
 /**
  * Represents all less informative instances of the event instance which match its enable sets and are associated with
@@ -24,6 +27,12 @@ public class ChainData {
     public ChainData(int[] nodeMask, int monitorSetId) {
 	super();
 	this.nodeMask = nodeMask;
+	this.monitorSetId = monitorSetId;
+    }
+
+    public ChainData(List<Integer> nodeMask, int monitorSetId) {
+	super();
+	this.nodeMask = Util.toPrimitiveIntegerArray(nodeMask);
 	this.monitorSetId = monitorSetId;
     }
 
