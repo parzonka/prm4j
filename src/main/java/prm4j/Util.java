@@ -10,10 +10,12 @@
  */
 package prm4j;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Util {
@@ -87,6 +89,12 @@ public class Util {
 	    result[i++] = n;
 	}
 	return result;
+    }
+
+    public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
+	List<T> list = new ArrayList<T>(c);
+	java.util.Collections.sort(list);
+	return list;
     }
 
     public static <S, T extends S> Set<S> covariantUnmodifiableSet(Set<T> set) {
