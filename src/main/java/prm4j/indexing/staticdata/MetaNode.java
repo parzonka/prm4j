@@ -28,12 +28,14 @@ public class MetaNode {
 
     private final MetaNode[] successors;
     private ChainData[] chainData;
+    private Set<Parameter<?>> nodeParameterSet;
     private Set<Parameter<?>> fullParameterSet;
     private boolean isConfigured = false;
     private int monitorSetCount;
 
-    public MetaNode(Set<Parameter<?>> fullParameterSet) {
+    public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
 	super();
+	this.nodeParameterSet = nodeParameterSet;
 	this.fullParameterSet = fullParameterSet;
 	assert parameterIndexIsValid(fullParameterSet) : "Full parameter set must be valid.";
 	successors = new MetaNode[fullParameterSet.size()];
@@ -41,7 +43,7 @@ public class MetaNode {
 
     private static boolean parameterIndexIsValid(Set<Parameter<?>> fullParameterSet) {
 	for (Parameter<?> parameter : fullParameterSet) {
-	    if (parameter.getIndex() >= fullParameterSet.size()) {
+	    if (parameter.getIndex() >= fullParameterSet.size() || parameter.getIndex() < 0) {
 		return false;
 	    }
 	}
@@ -142,8 +144,9 @@ public class MetaNode {
     @Override
     public String toString() {
 	return "MetaNode [successors=" + Arrays.toString(successors) + ", chainData=" + Arrays.toString(chainData)
-		+ ", parameterSet=" + fullParameterSet + ", isConfigured=" + isConfigured + ", monitorSetCount="
-		+ monitorSetCount + "]";
+		+ ", nodeParameterSet=" + nodeParameterSet + ", fullParameterSet=" + fullParameterSet
+		+ ", isConfigured=" + isConfigured + ", monitorSetCount=" + monitorSetCount + "]";
     }
+
 
 }
