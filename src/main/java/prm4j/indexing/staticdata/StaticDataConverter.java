@@ -54,8 +54,8 @@ public class StaticDataConverter {
 	chainData = HashMultimap.create();
 	monitorSetIds = HashBasedTable.create();
 	convertToLowLevelStaticData();
-	rootNode = new MetaNode(new HashSet<Parameter<?>>());
-	// TODO createMetaTree();
+	rootNode = new MetaNode(new HashSet<Parameter<?>>(), pp.getParameters());
+	createMetaTree();
     }
 
     /**
