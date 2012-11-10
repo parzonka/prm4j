@@ -12,8 +12,10 @@ package prm4j.indexing.staticdata;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import prm4j.Util;
 import prm4j.api.Parameter;
 import prm4j.indexing.realtime.DefaultNode;
 import prm4j.indexing.realtime.Node;
@@ -90,6 +92,15 @@ public class MetaNode {
      */
     public Set<Parameter<?>> getNodeParameterSet() {
 	return nodeParameterSet;
+    }
+
+    /**
+     * Returns the parameters, which uniquely identify this meta node, sorted by parameter id.
+     *
+     * @return parameters sorted by parameter id
+     */
+    public List<Parameter<?>> getNodeParameterList() {
+	return Util.asSortedList(nodeParameterSet);
     }
 
     public int getMonitorSetCount() {
