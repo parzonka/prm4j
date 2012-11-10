@@ -92,7 +92,7 @@ public class StaticDataConverter {
 	}
 	for (Set<Parameter<?>> parameterSet : pp.getChainData().keys()) {
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getChainData().get(parameterSet)) {
-		final int[] nodeMask = toParameterMask(parameterSet);
+		final int[] nodeMask = toParameterMask(tuple.getLeft());
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
 		chainData.put(parameterSet, new ChainData(nodeMask, monitorSetId));
 	    }
