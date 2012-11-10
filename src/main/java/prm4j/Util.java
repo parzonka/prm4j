@@ -10,6 +10,7 @@
  */
 package prm4j;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -68,6 +69,24 @@ public class Util {
 	public int compare(Set<?> set1, Set<?> set2) {
 	    return set2.size() - set1.size();
 	}
+    }
+
+    public static boolean[] toPrimitiveBooleanArray(Collection<Boolean> collection) {
+	boolean[] result = new boolean[collection.size()];
+	int i = 0;
+	for (Boolean b : collection) {
+	    result[i++] = b;
+	}
+	return result;
+    }
+
+    public static int[] toPrimitiveIntegerArray(Collection<Integer> collection) {
+	int[] result = new int[collection.size()];
+	int i = 0;
+	for (Integer n : collection) {
+	    result[i++] = n;
+	}
+	return result;
     }
 
     public static <S, T extends S> Set<S> covariantUnmodifiableSet(Set<T> set) {
