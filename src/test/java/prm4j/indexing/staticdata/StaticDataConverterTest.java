@@ -10,7 +10,7 @@
  */
 package prm4j.indexing.staticdata;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.*;
 
 import java.util.Set;
 
@@ -22,6 +22,9 @@ import prm4j.api.Parameter;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.spec.FiniteParametricProperty;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.SetMultimap;
 
 @SuppressWarnings("rawtypes")
 public class StaticDataConverterTest extends AbstractTest {
@@ -359,6 +362,30 @@ public class StaticDataConverterTest extends AbstractTest {
 	expected[u.useIter.getIndex()] = new JoinData[0];
 
 	assert2DimArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void getChainData_unsafeMapIterator() {
+
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	u.m.setIndex(0);
+	u.c.setIndex(1);
+	u.i.setIndex(2);
+	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
+	StaticDataConverter sdc = new StaticDataConverter(fpp);
+
+	SetMultimap<Set<Parameter<?>>, ChainData> actual = sdc.getChainData();
+
+	SetMultimap<Set<Parameter<?>>, ChainData> expected = HashMultimap.create();
+	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(0), 0));
+	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(2), 0));
+	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(0, 1), 0));
+	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(1, 2), 0));
+	expected.put(asSet(u.m, u.c), new ChainData(list(0), 0));
+	expected.put(asSet(u.m, u.c), new ChainData(list(1), 0));
+
+	assertEquals(expected, actual);
     }
 
 }
