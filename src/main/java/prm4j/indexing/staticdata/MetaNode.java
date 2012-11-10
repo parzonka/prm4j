@@ -71,16 +71,17 @@ public class MetaNode {
     }
 
     public MetaNode getMetaNode(Parameter<?> parameter) {
-	MetaNode node = successors[parameter.getIndex()];
-	if (node == null) {
-	    Set<Parameter<?>> parameterSet = new HashSet<Parameter<?>>();
-	    parameterSet.addAll(fullParameterSet);
-	    assert !parameterSet.contains(parameter) : "Parameter set could not have had contained new parameter.";
-	    parameterSet.add(parameter);
-	    successors[parameter.getIndex()] = node;
-	}
-	return node;
-    }
+   	MetaNode node = successors[parameter.getIndex()];
+   	if (node == null) {
+   	    Set<Parameter<?>> nodeParameterSet = new HashSet<Parameter<?>>();
+   	    nodeParameterSet.addAll(this.nodeParameterSet);
+   	    assert !nodeParameterSet.contains(parameter) : "Parameter set could not have had contained new parameter.";
+   	    nodeParameterSet.add(parameter);
+   	    node = new MetaNode(nodeParameterSet, fullParameterSet);
+   	    successors[parameter.getIndex()] = node;
+   	}
+   	return node;
+       }
 
     public Set<Parameter<?>> getParameterSet() {
 	return fullParameterSet;
