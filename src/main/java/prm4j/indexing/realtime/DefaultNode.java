@@ -33,7 +33,7 @@ public class DefaultNode implements Node {
     }
 
     @Override
-    public MetaNode getNodeContext() {
+    public MetaNode getMetaNode() {
 	return metaNode;
     }
 

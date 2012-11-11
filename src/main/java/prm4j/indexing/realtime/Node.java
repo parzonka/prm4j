@@ -15,7 +15,7 @@ import prm4j.indexing.staticdata.MetaNode;
 
 public interface Node {
 
-    public MetaNode getNodeContext();
+    public MetaNode getMetaNode();
 
     /**
      *
