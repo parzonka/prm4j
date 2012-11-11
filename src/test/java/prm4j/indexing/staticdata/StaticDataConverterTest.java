@@ -12,7 +12,10 @@ package prm4j.indexing.staticdata;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static prm4j.Util.toNodeMask;
+import static prm4j.Visualizer.visualizeMetaTree;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
@@ -392,6 +395,8 @@ public class StaticDataConverterTest extends AbstractTest {
     @Test
     public void getMetaTree_unsafeMapIterator() {
 
+	final Set<ChainData> emptyChainDataSet = new HashSet<ChainData>();
+
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
 	u.m.setIndex(0);
@@ -401,35 +406,34 @@ public class StaticDataConverterTest extends AbstractTest {
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 
 	MetaNode actual = sdc.getMetaTree();
-
 	MetaNode expected = new MetaNode(EMPTY_PARAMETER_SET, fpp.getParameters());
 
-	ChainData[] chainData = new ChainData[0];
+	// depth 1
+	expected.getMetaNode(u.m).setChainData(emptyChainDataSet);
+	expected.getMetaNode(u.m).setMonitorSetCount(1);
 
-	expected.getMetaNode(u.m).setChainData(chainData);
-	expected.getMetaNode(u.m).setMonitorSetCount(0);
+	expected.getMetaNode(u.c).setChainData(emptyChainDataSet);
+	expected.getMetaNode(u.c).setMonitorSetCount(1);
 
-	expected.getMetaNode(u.c).setChainData(chainData);
-	expected.getMetaNode(u.c).setMonitorSetCount(0);
+	expected.getMetaNode(u.i).setChainData(emptyChainDataSet);
+	expected.getMetaNode(u.i).setMonitorSetCount(1);
 
-	expected.getMetaNode(u.i).setChainData(chainData);
-	expected.getMetaNode(u.i).setMonitorSetCount(0);
+	// depth 2
+	expected.getMetaNode(u.m, u.c).setChainData(
+		asSet(new ChainData(toNodeMask(u.m), 0), new ChainData(toNodeMask(u.c), 0)));
+	expected.getMetaNode(u.m, u.c).setMonitorSetCount(1);
 
-	chainData = new ChainData[1];
-	int[] nodeMask_m = { u.m.getIndex() };
-	chainData[0] = new ChainData(nodeMask_m, 0);
-	expected.getMetaNode(u.m).getMetaNode(u.c).setChainData(chainData);
+	expected.getMetaNode(u.c, u.i).setChainData(emptyChainDataSet);
+	expected.getMetaNode(u.c, u.i).setMonitorSetCount(1);
 
-	chainData = new ChainData[2];
-	chainData[0] = new ChainData(nodeMask_m, 0);
-	int[] nodeMask_mc = { u.m.getIndex(), u.c.getIndex() };
-	chainData[1] = new ChainData(nodeMask_mc, 0);
-	expected.getMetaNode(u.m).getMetaNode(u.c).getMetaNode(u.i).setChainData(chainData);
+	// depth 3
+	expected.getMetaNode(u.m, u.c, u.i).setChainData(
+		asSet(new ChainData(toNodeMask(u.m), 0), new ChainData(toNodeMask(u.m, u.c), 0), new ChainData(
+			toNodeMask(u.c, u.i), 0), new ChainData(toNodeMask(u.i), 0)));
+	expected.getMetaNode(u.m, u.c, u.i).setMonitorSetCount(0);
 
-	chainData = new ChainData[1];
-	int[] nodeMask_c = { u.c.getIndex() };
-	chainData[0] = new ChainData(nodeMask_c, 0);
-	expected.getMetaNode(u.c).getMetaNode(u.i).setChainData(chainData);
+	visualizeMetaTree(expected, "StaticDataConverter/getMetaTree_unsafeMapIterator", "expected");
+	visualizeMetaTree(actual, "StaticDataConverter/getMetaTree_unsafeMapIterator", "actual");
 
 	assertEquals(expected, actual);
     }
