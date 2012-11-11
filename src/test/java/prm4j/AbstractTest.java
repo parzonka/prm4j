@@ -51,6 +51,15 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	return set;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> Set<T> asSet(T... values) {
+	Set<Object> set = new HashSet<Object>();
+	for (Object s : values) {
+	    set.add(s);
+	}
+	return (Set<T>) set;
+    }
+
     public static <T> List<T> list(T... objects) {
 	List<T> result = new ArrayList<T>();
 	for (T t : objects)
