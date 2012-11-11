@@ -29,10 +29,11 @@ import prm4j.indexing.realtime.NodeMap;
 public class MetaNode {
 
     private final MetaNode[] successors;
-    private ChainData[] chainData;
+    private Set<ChainData> chainDataSet;
     private Set<Parameter<?>> nodeParameterSet;
     private Set<Parameter<?>> fullParameterSet;
     private int monitorSetCount;
+    private ChainData[] chainDataArray;
 
     public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
 	super();
@@ -51,8 +52,12 @@ public class MetaNode {
 	return true;
     }
 
-    public ChainData[] getChainData() {
-	return chainData;
+    public ChainData[] getChainDataArray() {
+	return chainDataArray;
+    }
+
+    public Set<ChainData> getChainDataSet() {
+	return chainDataSet;
     }
 
     public Node createNode() {
@@ -60,7 +65,7 @@ public class MetaNode {
     }
 
     public Node createNode(int parameterId) {
-	return successors[parameterId].createNode();
+	return getSuccessors()[parameterId].createNode();
     }
 
     public NodeMap createNodeMap() {
@@ -68,19 +73,28 @@ public class MetaNode {
 	return null;
     }
 
-    void setChainData(ChainData[] chainData) {
-	this.chainData = chainData;
+    void setChainData(Set<ChainData> chainDataSet) {
+	chainDataArray = chainDataSet.toArray(new ChainData[0]);
+	this.chainDataSet = chainDataSet;
     }
 
     public MetaNode getMetaNode(Parameter<?> parameter) {
-	MetaNode node = successors[parameter.getIndex()];
+	MetaNode node = getSuccessors()[parameter.getIndex()];
 	if (node == null) {
 	    Set<Parameter<?>> nodeParameterSet = new HashSet<Parameter<?>>();
 	    nodeParameterSet.addAll(this.nodeParameterSet);
 	    assert !nodeParameterSet.contains(parameter) : "Parameter set could not have had contained new parameter.";
 	    nodeParameterSet.add(parameter);
 	    node = new MetaNode(nodeParameterSet, fullParameterSet);
-	    successors[parameter.getIndex()] = node;
+	    getSuccessors()[parameter.getIndex()] = node;
+	}
+	return node;
+    }
+
+    public MetaNode getMetaNode(Parameter<?>... parameters) {
+	MetaNode node = this;
+	for (Parameter<?> parameter : parameters) {
+	    node = node.getMetaNode(parameter);
 	}
 	return node;
     }
@@ -103,6 +117,15 @@ public class MetaNode {
 	return Util.asSortedList(nodeParameterSet);
     }
 
+    /**
+     * Returns the parameter ids, which uniquely identify this meta node, sorted by parameter id.
+     *
+     * @return parameters sorted by parameter id
+     */
+    public int[] getNodeMask() {
+	return Util.toNodeMask(nodeParameterSet);
+    }
+
     public int getMonitorSetCount() {
 	return monitorSetCount;
     }
@@ -115,7 +138,7 @@ public class MetaNode {
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + Arrays.hashCode(chainData);
+	result = prime * result + ((chainDataSet == null) ? 0 : chainDataSet.hashCode());
 	result = prime * result + ((fullParameterSet == null) ? 0 : fullParameterSet.hashCode());
 	result = prime * result + monitorSetCount;
 	result = prime * result + ((nodeParameterSet == null) ? 0 : nodeParameterSet.hashCode());
@@ -132,7 +155,10 @@ public class MetaNode {
 	if (getClass() != obj.getClass())
 	    return false;
 	MetaNode other = (MetaNode) obj;
-	if (!Arrays.equals(chainData, other.chainData))
+	if (chainDataSet == null) {
+	    if (other.chainDataSet != null)
+		return false;
+	} else if (!chainDataSet.equals(other.chainDataSet))
 	    return false;
 	if (fullParameterSet == null) {
 	    if (other.fullParameterSet != null)
@@ -153,9 +179,12 @@ public class MetaNode {
 
     @Override
     public String toString() {
-	return "MetaNode [successors=" + Arrays.toString(successors) + ", chainData=" + Arrays.toString(chainData)
-		+ ", nodeParameterSet=" + nodeParameterSet + ", fullParameterSet=" + fullParameterSet
-		+ ", monitorSetCount=" + monitorSetCount + "]";
+	return "MetaNode [successors=" + Arrays.toString(successors) + ", chainDataSet=" + chainDataSet
+		+ ", nodeParameterSet=" + nodeParameterSet + ", monitorSetCount=" + monitorSetCount + "]";
+    }
+
+    public MetaNode[] getSuccessors() {
+	return successors;
     }
 
 }

@@ -169,7 +169,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     }
 
     private void chain(LowLevelBinding[] bindings, BaseMonitor monitor) {
-	for (ChainData chainData : nodeStore.getNode(bindings).getNodeContext().getChainData()) {
+	for (ChainData chainData : nodeStore.getNode(bindings).getNodeContext().getChainDataArray()) {
 	    nodeStore.getNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
 		    .add(monitor);
 	}
