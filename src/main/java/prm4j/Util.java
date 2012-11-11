@@ -11,12 +11,15 @@
 package prm4j;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import prm4j.api.Parameter;
 
 public class Util {
 
@@ -99,6 +102,20 @@ public class Util {
 
     public static <S, T extends S> Set<S> covariantUnmodifiableSet(Set<T> set) {
 	return Collections.unmodifiableSet(new HashSet<S>(set));
+    }
+
+    public static int[] toNodeMask(Parameter<?>... parameters) {
+	int[] nodeMask = new int[parameters.length];
+	int i = 0;
+	for (Parameter<?> parameter : parameters) {
+	    nodeMask[i++] = parameter.getIndex();
+	}
+	Arrays.sort(nodeMask);
+	return nodeMask;
+    }
+
+    public static int[] toNodeMask(Set<Parameter<?>> parametersSet) {
+	return toNodeMask(parametersSet.toArray(new Parameter<?>[0]));
     }
 
     public static <T1, T2> Tuple<T1, T2> tuple(T1 left, T2 right) {
