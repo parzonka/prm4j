@@ -52,7 +52,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
      */
     public E get(final Object key, final int hashCode) {
 
-	final int index = hashIndex(hashCode);
+	final int index = hashIndex(hashCode, table.length);
 	E entry = table[index];
 
 	E lastEntry = null;
@@ -70,7 +70,31 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 	    lastEntry.setNext(entry);
 	}
 	size++;
+	ensureCapacity();
 	return entry;
+    }
+
+    private void ensureCapacity() {
+
+	// TODO not yet done here !
+
+	final int newCapacity = 0;
+	final E[] oldTable = table;
+	final E[] newTable = createTable(newCapacity);
+	for (int i = 0; i < oldTable.length; i++) {
+	    E entry = oldTable[i];
+	    if (entry != null) {
+		oldTable[i] = null;
+		do {
+		    E nextEntry = entry.next();
+		    int newIndex = hashIndex(entry.getHashCode(), newCapacity);
+		    entry.setNext(newTable[newIndex]);
+		    newTable[newIndex] = entry;
+		    entry = nextEntry;
+		} while (entry != null);
+	    }
+	}
+
     }
 
     /**
@@ -88,7 +112,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 
     public void remove(final Object key, final int hashCode) {
 
-	final int hashIndex = hashIndex(hashCode);
+	final int hashIndex = hashIndex(hashCode, table.length);
 	E entry = table[hashIndex];
 
 	E lastEntry = null;
@@ -123,8 +147,8 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 	return h ^ (h >>> 7) ^ (h >>> 4);
     }
 
-    protected int hashIndex(int hashCode) {
-	return hashCode & (table.length - 1);
+    protected int hashIndex(int hashCode, int tableLength) {
+	return hashCode & (tableLength - 1);
     }
 
     public int size() {
