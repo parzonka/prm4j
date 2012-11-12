@@ -41,7 +41,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
     /**
      * The table, resized as necessary. Length MUST Always be a power of two.
      */
-    protected final E[] table;
+    protected E[] table;
 
     /**
      * The number of key-value mappings contained in this map.
@@ -57,6 +57,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 
     public MinimalMap() {
 	table = createTable(8);
+	threshold = (int) (table.length * DEFAULT_LOAD_FACTOR);
     }
 
     protected abstract E[] createTable(int size);
@@ -106,23 +107,30 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 
     private void ensureCapacity() {
 
-	// TODO not yet done here !
+	if (table.length == MAXIMUM_CAPACITY) {
+	    return;
+	}
 
-	final int newCapacity = 0;
-	final E[] oldTable = table;
-	final E[] newTable = createTable(newCapacity);
-	for (int i = 0; i < oldTable.length; i++) {
-	    E entry = oldTable[i];
-	    if (entry != null) {
-		oldTable[i] = null;
-		do {
-		    E nextEntry = entry.next();
-		    int newIndex = hashIndex(entry.getHashCode(), newCapacity);
-		    entry.setNext(newTable[newIndex]);
-		    newTable[newIndex] = entry;
-		    entry = nextEntry;
-		} while (entry != null);
+	if (size >= threshold) {
+	    final int newCapacity = table.length * 2;
+	    final E[] oldTable = table;
+	    // transfer to new table
+	    final E[] newTable = createTable(newCapacity);
+	    for (int i = 0; i < oldTable.length; i++) {
+		E entry = oldTable[i];
+		if (entry != null) {
+		    oldTable[i] = null; // help gc
+		    do {
+			E nextEntry = entry.next();
+			int newIndex = hashIndex(entry.getHashCode(), newCapacity);
+			entry.setNext(newTable[newIndex]);
+			newTable[newIndex] = entry;
+			entry = nextEntry;
+		    } while (entry != null);
+		}
 	    }
+	    table = newTable;
+	    threshold = (int) (newCapacity * DEFAULT_LOAD_FACTOR);
 	}
 
     }
