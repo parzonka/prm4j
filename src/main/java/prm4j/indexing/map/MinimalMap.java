@@ -50,7 +50,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 
 	E lastEntry = null;
 	while (entry != null) {
-	    if (key == entry.getKey()) {
+	    if (hashCode == entry.getHashCode() && key == entry.getKey()) {
 		return entry;
 	    }
 	    lastEntry = entry;
