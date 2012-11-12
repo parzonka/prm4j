@@ -83,7 +83,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
     protected abstract E createEntry(Object key, int hashCode);
 
     public void remove(final Object key) {
-	 remove(key, hashCode(key));
+	remove(key, hashCode(key));
     }
 
     public void remove(final Object key, final int hashCode) {
@@ -101,10 +101,9 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 		    lastEntry.setNext(nextEntry);
 		}
 		size--;
-	    } else {
-		lastEntry = entry;
-		entry = nextEntry;
 	    }
+	    lastEntry = entry;
+	    entry = nextEntry;
 	}
     }
 
