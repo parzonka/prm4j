@@ -23,6 +23,7 @@ package prm4j.indexing.map;
 public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 
     protected final E[] entries;
+    protected int size = 0;
 
     public MinimalMap() {
 	entries = createInitialArray(8);
@@ -68,6 +69,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 	} else {
 	    lastEntry.setNext(entry);
 	}
+	size++;
 	return entry;
     }
 
@@ -98,6 +100,10 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 
     protected int hashIndex(int hashCode) {
 	return hashCode & (entries.length - 1);
+    }
+
+    public int size() {
+	return size;
     }
 
 }
