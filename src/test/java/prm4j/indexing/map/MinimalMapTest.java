@@ -59,7 +59,7 @@ public class MinimalMapTest {
     static class MockMap extends MinimalMap<MockEntry> {
 
 	@Override
-	protected MockEntry[] createInitialArray(int size) {
+	protected MockEntry[] createTable(int size) {
 	    return new MockEntry[size];
 	}
 

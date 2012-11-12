@@ -22,14 +22,14 @@ package prm4j.indexing.map;
  */
 public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 
-    protected final E[] entries;
+    protected final E[] table;
     protected int size = 0;
 
     public MinimalMap() {
-	entries = createInitialArray(8);
+	table = createTable(8);
     }
 
-    protected abstract E[] createInitialArray(int size);
+    protected abstract E[] createTable(int size);
 
     /**
      * Retrieves the entry associated with this key using hash code variant implemented in this class.
@@ -52,8 +52,8 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
      */
     public E get(final Object key, final int hashCode) {
 
-	final int hashIndex = hashIndex(hashCode);
-	E entry = entries[hashIndex];
+	final int index = hashIndex(hashCode);
+	E entry = table[index];
 
 	E lastEntry = null;
 	while (entry != null) {
@@ -65,7 +65,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 	}
 	entry = createEntry(key, hashCode);
 	if (lastEntry == null) {
-	    entries[hashIndex] = entry;
+	    table[index] = entry;
 	} else {
 	    lastEntry.setNext(entry);
 	}
@@ -89,14 +89,14 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
     public void remove(final Object key, final int hashCode) {
 
 	final int hashIndex = hashIndex(hashCode);
-	E entry = entries[hashIndex];
+	E entry = table[hashIndex];
 
 	E lastEntry = null;
 	while (entry != null) {
 	    E nextEntry = entry.next();
 	    if (hashCode == entry.getHashCode() && key == entry.getKey()) {
 		if (lastEntry == null) {
-		    entries[hashIndex] = nextEntry;
+		    table[hashIndex] = nextEntry;
 		} else {
 		    lastEntry.setNext(nextEntry);
 		}
@@ -124,7 +124,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
     }
 
     protected int hashIndex(int hashCode) {
-	return hashCode & (entries.length - 1);
+	return hashCode & (table.length - 1);
     }
 
     public int size() {
