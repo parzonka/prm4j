@@ -65,7 +65,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 	}
 	entry = createEntry(key, hashCode);
 	if (lastEntry == null) {
-	    entries[hashCode] = entry;
+	    entries[hashIndex] = entry;
 	} else {
 	    lastEntry.setNext(entry);
 	}
