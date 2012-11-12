@@ -11,48 +11,68 @@
 package prm4j.indexing.map;
 
 /**
- * This hash map stores its values directly (as entries themselves), omitting the creation of wrapping map entries. This
- * is useful, when the values store the keys of the map anyway and may be aware of the {@link MinimalMap}. Values
- * implement the {@link MinimalMapEntry}-interface to provide access to the key.
+ * This hash map uses, stores and returns its values as entries, omitting the creation of wrapping map entries. This is
+ * useful, when the values have to store their keys anyway and being aware of the {@link MinimalMap} is no problem.
+ * Values have to implement {@link MinimalMapEntry}-interface to be used as entries.
+ * <p>
+ * The map transparently creates entries which are not found in the map, omitting a 'put' method.
  *
  * @param <E>
  *            the type of the value which is also used as map entry
  */
-public class MinimalMap<E extends MinimalMapEntry<E>> {
+public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 
     protected E[] entries;
 
     /**
-     * Retrieves the value associated with this key using hash code variant implemented in this class.
+     * Retrieves the entry associated with this key using hash code variant implemented in this class.
      *
      * @param key
-     * @return
+     * @return the entry
      */
     public E get(final Object key) {
 	return get(key, hashCode(key));
     }
 
     /**
-     * Retrieves the value associated with this key provided hash code.
+     * Retrieves the entry associated with this key and the provided hash code or creates a and stores new entry based
+     * on the key and hash code.
      *
      * @param key
      * @param hashcode
      *            should be consistently calculated with the provided method of this class (or a subtype)
-     * @return
+     * @return the entry
      */
     public E get(final Object key, final int hashCode) {
 
 	final int hashIndex = hashIndex(hashCode);
 	E entry = entries[hashIndex];
 
+	E lastEntry = null;
 	while (entry != null) {
 	    if (key == entry.getKey()) {
 		return entry;
 	    }
+	    lastEntry = entry;
 	    entry = entry.next();
 	}
-	return null;
+	entry = createEntry(key, hashCode);
+	if (lastEntry == null) {
+	    entries[hashCode] = entry;
+	} else {
+	    lastEntry.setNext(entry);
+	}
+	return entry;
     }
+
+    /**
+     * Creates a new entry based on the key and hash code.
+     *
+     * @param key
+     * @param hashCode
+     * @return the entry
+     */
+    protected abstract E createEntry(Object key, int hashCode);
 
     /**
      * Calculates the hashcode for the given key, which defaults to a variant of its object identity. Subclasses may

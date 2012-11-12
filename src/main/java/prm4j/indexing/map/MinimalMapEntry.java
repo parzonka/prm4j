@@ -16,4 +16,6 @@ public interface MinimalMapEntry<E extends MinimalMapEntry<E>> {
 
     public E next();
 
+    public void setNext(E nextEntry);
+
 }
