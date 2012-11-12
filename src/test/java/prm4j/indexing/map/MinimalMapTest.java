@@ -56,6 +56,46 @@ public class MinimalMapTest {
 	assertEquals(0, map.size());
     }
 
+    @Test
+    public void ensureCapacity_hittingThresholdForcesResizing() throws Exception {
+	MinimalMap<MockEntry> map = new MockMap();
+	assertEquals(8, map.table.length);
+	map.get(1);
+	map.get(2);
+	map.get(3);
+	map.get(4);
+	map.get(5);
+	assertEquals(8, map.table.length);
+	map.get(6);
+	assertEquals(16, map.table.length);
+	map.get(7);
+	map.get(8);
+    }
+
+    @Test
+    public void ensureCapacity_resizeKeepsEntries() throws Exception {
+	MinimalMap<MockEntry> map = new MockMap();
+	assertEquals(8, map.table.length);
+	MockEntry e1 = map.get(1);
+	MockEntry e2 = map.get(2);
+	MockEntry e3 = map.get(3);
+	MockEntry e4 = map.get(4);
+	MockEntry e5 = map.get(5);
+	MockEntry e6 = map.get(6);
+	assertEquals(16, map.table.length);
+	MockEntry e7 = map.get(7);
+
+	assertEquals(e1, map.get(1));
+	assertEquals(e2, map.get(2));
+	assertEquals(e3, map.get(3));
+	assertEquals(e4, map.get(4));
+	assertEquals(e5, map.get(5));
+	assertEquals(e6, map.get(6));
+	assertEquals(e7, map.get(7));
+    }
+
+
+
     static class MockMap extends MinimalMap<MockEntry> {
 
 	@Override
