@@ -22,7 +22,13 @@ package prm4j.indexing.map;
  */
 public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 
-    protected E[] entries;
+    protected final E[] entries;
+
+    public MinimalMap() {
+	entries = createInitialArray(8);
+    }
+
+    protected abstract E[] createInitialArray(int size);
 
     /**
      * Retrieves the entry associated with this key using hash code variant implemented in this class.
