@@ -17,25 +17,43 @@ import org.junit.Test;
 public class MinimalMapTest {
 
     @Test
-    public void size_1() throws Exception {
+    public void size_sizeGrowsWithAddedEntries() throws Exception {
 	MinimalMap<MockEntry> map = new MockMap();
 	assertEquals(0, map.size());
-	String a = "a";
-	map.get(a);
-	assertEquals(1, map.size());
-	map.get(a);
+	map.get("a");
 	assertEquals(1, map.size());
 	map.get("b");
 	assertEquals(2, map.size());
     }
 
     @Test
-    public void get_1() throws Exception {
+    public void get_createEntryAndRetrieveEntry() throws Exception {
 	MinimalMap<MockEntry> map = new MockMap();
 	String a = "a";
 	MockEntry x = map.get(a);
 	MockEntry y = map.get(a);
+	assertEquals(1, map.size());
 	assertEquals(x, y);
+    }
+
+    @Test
+    public void get_createNewEntryForSameKeyWhenRemoved() throws Exception {
+	MinimalMap<MockEntry> map = new MockMap();
+	String a = "a";
+	MockEntry x = map.get(a);
+	map.remove(a);
+	MockEntry y = map.get(a);
+	assertNotSame(x, y);
+
+    }
+
+    @Test
+    public void remove_sizeDecrementsUponRemoval() throws Exception {
+	MinimalMap<MockEntry> map = new MockMap();
+	String a = "a";
+	map.get(a);
+	map.remove(a);
+	assertEquals(0, map.size());
     }
 
     static class MockMap extends MinimalMap<MockEntry> {
