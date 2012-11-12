@@ -22,8 +22,38 @@ package prm4j.indexing.map;
  */
 public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
 
+    /**
+     * The default initial capacity - MUST be a power of two.
+     */
+    static final int DEFAULT_INITIAL_CAPACITY = 8;
+
+    /**
+     * The maximum capacity, used if a higher value is implicitly specified by either of the constructors with
+     * arguments. MUST be a power of two <= 1<<30.
+     */
+    static final int MAXIMUM_CAPACITY = 1 << 30;
+
+    /**
+     * The load factor.
+     */
+    static final float DEFAULT_LOAD_FACTOR = 0.75f;
+
+    /**
+     * The table, resized as necessary. Length MUST Always be a power of two.
+     */
     protected final E[] table;
+
+    /**
+     * The number of key-value mappings contained in this map.
+     */
     protected int size = 0;
+
+    /**
+     * The next size value at which to resize (capacity * load factor).
+     *
+     * @serial
+     */
+    int threshold;
 
     public MinimalMap() {
 	table = createTable(8);
