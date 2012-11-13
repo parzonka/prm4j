@@ -19,7 +19,7 @@ public class ParametricMonitorFactory {
 
     public static ParametricMonitor createParametricMonitor(FiniteSpec finiteSpec) {
 	StaticDataConverter converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
-	return new DefaultParametricMonitor(converter.getEventContext(), finiteSpec);
+	return new DefaultParametricMonitor(converter.getMetaTree(), converter.getEventContext(), finiteSpec);
     }
 
 }

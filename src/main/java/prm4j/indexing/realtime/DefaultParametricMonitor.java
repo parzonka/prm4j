@@ -18,6 +18,7 @@ import prm4j.indexing.staticdata.ChainData;
 import prm4j.indexing.staticdata.EventContext;
 import prm4j.indexing.staticdata.JoinData;
 import prm4j.indexing.staticdata.MaxData;
+import prm4j.indexing.staticdata.MetaNode;
 import prm4j.spec.Spec;
 
 public class DefaultParametricMonitor implements ParametricMonitor {
@@ -28,7 +29,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     private final EventContext eventContext;
     private long timestamp = 0L;
 
-    public DefaultParametricMonitor(EventContext eventContext, Spec spec) {
+    public DefaultParametricMonitor(MetaNode metaTree, EventContext eventContext, Spec spec) {
 	this.eventContext = eventContext;
 	bindingStore = new BindingStore(spec.getFullParameterSet(), 1);
 	monitorPrototype = spec.getInitialMonitor();
