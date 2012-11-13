@@ -10,6 +10,7 @@
  */
 package prm4j.indexing.realtime;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -20,28 +21,28 @@ import prm4j.indexing.staticdata.MetaNode;
  */
 public class AwareDefaultNodeStore extends DefaultNodeStore {
 
-    private final Deque<Node> retrievedNodes;
+    private final Deque<WeakReference<Node>> retrievedNodes;
 
     public AwareDefaultNodeStore(MetaNode metaTree) {
 	super(metaTree);
-	retrievedNodes = new ArrayDeque<Node>();
+	retrievedNodes = new ArrayDeque<WeakReference<Node>>();
     }
 
     @Override
     public Node getNode(LowLevelBinding[] bindings) {
 	Node node = super.getNode(bindings);
-	getListOfNodes().add(node);
+	getListOfNodes().add(new WeakReference<Node>(node));
 	return node;
     }
 
     @Override
     public Node getNode(LowLevelBinding[] bindings, int[] parameterMask) {
 	Node node = super.getNode(bindings, parameterMask);
-	getListOfNodes().add(node);
+	getListOfNodes().add(new WeakReference<Node>(node));
 	return node;
     }
 
-    public Deque<Node> getListOfNodes() {
+    public Deque<WeakReference<Node>> getListOfNodes() {
 	return retrievedNodes;
     }
 
