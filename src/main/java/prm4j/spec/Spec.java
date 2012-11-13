@@ -24,7 +24,7 @@ public interface Spec {
 
     public Set<BaseEvent> getBaseEvents();
 
-    public Set<Parameter<?>> getParameters();
+    public Set<Parameter<?>> getFullParameterSet();
 
     public BaseMonitorState getInitialState();
 

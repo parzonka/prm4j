@@ -56,7 +56,7 @@ public class FSMSpec implements FiniteSpec {
     }
 
     @Override
-    public Set<Parameter<?>> getParameters() {
+    public Set<Parameter<?>> getFullParameterSet() {
 	return parameters;
     }
 

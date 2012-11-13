@@ -30,7 +30,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
     public DefaultParametricMonitor(EventContext eventContext, Spec spec) {
 	this.eventContext = eventContext;
-	bindingStore = new BindingStore(spec.getParameters());
+	bindingStore = new BindingStore(spec.getFullParameterSet());
 	monitorPrototype = spec.getInitialMonitor();
     }
 

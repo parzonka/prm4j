@@ -49,7 +49,7 @@ public class FSMSpecTest {
 	FSM fsm = u.fsm;
 	FSMSpec fs = new FSMSpec(fsm);
 
-	Set<Parameter<?>> actual = fs.getParameters();
+	Set<Parameter<?>> actual = fs.getFullParameterSet();
 
 	Set<Parameter<?>> expected = new HashSet<Parameter<?>>();
 	expected.add(u.c);

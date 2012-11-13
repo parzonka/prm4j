@@ -233,7 +233,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 
     private void calculateAcceptingParameters() {
 	// TODO implement calculateAcceptingParameters
-	boolean[] acceptingParameters = new boolean[finiteSpec.getParameters().size()];
+	boolean[] acceptingParameters = new boolean[finiteSpec.getFullParameterSet().size()];
 	for (BaseMonitorState state : finiteSpec.getStates()) {
 	    state.setAcceptingParameters(acceptingParameters);
 	}
@@ -318,7 +318,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 
     @Override
     public Set<Parameter<?>> getParameters() {
-	return finiteSpec.getParameters();
+	return finiteSpec.getFullParameterSet();
     }
 
 }
