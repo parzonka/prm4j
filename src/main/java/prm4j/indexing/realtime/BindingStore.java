@@ -13,30 +13,31 @@ package prm4j.indexing.realtime;
 import java.lang.ref.ReferenceQueue;
 import java.util.Set;
 
+import prm4j.Util;
 import prm4j.api.Parameter;
 import prm4j.indexing.map.MinimalMap;
 
 public class BindingStore {
 
     ReferenceQueue<Object> referenceQueue;
-    MinimalMap<Object, DefaultLowLevelBinding>[] stores;
+    final private MinimalMap<Object, DefaultLowLevelBinding>[] stores;
 
     @SuppressWarnings("unchecked")
     public BindingStore(Set<Parameter<?>> fullParameterSet) {
 
 	referenceQueue = new ReferenceQueue<Object>();
-	final int parameterCount = fullParameterSet.size();
-	stores = new MinimalMap[parameterCount];
-	for (int i = 0; i < parameterCount; i++) {
-	    // TODO
+
+	stores = new MinimalMap[fullParameterSet.size()];
+	for (Parameter<?> parameter : Util.asSortedList(fullParameterSet)) {
+	    stores[parameter.getIndex()] = new SingleBindingStore(parameter);
 	}
     }
 
     /**
-     * Returns an instance for the given bound objects.
+     * Returns an array of {@link LowLevelBinding}s modeling an instance for the given bound objects.
      *
      * @param boundObjects
-     * @return
+     * @return the instance
      */
     public LowLevelBinding[] getBindings(Object[] boundObjects) {
 	int objectsCount = 0;
@@ -53,12 +54,20 @@ public class BindingStore {
 		result[j++] = stores[i].get(boundObject);
 	    }
 	}
+	pruneInaccessibleNodes();
 	return result;
     }
 
+    private void pruneInaccessibleNodes() {
+	 // TODO garbage collection of nodes
+    }
+
+    /**
+     * Stores the bindings associated to a single parameter
+     */
     class SingleBindingStore extends MinimalMap<Object, DefaultLowLevelBinding> {
 
-	final Parameter<?> parameter;
+	private final Parameter<?> parameter;
 
 	public SingleBindingStore(Parameter<?> parameter) {
 	    this.parameter = parameter;
