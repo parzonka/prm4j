@@ -19,7 +19,6 @@ import prm4j.Util;
 import prm4j.api.Parameter;
 import prm4j.indexing.realtime.DefaultNode;
 import prm4j.indexing.realtime.Node;
-import prm4j.indexing.realtime.NodeMap;
 
 /**
  * Every {@link Node} is equipped with a MetaNode, containing factory methods and providing statically computed
@@ -66,11 +65,6 @@ public class MetaNode {
 
     public Node createNode(int parameterId) {
 	return getSuccessors()[parameterId].createNode();
-    }
-
-    public NodeMap createNodeMap() {
-	// TODO Auto-generated method stub
-	return null;
     }
 
     void setChainData(Set<ChainData> chainDataSet) {
