@@ -18,6 +18,7 @@ import java.util.Set;
 import prm4j.Util;
 import prm4j.api.Parameter;
 import prm4j.indexing.realtime.DefaultNode;
+import prm4j.indexing.realtime.LowLevelBinding;
 import prm4j.indexing.realtime.Node;
 
 /**
@@ -59,12 +60,20 @@ public class MetaNode {
 	return chainDataSet;
     }
 
-    public Node createNode() {
-	return new DefaultNode(this);
+    public Node createNode(LowLevelBinding key, int hashCode) {
+	return new DefaultNode(this, key, hashCode);
     }
 
-    public Node createNode(int parameterId) {
-	return getSuccessors()[parameterId].createNode();
+    /**
+     * Creates a Node by a successor.
+     *
+     * @param parameterId
+     * @param key
+     * @param hashCode
+     * @return
+     */
+    public Node createNode(int parameterId, LowLevelBinding key, int hashCode) {
+	return getSuccessors()[parameterId].createNode(key, hashCode);
     }
 
     void setChainData(Set<ChainData> chainDataSet) {

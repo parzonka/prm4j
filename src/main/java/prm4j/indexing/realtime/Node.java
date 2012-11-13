@@ -11,9 +11,10 @@
 package prm4j.indexing.realtime;
 
 import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.map.MinimalMapEntry;
 import prm4j.indexing.staticdata.MetaNode;
 
-public interface Node {
+public interface Node extends MinimalMapEntry<LowLevelBinding, Node> {
 
     public MetaNode getMetaNode();
 

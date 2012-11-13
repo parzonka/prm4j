@@ -14,20 +14,20 @@ import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.map.MinimalMap;
 import prm4j.indexing.staticdata.MetaNode;
 
-public class DefaultNode extends MinimalMap<LowLevelBinding, NodeReference> implements Node {
+public class DefaultNode extends MinimalMap<LowLevelBinding, Node> implements Node {
 
     private final MetaNode metaNode;
     private final MonitorSet[] monitorSets;
     private BaseMonitor monitor;
 
-    public DefaultNode(MetaNode metaNode, int monitorSetCount) {
-	super();
-	this.metaNode = metaNode;
-	monitorSets = new MonitorSet[monitorSetCount];
-    }
+    private final LowLevelBinding key;
+    private final int hashCode;
+    private Node nextNode;
 
-    public DefaultNode(MetaNode metaNode) {
+    public DefaultNode(MetaNode metaNode, LowLevelBinding key, int hashCode) {
 	this.metaNode = metaNode;
+	this.key = key;
+	this.hashCode = hashCode;
 	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
     }
 
@@ -43,7 +43,7 @@ public class DefaultNode extends MinimalMap<LowLevelBinding, NodeReference> impl
 
     @Override
     public Node getNode(LowLevelBinding binding) {
-	return get(binding).get();
+	return get(binding);
     }
 
     @Override
@@ -67,22 +67,36 @@ public class DefaultNode extends MinimalMap<LowLevelBinding, NodeReference> impl
 	return monitorSets;
     }
 
-    // Map overrides
-
     @Override
-    protected NodeReference[] createTable(int size) {
-	return new NodeReference[size];
+    public int getHashCode() {
+	return hashCode;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * Creates a {@link NodeReference} with a weak reference to a newly created {@link Node}. <br>
-     * The {@link NodeReference} is also an entry with a binding as key using the same hashcode.
-     */
     @Override
-    protected NodeReference createEntry(LowLevelBinding binding, int bindingHashCode) {
-	return new NodeReference(metaNode.createNode(binding.getParameterId()), binding, bindingHashCode);
+    public LowLevelBinding getKey() {
+	return key;
     }
+
+    @Override
+    public Node next() {
+	return nextNode;
+    }
+
+    @Override
+    public void setNext(Node nextNode) {
+	this.nextNode = nextNode;
+
+    }
+
+    @Override
+    protected Node[] createTable(int size) {
+	return new Node[size];
+    }
+
+    @Override
+    protected Node createEntry(LowLevelBinding key, int hashCode) {
+	return getMetaNode().createNode(key.getParameterId(), key, hashCode);
+    }
+
 
 }
