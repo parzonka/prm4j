@@ -13,6 +13,7 @@ package prm4j.indexing.realtime;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
+import prm4j.api.Parameter;
 import prm4j.indexing.map.MinimalMapEntry;
 
 public class DefaultLowLevelBinding extends WeakReference<Object> implements LowLevelBinding,
@@ -21,17 +22,18 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     private long timestamp;
     private boolean disabled;
     private final int hashCode;
+    private final int parameterIndex;
     private DefaultLowLevelBinding next;
 
-    public DefaultLowLevelBinding(Object boundObject, int parameterId, int hashCode, ReferenceQueue<? super Object> q) {
+    public DefaultLowLevelBinding(Object boundObject, Parameter<?> parameter, int hashCode, ReferenceQueue<Object> q) {
 	super(boundObject, q);
 	this.hashCode = hashCode;
+	parameterIndex = parameter.getIndex();
     }
 
     @Override
     public int getParameterId() {
-	// TODO Auto-generated method stub
-	return 0;
+	return parameterIndex;
     }
 
     @Override
