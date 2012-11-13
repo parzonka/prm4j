@@ -46,12 +46,12 @@ public class DefaultNode extends AbstractNode {
     }
 
     @Override
-    public MonitorSet getMonitorSet(int parameterSetId) {
+    public MonitorSet getMonitorSet(int monitorSetId) {
 	// lazy creation
-	MonitorSet monitorSet = monitorSets[parameterSetId];
+	MonitorSet monitorSet = monitorSets[monitorSetId];
 	if (monitorSet == null) {
 	    monitorSet = new MonitorSet();
-	    monitorSets[parameterSetId] = monitorSet;
+	    monitorSets[monitorSetId] = monitorSet;
 	}
 	return monitorSet;
     }
