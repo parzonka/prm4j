@@ -12,6 +12,8 @@ package prm4j.indexing.realtime;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import prm4j.api.Parameter;
 import prm4j.indexing.map.MinimalMapEntry;
@@ -24,11 +26,13 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     private final int hashCode;
     private final int parameterIndex;
     private DefaultLowLevelBinding next;
+    private List<WeakReference<Node>> nodeRefs;
 
     public DefaultLowLevelBinding(Object boundObject, Parameter<?> parameter, int hashCode, ReferenceQueue<Object> q) {
 	super(boundObject, q);
 	this.hashCode = hashCode;
 	parameterIndex = parameter.getIndex();
+	nodeRefs = new ArrayList<WeakReference<Node>>();
     }
 
     @Override
@@ -62,8 +66,19 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     }
 
     @Override
+    public void registerNode(WeakReference<Node> nodeReference) {
+	nodeRefs.add(nodeReference);
+    }
+
+    @Override
     public void release() {
-	// TODO Garbage collection from bindings
+	for (WeakReference<Node> ref : nodeRefs) {
+	    final Node node = ref.get();
+	    if (node != null) {
+		node.remove(this);
+	    }
+	}
+	nodeRefs = null;
     }
 
     @Override

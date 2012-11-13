@@ -10,6 +10,8 @@
  */
 package prm4j.indexing.realtime;
 
+import java.lang.ref.WeakReference;
+
 /**
  * A binding used by optimized indexing strategies.
  */
@@ -26,7 +28,7 @@ public interface LowLevelBinding extends prm4j.api.Binding {
      *
      * @param mapReference
      */
-//    void registerMap(MapReference mapReference); // TODO resource registration
+    void registerNode(WeakReference<Node> nodeReference); // TODO resource registration
 
     /**
      * Return the node representing the instance this binding can form.
