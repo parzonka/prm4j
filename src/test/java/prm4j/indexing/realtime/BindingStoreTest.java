@@ -10,8 +10,11 @@
  */
 package prm4j.indexing.realtime;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +30,7 @@ public class BindingStoreTest extends AbstractTest {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
-    public void getBindings_unsafeMapIterator_1() throws Exception {
+    public void getBindings_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteSpec finiteSpec = new FSMSpec(fsm);
@@ -37,26 +40,74 @@ public class BindingStoreTest extends AbstractTest {
 
 	BindingStore bs = new BindingStore(finiteSpec.getFullParameterSet(), 1);
 
+	// create bindings
 	Object[] boundObjects = new Object[finiteSpec.getFullParameterSet().size()];
 	Map map = new HashMap();
 	map.put(1, "a");
 	Collection coll = map.entrySet();
 	boundObjects[0] = map;
 	boundObjects[1] = coll;
-
 	LowLevelBinding[] bindings = bs.getBindings(boundObjects);
 	LowLevelBinding mBinding = bindings[0];
 	LowLevelBinding cBinding = bindings[1];
 
-	// check 'compression'
+	// verify 'compression'
 	assertEquals(2, bindings.length);
 
-	// check bound objects
+	// verify bound objects
 	assertTrue(map == mBinding.get());
 	assertTrue(coll == cBinding.get());
-	// check parameter index
+	// verify parameter index
 	assertEquals(0, mBinding.getParameterId());
 	assertEquals(1, cBinding.getParameterId());
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Test
+    public void removeExpiredBindingsNow_unsafeMapIterator() throws Exception {
+	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM fsm = u.fsm;
+	FiniteSpec finiteSpec = new FSMSpec(fsm);
+	u.m.setIndex(0);
+	u.c.setIndex(1);
+	u.i.setIndex(2);
+
+	BindingStore bs = new BindingStore(finiteSpec.getFullParameterSet(), 1);
+
+	// create bindings
+	Object[] boundObjects = new Object[finiteSpec.getFullParameterSet().size()];
+	Map map = new HashMap();
+	map.put(1, "a");
+	Collection coll = map.entrySet();
+	boundObjects[0] = map;
+	boundObjects[1] = coll;
+	LowLevelBinding[] bindings = bs.getBindings(boundObjects);
+	LowLevelBinding mBinding = bindings[0];
+	LowLevelBinding cBinding = bindings[1];
+
+	// register node mocks
+	Node mNode = mock(Node.class);
+	Node cNode = mock(Node.class);
+	mBinding.registerNode(new WeakReference<Node>(mNode));
+	cBinding.registerNode(new WeakReference<Node>(cNode));
+
+	// nullify references
+	boundObjects[0] = null;
+	boundObjects[1] = null;
+	map = null;
+	coll = null;
+
+	// gc references
+	System.gc();
+	System.gc();
+
+	// exercise
+	bs.removeExpiredBindingsNow();
+
+	// verify
+	verify(mNode).remove(mBinding);
+	verify(cNode).remove(cBinding);
+
     }
 
 }

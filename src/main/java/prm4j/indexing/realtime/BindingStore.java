@@ -65,6 +65,10 @@ public class BindingStore {
 	return referenceQueue;
     }
 
+    protected void removeExpiredBindingsNow() {
+	cleaner.removeExpiredBindings();
+    }
+
     /**
      * Stores the bindings associated to a single parameter
      */
@@ -102,11 +106,12 @@ public class BindingStore {
 	    DefaultLowLevelBinding binding;
 	    do {
 		binding = (DefaultLowLevelBinding) referenceQueue.poll();
-		stores[binding.getParameterId()].removeEntry(binding);
-		binding.release();
+		if (binding != null) {
+		    stores[binding.getParameterId()].removeEntry(binding);
+		    binding.release();
+		}
 	    } while (binding != null);
 	}
-
     }
 
 }
