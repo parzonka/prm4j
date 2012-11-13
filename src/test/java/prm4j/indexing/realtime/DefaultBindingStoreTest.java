@@ -26,7 +26,7 @@ import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.spec.FiniteSpec;
 
-public class BindingStoreTest extends AbstractTest {
+public class DefaultBindingStoreTest extends AbstractTest {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
@@ -38,7 +38,7 @@ public class BindingStoreTest extends AbstractTest {
 	u.c.setIndex(1);
 	u.i.setIndex(2);
 
-	BindingStore bs = new BindingStore(finiteSpec.getFullParameterSet(), 1);
+	DefaultBindingStore bs = new DefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
 
 	// create bindings
 	Object[] boundObjects = new Object[finiteSpec.getFullParameterSet().size()];
@@ -72,7 +72,7 @@ public class BindingStoreTest extends AbstractTest {
 	u.c.setIndex(1);
 	u.i.setIndex(2);
 
-	BindingStore bs = new BindingStore(finiteSpec.getFullParameterSet(), 1);
+	DefaultBindingStore bs = new DefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
 
 	// create bindings
 	Object[] boundObjects = new Object[finiteSpec.getFullParameterSet().size()];
