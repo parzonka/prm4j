@@ -29,6 +29,8 @@ public interface Node extends MinimalMapEntry<LowLevelBinding, Node> {
 
     public Node getNode(LowLevelBinding binding);
 
+    public void remove(LowLevelBinding binding);
+
     /**
      * Returns a monitor set which represents a (sometimes not real) subset of instances which are more informative than
      * the instance represented by this node.
