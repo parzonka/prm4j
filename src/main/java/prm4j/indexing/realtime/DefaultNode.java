@@ -19,6 +19,11 @@ public class DefaultNode extends AbstractNode {
     private final MonitorSet[] monitorSets;
     private BaseMonitor monitor;
 
+    /**
+     * @param metaNode
+     * @param key may be null, if node is root node
+     * @param hashCode hash code of the key
+     */
     public DefaultNode(MetaNode metaNode, LowLevelBinding key, int hashCode) {
 	super(key, hashCode);
 	this.metaNode = metaNode;

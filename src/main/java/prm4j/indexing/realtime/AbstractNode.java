@@ -18,6 +18,11 @@ public abstract class AbstractNode extends MinimalMap<LowLevelBinding, Node> imp
     private final int hashCode;
     private Node nextNode;
 
+    /**
+     * @param metaNode
+     * @param key may be null, if node is root node
+     * @param hashCode hash code of the key
+     */
     public AbstractNode(LowLevelBinding key, int hashCode) {
 	this.key = key;
 	this.hashCode = hashCode;
