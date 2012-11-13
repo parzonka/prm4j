@@ -169,6 +169,28 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 	}
     }
 
+    public void removeEntry(final E entryToRemove) {
+
+	final int hashCode = entryToRemove.getHashCode();
+	final int hashIndex = hashIndex(hashCode, table.length);
+	E entry = table[hashIndex];
+
+	E lastEntry = null;
+	while (entry != null) {
+	    E nextEntry = entry.next();
+	    if (hashCode == entry.getHashCode() && entryToRemove == entry) {
+		if (lastEntry == null) {
+		    table[hashIndex] = nextEntry;
+		} else {
+		    lastEntry.setNext(nextEntry);
+		}
+		size--;
+	    }
+	    lastEntry = entry;
+	    entry = nextEntry;
+	}
+    }
+
     /**
      * Calculates the hashcode for the given key, which defaults to a variant of its object identity. Subclasses may
      * implement their own hash code.
