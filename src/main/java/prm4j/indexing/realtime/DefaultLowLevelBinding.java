@@ -82,11 +82,6 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     }
 
     @Override
-    public Node getBaseNode() {
-	return null;
-    }
-
-    @Override
     public boolean isDisabled() {
 	return disabled;
     }

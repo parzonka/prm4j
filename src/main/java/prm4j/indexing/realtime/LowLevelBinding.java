@@ -30,13 +30,6 @@ public interface LowLevelBinding extends prm4j.api.Binding {
      */
     void registerNode(WeakReference<Node> nodeReference); // TODO resource registration
 
-    /**
-     * Return the node representing the instance this binding can form.
-     *
-     * @return
-     */
-    Node getBaseNode();
-
     boolean isDisabled();
 
     void setDisabled(boolean disable);
