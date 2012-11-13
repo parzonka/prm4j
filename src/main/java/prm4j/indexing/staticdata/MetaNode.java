@@ -64,6 +64,10 @@ public class MetaNode {
 	return new DefaultNode(this, key, hashCode);
     }
 
+    public Node createRootNode() {
+	return createNode(null, 0);
+    }
+
     /**
      * Creates a Node by a successor.
      *

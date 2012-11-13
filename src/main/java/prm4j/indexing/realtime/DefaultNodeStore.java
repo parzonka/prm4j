@@ -10,13 +10,14 @@
  */
 package prm4j.indexing.realtime;
 
+import prm4j.indexing.staticdata.MetaNode;
 
 public class DefaultNodeStore implements NodeStore {
 
     private Node rootNode;
 
-    public DefaultNodeStore() {
-	// this.rootNode = rootNode; // TODO
+    public DefaultNodeStore(MetaNode metaTree) {
+	 rootNode = metaTree.createRootNode();
     }
 
     @Override
@@ -26,7 +27,7 @@ public class DefaultNodeStore implements NodeStore {
 	    return rootNode;
 	}
 	// retrieve the head of the array pointing to the first node we will use
-	Node node = bindings[0].getBaseNode();
+	Node node = rootNode.getNode(bindings[0]);
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 1; i < bindings.length; i++) {
 	    // traverse the node tree until the parameter instance is fully realized
@@ -42,7 +43,7 @@ public class DefaultNodeStore implements NodeStore {
 	    return rootNode;
 	}
 	// retrieve the head of the array pointing to the first node we will use
-	Node node = bindings[parameterMask[0]].getBaseNode();
+	Node node = rootNode.getNode(bindings[parameterMask[0]]);
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 1; i < parameterMask.length; i++) {
 	    // traverse the node tree until the parameter instance is fully realized
