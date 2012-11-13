@@ -18,7 +18,7 @@ public class MinimalMapTest {
 
     @Test
     public void size_sizeGrowsWithAddedEntries() throws Exception {
-	MinimalMap<MockEntry> map = new MockMap();
+	MinimalMap<Object, MockEntry> map = new MockMap();
 	assertEquals(0, map.size());
 	map.get("a");
 	assertEquals(1, map.size());
@@ -28,7 +28,7 @@ public class MinimalMapTest {
 
     @Test
     public void get_createEntryAndRetrieveEntry() throws Exception {
-	MinimalMap<MockEntry> map = new MockMap();
+	MinimalMap<Object, MockEntry> map = new MockMap();
 	String a = "a";
 	MockEntry x = map.get(a);
 	MockEntry y = map.get(a);
@@ -38,7 +38,7 @@ public class MinimalMapTest {
 
     @Test
     public void get_createNewEntryForSameKeyWhenRemoved() throws Exception {
-	MinimalMap<MockEntry> map = new MockMap();
+	MinimalMap<Object, MockEntry> map = new MockMap();
 	String a = "a";
 	MockEntry x = map.get(a);
 	map.remove(a);
@@ -49,7 +49,7 @@ public class MinimalMapTest {
 
     @Test
     public void remove_sizeDecrementsUponRemoval() throws Exception {
-	MinimalMap<MockEntry> map = new MockMap();
+	MinimalMap<Object, MockEntry> map = new MockMap();
 	String a = "a";
 	map.get(a);
 	map.remove(a);
@@ -58,7 +58,7 @@ public class MinimalMapTest {
 
     @Test
     public void ensureCapacity_hittingThresholdForcesResizing() throws Exception {
-	MinimalMap<MockEntry> map = new MockMap();
+	MinimalMap<Object, MockEntry> map = new MockMap();
 	assertEquals(8, map.table.length);
 	map.get(1);
 	map.get(2);
@@ -74,7 +74,7 @@ public class MinimalMapTest {
 
     @Test
     public void ensureCapacity_resizeKeepsEntries() throws Exception {
-	MinimalMap<MockEntry> map = new MockMap();
+	MinimalMap<Object, MockEntry> map = new MockMap();
 	assertEquals(8, map.table.length);
 	MockEntry e1 = map.get(1);
 	MockEntry e2 = map.get(2);
@@ -94,9 +94,7 @@ public class MinimalMapTest {
 	assertEquals(e7, map.get(7));
     }
 
-
-
-    static class MockMap extends MinimalMap<MockEntry> {
+    static class MockMap extends MinimalMap<Object, MockEntry> {
 
 	@Override
 	protected MockEntry[] createTable(int size) {
@@ -110,7 +108,7 @@ public class MinimalMapTest {
 
     }
 
-    static class MockEntry implements MinimalMapEntry<MockEntry> {
+    static class MockEntry implements MinimalMapEntry<Object, MockEntry> {
 
 	private final Object key;
 	private final int hashCode;

@@ -10,11 +10,11 @@
  */
 package prm4j.indexing.map;
 
-public interface MinimalMapEntry<E extends MinimalMapEntry<E>> {
+public interface MinimalMapEntry<K, E extends MinimalMapEntry<K, E>> {
 
     public int getHashCode();
 
-    public Object getKey();
+    public K getKey();
 
     public E next();
 

@@ -20,7 +20,7 @@ package prm4j.indexing.map;
  * @param <E>
  *            the type of the value which is also used as map entry
  */
-public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
+public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
     /**
      * The default initial capacity - MUST be a power of two.
@@ -68,7 +68,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
      * @param key
      * @return the entry
      */
-    public E get(final Object key) {
+    public E get(final K key) {
 	return get(key, hashCode(key));
     }
 
@@ -81,7 +81,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
      *            should be consistently calculated with the provided method of this class (or a subtype)
      * @return the entry
      */
-    public E get(final Object key, final int hashCode) {
+    public E get(final K key, final int hashCode) {
 
 	final int index = hashIndex(hashCode, table.length);
 	E entry = table[index];
@@ -142,13 +142,13 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
      * @param hashCode
      * @return the entry
      */
-    protected abstract E createEntry(Object key, int hashCode);
+    protected abstract E createEntry(K key, int hashCode);
 
-    public void remove(final Object key) {
+    public void remove(final K key) {
 	remove(key, hashCode(key));
     }
 
-    public void remove(final Object key, final int hashCode) {
+    public void remove(final K key, final int hashCode) {
 
 	final int hashIndex = hashIndex(hashCode, table.length);
 	E entry = table[hashIndex];
@@ -176,7 +176,7 @@ public abstract class MinimalMap<E extends MinimalMapEntry<E>> {
      * @param key
      * @return the hash code
      */
-    public int hashCode(Object key) {
+    public int hashCode(K key) {
 	int h = System.identityHashCode(key);
 	// This function ensures that hashCodes that differ only by
 	// constant multiples at each bit position have a bounded
