@@ -57,6 +57,79 @@ public class MinimalMapTest {
     }
 
     @Test
+    public void remove_get_collision1() throws Exception {
+	MinimalMap<Object, MockEntry> map = new MockMap();
+	String a = "a";
+	String b = "b";
+	MockEntry aEntry = map.get(a, 0);
+	map.get(b, 0);
+	assertEquals(2, map.size());
+	map.remove(b, 0);
+	assertEquals(1, map.size());
+	MockEntry aEntry2 = map.get(a, 0);
+	assertTrue(aEntry == aEntry2);
+    }
+
+    @Test
+    public void remove_get_collision2() throws Exception {
+	MinimalMap<Object, MockEntry> map = new MockMap();
+	String a = "a";
+	String b = "b";
+	map.get(b, 0);
+	MockEntry aEntry = map.get(a, 0);
+	assertEquals(2, map.size());
+	map.remove(b, 0);
+	assertEquals(1, map.size());
+	MockEntry aEntry2 = map.get(a, 0);
+	assertTrue(aEntry == aEntry2);
+    }
+
+    @Test
+    public void removeEntry_get_createNewEntryForSameKeyWhenRemoved() throws Exception {
+	MinimalMap<Object, MockEntry> map = new MockMap();
+	String a = "a";
+	MockEntry x = map.get(a, 0);
+	map.removeEntry(x);
+	MockEntry y = map.get(a);
+	assertNotSame(x, y);
+    }
+
+    @Test
+    public void removeEntry_sizeDecrementsUponRemoval() throws Exception {
+	MinimalMap<Object, MockEntry> map = new MockMap();
+	String a = "a";
+	MockEntry x = map.get(a);
+	map.removeEntry(x);
+	assertEquals(0, map.size());
+    }
+
+    @Test
+    public void removeEntry_get_collision1() throws Exception {
+	MinimalMap<Object, MockEntry> map = new MockMap();
+	String a = "a";
+	MockEntry bEntry = map.get("b", 0);
+	MockEntry aEntry = map.get(a, 0);
+	assertEquals(2, map.size());
+	map.removeEntry(bEntry);
+	assertEquals(1, map.size());
+	MockEntry aEntry2 = map.get(a, 0);
+	assertTrue(aEntry == aEntry2);
+    }
+
+    @Test
+    public void removeEntry_get_collision2() throws Exception {
+	MinimalMap<Object, MockEntry> map = new MockMap();
+	String a = "a";
+	MockEntry aEntry = map.get(a, 0);
+	MockEntry bEntry = map.get("b", 0);
+	assertEquals(2, map.size());
+	map.removeEntry(bEntry);
+	assertEquals(1, map.size());
+	MockEntry aEntry2 = map.get(a, 0);
+	assertTrue(aEntry == aEntry2);
+    }
+
+    @Test
     public void ensureCapacity_hittingThresholdForcesResizing() throws Exception {
 	MinimalMap<Object, MockEntry> map = new MockMap();
 	assertEquals(8, map.table.length);
