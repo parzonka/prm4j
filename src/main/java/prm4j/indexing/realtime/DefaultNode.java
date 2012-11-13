@@ -11,23 +11,17 @@
 package prm4j.indexing.realtime;
 
 import prm4j.indexing.BaseMonitor;
-import prm4j.indexing.map.MinimalMap;
 import prm4j.indexing.staticdata.MetaNode;
 
-public class DefaultNode extends MinimalMap<LowLevelBinding, Node> implements Node {
+public class DefaultNode extends AbstractNode {
 
     private final MetaNode metaNode;
     private final MonitorSet[] monitorSets;
     private BaseMonitor monitor;
 
-    private final LowLevelBinding key;
-    private final int hashCode;
-    private Node nextNode;
-
     public DefaultNode(MetaNode metaNode, LowLevelBinding key, int hashCode) {
+	super(key, hashCode);
 	this.metaNode = metaNode;
-	this.key = key;
-	this.hashCode = hashCode;
 	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
     }
 
@@ -66,37 +60,5 @@ public class DefaultNode extends MinimalMap<LowLevelBinding, Node> implements No
     public MonitorSet[] getMonitorSets() {
 	return monitorSets;
     }
-
-    @Override
-    public int getHashCode() {
-	return hashCode;
-    }
-
-    @Override
-    public LowLevelBinding getKey() {
-	return key;
-    }
-
-    @Override
-    public Node next() {
-	return nextNode;
-    }
-
-    @Override
-    public void setNext(Node nextNode) {
-	this.nextNode = nextNode;
-
-    }
-
-    @Override
-    protected Node[] createTable(int size) {
-	return new Node[size];
-    }
-
-    @Override
-    protected Node createEntry(LowLevelBinding key, int hashCode) {
-	return getMetaNode().createNode(key.getParameterId(), key, hashCode);
-    }
-
 
 }
