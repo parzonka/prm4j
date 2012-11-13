@@ -45,7 +45,7 @@ public class StaticDataConverter {
     private final ListMultimap<BaseEvent, JoinData> joinData;
     private final SetMultimap<Set<Parameter<?>>, ChainData> chainData;
     private final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
-    private final MetaNode rootNode;
+    private final MetaNode metaTree;
 
     public StaticDataConverter(ParametricProperty pp) {
 	this.pp = pp;
@@ -54,7 +54,7 @@ public class StaticDataConverter {
 	chainData = HashMultimap.create();
 	monitorSetIds = HashBasedTable.create();
 	convertToLowLevelStaticData();
-	rootNode = new MetaNode(new HashSet<Parameter<?>>(), pp.getParameters());
+	metaTree = new MetaNode(new HashSet<Parameter<?>>(), pp.getParameters());
 	createMetaTree();
     }
 
@@ -176,7 +176,7 @@ public class StaticDataConverter {
 	for (Set<Parameter<?>> parameterSet : allParameterSets) {
 	    List<Parameter<?>> parameterList = new ArrayList<Parameter<?>>(parameterSet);
 	    Collections.sort(parameterList);
-	    MetaNode node = rootNode;
+	    MetaNode node = metaTree;
 	    for (Parameter<?> parameter : parameterList) {
 		node = node.getMetaNode(parameter);
 		node.setChainData(chainData.get(node.getNodeParameterSet()));
@@ -207,7 +207,7 @@ public class StaticDataConverter {
      * @return the rootnode of the tree of meta nodes
      */
     public MetaNode getMetaTree() {
-	return rootNode;
+	return metaTree;
     }
 
     protected SetMultimap<Set<Parameter<?>>, ChainData> getChainData() {
