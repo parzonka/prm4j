@@ -19,13 +19,16 @@ import prm4j.indexing.map.MinimalMap;
 
 public class BindingStore {
 
-    ReferenceQueue<Object> referenceQueue;
-    final private MinimalMap<Object, DefaultLowLevelBinding>[] stores;
+    private final ReferenceQueue<Object> referenceQueue;
+    private final MinimalMap<Object, DefaultLowLevelBinding>[] stores;
+    private final Cleaner cleaner = new Cleaner();
+    private final int cleaningInterval;
 
     @SuppressWarnings("unchecked")
-    public BindingStore(Set<Parameter<?>> fullParameterSet) {
+    public BindingStore(Set<Parameter<?>> fullParameterSet, int cleaningInterval) {
 
 	referenceQueue = new ReferenceQueue<Object>();
+	this.cleaningInterval = cleaningInterval;
 
 	stores = new MinimalMap[fullParameterSet.size()];
 	for (Parameter<?> parameter : Util.asSortedList(fullParameterSet)) {
@@ -54,12 +57,12 @@ public class BindingStore {
 		result[j++] = stores[i].get(boundObject);
 	    }
 	}
-	pruneInaccessibleNodes();
+	cleaner.clean();
 	return result;
     }
 
-    private void pruneInaccessibleNodes() {
-	 // TODO garbage collection of nodes
+    protected ReferenceQueue<Object> getReferenceQueue() {
+	return referenceQueue;
     }
 
     /**
@@ -81,6 +84,27 @@ public class BindingStore {
 	@Override
 	protected DefaultLowLevelBinding createEntry(Object key, int hashCode) {
 	    return new DefaultLowLevelBinding(key, parameter, hashCode, referenceQueue);
+	}
+    }
+
+    class Cleaner {
+
+	private int attempts = 0;
+
+	public void clean() {
+	    if (attempts++ > cleaningInterval) {
+		removeExpiredBindings();
+		attempts = 0;
+	    }
+	}
+
+	private void removeExpiredBindings() {
+	    DefaultLowLevelBinding binding;
+	    do {
+		binding = (DefaultLowLevelBinding) referenceQueue.poll();
+		stores[binding.getParameterId()].removeEntry(binding);
+		binding.release();
+	    } while (binding != null);
 	}
 
     }

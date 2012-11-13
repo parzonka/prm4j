@@ -35,7 +35,7 @@ public class BindingStoreTest extends AbstractTest {
 	u.c.setIndex(1);
 	u.i.setIndex(2);
 
-	BindingStore bs = new BindingStore(finiteSpec.getFullParameterSet());
+	BindingStore bs = new BindingStore(finiteSpec.getFullParameterSet(), 1);
 
 	Object[] boundObjects = new Object[finiteSpec.getFullParameterSet().size()];
 	Map map = new HashMap();
