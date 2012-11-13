@@ -11,8 +11,8 @@
 package prm4j.indexing.realtime;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Set;
 
 import prm4j.api.Parameter;
@@ -22,11 +22,11 @@ import prm4j.api.Parameter;
  */
 public class AwareDefaultBindingStore extends DefaultBindingStore {
 
-    private final List<WeakReference<LowLevelBinding[]>> listOfBindings;
+    private final Deque<WeakReference<LowLevelBinding[]>> retrievedBindings;
 
     public AwareDefaultBindingStore(Set<Parameter<?>> fullParameterSet, int cleaningInterval) {
 	super(fullParameterSet, cleaningInterval);
-	listOfBindings = new ArrayList<WeakReference<LowLevelBinding[]>>();
+	retrievedBindings = new ArrayDeque<WeakReference<LowLevelBinding[]>>();
     }
 
     @Override
@@ -36,8 +36,8 @@ public class AwareDefaultBindingStore extends DefaultBindingStore {
 	return bindings;
     }
 
-    public List<WeakReference<LowLevelBinding[]>> getListOfBindings() {
-	return listOfBindings;
+    public Deque<WeakReference<LowLevelBinding[]>> getListOfBindings() {
+	return retrievedBindings;
     }
 
 }
