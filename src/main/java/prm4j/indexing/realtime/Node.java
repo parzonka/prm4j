@@ -26,7 +26,7 @@ public interface Node {
 
     public void setMonitor(BaseMonitor monitor);
 
-    public NodeMap getNodeMap();
+    public Node getNode(LowLevelBinding binding);
 
     /**
      * Returns a monitor set which represents a (sometimes not real) subset of instances which are more informative than
@@ -44,12 +44,5 @@ public interface Node {
     public MonitorSet getMonitorSet(int parameterSetId);
 
     public MonitorSet[] getMonitorSets();
-
-    /**
-     * The node is used in {@link NodeMap}s with similar functionality as map entries.
-     *
-     * @return TODO comment
-     */
-    public Node next();
 
 }

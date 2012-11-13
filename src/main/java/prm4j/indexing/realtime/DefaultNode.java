@@ -11,14 +11,13 @@
 package prm4j.indexing.realtime;
 
 import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.map.MinimalMap;
 import prm4j.indexing.staticdata.MetaNode;
 
-public class DefaultNode implements Node {
+public class DefaultNode extends MinimalMap<LowLevelBinding, NodeReference> implements Node {
 
     private final MetaNode metaNode;
     private final MonitorSet[] monitorSets;
-
-    private NodeMap nodeMap;
     private BaseMonitor monitor;
 
     public DefaultNode(MetaNode metaNode, int monitorSetCount) {
@@ -43,17 +42,13 @@ public class DefaultNode implements Node {
     }
 
     @Override
-    public void setMonitor(BaseMonitor monitor) {
-	this.monitor = monitor;
+    public Node getNode(LowLevelBinding binding) {
+	return get(binding).get();
     }
 
     @Override
-    public NodeMap getNodeMap() {
-	// lazy creation
-	if (nodeMap == null) {
-	    nodeMap = metaNode.createNodeMap();
-	}
-	return nodeMap;
+    public void setMonitor(BaseMonitor monitor) {
+	this.monitor = monitor;
     }
 
     @Override
@@ -68,14 +63,26 @@ public class DefaultNode implements Node {
     }
 
     @Override
-    public Node next() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
     public MonitorSet[] getMonitorSets() {
 	return monitorSets;
+    }
+
+    // Map overrides
+
+    @Override
+    protected NodeReference[] createTable(int size) {
+	return new NodeReference[size];
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Creates a {@link NodeReference} with a weak reference to a newly created {@link Node}. <br>
+     * The {@link NodeReference} is also an entry with a binding as key using the same hashcode.
+     */
+    @Override
+    protected NodeReference createEntry(LowLevelBinding binding, int bindingHashCode) {
+	return new NodeReference(metaNode.createNode(binding.getParameterId()), binding, bindingHashCode);
     }
 
 }

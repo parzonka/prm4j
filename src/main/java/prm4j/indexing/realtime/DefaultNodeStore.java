@@ -30,7 +30,7 @@ public class DefaultNodeStore implements NodeStore {
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 1; i < bindings.length; i++) {
 	    // traverse the node tree until the parameter instance is fully realized
-	    node = node.getNodeMap().getNode(bindings[i]);
+	    node = node.getNode(bindings[i]);
 	}
 	return node;
     }
@@ -46,7 +46,7 @@ public class DefaultNodeStore implements NodeStore {
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 1; i < parameterMask.length; i++) {
 	    // traverse the node tree until the parameter instance is fully realized
-	    node = node.getNodeMap().getNode(bindings[parameterMask[i]]);
+	    node = node.getNode(bindings[parameterMask[i]]);
 	}
 	return node;
     }
