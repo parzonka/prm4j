@@ -12,8 +12,13 @@ package prm4j.indexing.realtime;
 
 import java.lang.ref.WeakReference;
 
+import prm4j.indexing.map.MinimalMap;
 import prm4j.indexing.map.MinimalMapEntry;
 
+/**
+ * A {@link NodeReference} is mainly a weak reference to a {@link Node} and also used as a {@link MinimalMapEntry} in a {@link MinimalMap},
+ * mapping from {@link LowLevelBinding}s to {@link NodeReference}s.
+ */
 public class NodeReference extends WeakReference<Node> implements MinimalMapEntry<LowLevelBinding, NodeReference> {
 
     private final int hashCode;
