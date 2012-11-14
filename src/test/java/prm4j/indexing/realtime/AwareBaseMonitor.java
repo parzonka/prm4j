@@ -10,7 +10,9 @@
  */
 package prm4j.indexing.realtime;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 import prm4j.Util;
@@ -25,18 +27,18 @@ import prm4j.indexing.BaseMonitor;
 public class AwareBaseMonitor extends BaseMonitor {
 
     private final List<BaseEvent> baseEventTrace;
-    private final List<AwareBaseMonitor> updatedMonitors;
+    private final Deque<AwareBaseMonitor> updatedMonitors;
     private final List<AwareBaseMonitor> createdMonitors;
 
     public AwareBaseMonitor() {
 	super();
 	baseEventTrace = new ArrayList<BaseEvent>();
-	updatedMonitors = new ArrayList<AwareBaseMonitor>();
+	updatedMonitors = new ArrayDeque<AwareBaseMonitor>();
 	createdMonitors = new ArrayList<AwareBaseMonitor>();
 	createdMonitors.add(this);
     }
 
-    public AwareBaseMonitor(List<BaseEvent> baseEventTrace, List<AwareBaseMonitor> updatedMonitors,
+    public AwareBaseMonitor(List<BaseEvent> baseEventTrace, Deque<AwareBaseMonitor> updatedMonitors,
 	    List<AwareBaseMonitor> createdMonitors) {
 	super();
 	this.baseEventTrace = baseEventTrace;
@@ -78,7 +80,7 @@ public class AwareBaseMonitor extends BaseMonitor {
      *
      * @return updated monitors
      */
-    public List<AwareBaseMonitor> getUpdatedMonitors() {
+    public Deque<AwareBaseMonitor> getUpdatedMonitors() {
 	return updatedMonitors;
     }
 
