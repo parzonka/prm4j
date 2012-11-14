@@ -117,6 +117,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    }
 	} else {
 	    // update phase
+	    instanceMonitor.processEvent(event); // 30
 	    for (MonitorSet monitorSet : instanceNode.getMonitorSets()) { // 30 - 32
 		monitorSet.processEvent(event);
 	    }
