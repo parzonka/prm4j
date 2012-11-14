@@ -32,6 +32,7 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 	super(boundObject, q);
 	this.hashCode = hashCode;
 	this.parameter = parameter;
+	timestamp = Long.MAX_VALUE; // indicates the binding was just created
 	nodeRefs = new ArrayList<WeakReference<Node>>();
     }
 
