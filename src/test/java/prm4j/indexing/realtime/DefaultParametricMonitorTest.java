@@ -166,19 +166,19 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 
     // helper //////////////////////////////////////////////////////////////////////////////
 
-    public AwareBaseMonitor popNextUpdatedMonitor() {
+    protected AwareBaseMonitor popNextUpdatedMonitor() {
 	if (prototypeMonitor.getUpdatedMonitors().isEmpty())
 	    fail("There were no more updated monitors!");
 	return prototypeMonitor.getUpdatedMonitors().pop();
     }
 
-    public AwareBaseMonitor popNextCreatedMonitor() {
+    protected AwareBaseMonitor popNextCreatedMonitor() {
 	if (prototypeMonitor.getCreatedMonitors().isEmpty())
 	    fail("There were no more created monitors!");
 	return prototypeMonitor.getCreatedMonitors().pop();
     }
 
-    private void assertBoundObjects(AwareBaseMonitor monitor, Object... boundObjects) {
+    protected void assertBoundObjects(AwareBaseMonitor monitor, Object... boundObjects) {
 	LowLevelBinding[] bindings = monitor.getLowLevelBindings();
 	Object[] monitorBoundObjects = new Object[bindings.length];
 	for (int i = 0; i < bindings.length; i++) {
@@ -187,17 +187,17 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	assertArrayEquals(boundObjects, monitorBoundObjects);
     }
 
-    public void assertNoMoreUpdatedMonitors() {
+    protected void assertNoMoreUpdatedMonitors() {
 	assertTrue("There were more updated monitors: " + prototypeMonitor.getUpdatedMonitors(), prototypeMonitor
 		.getUpdatedMonitors().isEmpty());
     }
 
-    public void assertNoMoreCreatedMonitors() {
+    protected void assertNoMoreCreatedMonitors() {
 	assertTrue("There were more created monitors: " + prototypeMonitor.getCreatedMonitors(), prototypeMonitor
 		.getCreatedMonitors().isEmpty());
     }
 
-    public void assertTrace(AwareBaseMonitor monitor, Symbol... symbols) {
+    protected void assertTrace(AwareBaseMonitor monitor, Symbol... symbols) {
 	assertEquals(Arrays.asList(symbols), monitor.getBaseEventTrace());
     }
 }
