@@ -120,4 +120,33 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 	assertEquals(asSet(fsm.p1), popNextRetrievedNode().getMetaNode().getNodeParameterSet());
     }
 
+    // firstEvent_ab //////////////////////////////////////////////////////////////////
+
+    @Test
+    public void firstEvent_ab_doesNotCreateMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertNoMoreCreatedMonitors();
+    }
+
+    @Test
+    public void firstEvent_ab_doesNotUpdateMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertNoMoreUpdatedMonitors();
+    }
+
+    @Test
+    public void firstEvent_ab_noMatchDetected() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+    }
+
 }
