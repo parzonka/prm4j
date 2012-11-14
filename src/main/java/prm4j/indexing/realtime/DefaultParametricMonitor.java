@@ -72,9 +72,10 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    BaseMonitor monitor = m.copy(); // 102-105
 		    monitor.processEvent(event); // 103
 		    instanceNode.setMonitor(monitor); // 106
-		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) {
+		    // inlined chain-method
+		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
 			nodeStore.getNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
-				.add(monitor);
+				.add(monitor); // 111
 		    } // 107
 		    break findMaxPhase;
 		}
@@ -90,7 +91,11 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    BaseMonitor monitor = monitorPrototype.copy(bindings, timestamp); // 94 - 97
 		    monitor.processEvent(event); // 95
 		    instanceNode.setMonitor(monitor); // 98
-		    chain(bindings, monitor); // 99
+		    // inlined chain-method
+		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
+			nodeStore.getNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
+				.add(monitor); // 111
+		    } // 99
 		}
 	    }
 	    // inlined Join from 42
@@ -149,13 +154,6 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	}
 	assert sourceIndex == bindings.length : "All bindings have to be taken into account.";
 	return joinableBindings;
-    }
-
-    private void chain(LowLevelBinding[] bindings, BaseMonitor monitor) {
-	for (ChainData chainData : nodeStore.getNode(bindings).getMetaNode().getChainDataArray()) {
-	    nodeStore.getNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
-		    .add(monitor);
-	}
     }
 
     @Override
