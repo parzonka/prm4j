@@ -28,18 +28,18 @@ public class AwareBaseMonitor extends BaseMonitor {
 
     private final List<BaseEvent> baseEventTrace;
     private final Deque<AwareBaseMonitor> updatedMonitors;
-    private final List<AwareBaseMonitor> createdMonitors;
+    private final Deque<AwareBaseMonitor> createdMonitors;
 
     public AwareBaseMonitor() {
 	super();
 	baseEventTrace = new ArrayList<BaseEvent>();
 	updatedMonitors = new ArrayDeque<AwareBaseMonitor>();
-	createdMonitors = new ArrayList<AwareBaseMonitor>();
+	createdMonitors = new ArrayDeque<AwareBaseMonitor>();
 	createdMonitors.add(this);
     }
 
     public AwareBaseMonitor(List<BaseEvent> baseEventTrace, Deque<AwareBaseMonitor> updatedMonitors,
-	    List<AwareBaseMonitor> createdMonitors) {
+	    Deque<AwareBaseMonitor> createdMonitors) {
 	super();
 	this.baseEventTrace = baseEventTrace;
 	this.updatedMonitors = updatedMonitors;
@@ -89,7 +89,7 @@ public class AwareBaseMonitor extends BaseMonitor {
      *
      * @return created monitors
      */
-    public List<AwareBaseMonitor> getCreatedMonitors() {
+    public Deque<AwareBaseMonitor> getCreatedMonitors() {
 	return createdMonitors;
     }
 
