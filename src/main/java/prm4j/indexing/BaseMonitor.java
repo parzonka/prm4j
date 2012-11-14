@@ -20,10 +20,17 @@ import prm4j.indexing.realtime.LowLevelBinding;
  */
 public abstract class BaseMonitor {
 
+    private final static LowLevelBinding[] EMPTY_BINDINGS = new LowLevelBinding[0];
+
     // low level access
     private LowLevelBinding[] bindings;
     // low level access
-    private long creationTime;
+    private long timestamp;
+
+    public BaseMonitor() {
+	bindings = EMPTY_BINDINGS;
+	timestamp = 0L;
+    }
 
     /**
      * Creates a low level deep copy of this monitor.
@@ -33,20 +40,16 @@ public abstract class BaseMonitor {
      */
     public final BaseMonitor copy(LowLevelBinding[] bindings) {
 	BaseMonitor copy = copy();
-	copy.setBindings(bindings);
-	copy.setCreationTime(creationTime);
+	copy.bindings = bindings;
+	copy.timestamp = timestamp;
 	return copy;
     }
 
     public final BaseMonitor copy(LowLevelBinding[] bindings, long timestamp) {
 	BaseMonitor copy = copy();
-	copy.setBindings(bindings);
-	copy.setCreationTime(timestamp);
+	copy.bindings = bindings;
+	copy.timestamp = timestamp;
 	return copy;
-    }
-
-    private final void setBindings(LowLevelBinding[] bindings) {
-	this.bindings = bindings;
     }
 
     public final LowLevelBinding[] getLowLevelBindings() {
@@ -59,11 +62,7 @@ public abstract class BaseMonitor {
     }
 
     public final long getCreationTime() {
-	return creationTime;
-    }
-
-    final void setCreationTime(long creationTime) {
-	this.creationTime = creationTime;
+	return timestamp;
     }
 
     /**
