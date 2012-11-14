@@ -13,6 +13,7 @@ package prm4j.indexing.realtime;
 import java.util.ArrayList;
 import java.util.List;
 
+import prm4j.Util;
 import prm4j.api.BaseEvent;
 import prm4j.api.Event;
 import prm4j.indexing.BaseMonitor;
@@ -47,7 +48,8 @@ public class AwareBaseMonitor extends BaseMonitor {
     @Override
     public boolean processEvent(Event event) {
 	updatedMonitors.add(this);
-	return baseEventTrace.add(event.getBaseEvent());
+	baseEventTrace.add(event.getBaseEvent());
+	return true;
     }
 
     @Override
@@ -87,6 +89,11 @@ public class AwareBaseMonitor extends BaseMonitor {
      */
     public List<AwareBaseMonitor> getCreatedMonitors() {
 	return createdMonitors;
+    }
+
+    @Override
+    public String toString() {
+	return Util.bindingsToString(getBindings());
     }
 
 }
