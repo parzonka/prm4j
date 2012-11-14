@@ -23,7 +23,6 @@ import org.junit.Test;
 import prm4j.AbstractTest;
 import prm4j.api.Symbol;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
@@ -63,6 +62,8 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	assertNoMoreCreatedMonitors();
 	assertNoMoreUpdatedMonitors();
     }
+
+    // firstEvent //////////////////////////////////////////////////////////////////
 
     @Test
     public void firstEventCreatesOnlyOneMonitor() throws Exception {
@@ -114,30 +115,56 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	assertBoundObjects(monitor, a);
     }
 
+    // recurringEvent = same event as first event again ////////////////////////////////
+
     @Test
-    // TODO refactor
-    public void newEvents_monitorUpdatesTimestampBoundObjects() throws Exception {
-
-	String a = "a";
-	String b = "b";
-
+    public void recurringEvent_doesNotCreateNewMonitor() throws Exception {
 	// exercise
 	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(b));
+	popNextCreatedMonitor();
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	assertNoMoreCreatedMonitors();
+    }
+
+    @Test
+    public void recurringEvent_updatesSameMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
 	monitor = popNextUpdatedMonitor();
-	assertCreationTime(0L, monitor);
-	assertBoundObjects(monitor, a);
-	monitor = popNextUpdatedMonitor();
-	assertCreationTime(1L, monitor);
-	assertBoundObjects(monitor, b);
+	assertEquals(monitor, popNextUpdatedMonitor());
 	assertNoMoreUpdatedMonitors();
     }
 
-    private void assertCreationTime(long timeStamp, BaseMonitor monitor) {
-	assertEquals(timeStamp, monitor.getCreationTime());
+    @Test
+    public void recurringEvent_monitorHasSameTimestamp0() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	monitor = popNextUpdatedMonitor();
+	assertEquals(0L, monitor.getCreationTime());
+	monitor = popNextUpdatedMonitor();
+	assertEquals(0L, monitor.getCreationTime());
     }
+
+    @Test
+    public void recurringEvent_monitorStillBindsSameObjects() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	monitor = popNextUpdatedMonitor();
+	assertBoundObjects(monitor, a);
+    }
+
+    // helper //////////////////////////////////////////////////////////////////////////////
 
     public AwareBaseMonitor popNextUpdatedMonitor() {
 	if (prototypeMonitor.getUpdatedMonitors().isEmpty())
