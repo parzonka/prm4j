@@ -122,6 +122,8 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 
     // firstEvent_ab //////////////////////////////////////////////////////////////////
 
+    // monitors are not created because of ab is no creation event
+
     @Test
     public void firstEvent_ab_doesNotCreateMonitor() throws Exception {
 	// exercise
@@ -147,6 +149,74 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 
 	// verify
 	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+    }
+
+    // twoEvent_a_b = a followed by b ////////////////////////////////
+
+    @Test
+    public void twoEvents_a_b_secondEventDoesCreateASingleNewMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	popNextCreatedMonitor();
+	pm.processEvent(fsm.e1.createEvent(b));
+
+	// verify
+	popNextCreatedMonitor();
+	assertNoMoreCreatedMonitors();
+    }
+
+    @Test
+    public void twoEvents_a_b_createdMonitorsAreDifferent() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(b));
+
+	// verify
+	assertNotSame(popNextCreatedMonitor(), popNextCreatedMonitor());
+    }
+
+    @Test
+    public void twoEvents_a_b_updatedMonitorsAreDifferent() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(b));
+
+	// verify
+	assertNotSame(popNextUpdatedMonitor(), popNextUpdatedMonitor());
+	assertNoMoreUpdatedMonitors();
+    }
+
+    @Test
+    public void twoEvents_a_b_bothTracesAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(b));
+
+	// verify
+	assertTrace(popNextUpdatedMonitor(), fsm.e1);
+	assertTrace(popNextUpdatedMonitor(), fsm.e1);
+    }
+
+    @Test
+    public void twoEvents_a_b_timestampsAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(b));
+
+	// verify
+	assertEquals(0L, popNextCreatedMonitor().getCreationTime());
+	assertEquals(1L, popNextCreatedMonitor().getCreationTime());
+    }
+
+    @Test
+    public void twoEvents_a_b_boundObjectsAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(b));
+
+	// verify
+	assertBoundObjects(popNextCreatedMonitor(), a);
+	assertBoundObjects(popNextCreatedMonitor(), b);
     }
 
 }
