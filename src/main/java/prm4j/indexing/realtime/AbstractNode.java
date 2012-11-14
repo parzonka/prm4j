@@ -55,7 +55,7 @@ public abstract class AbstractNode extends MinimalMap<LowLevelBinding, Node> imp
 
     @Override
     protected Node createEntry(LowLevelBinding key, int hashCode) {
-	return getMetaNode().createNode(key.getParameterId(), key, hashCode);
+	return getMetaNode().createNode(key.getParameterIndex(), key, hashCode);
     }
 
 }

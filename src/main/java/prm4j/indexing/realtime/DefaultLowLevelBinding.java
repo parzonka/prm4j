@@ -41,7 +41,7 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     }
 
     @Override
-    public int getParameterId() {
+    public int getParameterIndex() {
 	return parameter.getIndex();
     }
 

@@ -43,7 +43,7 @@ public abstract class MatchHandler {
     protected <P> P getBoundObject(Parameter<P> param, Binding[] bindings) {
 	// matches are rare, so we simply search the bindings linearly
 	for (Binding binding : bindings) {
-	    if (binding != null && binding.getParameterId() == param.getIndex()) {
+	    if (binding != null && binding.getParameterIndex() == param.getIndex()) {
 		@SuppressWarnings("unchecked")
 		P boundObject = (P) binding.get();
 		return boundObject;

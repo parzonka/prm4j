@@ -18,7 +18,7 @@ public interface Binding {
 
     public Parameter<?> getParameter();
 
-    public int getParameterId();
+    public int getParameterIndex();
 
     public Object get();
 

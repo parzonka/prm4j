@@ -102,7 +102,7 @@ public class DefaultBindingStore implements BindingStore {
 	    do {
 		binding = (DefaultLowLevelBinding) referenceQueue.poll();
 		if (binding != null) {
-		    stores[binding.getParameterId()].removeEntry(binding);
+		    stores[binding.getParameterIndex()].removeEntry(binding);
 		    binding.release();
 		}
 	    } while (binding != null);

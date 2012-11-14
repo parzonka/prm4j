@@ -58,8 +58,8 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	assertTrue(map == mBinding.get());
 	assertTrue(coll == cBinding.get());
 	// verify parameter index
-	assertEquals(0, mBinding.getParameterId());
-	assertEquals(1, cBinding.getParameterId());
+	assertEquals(0, mBinding.getParameterIndex());
+	assertEquals(1, cBinding.getParameterIndex());
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

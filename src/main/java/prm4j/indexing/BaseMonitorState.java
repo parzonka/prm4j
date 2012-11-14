@@ -27,7 +27,7 @@ public abstract class BaseMonitorState {
      */
     public boolean isAcceptingStateReachable(LowLevelBinding[] bindings) {
 	for (LowLevelBinding b : bindings) {
-	    if (acceptingParameters[b.getParameterId()]) {
+	    if (acceptingParameters[b.getParameterIndex()]) {
 		if (b.get() == null)
 		    return false;
 	    }
