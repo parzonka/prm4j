@@ -110,39 +110,15 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		// calculate once the bindings to be joined with the whole monitor set
 		final LowLevelBinding[] joinableBindings = createJoinableBindings(bindings,
 			joinData.getExtensionPattern()); // 56 - 61
-		// iterate over all compatible nodes
-		final MonitorSetIterator iter = compatibleNode.getMonitorSet(joinData.getMonitorSetId()).getIterator();
-		BaseMonitor compatibleMonitor = null;
-		boolean isCompatibleMonitorAlive = false;
-		// iterate over all compatible nodes
-		LowLevelBinding[] joinable = joinableBindings.clone(); // 62
-		monitorSetIteration: while (iter.hasNext(compatibleMonitor, isCompatibleMonitorAlive)) { // 63
-		    compatibleMonitor = iter.next();
-		    isCompatibleMonitorAlive = true;
-		    if (someBindingsAreKnown && compatibleMonitor.getCreationTime() < tmax) { // 64
-			continue monitorSetIteration; // 65
-		    }
-		    createJoin(joinable, compatibleMonitor.getLowLevelBindings(), joinData.getCopyPattern()); // 67 - 71
-		    final Node lastNode = nodeStore.getNode(joinable);
-		    if (lastNode.getMonitor() == null) { // 72
-			// inlined DefineTo // 73
-			BaseMonitor monitor = compatibleMonitor.copy(joinable); // 102-105
-			monitor.processEvent(event); // 103
-			lastNode.setMonitor(monitor); // 106
-			chain(joinable, monitor); // 99
-			joinable = joinableBindings.clone(); // 74
-		    }
-		}
+
+		// join is performed in monitor set
+		compatibleNode.getMonitorSet(joinData.getMonitorSetId()).join(nodeStore, bindings, event,
+			    joinableBindings, someBindingsAreKnown, tmax, joinData.getCopyPattern());
 	    }
 	} else {
 	    // update phase
 	    for (MonitorSet monitorSet : instanceNode.getMonitorSets()) { // 30 - 32
-		MonitorSetIterator iter = monitorSet.getIterator();
-		BaseMonitor monitor = null;
-		boolean isMonitorAlive = false;
-		while (iter.hasNext(monitor, isMonitorAlive)) {
-		    isMonitorAlive = iter.next().processEvent(event); // 33
-		}
+		monitorSet.processEvent(event);
 	    }
 	}
 	for (LowLevelBinding b : bindings) { // 37
@@ -169,15 +145,6 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	}
 	assert sourceIndex == bindings.length : "All bindings have to be taken into account.";
 	return joinableBindings;
-    }
-
-    private static void createJoin(LowLevelBinding[] joinableBindings, LowLevelBinding[] joiningBindings,
-	    int[] copyPattern) {
-	// fill in the missing bindings into the duplicate from the old monitor
-	for (int j = 0; j < copyPattern.length; j += 2) {
-	    // copy from j to j+1
-	    joinableBindings[copyPattern[j + 1]] = joiningBindings[copyPattern[j]];
-	}
     }
 
     private void chain(LowLevelBinding[] bindings, BaseMonitor monitor) {
