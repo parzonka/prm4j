@@ -60,6 +60,17 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	assertNoMoreCreatedMonitors();
 	assertNoMoreUpdatedMonitors();
     }
+
+    @Test
+    public void firstEventCreatesOnlyOneMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	monitor = popNextCreatedMonitor();
+	assertNoMoreCreatedMonitors();
+    }
+
 	assertNoMoreUpdatedMonitors();
     }
 
@@ -94,10 +105,10 @@ public class DefaultParametricMonitorTest extends AbstractTest {
     }
 
     public AwareBaseMonitor popNextCreatedMonitor() {
-   	if (prototypeMonitor.getUpdatedMonitors().isEmpty())
-   	    fail("There were no more updated monitors!");
-   	return prototypeMonitor.getUpdatedMonitors().pop();
-       }
+	if (prototypeMonitor.getCreatedMonitors().isEmpty())
+	    fail("There were no more created monitors!");
+	return prototypeMonitor.getCreatedMonitors().pop();
+    }
 
     private void assertBoundObjects(AwareBaseMonitor monitor, Object... boundObjects) {
 	LowLevelBinding[] bindings = monitor.getLowLevelBindings();
@@ -114,7 +125,7 @@ public class DefaultParametricMonitorTest extends AbstractTest {
     }
 
     public void assertNoMoreCreatedMonitors() {
-   	assertTrue("There were more created monitors: " + prototypeMonitor.getCreatedMonitors(), prototypeMonitor
-   		.getCreatedMonitors().isEmpty());
-       }
+	assertTrue("There were more created monitors: " + prototypeMonitor.getCreatedMonitors(), prototypeMonitor
+		.getCreatedMonitors().isEmpty());
+    }
 }
