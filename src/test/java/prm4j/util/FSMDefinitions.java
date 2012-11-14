@@ -22,6 +22,8 @@ import prm4j.api.Symbol1;
 import prm4j.api.Symbol2;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMState;
+import prm4j.indexing.realtime.AwareMatchHandler;
+import prm4j.indexing.realtime.AwareMatchHandler.AwareMatchHandler1;
 
 public abstract class FSMDefinitions {
 
@@ -119,12 +121,14 @@ public abstract class FSMDefinitions {
 
 	public final Symbol1<String> createString = alphabet.createSymbol1("createString", str);
 
+	public final AwareMatchHandler1<String> matchHandler = AwareMatchHandler.create(str);
+
 	public final FSM fsm = new FSM(alphabet);
 
 	public final FSMState initial = fsm.createInitialState();
 	public final FSMState s1 = fsm.createState();
 	public final FSMState s2 = fsm.createState();
-	public final FSMState error = fsm.createAcceptingState(MatchHandler.NO_OP);
+	public final FSMState error = fsm.createAcceptingState(matchHandler);
 
 	public FSM_threeSameStrings() {
 	    initial.addTransition(createString, s1);
