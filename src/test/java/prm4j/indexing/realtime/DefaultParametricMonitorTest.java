@@ -15,10 +15,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.AbstractTest;
+import prm4j.api.Symbol;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
@@ -71,10 +74,48 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	assertNoMoreCreatedMonitors();
     }
 
+    @Test
+    public void firstEventUpdatesOnlyOneMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	monitor = popNextUpdatedMonitor();
 	assertNoMoreUpdatedMonitors();
     }
 
     @Test
+    public void firstEventCreatesMonitorWithCreationTime0() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	monitor = popNextUpdatedMonitor();
+	assertEquals(0L, monitor.getCreationTime());
+    }
+
+    @Test
+    public void firstEventCreatesCorrectTrace() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	monitor = popNextUpdatedMonitor();
+	assertTrace(monitor, fsm.createString);
+    }
+
+    @Test
+    public void firstEventsMonitorBindsAllItsParameters() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	monitor = popNextUpdatedMonitor();
+	assertBoundObjects(monitor, a);
+    }
+
+    @Test
+    // TODO refactor
     public void newEvents_monitorUpdatesTimestampBoundObjects() throws Exception {
 
 	String a = "a";
@@ -127,5 +168,9 @@ public class DefaultParametricMonitorTest extends AbstractTest {
     public void assertNoMoreCreatedMonitors() {
 	assertTrue("There were more created monitors: " + prototypeMonitor.getCreatedMonitors(), prototypeMonitor
 		.getCreatedMonitors().isEmpty());
+    }
+
+    public void assertTrace(AwareBaseMonitor monitor, Symbol... symbols) {
+	assertEquals(Arrays.asList(symbols), monitor.getBaseEventTrace());
     }
 }
