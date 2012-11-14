@@ -22,6 +22,7 @@ import prm4j.api.Symbol1;
 import prm4j.api.Symbol2;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMState;
+import prm4j.indexing.realtime.AwareMatchHandler;
 
 public abstract class FSMDefinitions {
 
@@ -107,6 +108,29 @@ public abstract class FSMDefinitions {
 	    initial.addTransition(e1, s1);
 	    initial.addTransition(e2, initial); // self-loop
 	    s1.addTransition(e3, error);
+	}
+
+    }
+
+    public static class FSM_threeSameStrings {
+
+	public final Alphabet alphabet = new Alphabet();
+
+	public final Parameter<String> str = alphabet.createParameter("str", String.class);
+
+	public final Symbol1<String> createString = alphabet.createSymbol1("createString", str);
+
+	public final FSM fsm = new FSM(alphabet);
+
+	public final FSMState initial = fsm.createInitialState();
+	public final FSMState s1 = fsm.createState();
+	public final FSMState s2 = fsm.createState();
+	public final FSMState error = fsm.createAcceptingState(MatchHandler.NO_OP);
+
+	public FSM_threeSameStrings() {
+	    initial.addTransition(createString, s1);
+	    s1.addTransition(createString, s2);
+	    s2.addTransition(createString, error);
 	}
 
     }
