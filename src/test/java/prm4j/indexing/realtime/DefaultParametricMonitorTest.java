@@ -56,6 +56,11 @@ public class DefaultParametricMonitorTest extends AbstractTest {
     }
 
     @Test
+    public void verifyPostConditions() throws Exception {
+	assertNoMoreUpdatedMonitors();
+    }
+
+    @Test
     public void newEvents_monitorUpdatesTimestampBoundObjects() throws Exception {
 
 	String a = "a";
