@@ -10,6 +10,7 @@
  */
 package prm4j.indexing.realtime;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -39,8 +40,8 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 
     FSM_threeSameStrings fsm;
     final String a = "a";
-    final String b = "a";
-    final String c = "a";
+    final String b = "b";
+    final String c = "c";
 
     public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
 	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
@@ -173,6 +174,74 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	// verify
 	monitor = popNextUpdatedMonitor();
 	assertBoundObjects(monitor, a);
+    }
+
+ // twoEvents = two different events ////////////////////////////////
+
+    @Test
+    public void twoEvents_secondEventDoesCreateASingleNewMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	popNextCreatedMonitor();
+	pm.processEvent(fsm.createString.createEvent(b));
+
+	// verify
+	popNextCreatedMonitor();
+	assertNoMoreCreatedMonitors();
+    }
+
+    @Test
+    public void twoEvents_createdMonitorsAreDifferent() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(b));
+
+	// verify
+	assertNotSame(popNextCreatedMonitor(), popNextCreatedMonitor());
+    }
+
+    @Test
+    public void twoEvents_updatedMonitorsAreDifferent() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(b));
+
+	// verify
+	assertNotSame(popNextUpdatedMonitor(), popNextUpdatedMonitor());
+	assertNoMoreUpdatedMonitors();
+    }
+
+    @Test
+    public void twoEvents_bothTracesAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(b));
+
+	// verify
+	assertTrace(popNextUpdatedMonitor(), fsm.createString);
+	assertTrace(popNextUpdatedMonitor(), fsm.createString);
+    }
+
+    @Test
+    public void twoEvents_timestampsAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(b));
+
+	// verify
+	assertEquals(0L, popNextCreatedMonitor().getCreationTime());
+	assertEquals(1L, popNextCreatedMonitor().getCreationTime());
+    }
+
+    @Test
+    public void twoEvents_boundObjectsAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(b));
+
+	// verify
+	assertBoundObjects(popNextCreatedMonitor(), a);
+	assertBoundObjects(popNextCreatedMonitor(), b);
     }
 
     // helper //////////////////////////////////////////////////////////////////////////////
