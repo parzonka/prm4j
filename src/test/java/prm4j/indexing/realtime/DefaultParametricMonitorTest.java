@@ -231,12 +231,11 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
 	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
-	popNextCreatedMonitor();
 	assertEquals(list(a), fsm.matchHandler.getHandledMatches());
     }
 
     @Test
-    public void matchingTraceAndOnce() throws Exception {
+    public void matchingTracePlusOneDoesNotAddAnotherMatch() throws Exception {
 	// exercise
 	pm.processEvent(fsm.createString.createEvent(a));
 	pm.processEvent(fsm.createString.createEvent(a));
@@ -244,7 +243,6 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
 	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
-	popNextCreatedMonitor();
 	assertEquals(list(a), fsm.matchHandler.getHandledMatches());
     }
 
