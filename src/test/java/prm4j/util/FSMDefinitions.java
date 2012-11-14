@@ -22,7 +22,6 @@ import prm4j.api.Symbol1;
 import prm4j.api.Symbol2;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMState;
-import prm4j.indexing.realtime.AwareMatchHandler;
 
 public abstract class FSMDefinitions {
 
