@@ -35,7 +35,6 @@ public class AwareBaseMonitor extends BaseMonitor {
 	baseEventTrace = new ArrayList<BaseEvent>();
 	updatedMonitors = new ArrayDeque<AwareBaseMonitor>();
 	createdMonitors = new ArrayDeque<AwareBaseMonitor>();
-	createdMonitors.add(this);
     }
 
     public AwareBaseMonitor(List<BaseEvent> baseEventTrace, Deque<AwareBaseMonitor> updatedMonitors,
