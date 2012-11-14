@@ -79,7 +79,7 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     }
 
     @After
-    protected void cleanup() {
+    public void cleanup() {
 	converter = null;
 	bindingStore = null;
 	nodeStore = null;
