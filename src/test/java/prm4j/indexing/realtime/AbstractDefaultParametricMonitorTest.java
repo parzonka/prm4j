@@ -56,9 +56,9 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     }
 
     protected Node popNextRetrievedNode() {
-	if (nodeStore.getListOfNodes().isEmpty())
+	if (nodeStore.getRetrievedNodes().isEmpty())
 	    fail("There were no more retrieved nodes!");
-	return nodeStore.getListOfNodes().pop().get();
+	return nodeStore.getRetrievedNodes().pop().get();
     }
 
     protected void assertBoundObjects(AwareBaseMonitor monitor, Object... boundObjects) {
@@ -81,7 +81,7 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     }
 
     protected void assertNoMoreRetrievedNodes() {
-	assertTrue("There were more retrieved nodes: " + nodeStore.getListOfNodes(), nodeStore.getListOfNodes()
+	assertTrue("There were more retrieved nodes: " + nodeStore.getRetrievedNodes(), nodeStore.getRetrievedNodes()
 		.isEmpty());
     }
 
