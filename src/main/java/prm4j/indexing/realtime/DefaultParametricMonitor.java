@@ -24,7 +24,7 @@ import prm4j.spec.Spec;
 public class DefaultParametricMonitor implements ParametricMonitor {
 
     private final BaseMonitor monitorPrototype;
-    private final DefaultBindingStore bindingStore;
+    private final BindingStore bindingStore;
     private final NodeStore nodeStore;
     private final EventContext eventContext;
     private long timestamp = 0L;
@@ -36,7 +36,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	monitorPrototype = spec.getInitialMonitor();
     }
 
-    public DefaultParametricMonitor(DefaultBindingStore bindingStore, NodeStore nodeStore, BaseMonitor monitorPrototype, EventContext eventContext) {
+    public DefaultParametricMonitor(BindingStore bindingStore, NodeStore nodeStore, BaseMonitor monitorPrototype, EventContext eventContext) {
 	this.bindingStore = bindingStore;
 	this.nodeStore = nodeStore;
 	this.monitorPrototype = monitorPrototype;
