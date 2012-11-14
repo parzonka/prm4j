@@ -36,13 +36,13 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	monitorPrototype = spec.getInitialMonitor();
     }
 
-    public DefaultParametricMonitor(BindingStore bindingStore, NodeStore nodeStore, BaseMonitor monitorPrototype, EventContext eventContext) {
+    public DefaultParametricMonitor(BindingStore bindingStore, NodeStore nodeStore, BaseMonitor monitorPrototype,
+	    EventContext eventContext) {
 	this.bindingStore = bindingStore;
 	this.nodeStore = nodeStore;
 	this.monitorPrototype = monitorPrototype;
 	this.eventContext = eventContext;
     }
-
 
     @Override
     public void processEvent(Event event) {
@@ -72,7 +72,10 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    BaseMonitor monitor = m.copy(); // 102-105
 		    monitor.processEvent(event); // 103
 		    instanceNode.setMonitor(monitor); // 106
-		    chain(bindings, monitor); // 107
+		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) {
+			nodeStore.getNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
+				.add(monitor);
+		    } // 107
 		    break findMaxPhase;
 		}
 	    }
@@ -113,7 +116,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
 		// join is performed in monitor set
 		compatibleNode.getMonitorSet(joinData.getMonitorSetId()).join(nodeStore, bindings, event,
-			    joinableBindings, someBindingsAreKnown, tmax, joinData.getCopyPattern());
+			joinableBindings, someBindingsAreKnown, tmax, joinData.getCopyPattern());
 	    }
 	} else {
 	    // update phase
