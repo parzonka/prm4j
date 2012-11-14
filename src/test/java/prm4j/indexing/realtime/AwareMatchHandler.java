@@ -33,7 +33,6 @@ public class AwareMatchHandler<P1> {
 
 	@Override
 	public void handleMatch(P1 obj1) {
-	    System.out.println("Match detected for: " + obj1);
 	    handledMatches.add(obj1);
 	}
 
