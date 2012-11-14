@@ -48,16 +48,14 @@ public class Alphabet {
      * @return the parameter
      */
     public <P> Parameter<P> createParameter(Class<P> parameterObjectType) {
-	Parameter<P> parameter = new Parameter<P>("TODO");
-	parameters.add(parameter);
-	parameterCount++;
-	return parameter;
+	return createParameter("p" + parameterCount, parameterObjectType);
     }
 
     public <P> Parameter<P> createParameter(String optionalName, Class<P> parameterObjectType) {
 	Parameter<P> parameter = new Parameter<P>(optionalName);
 	parameters.add(parameter);
-	parameterCount++;
+	// we index parameters in order of appearance, this may be not optimal
+	parameter.setIndex(parameterCount++);
 	return parameter;
     }
 
