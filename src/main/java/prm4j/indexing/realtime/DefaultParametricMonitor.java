@@ -69,7 +69,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 			}
 		    }
 		    // inlined DefineTo from 73
-		    BaseMonitor monitor = m.copy(); // 102-105
+		    BaseMonitor monitor = m.copy(bindings); // 102-105
 		    monitor.processEvent(event); // 103
 		    instanceNode.setMonitor(monitor); // 106
 		    // inlined chain-method
