@@ -31,7 +31,13 @@ public class AwareDefaultNodeStore extends DefaultNodeStore {
     @Override
     public Node getNode(LowLevelBinding[] bindings) {
 	Node node = super.getNode(bindings);
-	getListOfNodes().add(new WeakReference<Node>(node));
+	getListOfNodes().add(new WeakReference<Node>(node) {
+	    @Override
+	    public String toString() {
+		Node node = get();
+		return node == null ? "[collected reference]" : node.toString();
+	    }
+	});
 	return node;
     }
 
