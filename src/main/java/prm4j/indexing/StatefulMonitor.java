@@ -20,7 +20,7 @@ import prm4j.api.MatchHandler;
  */
 public class StatefulMonitor extends BaseMonitor {
 
-    private BaseMonitorState state;
+    protected BaseMonitorState state;
 
     public StatefulMonitor(BaseMonitorState state) {
 	this.state = state;
@@ -39,7 +39,7 @@ public class StatefulMonitor extends BaseMonitor {
     }
 
     @Override
-    public StatefulMonitor copy() {
+    public BaseMonitor copy() {
 	return new StatefulMonitor(state);
     }
 

@@ -19,27 +19,29 @@ import prm4j.Util;
 import prm4j.api.BaseEvent;
 import prm4j.api.Event;
 import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.BaseMonitorState;
+import prm4j.indexing.StatefulMonitor;
 
 /**
  * {@link BaseMonitor} which is aware of all bindings of the trace it processed, and of all monitors which got updated
  * and created.
  */
-public class AwareBaseMonitor extends BaseMonitor {
+public class AwareBaseMonitor extends StatefulMonitor {
 
     private final List<BaseEvent> baseEventTrace;
     private final Deque<AwareBaseMonitor> updatedMonitors;
     private final Deque<AwareBaseMonitor> createdMonitors;
 
-    public AwareBaseMonitor() {
-	super();
+    public AwareBaseMonitor(BaseMonitorState state) {
+	super(state);
 	baseEventTrace = new ArrayList<BaseEvent>();
 	updatedMonitors = new ArrayDeque<AwareBaseMonitor>();
 	createdMonitors = new ArrayDeque<AwareBaseMonitor>();
     }
 
-    public AwareBaseMonitor(List<BaseEvent> baseEventTrace, Deque<AwareBaseMonitor> updatedMonitors,
+    public AwareBaseMonitor(BaseMonitorState state, List<BaseEvent> baseEventTrace, Deque<AwareBaseMonitor> updatedMonitors,
 	    Deque<AwareBaseMonitor> createdMonitors) {
-	super();
+	super(state);
 	this.baseEventTrace = baseEventTrace;
 	this.updatedMonitors = updatedMonitors;
 	this.createdMonitors = createdMonitors;
@@ -50,7 +52,7 @@ public class AwareBaseMonitor extends BaseMonitor {
     public boolean processEvent(Event event) {
 	updatedMonitors.add(this);
 	baseEventTrace.add(event.getBaseEvent());
-	return true;
+	return super.processEvent(event);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class AwareBaseMonitor extends BaseMonitor {
 
     @Override
     public BaseMonitor copy() {
-	AwareBaseMonitor copy = new AwareBaseMonitor(new ArrayList<BaseEvent>(baseEventTrace), updatedMonitors,
+	AwareBaseMonitor copy = new AwareBaseMonitor(state, new ArrayList<BaseEvent>(baseEventTrace), updatedMonitors,
 		createdMonitors);
 	return copy;
     }
