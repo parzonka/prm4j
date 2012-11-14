@@ -10,6 +10,7 @@
  */
 package prm4j.indexing.realtime;
 
+import prm4j.Util;
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.MetaNode;
 
@@ -64,6 +65,11 @@ public class DefaultNode extends AbstractNode {
     @Override
     public MonitorSet[] getMonitorSets() {
 	return monitorSets;
+    }
+
+    @Override
+    public String toString() {
+        return Util.bindingsToString(getMonitor().getLowLevelBindings());
     }
 
 }
