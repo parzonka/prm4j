@@ -12,7 +12,7 @@ package prm4j.indexing.realtime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,6 +38,7 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     public void verifyPostConditions() throws Exception {
 	assertNoMoreCreatedMonitors();
 	assertNoMoreUpdatedMonitors();
+	assertNoMoreRetrievedNodes();
     }
 
     // firstEvent //////////////////////////////////////////////////////////////////
@@ -96,6 +97,34 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
 
 	// verify
 	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+    }
+
+    @Test
+    public void firstEvent_onlyOneNodeIsRetrieved() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	assertNotNull(popNextRetrievedNode());
+	assertNoMoreRetrievedNodes();
+    }
+
+    @Test
+    public void firstEvent_nodeHasNoMonitorSets() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	assertArrayEquals(new MonitorSet[0], popNextRetrievedNode().getMonitorSets());
+    }
+
+    @Test
+    public void firstEvent_metaNodeHasCorrectParameterSet() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	assertEquals(asSet(fsm.str), popNextRetrievedNode().getMetaNode().getNodeParameterSet());
     }
 
     // recurringEvent = same event as first event again ////////////////////////////////

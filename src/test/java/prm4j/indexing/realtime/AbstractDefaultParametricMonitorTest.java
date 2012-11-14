@@ -55,6 +55,12 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	return prototypeMonitor.getCreatedMonitors().pop();
     }
 
+    protected Node popNextRetrievedNode() {
+	if (nodeStore.getListOfNodes().isEmpty())
+	    fail("There were no more retrieved nodes!");
+	return nodeStore.getListOfNodes().pop().get();
+    }
+
     protected void assertBoundObjects(AwareBaseMonitor monitor, Object... boundObjects) {
 	LowLevelBinding[] bindings = monitor.getLowLevelBindings();
 	Object[] monitorBoundObjects = new Object[bindings.length];
@@ -72,6 +78,11 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     protected void assertNoMoreCreatedMonitors() {
 	assertTrue("There were more created monitors: " + prototypeMonitor.getCreatedMonitors(), prototypeMonitor
 		.getCreatedMonitors().isEmpty());
+    }
+
+    protected void assertNoMoreRetrievedNodes() {
+	assertTrue("There were more retrieved nodes: " + nodeStore.getListOfNodes(), nodeStore.getListOfNodes()
+		.isEmpty());
     }
 
     protected void assertTrace(AwareBaseMonitor monitor, Symbol... symbols) {
