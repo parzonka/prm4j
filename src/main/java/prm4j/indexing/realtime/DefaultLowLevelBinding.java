@@ -107,4 +107,9 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 	this.timestamp = timestamp;
     }
 
+    @Override
+    public String toString() {
+        return parameter + "=" + get();
+    }
+
 }
