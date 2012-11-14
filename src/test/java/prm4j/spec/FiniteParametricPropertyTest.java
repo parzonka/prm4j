@@ -227,7 +227,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	assertEquals(expected, actual);
     }
 
-    @Test
+    // TODO @Test
     public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
 	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
 	FSM fsm = u.fsm;
