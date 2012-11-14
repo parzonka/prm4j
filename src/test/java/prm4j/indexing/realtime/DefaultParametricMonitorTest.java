@@ -13,17 +13,12 @@ package prm4j.indexing.realtime;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.AbstractTest;
-import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
@@ -40,6 +35,11 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 
     AwareBaseMonitor monitor; // working variable
 
+    FSM_threeSameStrings fsm;
+    final String a = "a";
+    final String b = "a";
+    final String c = "a";
+
     public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
 	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
 	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
@@ -48,12 +48,15 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext());
     }
 
+    @Before
+    public void init() {
+	fsm = new FSM_threeSameStrings();
+	FiniteSpec finiteSpec = new FSMSpec(fsm.fsm);
+	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
+    }
+
     @Test
     public void newEvents_monitorUpdatesTimestampBoundObjects() throws Exception {
-	FSM_threeSameStrings fsm = new FSM_threeSameStrings();
-	FiniteSpec finiteSpec = new FSMSpec(fsm.fsm);
-
-	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
 
 	String a = "a";
 	String b = "b";
@@ -70,7 +73,6 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	assertCreationTime(1L, monitor);
 	assertBoundObjects(monitor, b);
 	assertNoMoreUpdatedMonitors();
-
     }
 
     private void assertCreationTime(long timeStamp, BaseMonitor monitor) {
@@ -78,6 +80,8 @@ public class DefaultParametricMonitorTest extends AbstractTest {
     }
 
     public AwareBaseMonitor popNextUpdatedMonitor() {
+	if (prototypeMonitor.getUpdatedMonitors().isEmpty())
+	    fail("There were no more updated monitors!");
 	return prototypeMonitor.getUpdatedMonitors().pop();
     }
 
