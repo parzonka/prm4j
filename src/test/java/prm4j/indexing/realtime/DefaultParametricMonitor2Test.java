@@ -262,18 +262,18 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 
 	// verify
 	assertTrace(popNextUpdatedMonitor(), fsm.e1);
-	assertTrace(popNextUpdatedMonitor(), fsm.e1);
+	assertTrace(popNextUpdatedMonitor(), fsm.e1, fsm.e2);
     }
 
     @Test
-    public void twoEvents_a_ab_timestampsAreCorrect() throws Exception {
+    public void twoEvents_a_ab_timestampGetsPropagatedToNewMonitor() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a));
 	pm.processEvent(fsm.e2.createEvent(a, b));
 
 	// verify
 	assertEquals(0L, popNextCreatedMonitor().getCreationTime());
-	assertEquals(1L, popNextCreatedMonitor().getCreationTime());
+	assertEquals(0L, popNextCreatedMonitor().getCreationTime());
     }
 
     @Test
@@ -284,7 +284,7 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 
 	// verify
 	assertBoundObjects(popNextCreatedMonitor(), a);
-	assertBoundObjects(popNextCreatedMonitor(), b);
+	assertBoundObjects(popNextCreatedMonitor(), a, b);
     }
 
 }
