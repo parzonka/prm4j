@@ -287,4 +287,41 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 	assertBoundObjects(popNextCreatedMonitor(), a, b);
     }
 
+    // twoEvent_ab_a = ab followed by a (and some with b) ////////////////////////////////
+
+    /*
+     * ab is in the disabling set and disables any traces with a, so we will not see any monitors created associated to
+     * the instance a
+     */
+
+    @Test
+    public void twoEvents_ab_a_disableSetPreventsCreationOfBothMonitors() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a));
+
+	// verify
+	assertNoMoreCreatedMonitors();
+    }
+
+    @Test
+    public void twoEvents_ab_a_noUpdates() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a));
+
+	// verify
+	assertNoMoreUpdatedMonitors();
+    }
+
+    @Test
+    public void twoEvents_ab_b_disableSetPreventsCreationOfBothMonitors() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(b));
+
+	// verify
+	assertNoMoreCreatedMonitors();
+    }
+
 }
