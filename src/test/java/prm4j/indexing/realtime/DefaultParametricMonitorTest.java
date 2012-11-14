@@ -10,43 +10,88 @@
  */
 package prm4j.indexing.realtime;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 
 import prm4j.AbstractTest;
-import prm4j.api.ParametricMonitor;
-import prm4j.api.ParametricMonitorFactory;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.staticdata.StaticDataConverter;
+import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitorTest extends AbstractTest {
 
+    StaticDataConverter converter;
+    AwareDefaultBindingStore bindingStore;
+    AwareDefaultNodeStore nodeStore;
+    AwareBaseMonitor prototypeMonitor;
+    DefaultParametricMonitor pm;
+
+    AwareBaseMonitor monitor; // working variable
+
+    public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
+	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
+	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
+	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree());
+	prototypeMonitor = new AwareBaseMonitor();
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext());
+    }
+
     @Test
-    public void process() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	FSM fsm = u.fsm;
-	FiniteSpec finiteSpec = new FSMSpec(fsm);
-	u.m.setIndex(0);
-	u.c.setIndex(1);
-	u.i.setIndex(2);
+    public void newEvents_monitorUpdatesTimestampBoundObjects() throws Exception {
+	FSM_threeSameStrings fsm = new FSM_threeSameStrings();
+	FiniteSpec finiteSpec = new FSMSpec(fsm.fsm);
 
-	ParametricMonitor pm = ParametricMonitorFactory.createParametricMonitor(finiteSpec);
+	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
 
-	Map<Integer, String> m1 = new HashMap<Integer, String>();
-	Collection<Integer> c1 = m1.keySet();
-	pm.processEvent(u.createColl.createEvent(m1, c1)); // we created collection c1 from m1
-	Iterator<Integer> i1 = c1.iterator();
-	pm.processEvent(u.createIter.createEvent(c1, i1)); // we created iterator i1 from c1
-	m1.put(1, "a");
-	pm.processEvent(u.updateMap.createEvent(m1));
-//	i1.next(); // triggers concurrent modification exception (which is desirable)
-	pm.processEvent(u.useIter.createEvent(i1));
+	String a = "a";
+	String b = "b";
+
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(b));
+
+	// verify
+	monitor = popNextUpdatedMonitor();
+	assertCreationTime(0L, monitor);
+	assertBoundObjects(monitor, a);
+	monitor = popNextUpdatedMonitor();
+	assertCreationTime(1L, monitor);
+	assertBoundObjects(monitor, b);
+	assertNoMoreUpdatedMonitors();
 
     }
 
+    private void assertCreationTime(long timeStamp, BaseMonitor monitor) {
+	assertEquals(timeStamp, monitor.getCreationTime());
+    }
+
+    public AwareBaseMonitor popNextUpdatedMonitor() {
+	return prototypeMonitor.getUpdatedMonitors().pop();
+    }
+
+    private void assertBoundObjects(AwareBaseMonitor monitor, Object... boundObjects) {
+	LowLevelBinding[] bindings = monitor.getLowLevelBindings();
+	Object[] monitorBoundObjects = new Object[bindings.length];
+	for (int i = 0; i < bindings.length; i++) {
+	    monitorBoundObjects[i] = bindings[i].get();
+	}
+	assertArrayEquals(boundObjects, monitorBoundObjects);
+    }
+
+    public void assertNoMoreUpdatedMonitors() {
+	assertTrue("There were more updated monitors: " + prototypeMonitor.getUpdatedMonitors(), prototypeMonitor
+		.getUpdatedMonitors().isEmpty());
+    }
 }
