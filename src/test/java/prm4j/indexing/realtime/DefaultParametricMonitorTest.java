@@ -141,6 +141,17 @@ public class DefaultParametricMonitorTest extends AbstractTest {
     }
 
     @Test
+    public void recurringEvent_createsCorrectTrace() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	monitor = popNextUpdatedMonitor();
+	assertTrace(monitor, fsm.createString, fsm.createString);
+    }
+
+    @Test
     public void recurringEvent_monitorHasSameTimestamp0() throws Exception {
 	// exercise
 	pm.processEvent(fsm.createString.createEvent(a));
