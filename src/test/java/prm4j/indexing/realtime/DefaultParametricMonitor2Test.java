@@ -219,4 +219,72 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 	assertBoundObjects(popNextCreatedMonitor(), b);
     }
 
+    // twoEvent_a_ab = a followed by ab ////////////////////////////////
+
+    @Test
+    public void twoEvents_a_ab_secondEventDoesCreateASingleNewMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	popNextCreatedMonitor();
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	popNextCreatedMonitor();
+	assertNoMoreCreatedMonitors();
+    }
+
+    @Test
+    public void twoEvents_a_ab_createdMonitorsAreDifferent() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertNotSame(popNextCreatedMonitor(), popNextCreatedMonitor());
+    }
+
+    @Test
+    public void twoEvents_a_ab_updatedMonitorsAreDifferent() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertNotSame(popNextUpdatedMonitor(), popNextUpdatedMonitor());
+	assertNoMoreUpdatedMonitors();
+    }
+
+    @Test
+    public void twoEvents_a_ab_bothTracesAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertTrace(popNextUpdatedMonitor(), fsm.e1);
+	assertTrace(popNextUpdatedMonitor(), fsm.e1);
+    }
+
+    @Test
+    public void twoEvents_a_ab_timestampsAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertEquals(0L, popNextCreatedMonitor().getCreationTime());
+	assertEquals(1L, popNextCreatedMonitor().getCreationTime());
+    }
+
+    @Test
+    public void twoEvents_a_ab_boundObjectsAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertBoundObjects(popNextCreatedMonitor(), a);
+	assertBoundObjects(popNextCreatedMonitor(), b);
+    }
+
 }
