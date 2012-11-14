@@ -29,6 +29,9 @@ public class StatefulMonitor extends BaseMonitor {
     @Override
     public boolean processEvent(Event event) {
 	state = state.getSuccessor(event.getBaseEvent());
+	if (state == null) {
+	    return false;
+	}
 	MatchHandler matchHandler = state.getMatchHandler();
 	if (matchHandler != null) {
 	    matchHandler.handleMatch(getBindings());
