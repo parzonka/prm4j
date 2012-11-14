@@ -22,8 +22,10 @@ public class DefaultNode extends AbstractNode {
 
     /**
      * @param metaNode
-     * @param key may be null, if node is root node
-     * @param hashCode hash code of the key
+     * @param key
+     *            may be null, if node is root node
+     * @param hashCode
+     *            hash code of the key
      */
     public DefaultNode(MetaNode metaNode, LowLevelBinding key, int hashCode) {
 	super(key, hashCode);
@@ -69,7 +71,7 @@ public class DefaultNode extends AbstractNode {
 
     @Override
     public String toString() {
-        return Util.bindingsToString(getMonitor().getLowLevelBindings());
+	return monitor == null ? "(?)" : Util.bindingsToString(monitor.getLowLevelBindings());
     }
 
 }
