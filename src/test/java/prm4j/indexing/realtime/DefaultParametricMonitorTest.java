@@ -22,14 +22,14 @@ import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonitorTest {
 
-    FSM_threeSameStrings fsm;
+    FSM_a_a_a fsm;
     final String a = "a";
     final String b = "b";
     final String c = "c";
 
     @Before
     public void init() {
-	fsm = new FSM_threeSameStrings();
+	fsm = new FSM_a_a_a();
 	FiniteSpec finiteSpec = new FSMSpec(fsm.fsm);
 	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
     }
@@ -46,7 +46,7 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void firstEvent_createsOnlyOneMonitor() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	popNextCreatedMonitor();
@@ -56,7 +56,7 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void firstEvent_updatesOnlyOneMonitor() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	popNextUpdatedMonitor();
@@ -66,7 +66,7 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void firstEvent_createsMonitorWithCreationTime0() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	assertEquals(0L, popNextUpdatedMonitor().getCreationTime());
@@ -75,16 +75,16 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void firstEvent_createsCorrectTrace() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertTrace(popNextUpdatedMonitor(), fsm.createString);
+	assertTrace(popNextUpdatedMonitor(), fsm.e1);
     }
 
     @Test
     public void firstEvent_monitorBindsAllItsParameters() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	assertBoundObjects(popNextUpdatedMonitor(), a);
@@ -93,7 +93,7 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void firstEvent_noMatchDetected() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
@@ -102,7 +102,7 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void firstEvent_onlyOneNodeIsRetrieved() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	assertNotNull(popNextRetrievedNode());
@@ -112,7 +112,7 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void firstEvent_nodeHasNoMonitorSets() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	assertArrayEquals(new MonitorSet[0], popNextRetrievedNode().getMonitorSets());
@@ -121,10 +121,10 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void firstEvent_metaNodeHasCorrectParameterSet() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertEquals(asSet(fsm.str), popNextRetrievedNode().getMetaNode().getNodeParameterSet());
+	assertEquals(asSet(fsm.p1), popNextRetrievedNode().getMetaNode().getNodeParameterSet());
     }
 
     // recurringEvent = same event as first event again ////////////////////////////////
@@ -132,9 +132,9 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void recurringEvent_doesNotCreateNewMonitor() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 	popNextCreatedMonitor();
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	assertNoMoreCreatedMonitors();
@@ -143,8 +143,8 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void recurringEvent_updatesSameMonitor() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	assertEquals(popNextUpdatedMonitor(), popNextUpdatedMonitor());
@@ -154,18 +154,18 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void recurringEvent_createsCorrectTrace() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertTrace(popNextUpdatedMonitor(), fsm.createString, fsm.createString);
+	assertTrace(popNextUpdatedMonitor(), fsm.e1, fsm.e1);
     }
 
     @Test
     public void recurringEvent_monitorHasSameTimestamp0() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	assertEquals(0L, popNextUpdatedMonitor().getCreationTime());
@@ -175,8 +175,8 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void recurringEvent_monitorStillBindsSameObjects() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	assertBoundObjects(popNextUpdatedMonitor(), a);
@@ -187,9 +187,9 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void twoEvents_secondEventDoesCreateASingleNewMonitor() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 	popNextCreatedMonitor();
-	pm.processEvent(fsm.createString.createEvent(b));
+	pm.processEvent(fsm.e1.createEvent(b));
 
 	// verify
 	popNextCreatedMonitor();
@@ -199,8 +199,8 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void twoEvents_createdMonitorsAreDifferent() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(b));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(b));
 
 	// verify
 	assertNotSame(popNextCreatedMonitor(), popNextCreatedMonitor());
@@ -209,8 +209,8 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void twoEvents_updatedMonitorsAreDifferent() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(b));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(b));
 
 	// verify
 	assertNotSame(popNextUpdatedMonitor(), popNextUpdatedMonitor());
@@ -220,19 +220,19 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void twoEvents_bothTracesAreCorrect() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(b));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(b));
 
 	// verify
-	assertTrace(popNextUpdatedMonitor(), fsm.createString);
-	assertTrace(popNextUpdatedMonitor(), fsm.createString);
+	assertTrace(popNextUpdatedMonitor(), fsm.e1);
+	assertTrace(popNextUpdatedMonitor(), fsm.e1);
     }
 
     @Test
     public void twoEvents_timestampsAreCorrect() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(b));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(b));
 
 	// verify
 	assertEquals(0L, popNextCreatedMonitor().getCreationTime());
@@ -242,8 +242,8 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void twoEvents_boundObjectsAreCorrect() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(b));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(b));
 
 	// verify
 	assertBoundObjects(popNextCreatedMonitor(), a);
@@ -255,9 +255,9 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void matchingTrace() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	assertEquals(list(a), fsm.matchHandler.getHandledMatches());
@@ -266,10 +266,10 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
     @Test
     public void matchingTracePlusOneDoesNotAddAnotherMatch() throws Exception {
 	// exercise
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(a));
-	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
 	assertEquals(list(a), fsm.matchHandler.getHandledMatches());

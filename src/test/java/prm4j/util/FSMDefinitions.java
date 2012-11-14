@@ -114,15 +114,15 @@ public abstract class FSMDefinitions {
 
     }
 
-    public static class FSM_threeSameStrings {
+    public static class FSM_a_a_a {
 
 	public final Alphabet alphabet = new Alphabet();
 
-	public final Parameter<String> str = alphabet.createParameter("str", String.class);
+	public final Parameter<String> p1 = alphabet.createParameter("p1", String.class);
 
-	public final Symbol1<String> createString = alphabet.createSymbol1("createString", str);
+	public final Symbol1<String> e1 = alphabet.createSymbol1("e1", p1);
 
-	public final AwareMatchHandler1<String> matchHandler = AwareMatchHandler.create(str);
+	public final AwareMatchHandler1<String> matchHandler = AwareMatchHandler.create(p1);
 
 	public final FSM fsm = new FSM(alphabet);
 
@@ -131,10 +131,10 @@ public abstract class FSMDefinitions {
 	public final FSMState s2 = fsm.createState();
 	public final FSMState error = fsm.createAcceptingState(matchHandler);
 
-	public FSM_threeSameStrings() {
-	    initial.addTransition(createString, s1);
-	    s1.addTransition(createString, s2);
-	    s2.addTransition(createString, error);
+	public FSM_a_a_a() {
+	    initial.addTransition(e1, s1);
+	    s1.addTransition(e1, s2);
+	    s2.addTransition(e1, error);
 	}
 
     }
