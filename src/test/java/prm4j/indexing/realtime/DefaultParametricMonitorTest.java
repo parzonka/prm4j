@@ -67,53 +67,50 @@ public class DefaultParametricMonitorTest extends AbstractTest {
     // firstEvent //////////////////////////////////////////////////////////////////
 
     @Test
-    public void firstEventCreatesOnlyOneMonitor() throws Exception {
+    public void firstEvent_createsOnlyOneMonitor() throws Exception {
 	// exercise
 	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
-	monitor = popNextCreatedMonitor();
+	popNextCreatedMonitor();
 	assertNoMoreCreatedMonitors();
     }
 
     @Test
-    public void firstEventUpdatesOnlyOneMonitor() throws Exception {
+    public void firstEvent_updatesOnlyOneMonitor() throws Exception {
 	// exercise
 	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
-	monitor = popNextUpdatedMonitor();
+	popNextUpdatedMonitor();
 	assertNoMoreUpdatedMonitors();
     }
 
     @Test
-    public void firstEventCreatesMonitorWithCreationTime0() throws Exception {
+    public void firstEvent_createsMonitorWithCreationTime0() throws Exception {
 	// exercise
 	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
-	monitor = popNextUpdatedMonitor();
-	assertEquals(0L, monitor.getCreationTime());
+	assertEquals(0L, popNextUpdatedMonitor().getCreationTime());
     }
 
     @Test
-    public void firstEventCreatesCorrectTrace() throws Exception {
+    public void firstEvent_createsCorrectTrace() throws Exception {
 	// exercise
 	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
-	monitor = popNextUpdatedMonitor();
-	assertTrace(monitor, fsm.createString);
+	assertTrace(popNextUpdatedMonitor(), fsm.createString);
     }
 
     @Test
-    public void firstEventsMonitorBindsAllItsParameters() throws Exception {
+    public void firstEvent_monitorBindsAllItsParameters() throws Exception {
 	// exercise
 	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
-	monitor = popNextUpdatedMonitor();
-	assertBoundObjects(monitor, a);
+	assertBoundObjects(popNextUpdatedMonitor(), a);
     }
 
     // recurringEvent = same event as first event again ////////////////////////////////
@@ -136,8 +133,7 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
-	monitor = popNextUpdatedMonitor();
-	assertEquals(monitor, popNextUpdatedMonitor());
+	assertEquals(popNextUpdatedMonitor(), popNextUpdatedMonitor());
 	assertNoMoreUpdatedMonitors();
     }
 
@@ -148,8 +144,7 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
-	monitor = popNextUpdatedMonitor();
-	assertTrace(monitor, fsm.createString, fsm.createString);
+	assertTrace(popNextUpdatedMonitor(), fsm.createString, fsm.createString);
     }
 
     @Test
@@ -159,10 +154,8 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
-	monitor = popNextUpdatedMonitor();
-	assertEquals(0L, monitor.getCreationTime());
-	monitor = popNextUpdatedMonitor();
-	assertEquals(0L, monitor.getCreationTime());
+	assertEquals(0L, popNextUpdatedMonitor().getCreationTime());
+	assertEquals(0L, popNextUpdatedMonitor().getCreationTime());
     }
 
     @Test
@@ -172,8 +165,7 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	pm.processEvent(fsm.createString.createEvent(a));
 
 	// verify
-	monitor = popNextUpdatedMonitor();
-	assertBoundObjects(monitor, a);
+	assertBoundObjects(popNextUpdatedMonitor(), a);
     }
 
  // twoEvents = two different events ////////////////////////////////
