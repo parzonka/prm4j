@@ -57,6 +57,9 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 
     @Test
     public void verifyPostConditions() throws Exception {
+	assertNoMoreCreatedMonitors();
+	assertNoMoreUpdatedMonitors();
+    }
 	assertNoMoreUpdatedMonitors();
     }
 
@@ -90,6 +93,12 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	return prototypeMonitor.getUpdatedMonitors().pop();
     }
 
+    public AwareBaseMonitor popNextCreatedMonitor() {
+   	if (prototypeMonitor.getUpdatedMonitors().isEmpty())
+   	    fail("There were no more updated monitors!");
+   	return prototypeMonitor.getUpdatedMonitors().pop();
+       }
+
     private void assertBoundObjects(AwareBaseMonitor monitor, Object... boundObjects) {
 	LowLevelBinding[] bindings = monitor.getLowLevelBindings();
 	Object[] monitorBoundObjects = new Object[bindings.length];
@@ -103,4 +112,9 @@ public class DefaultParametricMonitorTest extends AbstractTest {
 	assertTrue("There were more updated monitors: " + prototypeMonitor.getUpdatedMonitors(), prototypeMonitor
 		.getUpdatedMonitors().isEmpty());
     }
+
+    public void assertNoMoreCreatedMonitors() {
+   	assertTrue("There were more created monitors: " + prototypeMonitor.getCreatedMonitors(), prototypeMonitor
+   		.getCreatedMonitors().isEmpty());
+       }
 }
