@@ -12,6 +12,7 @@ package prm4j.indexing.realtime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -88,6 +89,15 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
 	assertBoundObjects(popNextUpdatedMonitor(), a);
     }
 
+    @Test
+    public void firstEvent_noMatchDetected() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+    }
+
     // recurringEvent = same event as first event again ////////////////////////////////
 
     @Test
@@ -143,7 +153,7 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
 	assertBoundObjects(popNextUpdatedMonitor(), a);
     }
 
- // twoEvents = two different events ////////////////////////////////
+    // twoEvents = two different events ////////////////////////////////
 
     @Test
     public void twoEvents_secondEventDoesCreateASingleNewMonitor() throws Exception {
@@ -209,6 +219,33 @@ public class DefaultParametricMonitorTest extends AbstractDefaultParametricMonit
 	// verify
 	assertBoundObjects(popNextCreatedMonitor(), a);
 	assertBoundObjects(popNextCreatedMonitor(), b);
+    }
+
+    // matchingTrace ////////////////////////////////////////////////
+
+    @Test
+    public void matchingTrace() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	popNextCreatedMonitor();
+	assertEquals(list(a), fsm.matchHandler.getHandledMatches());
+    }
+
+    @Test
+    public void matchingTraceAndOnce() throws Exception {
+	// exercise
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(a));
+	pm.processEvent(fsm.createString.createEvent(a));
+
+	// verify
+	popNextCreatedMonitor();
+	assertEquals(list(a), fsm.matchHandler.getHandledMatches());
     }
 
 }
