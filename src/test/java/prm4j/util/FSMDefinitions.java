@@ -148,6 +148,7 @@ public abstract class FSMDefinitions {
 
 	public final Symbol1<String> e1 = alphabet.createSymbol1("e1", p1);
 	public final Symbol2<String, String> e2 = alphabet.createSymbol2("e2", p1, p2);
+	public final Symbol1<String> e3 = alphabet.createSymbol1("e3", p2);
 
 	public final AwareMatchHandler2<String, String> matchHandler = AwareMatchHandler.create(p1, p2);
 
@@ -162,8 +163,8 @@ public abstract class FSMDefinitions {
 	public FSM_a_ab_a_b() {
 	    initial.addTransition(e1, s1);
 	    s1.addTransition(e2, s2);
-	    s2.addTransition(e2, s3);
-	    s3.addTransition(e1, error);
+	    s2.addTransition(e1, s3);
+	    s3.addTransition(e3, error);
 	}
 
     }

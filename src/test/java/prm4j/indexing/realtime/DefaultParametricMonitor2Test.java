@@ -341,7 +341,7 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
     public void firstEvent_ab_b_bothBindingsAreDisabled() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(a, b));
-	pm.processEvent(fsm.e1.createEvent(b));
+	pm.processEvent(fsm.e3.createEvent(b));
 
 	// verify
 	LowLevelBinding[] binding = popNextRetrievedBinding();
@@ -353,7 +353,7 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
     public void twoEvents_ab_b_disableSetPreventsCreationOfBothMonitors() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(a, b));
-	pm.processEvent(fsm.e1.createEvent(b));
+	pm.processEvent(fsm.e3.createEvent(b));
 
 	// verify
 	assertNoMoreCreatedMonitors();
