@@ -84,4 +84,21 @@ public class MonitorSet {
 	    joinableBindings[copyPattern[j + 1]] = joiningBindings[copyPattern[j]];
 	}
     }
+
+    /**
+     * Searches the set linearly if monitor is contained, testing for object identity. Should be used only for
+     * diagnostic purposes.
+     *
+     * @param monitor
+     * @return true if monitor is contained
+     */
+    public boolean contains(BaseMonitor monitor) {
+	for (int i = 0; i < size; i++) {
+	    if (monitorSet[i] == monitor) {
+		return true;
+	    }
+	}
+	return false;
+    }
+
 }
