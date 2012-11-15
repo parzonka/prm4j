@@ -39,6 +39,23 @@ public class StaticDataConverter2Test extends AbstractTest {
 	assertChainData(mt, asSet(fsm.p1, fsm.p2), chainData(array(0), 0), chainData(array(1), 0));
     }
 
+    @Test
+    public void getChainData_FSM_ab_bc_c() {
+
+	FSM_ab_bc_c fsm = new FSM_ab_bc_c();
+	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	StaticDataConverter sdc = new StaticDataConverter(fpp);
+	MetaNode mt = sdc.getMetaTree();
+
+	assertChainData(mt, asSet(fsm.p1));
+	assertChainData(mt, asSet(fsm.p2));
+	assertChainData(mt, asSet(fsm.p3));
+	assertChainData(mt, asSet(fsm.p1, fsm.p2), chainData(array(1), 0));
+	assertChainData(mt, asSet(fsm.p2, fsm.p3));
+	assertChainData(mt, asSet(fsm.p1, fsm.p2, fsm.p3), chainData(array(0, 1), 0), chainData(array(1, 2), 0),
+		chainData(array(2), 0));
+    }
+
     protected static void assertChainData(MetaNode metaTree, Set<Parameter<?>> parameterSet, ChainData... chainDatas) {
 	Set<ChainData> chainDataSet = new HashSet<ChainData>(Arrays.asList(chainDatas));
 	assertEquals(chainDataSet, metaTree.getMetaNode(Util.asSortedList(parameterSet)).getChainDataSet());
