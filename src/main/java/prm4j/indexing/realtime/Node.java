@@ -35,8 +35,8 @@ public interface Node extends MinimalMapEntry<LowLevelBinding, Node> {
      * Returns a monitor set which represents a (sometimes not real) subset of instances which are more informative than
      * the instance represented by this node.
      *
-     * @param setId
-     *            the id of the parameter set. <br>
+     * @param monitorSetId
+     *            the id of the monitor set <br>
      *            Ids <i>should</i> be in the range [0, n].<br>
      *            Id 0 <b>must</b> select the set of all instances which are strictly more informative than this node.
      *            <p>
@@ -44,7 +44,7 @@ public interface Node extends MinimalMapEntry<LowLevelBinding, Node> {
      *            all a1b1d
      * @return
      */
-    public MonitorSet getMonitorSet(int parameterSetId);
+    public MonitorSet getMonitorSet(int monitorSetId);
 
     public MonitorSet[] getMonitorSets();
 
