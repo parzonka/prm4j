@@ -110,7 +110,12 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 
     @Override
     public String toString() {
-        return parameter + "=" + get();
+	return parameter + "=" + get();
+    }
+
+    @Override
+    public int compareTo(LowLevelBinding o) {
+	return this.getParameterIndex() - o.getParameterIndex();
     }
 
 }

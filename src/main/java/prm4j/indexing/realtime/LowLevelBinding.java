@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference;
 /**
  * A binding used by optimized indexing strategies.
  */
-public interface LowLevelBinding extends prm4j.api.Binding {
+public interface LowLevelBinding extends prm4j.api.Binding, Comparable<LowLevelBinding> {
 
     /**
      * Releases all resources used in the indexing data structure and/or notifies monitors about unreachability of the
