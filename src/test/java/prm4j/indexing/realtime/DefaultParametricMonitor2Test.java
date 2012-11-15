@@ -15,10 +15,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static prm4j.Util.tuple;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import prm4j.Util.Tuple;
+import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.spec.FiniteSpec;
 
@@ -272,7 +275,6 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a));
 	pm.processEvent(fsm.e2.createEvent(a, b));
-
 	// verify
 	assertTrace(popNextCreatedMonitor(), fsm.e1);
 	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2);
@@ -425,6 +427,19 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 	// verify
 	assertTrace(popNextCreatedMonitor(), fsm.e1);
 	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2, fsm.e3);
+    }
+
+    @Test
+    public void moreEvents_e1a_e2ab_e3b_numberOfMonitorSetsIsCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+	pm.processEvent(fsm.e3.createEvent(b));
+
+	// verify
+	assertEquals(1, getNode(tuple(fsm.p1, a)).getMonitorSets().length);
+	assertEquals(1, getNode(tuple(fsm.p2, b)).getMonitorSets().length);
+	assertEquals(0, getNode(tuple(fsm.p1, a), tuple(fsm.p2, b)).getMonitorSets().length);
     }
 
 }
