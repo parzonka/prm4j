@@ -96,4 +96,16 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
     }
 
+    @Test
+    public void firstEvent_ab_chainingIsPerformedCorrectly() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	assertEquals(0, getNode(a, null, null).getMonitorSets().length);
+	assertEquals(1, getNode(null, b, null).getMonitorSets().length);
+	assertEquals(1, getNode(null, b, null).getMonitorSet(0).getSize());
+	getNode(null, b, null).getMonitorSet(0).contains(getNode(a, b, null).getMonitor());
+    }
+
 }
