@@ -83,7 +83,8 @@ public class StaticDataConverter {
 		maxData.put(baseEvent, new MaxData(nodeMask, diffMask));
 	    }
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) {
-		final int[] nodeMask = toParameterMask(tuple.getLeft());
+		// we have to select the compatible parameters from the parameters in the base event
+		final int[] nodeMask = toParameterSubsetMask(tuple.getLeft(), baseEvent.getParameters());
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
 		final boolean[] extensionPattern = getExtensionPattern(tuple.getRight(), baseEvent.getParameters());
 		final int[] copyPattern = getCopyPattern(tuple.getRight(), baseEvent.getParameters());
@@ -184,8 +185,10 @@ public class StaticDataConverter {
     }
 
     /**
+     * Returns a parameter mask which selects all parameters in the given set from a full parameter set
+     *
      * @param parameterSet
-     * @return an array representation of the parameter ids of the given parameter set (sorted)
+     * @return
      */
     protected static int[] toParameterMask(Set<Parameter<?>> parameterSet) {
 	int[] result = new int[parameterSet.size()];
@@ -194,6 +197,26 @@ public class StaticDataConverter {
 	    result[i++] = parameter.getIndex();
 	}
 	Arrays.sort(result);
+	return result;
+    }
+
+    /**
+     * Returns a parameterMask which selects all parameters in the subset from the parameter set.
+     *
+     * @param subset
+     * @param parameterSet
+     * @return
+     */
+    protected static int[] toParameterSubsetMask(Set<Parameter<?>> subset, Set<Parameter<?>> parameterSet) {
+	int[] result = new int[subset.size()];
+	int i = 0;
+	int j = 0;
+	for (Parameter<?> parameter : Util.asSortedList(parameterSet)) {
+	    if (subset.contains(parameter)) {
+		result[i++] = j;
+	    }
+	    j++;
+	}
 	return result;
     }
 
