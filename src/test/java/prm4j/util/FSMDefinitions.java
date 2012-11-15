@@ -176,7 +176,7 @@ public abstract class FSMDefinitions {
 	public final Parameter<String> p2 = alphabet.createParameter("p2", String.class);
 	public final Parameter<String> p3 = alphabet.createParameter("p3", String.class);
 
-	public final Symbol2<String, String> e1 = alphabet.createSymbol2("e2", p1, p2);
+	public final Symbol2<String, String> e1 = alphabet.createSymbol2("e1", p1, p2);
 	public final Symbol2<String, String> e2 = alphabet.createSymbol2("e2", p2, p3);
 	public final Symbol1<String> e3 = alphabet.createSymbol1("e3", p3);
 
