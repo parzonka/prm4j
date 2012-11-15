@@ -298,6 +298,18 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 	assertBoundObjects(popNextCreatedMonitor(), a, b);
     }
 
+    // twoEvents_a_a associated to different base events  ////////////////////////////////
+
+    @Test
+    public void twoEvents_e1a_e3a_differentParamsBoundToTheSameObjectAreNotEqual() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e3.createEvent(a));
+
+	// verify
+	assertNotSame(popNextRetrievedBinding()[0], popNextRetrievedBinding()[0]);
+    }
+
     // twoEvent_ab_a = ab followed by a (and some with b) ////////////////////////////////
 
     /*
