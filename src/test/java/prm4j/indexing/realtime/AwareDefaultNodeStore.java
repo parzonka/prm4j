@@ -13,6 +13,7 @@ package prm4j.indexing.realtime;
 import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Set;
 
 import prm4j.indexing.staticdata.MetaNode;
 
@@ -54,6 +55,10 @@ public class AwareDefaultNodeStore extends DefaultNodeStore {
 		return node == null ? "[collected reference]" : node.toString();
 	    }
 	});
+    }
+
+    public Node getNode(Set<LowLevelBinding> setOfBindings) {
+	return super.getNode(prm4j.Util.asSortedList(setOfBindings).toArray(new LowLevelBinding[0]));
     }
 
 }
