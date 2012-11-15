@@ -67,6 +67,14 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	return result;
     }
 
+    public static <T> int[] array(int... objects) {
+	return objects;
+    }
+
+    public static <T> T[] array(T... objects) {
+	return objects;
+    }
+
     /**
      * assertArrayEquals(boolean[] a1, boolean[] a2) not implemented in jUnit for some reason, see
      * https://github.com/KentBeck/junit/issues/86

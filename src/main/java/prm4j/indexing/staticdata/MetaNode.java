@@ -106,6 +106,14 @@ public class MetaNode {
 	return node;
     }
 
+    public MetaNode getMetaNode(List<Parameter<?>> parameterList) {
+	MetaNode node = this;
+	for (Parameter<?> parameter : parameterList) {
+	    node = node.getMetaNode(parameter);
+	}
+	return node;
+    }
+
     /**
      * Returns the parameter set which uniquely identifies this meta node.
      *
