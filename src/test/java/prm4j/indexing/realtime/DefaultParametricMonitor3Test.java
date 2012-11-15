@@ -114,11 +114,13 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
      * We test if joining works
      */
 
+
+
     @Test
     public void joining_ab_bc_createsCorrectNodes() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e1.createEvent(b, c));
+	pm.processEvent(fsm.e2.createEvent(b, c));
 
 	// verify
 	assertBoundObjects(popNextCreatedMonitor(), a, b);
