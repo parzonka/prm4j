@@ -97,9 +97,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	map = null;
 	coll = null;
 
-	// gc references
-	System.gc();
-	System.gc();
+	runGarbageCollectorAFewTimes();
 
 	// exercise
 	bs.removeExpiredBindingsNow();

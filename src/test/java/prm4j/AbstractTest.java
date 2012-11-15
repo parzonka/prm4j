@@ -107,4 +107,15 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	}
     }
 
+    protected static void runGarbageCollectorAFewTimes() {
+   	System.gc();
+   	System.gc();
+   	System.gc();
+   	System.gc();
+   	System.gc();
+   	System.gc();
+   	System.gc();
+   	System.gc();
+       }
+
 }
