@@ -61,6 +61,12 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	return nodeStore.getRetrievedNodes().pop().get();
     }
 
+    protected LowLevelBinding[] popNextRetrievedBinding() {
+	if (bindingStore.getListOfBindings().isEmpty())
+	    fail("There were no more retrieved bindings!");
+	return bindingStore.getListOfBindings().pop().get();
+    }
+
     protected void assertBoundObjects(AwareBaseMonitor monitor, Object... boundObjects) {
 	LowLevelBinding[] bindings = monitor.getLowLevelBindings();
 	Object[] monitorBoundObjects = new Object[bindings.length];

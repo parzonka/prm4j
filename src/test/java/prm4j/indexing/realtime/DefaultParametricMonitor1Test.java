@@ -182,6 +182,18 @@ public class DefaultParametricMonitor1Test extends AbstractDefaultParametricMoni
 	assertBoundObjects(popNextUpdatedMonitor(), a);
     }
 
+    @Test
+    public void recurringEvent_bindingsAreReused() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
+
+	// verify
+	LowLevelBinding[] bindings1 = popNextRetrievedBinding();
+	LowLevelBinding[] bindings2 = popNextRetrievedBinding();
+	assertTrue(bindings1[0] == bindings2[0]);
+    }
+
     // twoEvents = two different events ////////////////////////////////
 
     @Test
