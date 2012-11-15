@@ -143,6 +143,17 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
     }
 
     @Test
+    public void firstEvent_ab_bothBindingsAreDisabled() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	LowLevelBinding[] binding = popNextRetrievedBinding();
+	assertTrue(binding[0].isDisabled());
+	assertTrue(binding[1].isDisabled());
+    }
+
+    @Test
     public void firstEvent_ab_noMatchDetected() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(a, b));
@@ -312,6 +323,30 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 
 	// verify
 	assertNoMoreUpdatedMonitors();
+    }
+
+    @Test
+    public void firstEvent_ab_a_bothBindingsAreDisabled() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a));
+
+	// verify
+	LowLevelBinding[] binding = popNextRetrievedBinding();
+	assertTrue(binding[0].isDisabled());
+	assertTrue(binding[1].isDisabled());
+    }
+
+    @Test
+    public void firstEvent_ab_b_bothBindingsAreDisabled() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(b));
+
+	// verify
+	LowLevelBinding[] binding = popNextRetrievedBinding();
+	assertTrue(binding[0].isDisabled());
+	assertTrue(binding[1].isDisabled());
     }
 
     @Test
