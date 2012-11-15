@@ -10,9 +10,11 @@
  */
 package prm4j.indexing.realtime;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -266,6 +268,18 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
     }
 
     @Test
+    public void twoEvents_a_ab_3nodesAreCreated() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertTrace(popNextCreatedMonitor(), fsm.e1);
+	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2);
+
+    }
+
+    @Test
     public void twoEvents_a_ab_bothTracesAreCorrect() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a));
@@ -298,7 +312,18 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 	assertBoundObjects(popNextCreatedMonitor(), a, b);
     }
 
-    // twoEvents_a_a associated to different base events  ////////////////////////////////
+    @Test
+    public void twoEvents_a_ab_tracesAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertTrace(popNextCreatedMonitor(), fsm.e1);
+	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2);
+    }
+
+    // twoEvents_a_a associated to different base events ////////////////////////////////
 
     @Test
     public void twoEvents_e1a_e3a_differentParamsBoundToTheSameObjectAreNotEqual() throws Exception {
@@ -369,6 +394,37 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 
 	// verify
 	assertNoMoreCreatedMonitors();
+    }
+
+    // twoEvent_ab_a = ab followed by a (and some with b) ////////////////////////////////
+
+    /*
+     * ab is in the disabling set and disables any traces with a, so we will not see any monitors created associated to
+     * the instance a
+     */
+
+    @Test
+    public void moreEvents_e1a_e2ab_e1a_tracesAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a));
+
+	// verify
+	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e1);
+	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2, fsm.e1);
+    }
+
+    @Test
+    public void moreEvents_e1a_e2ab_e3b_tracesAreCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+	pm.processEvent(fsm.e3.createEvent(b));
+
+	// verify
+	assertTrace(popNextCreatedMonitor(), fsm.e1);
+	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2, fsm.e3);
     }
 
 }
