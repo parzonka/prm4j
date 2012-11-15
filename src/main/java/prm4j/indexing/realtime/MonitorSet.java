@@ -101,4 +101,8 @@ public class MonitorSet {
 	return false;
     }
 
+    public int getSize() {
+	return size;
+    }
+
 }
