@@ -1,0 +1,99 @@
+/*
+ * Copyright (c) 2012 Mateusz Parzonka, Eric Bodden
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Mateusz Parzonka - initial API and implementation
+ */
+package prm4j.indexing.realtime;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static prm4j.Util.tuple;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.BaseMonitor;
+import prm4j.spec.FiniteSpec;
+
+public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMonitorTest {
+
+    FSM_ab_bc_c fsm;
+    final String a = "a";
+    final String b = "b";
+    final String c = "c";
+
+    @Before
+    public void init() {
+	fsm = new FSM_ab_bc_c();
+	FiniteSpec finiteSpec = new FSMSpec(fsm.fsm);
+	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
+    }
+
+    // firstEvent_ab //////////////////////////////////////////////////////////////////
+
+    @Test
+    public void firstEvent_ab_createsOnlyOneMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	popNextCreatedMonitor();
+	assertNoMoreCreatedMonitors();
+    }
+
+    @Test
+    public void firstEvent_ab_updatesOnlyOneMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	popNextUpdatedMonitor();
+	assertNoMoreUpdatedMonitors();
+    }
+
+    @Test
+    public void firstEvent_ab_createsMonitorWithCreationTime0() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	assertEquals(0L, popNextUpdatedMonitor().getCreationTime());
+    }
+
+    @Test
+    public void firstEvent_ab_createsCorrectTrace() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	assertTrace(popNextUpdatedMonitor(), fsm.e1);
+    }
+
+    @Test
+    public void firstEvent_ab_monitorBindsAllItsParameters() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	assertBoundObjects(popNextUpdatedMonitor(), a, b);
+    }
+
+    @Test
+    public void firstEvent_ab_noMatchDetected() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+    }
+
+}
