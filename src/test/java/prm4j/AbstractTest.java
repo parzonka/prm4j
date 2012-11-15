@@ -71,6 +71,10 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	return objects;
     }
 
+    public static <T> boolean[] array(boolean... objects) {
+   	return objects;
+       }
+
     public static <T> T[] array(T... objects) {
 	return objects;
     }

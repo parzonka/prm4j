@@ -10,7 +10,7 @@
  */
 package prm4j.indexing.staticdata;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import prm4j.AbstractTest;
 import prm4j.Util;
+import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.spec.FiniteParametricProperty;
@@ -56,13 +57,32 @@ public class StaticDataConverter2Test extends AbstractTest {
 		chainData(array(2), 0));
     }
 
+    @Test
+    public void getJoinData_FSM_ab_bc_c() {
+
+	FSM_ab_bc_c fsm = new FSM_ab_bc_c();
+	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	StaticDataConverter sdc = new StaticDataConverter(fpp);
+	EventContext ec = sdc.getEventContext();
+
+	assertJoinData(ec, fsm.e2, joinData(array(0), 0, array(true, true, false), array(1, 2)));
+    }
+
     protected static void assertChainData(MetaNode metaTree, Set<Parameter<?>> parameterSet, ChainData... chainDatas) {
 	Set<ChainData> chainDataSet = new HashSet<ChainData>(Arrays.asList(chainDatas));
 	assertEquals(chainDataSet, metaTree.getMetaNode(Util.asSortedList(parameterSet)).getChainDataSet());
     }
 
+    protected static void assertJoinData(EventContext eventContext, BaseEvent baseEvent, JoinData... joinDatas) {
+	assertArrayEquals(joinDatas, eventContext.getJoinData(baseEvent));
+    }
+
     protected static ChainData chainData(int[] nodeMask, int monitorSetId) {
 	return new ChainData(nodeMask, monitorSetId);
+    }
+
+    protected static JoinData joinData(int[] nodeMask, int monitorSetId, boolean[] extensionPattern, int[] copyPattern) {
+	return new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern);
     }
 
 }
