@@ -10,6 +10,8 @@
  */
 package prm4j.indexing.realtime;
 
+import prm4j.api.Parameter;
+
 public interface BindingStore {
 
     /**
@@ -19,5 +21,7 @@ public interface BindingStore {
      * @return the instance
      */
     public LowLevelBinding[] getBindings(Object[] boundObjects);
+
+    public LowLevelBinding getBinding(Parameter<?> parameter, Object boundObject);
 
 }
