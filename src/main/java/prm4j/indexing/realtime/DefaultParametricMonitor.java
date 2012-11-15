@@ -59,6 +59,12 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	} // 6
 
 	if (instanceMonitor == null) { // 7
+	    // direct update phase
+	    for (MonitorSet monitorSet : instanceNode.getMonitorSets()) { // (30 - 32) new
+		if (monitorSet != null) {
+		    monitorSet.processEvent(event);
+		}
+	    }
 	    findMaxPhase: for (MaxData maxData : eventContext.getMaxData(baseEvent)) { // 8
 		BaseMonitor m = nodeStore.getNode(bindings, maxData.getNodeMask()).getMonitor(); // 9
 		if (m != null) { // 10
@@ -72,6 +78,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    BaseMonitor monitor = m.copy(bindings); // 102-105
 		    monitor.processEvent(event); // 103
 		    instanceNode.setMonitor(monitor); // 106
+
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
 			nodeStore.getNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
@@ -127,7 +134,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    // update phase
 	    instanceMonitor.processEvent(event); // 30
 	    for (MonitorSet monitorSet : instanceNode.getMonitorSets()) { // 30 - 32
-		monitorSet.processEvent(event);
+		if (monitorSet != null) {
+		    monitorSet.processEvent(event);
+		}
 	    }
 	}
 	for (LowLevelBinding b : bindings) { // 37
