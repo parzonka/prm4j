@@ -166,7 +166,34 @@ public abstract class FSMDefinitions {
 	    s2.addTransition(e1, s3);
 	    s3.addTransition(e3, error);
 	}
+    }
 
+    public static class FSM_ab_bc_c {
+
+	public final Alphabet alphabet = new Alphabet();
+
+	public final Parameter<String> p1 = alphabet.createParameter("p1", String.class);
+	public final Parameter<String> p2 = alphabet.createParameter("p2", String.class);
+	public final Parameter<String> p3 = alphabet.createParameter("p3", String.class);
+
+	public final Symbol2<String, String> e1 = alphabet.createSymbol2("e2", p1, p2);
+	public final Symbol2<String, String> e2 = alphabet.createSymbol2("e2", p2, p3);
+	public final Symbol1<String> e3 = alphabet.createSymbol1("e3", p3);
+
+	public final AwareMatchHandler2<String, String> matchHandler = AwareMatchHandler.create(p1, p3);
+
+	public final FSM fsm = new FSM(alphabet);
+
+	public final FSMState initial = fsm.createInitialState();
+	public final FSMState s1 = fsm.createState();
+	public final FSMState s2 = fsm.createState();
+	public final FSMState error = fsm.createAcceptingState(matchHandler);
+
+	public FSM_ab_bc_c() {
+	    initial.addTransition(e1, s1);
+	    s1.addTransition(e2, s2);
+	    s2.addTransition(e3, error);
+	}
     }
 
 }
