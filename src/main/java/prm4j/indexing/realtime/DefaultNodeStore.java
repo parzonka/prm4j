@@ -22,7 +22,7 @@ public class DefaultNodeStore implements NodeStore {
 
     @Override
     public Node getNode(LowLevelBinding[] bindings) {
-	Node node = rootNode;
+	Node node = getRootNode();
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 0; i < bindings.length; i++) {
 	    // traverse the node tree until the parameter instance is fully realized
@@ -33,13 +33,17 @@ public class DefaultNodeStore implements NodeStore {
 
     @Override
     public Node getNode(LowLevelBinding[] bindings, int[] parameterMask) {
-	Node node = rootNode;
+	Node node = getRootNode();
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 0; i < parameterMask.length; i++) {
 	    // traverse the node tree until the parameter instance is fully realized
 	    node = node.getNode(bindings[parameterMask[i]]);
 	}
 	return node;
+    }
+
+    public Node getRootNode() {
+	return rootNode;
     }
 
 }

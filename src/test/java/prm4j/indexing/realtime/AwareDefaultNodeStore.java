@@ -12,8 +12,10 @@ package prm4j.indexing.realtime;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import prm4j.indexing.staticdata.MetaNode;
 
@@ -23,22 +25,32 @@ import prm4j.indexing.staticdata.MetaNode;
 public class AwareDefaultNodeStore extends DefaultNodeStore {
 
     private final Deque<WeakReference<Node>> retrievedNodes;
+    private final Set<Node> createdNodes; // weak set
 
     public AwareDefaultNodeStore(MetaNode metaTree) {
 	super(metaTree);
 	retrievedNodes = new ArrayDeque<WeakReference<Node>>();
+	createdNodes = Collections.newSetFromMap(new WeakHashMap<Node, Boolean>());
     }
 
     @Override
     public Node getNode(LowLevelBinding[] bindings) {
-	Node node = super.getNode(bindings);
+	Node node = getRootNode();
+	for (int i = 0; i < bindings.length; i++) {
+	    node = node.getNode(bindings[i]);
+	    createdNodes.add(node);
+	}
 	addToRetrievedNodes(node);
 	return node;
     }
 
     @Override
     public Node getNode(LowLevelBinding[] bindings, int[] parameterMask) {
-	Node node = super.getNode(bindings, parameterMask);
+	Node node = getRootNode();
+	for (int i = 0; i < parameterMask.length; i++) {
+	    node = node.getNode(bindings[parameterMask[i]]);
+	    createdNodes.add(node);
+	}
 	addToRetrievedNodes(node);
 	return node;
     }
@@ -59,6 +71,10 @@ public class AwareDefaultNodeStore extends DefaultNodeStore {
 
     public Node getNode(Set<LowLevelBinding> setOfBindings) {
 	return super.getNode(prm4j.Util.asSortedList(setOfBindings).toArray(new LowLevelBinding[0]));
+    }
+
+    public Set<Node> getCreatedNodes() {
+	return createdNodes;
     }
 
 }
