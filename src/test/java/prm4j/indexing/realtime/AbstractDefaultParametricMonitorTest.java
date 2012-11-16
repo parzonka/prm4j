@@ -97,6 +97,15 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	assertArrayEquals(boundObjects, monitorBoundObjects);
     }
 
+    protected void assertCreatedNodes(Object[]... instances) {
+	Set<Node> createdNodes = new HashSet<Node>(nodeStore.getCreatedNodes());
+	nodeStore.getCreatedNodes().clear();
+	for (Object[] instance : instances) {
+	    nodeStore.getNode(bindingStore.getBindings(instance));
+	}
+	assertEquals(nodeStore.getCreatedNodes(), createdNodes);
+    }
+
     protected void assertNoMoreUpdatedMonitors() {
 	assertTrue("There were more updated monitors: " + prototypeMonitor.getUpdatedMonitors(), prototypeMonitor
 		.getUpdatedMonitors().isEmpty());

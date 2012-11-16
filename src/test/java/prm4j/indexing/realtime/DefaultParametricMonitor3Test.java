@@ -126,4 +126,15 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 	assertNoMoreCreatedMonitors();
     }
 
+    @Test
+    public void joining_ab_bc_createsCorrectNodes() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e2.createEvent(b, c));
+
+	// verify
+	assertCreatedNodes(array(a, null, null), array(null, b, null), array(null, null, c), array(a, b, null),
+		array(null, b, c), array(a, b, c));
+    }
+
 }
