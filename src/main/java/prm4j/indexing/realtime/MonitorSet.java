@@ -10,6 +10,8 @@
  */
 package prm4j.indexing.realtime;
 
+import java.util.Arrays;
+
 import prm4j.api.Event;
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.ChainData;
@@ -103,6 +105,11 @@ public class MonitorSet {
 
     public int getSize() {
 	return size;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(monitorSet);
     }
 
 }
