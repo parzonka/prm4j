@@ -86,7 +86,7 @@ public class StaticDataConverter {
 		// we have to select the compatible parameters from the parameters in the base event
 		final int[] nodeMask = toParameterSubsetMask(tuple.getLeft(), baseEvent.getParameters());
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
-		final boolean[] extensionPattern = getExtensionPattern(tuple.getRight(), baseEvent.getParameters());
+		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
 		final int[] copyPattern = getCopyPattern(tuple.getRight(), baseEvent.getParameters());
 		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern));
 	    }
