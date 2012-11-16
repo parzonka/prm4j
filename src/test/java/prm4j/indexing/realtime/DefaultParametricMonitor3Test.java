@@ -167,4 +167,15 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 	assertChaining(array(null, b, c), array(a, b, c));
     }
 
+    @Test
+    public void joining_ab_bc_joinedMonitorHasCorrectTimestamp() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent("x", "y")); // time = 0
+	pm.processEvent(fsm.e1.createEvent(a, b)); // time = 1
+	pm.processEvent(fsm.e2.createEvent(b, c)); // derives 1 from (a, b)
+
+	// verify
+	assertEquals(1L, getNode(a, b, c).getMonitor().getCreationTime());
+    }
+
 }
