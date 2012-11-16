@@ -51,7 +51,7 @@ public class StaticDataConverterTest extends AbstractTest {
     // /////////////// getExtensionPattern ///////////////////////////
 
     @Test
-    public void getExtensionPattern_p1p3_p3p3() {
+    public void getExtensionPattern_p1p3_p3p5() {
 
 	Set<Parameter<?>> ps1 = asSet(p1, p3);
 	Set<Parameter<?>> ps2 = asSet(p3, p5);
@@ -214,7 +214,7 @@ public class StaticDataConverterTest extends AbstractTest {
     }
 
     @Test
-    public void getCopyPattern_p1p3_p3p3() {
+    public void getCopyPattern_p1p3_p3p5() {
 
 	Set<Parameter<?>> ps1 = asSet(p1, p3);
 	Set<Parameter<?>> ps2 = asSet(p3, p5);
