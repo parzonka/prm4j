@@ -102,8 +102,10 @@ public class StaticDataConverter {
 
     /**
      *
-     * @param baseSet all parameters of this set will be kept
-     * @param joiningSet new parameters from this set will join
+     * @param baseSet
+     *            all parameters of this set will be kept
+     * @param joiningSet
+     *            new parameters from this set will join
      * @return
      */
     protected static boolean[] getExtensionPattern(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
@@ -111,11 +113,13 @@ public class StaticDataConverter {
 	int i = 0;
 	int j = 0;
 	while (i < baseSet.size() || j < joiningSet.size()) {
-	    if (i < baseSet.size() && j < joiningSet.size() && toParameterMask(baseSet)[i] == toParameterMask(joiningSet)[j]) {
+	    if (i < baseSet.size() && j < joiningSet.size()
+		    && toParameterMask(baseSet)[i] == toParameterMask(joiningSet)[j]) {
 		result.add(true);
 		i++;
 		j++;
-	    } else if (i < baseSet.size() && (j >= joiningSet.size() || toParameterMask(baseSet)[i] < toParameterMask(joiningSet)[j])) {
+	    } else if (i < baseSet.size()
+		    && (j >= joiningSet.size() || toParameterMask(baseSet)[i] < toParameterMask(joiningSet)[j])) {
 		result.add(true);
 		i++;
 	    } else {
