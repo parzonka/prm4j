@@ -100,16 +100,22 @@ public class StaticDataConverter {
 	}
     }
 
-    protected static boolean[] getExtensionPattern(Set<Parameter<?>> ps1, Set<Parameter<?>> ps2) {
+    /**
+     *
+     * @param baseSet all parameters of this set will be kept
+     * @param joiningSet new parameters from this set will join
+     * @return
+     */
+    protected static boolean[] getExtensionPattern(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
 	List<Boolean> result = new ArrayList<Boolean>();
 	int i = 0;
 	int j = 0;
-	while (i < ps1.size() || j < ps2.size()) {
-	    if (i < ps1.size() && j < ps2.size() && toParameterMask(ps1)[i] == toParameterMask(ps2)[j]) {
+	while (i < baseSet.size() || j < joiningSet.size()) {
+	    if (i < baseSet.size() && j < joiningSet.size() && toParameterMask(baseSet)[i] == toParameterMask(joiningSet)[j]) {
 		result.add(true);
 		i++;
 		j++;
-	    } else if (i < ps1.size() && (j >= ps2.size() || toParameterMask(ps1)[i] < toParameterMask(ps2)[j])) {
+	    } else if (i < baseSet.size() && (j >= joiningSet.size() || toParameterMask(baseSet)[i] < toParameterMask(joiningSet)[j])) {
 		result.add(true);
 		i++;
 	    } else {
