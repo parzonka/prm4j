@@ -21,8 +21,8 @@ public class JoinData {
 
     // identifies the node, which represents the compatible part of the instance, we want to join with
     private final int[] nodeMask;
-    // identifies the monitor set, which contains the monitors carrying the bindings we will join with (they are strictly more
-    // informative than the node, selected by the nodeMask)
+    // identifies the monitor set, which contains the monitors carrying the bindings we will join with (they are
+    // strictly more informative than the node, selected by the nodeMask)
     private final int monitorSetId;
     // prepares the event bindings for the join
     private final boolean[] extensionPattern;
@@ -31,8 +31,7 @@ public class JoinData {
     // identifies the bindings which are in given binding without joining binding; used for disable-calculation
     private final int[] diffMask;
 
-    public JoinData(int[] nodeMask, int monitorSetId, boolean[] extensionPattern, int[] copyPattern,
-	    int[] diffMask) {
+    public JoinData(int[] nodeMask, int monitorSetId, boolean[] extensionPattern, int[] copyPattern, int[] diffMask) {
 	super();
 	this.nodeMask = nodeMask;
 	this.monitorSetId = monitorSetId;
@@ -40,7 +39,6 @@ public class JoinData {
 	this.copyPattern = copyPattern;
 	this.diffMask = diffMask;
     }
-
 
     public int[] getNodeMask() {
 	return nodeMask;
@@ -73,6 +71,7 @@ public class JoinData {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + Arrays.hashCode(copyPattern);
+	result = prime * result + Arrays.hashCode(diffMask);
 	result = prime * result + Arrays.hashCode(extensionPattern);
 	result = prime * result + monitorSetId;
 	result = prime * result + Arrays.hashCode(nodeMask);
@@ -90,6 +89,8 @@ public class JoinData {
 	JoinData other = (JoinData) obj;
 	if (!Arrays.equals(copyPattern, other.copyPattern))
 	    return false;
+	if (!Arrays.equals(diffMask, other.diffMask))
+	    return false;
 	if (!Arrays.equals(extensionPattern, other.extensionPattern))
 	    return false;
 	if (monitorSetId != other.monitorSetId)
@@ -103,7 +104,7 @@ public class JoinData {
     public String toString() {
 	return "JoinData [nodeMask=" + Arrays.toString(nodeMask) + ", monitorSetId=" + monitorSetId
 		+ ", extensionPattern=" + Arrays.toString(extensionPattern) + ", copyPattern="
-		+ Arrays.toString(copyPattern) + "]";
+		+ Arrays.toString(copyPattern) + ", diffMask=" + Arrays.toString(diffMask) + "]";
     }
 
 }
