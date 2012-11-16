@@ -65,7 +65,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 	EventContext ec = sdc.getEventContext();
 
-	assertJoinData(ec, fsm.e2, joinData(array(0), 0, array(true, true, false), array(1, 2)));
+	assertJoinData(ec, fsm.e2, joinData(array(0), 0, array(false, true, true), array(1, 2)));
     }
 
     protected static void assertChainData(MetaNode metaTree, Set<Parameter<?>> parameterSet, ChainData... chainDatas) {
