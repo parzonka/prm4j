@@ -71,7 +71,7 @@ public class DefaultNode extends AbstractNode {
 
     @Override
     public String toString() {
-	return monitor == null ? "(?)" : Util.bindingsToString(monitor.getLowLevelBindings());
+	return monitor == null ? "(..., " + getKey() + ")" : Util.bindingsToString(monitor.getLowLevelBindings());
     }
 
 }
