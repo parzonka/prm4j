@@ -108,9 +108,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    // inlined Join from 42
 	    joinPhase: for (JoinData joinData : eventContext.getJoinData(baseEvent)) { // 43
 		long tmax = 0L; // 44
-		final int[] copyPattern = joinData.getCopyPattern(); // use the copy pattern as diff mask
-		for (int i = 0; i < copyPattern.length; i = i + 2) { // 45
-		    final LowLevelBinding b = bindings[copyPattern[i]];
+		final int[] diffMask = joinData.getDiffMask(); // use the copy pattern as diff mask
+		for (int i = 0; i < diffMask.length; i++) { // 45
+		    final LowLevelBinding b = bindings[diffMask[i]];
 		    final long bTimestamp = b.getTimestamp();
 		    if (bTimestamp < timestamp) { // 46
 			if (b.isDisabled()) { // 47

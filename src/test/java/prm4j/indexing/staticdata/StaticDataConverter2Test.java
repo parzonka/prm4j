@@ -65,7 +65,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 	EventContext ec = sdc.getEventContext();
 
-	assertJoinData(ec, fsm.e2, joinData(array(0), 0, array(false, true, true), array(0, 0)));
+	assertJoinData(ec, fsm.e2, joinData(array(0), 0, array(false, true, true), array(0, 0), array(1)));
     }
 
     protected static void assertChainData(MetaNode metaTree, Set<Parameter<?>> parameterSet, ChainData... chainDatas) {
@@ -81,8 +81,8 @@ public class StaticDataConverter2Test extends AbstractTest {
 	return new ChainData(nodeMask, monitorSetId);
     }
 
-    protected static JoinData joinData(int[] nodeMask, int monitorSetId, boolean[] extensionPattern, int[] copyPattern) {
-	return new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern);
+    protected static JoinData joinData(int[] nodeMask, int monitorSetId, boolean[] extensionPattern, int[] copyPattern, int[] diffMask) {
+	return new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask);
     }
 
 }
