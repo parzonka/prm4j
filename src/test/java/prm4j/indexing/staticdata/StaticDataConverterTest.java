@@ -369,11 +369,9 @@ public class StaticDataConverterTest extends AbstractTest {
 	expected[u.updateMap.getIndex()] = new JoinData[0];
 
 	JoinData[] jd = new JoinData[1];
-	int[] nodeMask = { u.c.getIndex() };
-	int monitorSetId = 0;
-	boolean[] extensionPattern = { true, true, false };
-	int[] copyPattern = { 1, 2 }; // copy source[1] on target[2]
-	jd[0] = new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern);
+	// u.createIter.getParameters() = { c, i }
+	// compatible node selected by { c }
+	jd[0] = new JoinData(array(0), 0, array(false, true, true), array(0, 0), array(1));
 	expected[u.createIter.getIndex()] = jd;
 
 	expected[u.useIter.getIndex()] = new JoinData[0];
