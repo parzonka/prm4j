@@ -106,6 +106,23 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	assertEquals(nodeStore.getCreatedNodes(), createdNodes);
     }
 
+    protected void assertChaining(Object[] from, Object[] to) {
+	Node fromNode = getNode(from);
+	Node toNode = getNode(to);
+	boolean contained = false;
+	for (MonitorSet monitorSet : fromNode.getMonitorSets()) {
+	    if (monitorSet != null && monitorSet.contains(toNode.getMonitor())) {
+		if (contained) {
+		    fail("to-monitor is contained in multiple monitor sets!");
+		}
+		contained = true;
+	    }
+	}
+	if (!contained) {
+	    fail(Arrays.toString(to) + " was not contained in any monitor set of " + Arrays.toString(from) + "!");
+	}
+    }
+
     protected void assertNoMoreUpdatedMonitors() {
 	assertTrue("There were more updated monitors: " + prototypeMonitor.getUpdatedMonitors(), prototypeMonitor
 		.getUpdatedMonitors().isEmpty());

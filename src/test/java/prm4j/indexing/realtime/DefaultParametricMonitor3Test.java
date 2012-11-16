@@ -137,4 +137,24 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 		array(null, b, c), array(a, b, c));
     }
 
+    @Test
+    public void joining_ab_bc_chainingFromABtoABCexists() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e2.createEvent(b, c));
+
+	// verify
+	assertChaining(array(a, b, null), array(a, b, c));
+    }
+
+    @Test
+    public void joining_ab_bc_chainingFromCtoBCexists() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e2.createEvent(b, c));
+
+	// verify
+	assertChaining(array(null, null, c), array(null, b, c));
+    }
+
 }
