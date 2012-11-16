@@ -178,4 +178,45 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 	assertEquals(1L, getNode(a, b, c).getMonitor().getCreationTime());
     }
 
+    @Test
+    public void joining_ab_bc_assertCorrectTraces() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e2.createEvent(b, c));
+
+	// verify
+	assertTrace(popNextCreatedMonitor(), fsm.e1);
+	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2);
+    }
+
+    // more events //////////////////////////////////////////////////////////////////
+
+    @Test
+    public void joining_ab_bc_c_matchesTrace() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	pm.processEvent(fsm.e2.createEvent(b, c));
+	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	pm.processEvent(fsm.e3.createEvent(c));
+
+	// verify
+	assertTrue(!fsm.matchHandler.getHandledMatches().isEmpty());
+    }
+
+    @Test
+    public void moreEvents_ab_bc_c_bc_ab_c_correctTrace() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e3.createEvent(c));
+	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e3.createEvent(c));
+
+	// verify
+	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e1);
+	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2, fsm.e3, fsm.e2, fsm.e1, fsm.e3);
+    }
+
 }
