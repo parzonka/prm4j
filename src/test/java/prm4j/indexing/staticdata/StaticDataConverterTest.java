@@ -64,6 +64,19 @@ public class StaticDataConverterTest extends AbstractTest {
     }
 
     @Test
+    public void getExtensionPattern_p3p5_p1p3() {
+
+	Set<Parameter<?>> ps1 = asSet(p3, p5);
+	Set<Parameter<?>> ps2 = asSet(p1, p3);
+
+	boolean[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
+
+	boolean[] expected = { false, true, true };
+
+	assertBooleanArrayEquals(expected, actual);
+    }
+
+    @Test
     public void getExtensionPattern_p1_p5() {
 
 	Set<Parameter<?>> ps1 = asSet(p1);
