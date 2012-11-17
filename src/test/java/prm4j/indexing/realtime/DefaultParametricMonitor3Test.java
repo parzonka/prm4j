@@ -189,10 +189,10 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2);
     }
 
-    // more events //////////////////////////////////////////////////////////////////
+    // moreEvents //////////////////////////////////////////////////////////////////
 
     @Test
-    public void joining_ab_bc_c_matchesTrace() throws Exception {
+    public void moreEvents_ab_bc_c_matchesTrace() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a, b));
 	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
@@ -217,6 +217,32 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 	// verify
 	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e1);
 	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2, fsm.e3, fsm.e2, fsm.e1, fsm.e3);
+    }
+
+    @Test
+    public void moreEvents_ab_bc_c_c_matchesOnlyOneTrace() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e3.createEvent(c));
+	pm.processEvent(fsm.e3.createEvent(c));
+
+	// verify
+	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
+    }
+
+    @Test
+    public void moreEvents_ab_bc_c_ab_bc_c_matchesOnlyOneTrace() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e3.createEvent(c));
+	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e3.createEvent(c));
+
+	// verify
+	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
     }
 
 }
