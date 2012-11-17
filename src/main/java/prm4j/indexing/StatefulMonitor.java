@@ -28,6 +28,9 @@ public class StatefulMonitor extends BaseMonitor {
 
     @Override
     public boolean processEvent(Event event) {
+	if (state == null) {
+	    return false;
+	}
 	state = state.getSuccessor(event.getBaseEvent());
 	if (state == null) {
 	    return false;
