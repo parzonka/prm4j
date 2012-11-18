@@ -66,7 +66,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		}
 	    }
 	    findMaxPhase: for (MaxData maxData : eventContext.getMaxData(baseEvent)) { // 8
-		BaseMonitor m = nodeStore.getNode(bindings, maxData.getNodeMask()).getMonitor(); // 9
+		BaseMonitor m = nodeStore.getNodeNonCreative(bindings, maxData.getNodeMask()).getMonitor(); // 9
 		if (m != null) { // 10
 		    for (int i : maxData.getDiffMask()) { // 11
 			LowLevelBinding b = bindings[i];
@@ -113,8 +113,16 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    }
 	    // inlined Join from 42
 	    joinPhase: for (JoinData joinData : eventContext.getJoinData(baseEvent)) { // 43
+
+		// if node does not exist there can't be any joinable monitors
+		final Node compatibleNode = nodeStore.getNodeNonCreative(bindings, joinData.getNodeMask());
+		if (compatibleNode == NullNode.instance) {
+		    continue joinPhase;
+		}
+
+		// if bindings are disabled, the binding will not add to a valid trace
 		long tmax = 0L; // 44
-		final int[] diffMask = joinData.getDiffMask(); // use the copy pattern as diff mask
+		final int[] diffMask = joinData.getDiffMask();
 		for (int i = 0; i < diffMask.length; i++) { // 45
 		    final LowLevelBinding b = bindings[diffMask[i]];
 		    final long bTimestamp = b.getTimestamp();
@@ -127,7 +135,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    } // 52
 		} // 53
 		final boolean someBindingsAreKnown = tmax < timestamp;
-		final Node compatibleNode = nodeStore.getNode(bindings, joinData.getNodeMask());
+
 		// calculate once the bindings to be joined with the whole monitor set
 		final LowLevelBinding[] joinableBindings = createJoinableBindings(bindings,
 			joinData.getExtensionPattern()); // 56 - 61
