@@ -158,7 +158,7 @@ public class DefaultParametricMonitor1Test extends AbstractDefaultParametricMoni
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertTrace(popNextUpdatedMonitor(), fsm.e1, fsm.e1);
+	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e1);
     }
 
     @Test
