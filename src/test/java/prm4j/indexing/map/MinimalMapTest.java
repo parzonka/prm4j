@@ -168,11 +168,11 @@ public class MinimalMapTest {
     }
 
     @Test
-    public void getNonCreative_createEntryAndRetrieveEntry() throws Exception {
+    public void get_createEntryAndRetrieveEntry() throws Exception {
 	MinimalMap<Object, MockEntry> map = new MockMap();
 	String a = "a";
 	MockEntry x = map.getOrCreate(a, 1);
-	MockEntry y = map.getNonCreative(a, 1);
+	MockEntry y = map.get(a, 1);
 	assertEquals(x, y);
     }
 

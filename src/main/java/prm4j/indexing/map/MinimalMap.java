@@ -113,7 +113,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
      *            should be consistently calculated with the provided method of this class (or a subtype)
      * @return the entry or null, if entry is not stored in the map
      */
-    public E getNonCreative(final K key, final int hashCode) {
+    public E get(final K key, final int hashCode) {
 
 	final int index = hashIndex(hashCode, table.length);
 	E entry = table[index];
