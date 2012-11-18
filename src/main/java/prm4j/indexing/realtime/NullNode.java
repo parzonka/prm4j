@@ -10,8 +10,6 @@
  */
 package prm4j.indexing.realtime;
 
-import javax.naming.OperationNotSupportedException;
-
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.MetaNode;
 
@@ -32,12 +30,12 @@ public class NullNode implements Node {
 
     @Override
     public Node next() {
-	throw new RuntimeException(new OperationNotSupportedException());
+	throw new UnsupportedOperationException();
     }
 
     @Override
     public void setNext(Node nextEntry) {
-	throw new RuntimeException(new OperationNotSupportedException());
+	throw new UnsupportedOperationException();
     }
 
     @Override
@@ -52,7 +50,7 @@ public class NullNode implements Node {
 
     @Override
     public void setMonitor(BaseMonitor monitor) {
-	throw new RuntimeException(new OperationNotSupportedException());
+	throw new UnsupportedOperationException();
     }
 
     @Override
@@ -67,7 +65,7 @@ public class NullNode implements Node {
 
     @Override
     public void remove(LowLevelBinding binding) {
-	throw new RuntimeException(new OperationNotSupportedException());
+	throw new UnsupportedOperationException();
     }
 
     @Override
