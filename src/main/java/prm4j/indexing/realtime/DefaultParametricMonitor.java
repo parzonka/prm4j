@@ -84,7 +84,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
-			nodeStore.getNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
+			nodeStore.getOrCreateNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
 				.add(monitor); // 111
 		    } // 107
 		    break findMaxPhase;
@@ -106,7 +106,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    instanceNode.setMonitor(monitor); // 98
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
-			nodeStore.getNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
+			nodeStore.getOrCreateNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
 				.add(monitor); // 111
 		    } // 99
 		}

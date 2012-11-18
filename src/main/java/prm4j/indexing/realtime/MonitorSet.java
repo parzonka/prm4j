@@ -70,7 +70,7 @@ public class MonitorSet {
 		lastNode.setMonitor(monitor); // 106
 		// chain phase
 		for (ChainData chainData : lastNode.getMetaNode().getChainDataArray()) {
-		    nodeStore.getNode(joinable, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
+		    nodeStore.getOrCreateNode(joinable, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
 			    .add(monitor);
 		} // 99
 		joinable = joinableBindings.clone(); // 74

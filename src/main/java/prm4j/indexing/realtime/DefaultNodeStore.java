@@ -32,7 +32,7 @@ public class DefaultNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getNode(LowLevelBinding[] bindings, int[] parameterMask) {
+    public Node getOrCreateNode(LowLevelBinding[] bindings, int[] parameterMask) {
 	Node node = getRootNode();
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 0; i < parameterMask.length; i++) {

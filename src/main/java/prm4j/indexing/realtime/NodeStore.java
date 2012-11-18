@@ -14,7 +14,7 @@ public interface NodeStore {
 
     public Node getOrCreateNode(LowLevelBinding[] bindings);
 
-    public Node getNode(LowLevelBinding[] bindings, int[] parameterMask);
+    public Node getOrCreateNode(LowLevelBinding[] bindings, int[] parameterMask);
 
     public Node getNodeNonCreative(LowLevelBinding[] bindings);
 
