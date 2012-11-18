@@ -245,4 +245,26 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
     }
 
+    // disabling //////////////////////////////////////////////////////////////////
+
+    @Test
+    public void disabling_bc_ab_noMonitorsAreCreated() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	assertNoMoreCreatedMonitors();
+    }
+
+    @Test
+    public void disabling_bc_ab_noNodesAreCreated() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	assertCreatedNodes();
+    }
+
 }
