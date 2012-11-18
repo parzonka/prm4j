@@ -21,7 +21,7 @@ public class DefaultNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getNode(LowLevelBinding[] bindings) {
+    public Node getOrCreateNode(LowLevelBinding[] bindings) {
 	Node node = getRootNode();
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 0; i < bindings.length; i++) {

@@ -12,7 +12,7 @@ package prm4j.indexing.realtime;
 
 public interface NodeStore {
 
-    public Node getNode(LowLevelBinding[] bindings);
+    public Node getOrCreateNode(LowLevelBinding[] bindings);
 
     public Node getNode(LowLevelBinding[] bindings, int[] parameterMask);
 

@@ -62,7 +62,7 @@ public class MonitorSet {
 		continue; // 65
 	    }
 	    createJoin(joinable, compatibleMonitor.getLowLevelBindings(), copyPattern); // 67 - 71
-	    final Node lastNode = nodeStore.getNode(joinable);
+	    final Node lastNode = nodeStore.getOrCreateNode(joinable);
 	    if (lastNode.getMonitor() == null) { // 72
 		// inlined DefineTo // 73
 		final BaseMonitor monitor = compatibleMonitor.copy(joinable); // 102-105

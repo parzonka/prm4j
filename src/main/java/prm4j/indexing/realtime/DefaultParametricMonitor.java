@@ -75,7 +75,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 			}
 		    }
 		    if (instanceNode == NullNode.instance) {
-			instanceNode = nodeStore.getNode(bindings); // get real instance node
+			instanceNode = nodeStore.getOrCreateNode(bindings); // get real instance node
 		    }
 		    // inlined DefineTo from 73
 		    BaseMonitor monitor = m.copy(bindings); // 102-105
@@ -101,7 +101,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    BaseMonitor monitor = monitorPrototype.copy(bindings, timestamp); // 94 - 97
 		    monitor.processEvent(event); // 95
 		    if (instanceNode == NullNode.instance) {
-			instanceNode = nodeStore.getNode(bindings); // get real instance node
+			instanceNode = nodeStore.getOrCreateNode(bindings); // get real instance node
 		    }
 		    instanceNode.setMonitor(monitor); // 98
 		    // inlined chain-method
