@@ -147,6 +147,15 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
     }
 
     @Test
+    public void firstEvent_ab_doesNotCreateNode() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertCreatedNodes();
+    }
+
+    @Test
     public void firstEvent_ab_bothBindingsAreDisabled() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(a, b));

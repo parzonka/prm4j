@@ -248,6 +248,15 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
     // disabling //////////////////////////////////////////////////////////////////
 
     @Test
+    public void disabling_bc_noNodesAreCreated() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e2.createEvent(b, c));
+
+	// verify
+	assertCreatedNodes();
+    }
+
+    @Test
     public void disabling_bc_ab_noMonitorsAreCreated() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(b, c));
