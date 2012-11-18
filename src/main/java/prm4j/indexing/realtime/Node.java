@@ -29,7 +29,7 @@ public interface Node extends MinimalMapEntry<LowLevelBinding, Node> {
 
     public Node getOrCreateNode(LowLevelBinding binding);
 
-    public Node getNodeNonCreative(LowLevelBinding binding);
+    public Node getNode(LowLevelBinding binding);
 
     public void remove(LowLevelBinding binding);
 

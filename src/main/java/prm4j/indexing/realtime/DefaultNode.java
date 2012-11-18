@@ -50,7 +50,7 @@ public class DefaultNode extends AbstractNode {
     }
 
     @Override
-    public Node getNodeNonCreative(LowLevelBinding binding) {
+    public Node getNode(LowLevelBinding binding) {
 	return get(binding, binding.hashCode());
     }
 
