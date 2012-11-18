@@ -15,11 +15,16 @@ import java.util.List;
 
 import prm4j.Util;
 import prm4j.Util.Tuple;
+import prm4j.api.MatchHandler0;
 import prm4j.api.MatchHandler1;
 import prm4j.api.MatchHandler2;
 import prm4j.api.Parameter;
 
 public class AwareMatchHandler<P1> {
+
+    public static <P1> AwareMatchHandler0 create() {
+	return new AwareMatchHandler0();
+    }
 
     public static <P1> AwareMatchHandler1<P1> create(Parameter<P1> param1) {
 	return new AwareMatchHandler1<P1>(param1);
@@ -27,6 +32,26 @@ public class AwareMatchHandler<P1> {
 
     public static <P1, P2> AwareMatchHandler2<P1, P2> create(Parameter<P1> param1, Parameter<P2> param2) {
 	return new AwareMatchHandler2<P1, P2>(param1, param2);
+    }
+
+    public static class AwareMatchHandler0 extends MatchHandler0 {
+
+	private int handledMatches = 0;
+
+	/**
+	 * Returns a count of handled matches
+	 *
+	 * @return
+	 */
+	public int getHandledMatches() {
+	    return handledMatches;
+	}
+
+	@Override
+	public void handleMatch() {
+	    handledMatches++;
+	}
+
     }
 
     public static class AwareMatchHandler1<P1> extends MatchHandler1<P1> {
