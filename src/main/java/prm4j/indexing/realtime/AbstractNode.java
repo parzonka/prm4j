@@ -29,7 +29,7 @@ public abstract class AbstractNode extends MinimalMap<LowLevelBinding, Node> imp
     }
 
     @Override
-    public int getHashCode() {
+    public int hashCode() {
 	return hashCode;
     }
 

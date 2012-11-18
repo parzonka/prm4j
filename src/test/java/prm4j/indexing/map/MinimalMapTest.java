@@ -193,7 +193,7 @@ public class MinimalMapTest {
 	}
 
 	@Override
-	public int getHashCode() {
+	public int hashCode() {
 	    return hashCode;
 	}
 

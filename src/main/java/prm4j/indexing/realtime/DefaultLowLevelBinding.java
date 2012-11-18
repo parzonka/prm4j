@@ -46,11 +46,6 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 	return parameter.getIndex();
     }
 
-    @Override
-    public int getHashCode() {
-	return hashCode;
-    }
-
     /**
      * {@inheritDoc}
      *
@@ -59,6 +54,11 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     @Override
     public Object getKey() {
 	return get();
+    }
+
+    @Override
+    public int hashCode() {
+        return hashCode;
     }
 
     @Override

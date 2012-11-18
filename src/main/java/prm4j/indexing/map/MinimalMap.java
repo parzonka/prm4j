@@ -88,7 +88,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
 	E lastEntry = null;
 	while (entry != null) {
-	    if (hashCode == entry.getHashCode() && key == entry.getKey()) {
+	    if (hashCode == entry.hashCode() && key == entry.getKey()) {
 		return entry;
 	    }
 	    lastEntry = entry;
@@ -144,7 +144,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 		    oldTable[i] = null; // help gc
 		    do {
 			E nextEntry = entry.next();
-			int newIndex = hashIndex(entry.getHashCode(), newCapacity);
+			int newIndex = hashIndex(entry.hashCode(), newCapacity);
 			entry.setNext(newTable[newIndex]);
 			newTable[newIndex] = entry;
 			entry = nextEntry;
@@ -178,7 +178,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 	E lastEntry = null;
 	while (entry != null) {
 	    E nextEntry = entry.next();
-	    if (hashCode == entry.getHashCode() && key == entry.getKey()) {
+	    if (hashCode == entry.hashCode() && key == entry.getKey()) {
 		if (lastEntry == null) {
 		    table[hashIndex] = nextEntry;
 		} else {
@@ -193,14 +193,14 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
     public void removeEntry(final E entryToRemove) {
 
-	final int hashCode = entryToRemove.getHashCode();
+	final int hashCode = entryToRemove.hashCode();
 	final int hashIndex = hashIndex(hashCode, table.length);
 	E entry = table[hashIndex];
 
 	E lastEntry = null;
 	while (entry != null) {
 	    E nextEntry = entry.next();
-	    if (hashCode == entry.getHashCode() && entryToRemove == entry) {
+	    if (hashCode == entry.hashCode() && entryToRemove == entry) {
 		if (lastEntry == null) {
 		    table[hashIndex] = nextEntry;
 		} else {

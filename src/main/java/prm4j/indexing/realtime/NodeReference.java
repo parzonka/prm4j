@@ -32,7 +32,7 @@ public class NodeReference extends WeakReference<Node> implements MinimalMapEntr
     }
 
     @Override
-    public int getHashCode() {
+    public int hashCode() {
 	return hashCode;
     }
 
