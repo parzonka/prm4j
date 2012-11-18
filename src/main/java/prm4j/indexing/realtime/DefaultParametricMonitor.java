@@ -49,7 +49,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
 	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
 	final BaseEvent baseEvent = event.getBaseEvent();
-	Node instanceNode = nodeStore.getNodeNonCreative(bindings);
+	Node instanceNode = nodeStore.getNode(bindings);
 	final BaseMonitor instanceMonitor = instanceNode.getMonitor();
 
 	if (eventContext.isDisablingEvent(event.getBaseEvent())) { // 2
@@ -66,7 +66,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		}
 	    }
 	    findMaxPhase: for (MaxData maxData : eventContext.getMaxData(baseEvent)) { // 8
-		BaseMonitor m = nodeStore.getNodeNonCreative(bindings, maxData.getNodeMask()).getMonitor(); // 9
+		BaseMonitor m = nodeStore.getNode(bindings, maxData.getNodeMask()).getMonitor(); // 9
 		if (m != null) { // 10
 		    for (int i : maxData.getDiffMask()) { // 11
 			LowLevelBinding b = bindings[i];
@@ -115,7 +115,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    joinPhase: for (JoinData joinData : eventContext.getJoinData(baseEvent)) { // 43
 
 		// if node does not exist there can't be any joinable monitors
-		final Node compatibleNode = nodeStore.getNodeNonCreative(bindings, joinData.getNodeMask());
+		final Node compatibleNode = nodeStore.getNode(bindings, joinData.getNodeMask());
 		if (compatibleNode == NullNode.instance) {
 		    continue joinPhase;
 		}

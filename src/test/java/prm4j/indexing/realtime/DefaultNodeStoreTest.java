@@ -41,8 +41,8 @@ public class DefaultNodeStoreTest extends AbstractTest {
     }
 
     @Test
-    public void getNodeNonCreative_nonExistingNodeIsNullNode() throws Exception {
-	assertEquals(NullNode.instance, nodeStore.getNodeNonCreative(bindings));
+    public void getNode_nonExistingNodeIsNullNode() throws Exception {
+	assertEquals(NullNode.instance, nodeStore.getNode(bindings));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class DefaultNodeStoreTest extends AbstractTest {
     @Test
     public void getOrCreateNode_getNonCreativeReturnsStoredNode() throws Exception {
 	Node node1 = nodeStore.getOrCreateNode(bindings);
-	Node node2 = nodeStore.getNodeNonCreative(bindings);
+	Node node2 = nodeStore.getNode(bindings);
 	assertEquals(node1, node2);
     }
 

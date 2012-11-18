@@ -43,7 +43,7 @@ public class DefaultNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getNodeNonCreative(LowLevelBinding[] bindings) {
+    public Node getNode(LowLevelBinding[] bindings) {
 	Node node = getRootNode();
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 0; i < bindings.length; i++) {
@@ -57,7 +57,7 @@ public class DefaultNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getNodeNonCreative(LowLevelBinding[] bindings, int[] parameterMask) {
+    public Node getNode(LowLevelBinding[] bindings, int[] parameterMask) {
 	Node node = getRootNode();
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 0; i < parameterMask.length; i++) {
