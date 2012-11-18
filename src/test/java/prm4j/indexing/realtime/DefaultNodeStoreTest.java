@@ -51,7 +51,7 @@ public class DefaultNodeStoreTest extends AbstractTest {
     }
 
     @Test
-    public void getOrCreateNode_getNonCreativeReturnsStoredNode() throws Exception {
+    public void getOrCreateNode_get_returnsStoredNode() throws Exception {
 	Node node1 = nodeStore.getOrCreateNode(bindings);
 	Node node2 = nodeStore.getNode(bindings);
 	assertEquals(node1, node2);
