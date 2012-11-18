@@ -90,10 +90,11 @@ public class DefaultNode extends AbstractNode {
 		if (++i < max) {
 		    sb.append(parameter).append("=?, ");
 		} else {
-		    sb.append(getKey()).append(")");
 		    break;
 		}
 	    }
+	    final String key = getKey() == null ? "" : getKey().toString();
+	    sb.append(key).append(")");
 	    return sb.toString();
 	}
     }
