@@ -48,9 +48,9 @@ public class DefaultNodeStore implements NodeStore {
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 0; i < bindings.length; i++) {
 	    // traverse the node tree until the parameter instance is fully realized
-	    node = node.getNode(bindings[i]);
+	    node = node.getNodeNonCreative(bindings[i]);
 	    if (node == null) {
-		return null;
+		return NullNode.instance;
 	    }
 	}
 	return node;
@@ -63,7 +63,7 @@ public class DefaultNodeStore implements NodeStore {
 	for (int i = 0; i < parameterMask.length; i++) {
 	    node = node.getNodeNonCreative(bindings[parameterMask[i]]);
 	    if (node == null) {
-		return null;
+		return NullNode.instance;
 	    }
 	}
 	return node;
