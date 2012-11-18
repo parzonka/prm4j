@@ -49,7 +49,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
 	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
 	final BaseEvent baseEvent = event.getBaseEvent();
-	final Node instanceNode = nodeStore.getNode(bindings);
+	Node instanceNode = nodeStore.getNodeNonCreative(bindings);
 	final BaseMonitor instanceMonitor = instanceNode.getMonitor();
 
 	if (eventContext.isDisablingEvent(event.getBaseEvent())) { // 2
@@ -74,6 +74,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 			    continue findMaxPhase; // 13
 			}
 		    }
+		    if (instanceNode == NullNode.instance) {
+			instanceNode = nodeStore.getNode(bindings); // get real instance node
+		    }
 		    // inlined DefineTo from 73
 		    BaseMonitor monitor = m.copy(bindings); // 102-105
 		    monitor.processEvent(event); // 103
@@ -97,6 +100,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    // inlined DefineNew from 93
 		    BaseMonitor monitor = monitorPrototype.copy(bindings, timestamp); // 94 - 97
 		    monitor.processEvent(event); // 95
+		    if (instanceNode == NullNode.instance) {
+			instanceNode = nodeStore.getNode(bindings); // get real instance node
+		    }
 		    instanceNode.setMonitor(monitor); // 98
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
