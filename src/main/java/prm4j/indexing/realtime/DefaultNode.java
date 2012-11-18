@@ -49,6 +49,11 @@ public class DefaultNode extends AbstractNode {
     }
 
     @Override
+    public Node getNodeNonCreative(LowLevelBinding binding) {
+	return getNonCreative(binding, binding.hashCode());
+    }
+
+    @Override
     public void setMonitor(BaseMonitor monitor) {
 	this.monitor = monitor;
     }

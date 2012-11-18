@@ -42,6 +42,33 @@ public class DefaultNodeStore implements NodeStore {
 	return node;
     }
 
+    @Override
+    public Node getNodeNonCreative(LowLevelBinding[] bindings) {
+	Node node = getRootNode();
+	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
+	for (int i = 0; i < bindings.length; i++) {
+	    // traverse the node tree until the parameter instance is fully realized
+	    node = node.getNode(bindings[i]);
+	    if (node == null) {
+		return null;
+	    }
+	}
+	return node;
+    }
+
+    @Override
+    public Node getNodeNonCreative(LowLevelBinding[] bindings, int[] parameterMask) {
+	Node node = getRootNode();
+	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
+	for (int i = 0; i < parameterMask.length; i++) {
+	    node = node.getNodeNonCreative(bindings[parameterMask[i]]);
+	    if (node == null) {
+		return null;
+	    }
+	}
+	return node;
+    }
+
     public Node getRootNode() {
 	return rootNode;
     }
