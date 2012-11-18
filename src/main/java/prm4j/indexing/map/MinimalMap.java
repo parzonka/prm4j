@@ -105,6 +105,28 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 	return entry;
     }
 
+    /**
+     * Retrieves the entry associated with this key and the provided hash code or returns null.
+     *
+     * @param key
+     * @param hashcode
+     *            should be consistently calculated with the provided method of this class (or a subtype)
+     * @return the entry or null, if entry is not stored in the map
+     */
+    public E getNonCreative(final K key, final int hashCode) {
+
+	final int index = hashIndex(hashCode, table.length);
+	E entry = table[index];
+
+	while (entry != null) {
+	    if (key == entry.getKey()) {
+		return entry;
+	    }
+	    entry = entry.next();
+	}
+	return null;
+    }
+
     private void ensureCapacity() {
 
 	if (table.length == MAXIMUM_CAPACITY) {
