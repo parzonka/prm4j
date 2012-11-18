@@ -248,4 +248,17 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	// TODO failing test: implement functionality
 	assertEquals(expected, actual);
     }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void getPossibleParameterSets_FSM_a_a_no_b() throws Exception {
+	FSM_a_a_no_b fsm = new FSM_a_a_no_b();
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+
+	Set<Set<Parameter<?>>> actual = fs.getPossibleParameterSets();
+
+	Set<Set<Parameter<?>>> expected = asSet(EMPTY_PARAMETER_SET, asSet(fsm.p1), asSet(fsm.p2), asSet(fsm.p1, fsm.p2));
+
+	assertEquals(expected, actual);
+    }
 }
