@@ -23,6 +23,7 @@ import prm4j.api.Symbol2;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMState;
 import prm4j.indexing.realtime.AwareMatchHandler;
+import prm4j.indexing.realtime.AwareMatchHandler.AwareMatchHandler0;
 import prm4j.indexing.realtime.AwareMatchHandler.AwareMatchHandler1;
 import prm4j.indexing.realtime.AwareMatchHandler.AwareMatchHandler2;
 
@@ -193,6 +194,34 @@ public abstract class FSMDefinitions {
 	    initial.addTransition(e1, s1);
 	    s1.addTransition(e2, s2);
 	    s2.addTransition(e3, error);
+	}
+    }
+
+    /**
+     * A sequence of as, with b destroying the trace.
+     */
+    public static class FSM_a_a_no_b {
+
+	public final Alphabet alphabet = new Alphabet();
+
+	public final Parameter<String> p1 = alphabet.createParameter("p1", String.class);
+	public final Parameter<String> p2 = alphabet.createParameter("p2", String.class);
+
+	public final Symbol1<String> e1 = alphabet.createSymbol1("e1", p1);
+	public final Symbol1<String> e2 = alphabet.createSymbol1("e2", p2);
+
+	public final AwareMatchHandler0 matchHandler = AwareMatchHandler.create();
+
+	public final FSM fsm = new FSM(alphabet);
+
+	public final FSMState initial = fsm.createInitialState();
+	public final FSMState s1 = fsm.createState();
+	public final FSMState error = fsm.createAcceptingState(matchHandler);
+
+	public FSM_a_a_no_b() {
+	    initial.addTransition(e1, s1);
+	    initial.addTransition(e2, initial);
+	    s1.addTransition(e1, error);
 	}
     }
 
