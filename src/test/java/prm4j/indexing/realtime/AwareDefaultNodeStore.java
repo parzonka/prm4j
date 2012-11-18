@@ -37,7 +37,7 @@ public class AwareDefaultNodeStore extends DefaultNodeStore {
     public Node getNode(LowLevelBinding[] bindings) {
 	Node node = getRootNode();
 	for (int i = 0; i < bindings.length; i++) {
-	    node = node.getNode(bindings[i]);
+	    node = node.getOrCreateNode(bindings[i]);
 	    createdNodes.add(node);
 	}
 	addToRetrievedNodes(node);
@@ -48,7 +48,7 @@ public class AwareDefaultNodeStore extends DefaultNodeStore {
     public Node getNode(LowLevelBinding[] bindings, int[] parameterMask) {
 	Node node = getRootNode();
 	for (int i = 0; i < parameterMask.length; i++) {
-	    node = node.getNode(bindings[parameterMask[i]]);
+	    node = node.getOrCreateNode(bindings[parameterMask[i]]);
 	    createdNodes.add(node);
 	}
 	addToRetrievedNodes(node);

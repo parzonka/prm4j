@@ -54,7 +54,7 @@ public class NullNode implements Node {
     }
 
     @Override
-    public Node getNode(LowLevelBinding binding) {
+    public Node getOrCreateNode(LowLevelBinding binding) {
 	return null;
     }
 

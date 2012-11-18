@@ -45,7 +45,7 @@ public class DefaultNode extends AbstractNode {
     }
 
     @Override
-    public Node getNode(LowLevelBinding binding) {
+    public Node getOrCreateNode(LowLevelBinding binding) {
 	return getOrCreate(binding, binding.hashCode());
     }
 
