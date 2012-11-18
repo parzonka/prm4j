@@ -68,8 +68,8 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
      * @param key
      * @return the entry
      */
-    public E get(final K key) {
-	return get(key, hashCode(key));
+    public E getOrCreate(final K key) {
+	return getOrCreate(key, hashCode(key));
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
      *            should be consistently calculated with the provided method of this class (or a subtype)
      * @return the entry
      */
-    public E get(final K key, final int hashCode) {
+    public E getOrCreate(final K key, final int hashCode) {
 
 	final int index = hashIndex(hashCode, table.length);
 	E entry = table[index];

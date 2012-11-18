@@ -49,7 +49,7 @@ public class DefaultBindingStore implements BindingStore {
 	for (int i = 0; i < boundObjects.length; i++) {
 	    final Object boundObject = boundObjects[i];
 	    if (boundObject != null) {
-		result[j++] = stores[i].get(boundObject);
+		result[j++] = stores[i].getOrCreate(boundObject);
 	    }
 	}
 	cleaner.clean();
@@ -58,7 +58,7 @@ public class DefaultBindingStore implements BindingStore {
 
     @Override
     public LowLevelBinding getBinding(Parameter<?> parameter, Object boundObject) {
-	return stores[parameter.getIndex()].get(boundObject);
+	return stores[parameter.getIndex()].getOrCreate(boundObject);
     }
 
     protected ReferenceQueue<Object> getReferenceQueue() {
