@@ -281,4 +281,8 @@ public class StaticDataConverter {
 	return disablingEvents;
     }
 
+    protected Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> getMonitorSetIds() {
+	return monitorSetIds;
+    }
+
 }

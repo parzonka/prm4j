@@ -10,7 +10,8 @@
  */
 package prm4j.indexing.staticdata;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,6 +25,9 @@ import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.spec.FiniteParametricProperty;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 
 public class StaticDataConverter2Test extends AbstractTest {
 
@@ -66,6 +70,47 @@ public class StaticDataConverter2Test extends AbstractTest {
 	EventContext ec = sdc.getEventContext();
 
 	assertJoinData(ec, fsm.e2, joinData(array(0), 0, array(false, true, true), array(0, 0), array(1)));
+    }
+
+    @Test
+    public void getChainData_FSM_a_a_no_b() {
+
+	FSM_a_a_no_b fsm = new FSM_a_a_no_b();
+	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	StaticDataConverter sdc = new StaticDataConverter(fpp);
+	MetaNode mt = sdc.getMetaTree();
+
+	assertChainData(mt, asSet(fsm.p1));
+	assertChainData(mt, asSet(fsm.p2), chainData(new int[0], 0));
+	assertChainData(mt, asSet(fsm.p1, fsm.p2), chainData(array(0), 0), chainData(array(1), 0));
+    }
+
+    @Test
+    public void getMetaTree_FSM_a_a_no_b() {
+
+	FSM_a_a_no_b fsm = new FSM_a_a_no_b();
+	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	StaticDataConverter sdc = new StaticDataConverter(fpp);
+	MetaNode metaTreeRoot = sdc.getMetaTree();
+
+	assertEquals(1, metaTreeRoot.getMonitorSetCount());
+    }
+
+    @Test
+    public void getMonitorSetIds() {
+
+	FSM_a_a_no_b fsm = new FSM_a_a_no_b();
+	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	StaticDataConverter sdc = new StaticDataConverter(fpp);
+	Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> actual = sdc.getMonitorSetIds();
+
+	Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> expected = HashBasedTable.create();
+	expected.put(EMPTY_PARAMETER_SET, asSet(fsm.p2), 0);
+	expected.put(asSet(fsm.p1), EMPTY_PARAMETER_SET, 0);
+	expected.put(asSet(fsm.p2), EMPTY_PARAMETER_SET, 0);
+
+	assertEquals(expected, actual);
+
     }
 
     protected static void assertChainData(MetaNode metaTree, Set<Parameter<?>> parameterSet, ChainData... chainDatas) {
