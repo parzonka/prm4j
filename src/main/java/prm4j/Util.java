@@ -15,8 +15,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import prm4j.api.Binding;
@@ -122,20 +124,29 @@ public class Util {
     public static String bindingsToString(Binding[] bindings) {
 	// implementation copied from Arrays.toString
 	// substituting brackets for parantheses
-        if (bindings == null)
-            return "null";
+	if (bindings == null)
+	    return "null";
 	int iMax = bindings.length - 1;
-        if (iMax == -1)
-            return "[]";
+	if (iMax == -1)
+	    return "[]";
 
-        StringBuilder b = new StringBuilder();
+	StringBuilder b = new StringBuilder();
 	b.append('(');
-        for (int i = 0; ; i++) {
-            b.append(String.valueOf(bindings[i]));
-            if (i == iMax)
+	for (int i = 0;; i++) {
+	    b.append(String.valueOf(bindings[i]));
+	    if (i == iMax)
 		return b.append(')').toString();
 	    b.append(", ");
-        }
+	}
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static <K, V> Map<K, V> map(Tuple<K, V>... tuples) {
+	Map map = new HashMap();
+	for (Tuple<K, V> tuple : tuples) {
+	    map.put(tuple.left, tuple.right);
+	}
+	return map;
     }
 
     public static <T1, T2> Tuple<T1, T2> tuple(T1 left, T2 right) {
