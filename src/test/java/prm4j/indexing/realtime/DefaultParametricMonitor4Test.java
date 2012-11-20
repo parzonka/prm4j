@@ -19,14 +19,14 @@ import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor4Test extends AbstractDefaultParametricMonitorTest {
 
-    FSM_a_a_no_b fsm;
+    FSM_ab_b_with_initial_b_loop fsm;
     final String a = "a";
     final String b = "b";
     final String c = "c";
 
     @Before
     public void init() {
-	fsm = new FSM_a_a_no_b();
+	fsm = new FSM_ab_b_with_initial_b_loop();
 	FiniteSpec finiteSpec = new FSMSpec(fsm.fsm);
 	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
     }
@@ -57,19 +57,17 @@ public class DefaultParametricMonitor4Test extends AbstractDefaultParametricMoni
 	pm.processEvent(fsm.e2.createEvent(b));
 
 	// verify
-	assertEquals(1, getNode().getMonitorSets().length);
+	assertEquals(0, getNode().getMonitorSets().length);
     }
 
     @Test
     public void firstEvent_b_a_createsNoNodes() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(b));
-	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a, b));
 
 	// verify
-	assertCreatedNodes(array(a, null));
+	assertCreatedNodes(array(a, null), array(null, b), array(a, b));
     }
-
-
 
 }

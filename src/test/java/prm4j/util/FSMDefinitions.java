@@ -200,6 +200,34 @@ public abstract class FSMDefinitions {
     /**
      * A sequence of as, with b destroying the trace.
      */
+    public static class FSM_ab_b_with_initial_b_loop {
+
+	public final Alphabet alphabet = new Alphabet();
+
+	public final Parameter<String> p1 = alphabet.createParameter("p1", String.class);
+	public final Parameter<String> p2 = alphabet.createParameter("p2", String.class);
+
+	public final Symbol2<String, String> e1 = alphabet.createSymbol2("e1", p1, p2);
+	public final Symbol1<String> e2 = alphabet.createSymbol1("e2", p2);
+
+	public final AwareMatchHandler0 matchHandler = AwareMatchHandler.create();
+
+	public final FSM fsm = new FSM(alphabet);
+
+	public final FSMState initial = fsm.createInitialState();
+	public final FSMState s1 = fsm.createState();
+	public final FSMState error = fsm.createAcceptingState(matchHandler);
+
+	public FSM_ab_b_with_initial_b_loop() {
+	    initial.addTransition(e1, s1);
+	    initial.addTransition(e2, initial);
+	    s1.addTransition(e2, error);
+	}
+    }
+
+    /**
+     * A sequence of as, with b destroying the trace. Specifications of this kind will not be handled in the moment.
+     */
     public static class FSM_a_a_no_b {
 
 	public final Alphabet alphabet = new Alphabet();
