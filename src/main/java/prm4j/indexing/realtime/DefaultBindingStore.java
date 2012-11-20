@@ -61,6 +61,14 @@ public class DefaultBindingStore implements BindingStore {
 	return stores[parameter.getIndex()].get(boundObject);
     }
 
+    public int size() {
+	int result = 0;
+	for (MinimalMap<Object, DefaultLowLevelBinding> store : stores) {
+	    result += store.size();
+	}
+	return result;
+    }
+
     @Override
     public LowLevelBinding getOrCreateBinding(Parameter<?> parameter, Object boundObject) {
 	return stores[parameter.getIndex()].getOrCreate(boundObject);

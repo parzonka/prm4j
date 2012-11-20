@@ -26,4 +26,6 @@ public interface BindingStore {
 
     public LowLevelBinding getOrCreateBinding(Parameter<?> parameter, Object boundObject);
 
+    public int size();
+
 }
