@@ -50,4 +50,6 @@ public interface Node extends MinimalMapEntry<LowLevelBinding, Node> {
 
     public MonitorSet[] getMonitorSets();
 
+    public int size();
+
 }

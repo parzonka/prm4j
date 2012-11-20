@@ -78,4 +78,9 @@ public class NullNode implements Node {
 	return EMPTY_MONITOR_SETS;
     }
 
+    @Override
+    public int size() {
+	return 0;
+    }
+
 }
