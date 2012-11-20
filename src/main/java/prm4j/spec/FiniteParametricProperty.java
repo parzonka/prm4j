@@ -15,6 +15,7 @@ import static prm4j.Util.isSubset;
 import static prm4j.Util.isSuperset;
 import static prm4j.Util.isSubsetEq;
 import static prm4j.Util.tuple;
+import static java.util.Collections.unmodifiableSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -150,16 +151,21 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    stateToSeenBaseEvents.get(state).add(seenBaseEvents); // 6
 	    possibleParameterSets.add(parameterSet); // 7
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 8
-		if (state.getSuccessor(baseEvent) != null) { // 9 TODO path to accepting state
+		final BaseMonitorState nextState = state.getSuccessor(baseEvent);
+		if (nextState != null) { // 9 TODO path to accepting state
 		    final Set<BaseEvent> seenBaseEventsWithoutSelfloop = new HashSet<BaseEvent>(seenBaseEvents); // 10
 		    seenBaseEventsWithoutSelfloop.remove(baseEvent); // 10
-		    enablingEventSets.get(baseEvent).add(seenBaseEventsWithoutSelfloop); // 10
+		    enablingEventSets.get(baseEvent).add(unmodifiableSet(seenBaseEventsWithoutSelfloop)); // 10
 		    final Set<BaseEvent> nextSeenBaseEvents = new HashSet<BaseEvent>(seenBaseEvents); // 11
-		    nextSeenBaseEvents.add(baseEvent); // 11
-		    if (!stateToSeenBaseEvents.get(state).contains(nextSeenBaseEvents)) { // 11
-			Set<Parameter<?>> nextParameterSet = new HashSet<Parameter<?>>(parameterSet); // 12
+		    final Set<Parameter<?>> nextParameterSet = new HashSet<Parameter<?>>(parameterSet); // 12
+		    // filter loops on states
+		    if (nextState != state) {
+			nextSeenBaseEvents.add(baseEvent); // 11
 			nextParameterSet.addAll(baseEvent.getParameters()); // 12
-			computeEnableSets(state.getSuccessor(baseEvent), nextSeenBaseEvents, nextParameterSet); // 12
+		    }
+		    if (!stateToSeenBaseEvents.get(state).contains(nextSeenBaseEvents)) { // 11
+			computeEnableSets(state.getSuccessor(baseEvent), unmodifiableSet(nextSeenBaseEvents),
+				unmodifiableSet(nextParameterSet)); // 12
 		    } // 13
 		} // 14
 	    } // 15
@@ -279,7 +285,7 @@ public class FiniteParametricProperty implements ParametricProperty {
     }
 
     @Override
-    public SetMultimap<Set<Parameter<?>>,Tuple<Set<Parameter<?>>,Boolean>> getMonitorSetData() {
+    public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> getMonitorSetData() {
 	return monitorSetData;
     }
 
