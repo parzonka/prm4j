@@ -140,6 +140,29 @@ public abstract class FSMDefinitions {
 
     }
 
+    public static class FSM_obj_obj {
+
+	public final Alphabet alphabet = new Alphabet();
+
+	public final Parameter<Object> p1 = alphabet.createParameter("p1", Object.class);
+
+	public final Symbol1<Object> e1 = alphabet.createSymbol1("e1", p1);
+
+	public final AwareMatchHandler1<Object> matchHandler = AwareMatchHandler.create(p1);
+
+	public final FSM fsm = new FSM(alphabet);
+
+	public final FSMState initial = fsm.createInitialState();
+	public final FSMState s1 = fsm.createState();
+	public final FSMState error = fsm.createAcceptingState(matchHandler);
+
+	public FSM_obj_obj() {
+	    initial.addTransition(e1, s1);
+	    s1.addTransition(e1, error);
+	}
+
+    }
+
     public static class FSM_a_ab_a_b {
 
 	public final Alphabet alphabet = new Alphabet();
