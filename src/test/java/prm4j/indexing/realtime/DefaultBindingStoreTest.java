@@ -31,12 +31,13 @@ import prm4j.spec.FiniteSpec;
 
 public class DefaultBindingStoreTest extends AbstractTest {
 
+    // cleaning interval = 1 => check for expired bindings on each 'getBindings'
     DefaultBindingStore bs;
 
     @Test
     public void createBinding_sizeIncreases() throws Exception {
 	FSM_obj_obj fsm = new FSM_obj_obj();
-	setup(fsm.fsm);
+	createBindingStoreWithCleaningInterval1(fsm.fsm);
 	Object object = new Object();
 	assertEquals(0, bs.size());
 
@@ -50,7 +51,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
     @Test
     public void createBinding_bindingPersists() throws Exception {
 	FSM_obj_obj fsm = new FSM_obj_obj();
-	setup(fsm.fsm);
+	createBindingStoreWithCleaningInterval1(fsm.fsm);
 	Object object = new Object();
 
 	// exercise
@@ -63,7 +64,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
     @Test
     public void removeBinding_sizeHasDiminished() throws Exception {
 	FSM_obj_obj fsm = new FSM_obj_obj();
-	setup(fsm.fsm);
+	createBindingStoreWithCleaningInterval1(fsm.fsm);
 	Object object = new Object();
 
 	// exercise
@@ -77,7 +78,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
     @Test
     public void unreachableBoundObject_boundObjectIsNullInBinding() throws Exception {
 	FSM_obj_obj fsm = new FSM_obj_obj();
-	setup(fsm.fsm);
+	createBindingStoreWithCleaningInterval1(fsm.fsm);
 
 	// exercise
 	Object object = new Object();
@@ -92,7 +93,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
     @Test
     public void unreachableBoundObject_bindingIsEnqueuedInReferenceQueue() throws Exception {
 	FSM_obj_obj fsm = new FSM_obj_obj();
-	setup(fsm.fsm);
+	createBindingStoreWithCleaningInterval1(fsm.fsm);
 
 	// exercise
 	Object object = new Object();
@@ -105,9 +106,9 @@ public class DefaultBindingStoreTest extends AbstractTest {
     }
 
     @Test
-    public void getBinding_bindingGetsRemovedByGarbageCollector() throws Exception {
+    public void getBinding_removeExpiredBindingsNow_bindingGetsCleaned() throws Exception {
 	FSM_obj_obj fsm = new FSM_obj_obj();
-	setup(fsm.fsm);
+	createBindingStoreWithCleaningInterval1(fsm.fsm);
 
 	// exercise
 	Object object = new Object();
@@ -120,7 +121,23 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	assertEquals(0, bs.size());
     }
 
-    private void setup(FSM fsm) {
+    @Test
+    public void getBinding_expirationAndGetAnotherBinding_bindingGetsCleaned() throws Exception {
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	createBindingStoreWithCleaningInterval1(fsm.fsm);
+
+	// exercise
+	Object object = new Object();
+	bs.getBindings(array(object));
+	object = null;
+	runGarbageCollectorAFewTimes();
+	bs.getBindings(array(new Object())); // get another binding
+
+	// verify
+	assertEquals(1, bs.size()); // one got removed, one still persists
+    }
+
+    private void createBindingStoreWithCleaningInterval1(FSM fsm) {
 	FiniteSpec finiteSpec = new FSMSpec(fsm);
 	bs = new DefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
     }
