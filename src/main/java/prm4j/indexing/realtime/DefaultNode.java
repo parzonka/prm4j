@@ -10,6 +10,8 @@
  */
 package prm4j.indexing.realtime;
 
+import java.lang.ref.WeakReference;
+
 import prm4j.Util;
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseMonitor;
@@ -20,6 +22,7 @@ public class DefaultNode extends AbstractNode {
     private final MetaNode metaNode;
     private final MonitorSet[] monitorSets;
     private BaseMonitor monitor;
+    private final WeakReference<Node> nodeRef;
 
     /**
      * @param metaNode
@@ -32,6 +35,7 @@ public class DefaultNode extends AbstractNode {
 	super(key, hashCode);
 	this.metaNode = metaNode;
 	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
+	nodeRef = new WeakReference<Node>(this);
     }
 
     @Override
@@ -46,6 +50,7 @@ public class DefaultNode extends AbstractNode {
 
     @Override
     public Node getOrCreateNode(LowLevelBinding binding) {
+	binding.registerNode(nodeRef);
 	return getOrCreate(binding, binding.hashCode());
     }
 
