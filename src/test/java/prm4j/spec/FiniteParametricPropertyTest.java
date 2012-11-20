@@ -251,13 +251,42 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void getPossibleParameterSets_FSM_a_a_no_b() throws Exception {
-	FSM_a_a_no_b fsm = new FSM_a_a_no_b();
+    public void getEnablingEventSets_FSM_ab_b_with_initial_b_loop() throws Exception {
+	FSM_ab_b_with_initial_b_loop fsm = new FSM_ab_b_with_initial_b_loop();
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+
+	Map<BaseEvent, Set<Set<BaseEvent>>> actual = fs.getEnablingEventSets();
+	Map<BaseEvent, Set<Set<BaseEvent>>> expected = new HashMap<BaseEvent, Set<Set<BaseEvent>>>();
+
+	expected.put(fsm.e1, asSet(Collections.<BaseEvent> emptySet()));
+	expected.put(fsm.e2, asSet(asSet((BaseEvent) fsm.e1), Collections.<BaseEvent> emptySet()));
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getMonitorSetData_FSM_ab_b_with_initial_b_loop() throws Exception {
+	FSM_ab_b_with_initial_b_loop fsm = new FSM_ab_b_with_initial_b_loop();
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> actual = fs.getMonitorSetData();
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> expected = HashMultimap.create();
+
+	// compatible parameter set, (selected parameter set, sends updates)
+	expected.put(asSet(fsm.p2), tuple(EMPTY_PARAMETER_SET, true));
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void getPossibleParameterSets_FSM_ab_b_with_initial_b_loop() throws Exception {
+	FSM_ab_b_with_initial_b_loop fsm = new FSM_ab_b_with_initial_b_loop();
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
 
 	Set<Set<Parameter<?>>> actual = fs.getPossibleParameterSets();
 
-	Set<Set<Parameter<?>>> expected = asSet(EMPTY_PARAMETER_SET, asSet(fsm.p1), asSet(fsm.p2), asSet(fsm.p1, fsm.p2));
+	Set<Set<Parameter<?>>> expected = asSet(EMPTY_PARAMETER_SET, asSet(fsm.p1, fsm.p2));
 
 	assertEquals(expected, actual);
     }

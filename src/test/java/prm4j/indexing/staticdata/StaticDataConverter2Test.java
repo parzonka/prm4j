@@ -73,40 +73,40 @@ public class StaticDataConverter2Test extends AbstractTest {
     }
 
     @Test
-    public void getChainData_FSM_a_a_no_b() {
+    public void getChainData_FSM_ab_b_with_initial_b_loop() {
 
-	FSM_a_a_no_b fsm = new FSM_a_a_no_b();
+	FSM_ab_b_with_initial_b_loop fsm = new FSM_ab_b_with_initial_b_loop();
 	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 	MetaNode mt = sdc.getMetaTree();
 
 	assertChainData(mt, asSet(fsm.p1));
-	assertChainData(mt, asSet(fsm.p2), chainData(new int[0], 0));
-	assertChainData(mt, asSet(fsm.p1, fsm.p2), chainData(array(0), 0), chainData(array(1), 0));
+	assertChainData(mt, asSet(fsm.p2));
+	assertChainData(mt, asSet(fsm.p1, fsm.p2), chainData(array(1), 0));
     }
 
     @Test
-    public void getMetaTree_FSM_a_a_no_b() {
+    public void getMetaTreeMonitorSetCount_FSM_ab_b_with_initial_b_loop() {
 
-	FSM_a_a_no_b fsm = new FSM_a_a_no_b();
+	FSM_ab_b_with_initial_b_loop fsm = new FSM_ab_b_with_initial_b_loop();
 	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 	MetaNode metaTreeRoot = sdc.getMetaTree();
 
-	assertEquals(1, metaTreeRoot.getMonitorSetCount());
+	assertEquals(0, metaTreeRoot.getMonitorSetCount());
+	assertEquals(0, metaTreeRoot.getMetaNode(fsm.p1).getMonitorSetCount());
+	assertEquals(1, metaTreeRoot.getMetaNode(fsm.p2).getMonitorSetCount());
     }
 
     @Test
-    public void getMonitorSetIds() {
+    public void getMonitorSetIds_FSM_ab_b_with_initial_b_loop() {
 
-	FSM_a_a_no_b fsm = new FSM_a_a_no_b();
+	FSM_ab_b_with_initial_b_loop fsm = new FSM_ab_b_with_initial_b_loop();
 	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 	Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> actual = sdc.getMonitorSetIds();
 
 	Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> expected = HashBasedTable.create();
-	expected.put(EMPTY_PARAMETER_SET, asSet(fsm.p2), 0);
-	expected.put(asSet(fsm.p1), EMPTY_PARAMETER_SET, 0);
 	expected.put(asSet(fsm.p2), EMPTY_PARAMETER_SET, 0);
 
 	assertEquals(expected, actual);
