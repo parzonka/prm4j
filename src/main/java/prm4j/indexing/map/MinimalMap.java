@@ -106,6 +106,16 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
     }
 
     /**
+     * Retrieves the entry associated with this key or returns null.
+     *
+     * @param key
+     * @return the entry or null, if entry is not stored in the map
+     */
+    public E get(final K key) {
+	return get(key, hashCode(key));
+    }
+
+    /**
      * Retrieves the entry associated with this key and the provided hash code or returns null.
      *
      * @param key
