@@ -16,10 +16,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static prm4j.Util.map;
+import static prm4j.Util.tuple;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
@@ -84,6 +85,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	Object object = new Object();
 	LowLevelBinding[] bindings = bs.getBindings(array(object));
 	object = null;
+
 	runGarbageCollectorAFewTimes();
 
 	// verify
@@ -99,6 +101,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	Object object = new Object();
 	LowLevelBinding[] bindings = bs.getBindings(array(object));
 	object = null;
+
 	runGarbageCollectorAFewTimes();
 
 	// verify
@@ -191,26 +194,16 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	bs = new DefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void getBindings_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	FSM fsm = u.fsm;
-	FiniteSpec finiteSpec = new FSMSpec(fsm);
-	u.m.setIndex(0);
-	u.c.setIndex(1);
-	u.i.setIndex(2);
-
-	DefaultBindingStore bs = new DefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
+	createBindingStoreWithCleaningInterval1(new FSM_unsafeMapIterator().fsm);
 
 	// create bindings
-	Object[] boundObjects = new Object[finiteSpec.getFullParameterSet().size()];
-	Map map = new HashMap();
-	map.put(1, "a");
+	Map map = map(tuple(1, "a"));
 	Collection coll = map.entrySet();
-	boundObjects[0] = map;
-	boundObjects[1] = coll;
-	LowLevelBinding[] bindings = bs.getBindings(boundObjects);
+	LowLevelBinding[] bindings = bs.getBindings(array(map, coll));
+
 	LowLevelBinding mBinding = bindings[0];
 	LowLevelBinding cBinding = bindings[1];
 
@@ -225,26 +218,16 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	assertEquals(1, cBinding.getParameterIndex());
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void removeExpiredBindingsNow_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	FSM fsm = u.fsm;
-	FiniteSpec finiteSpec = new FSMSpec(fsm);
-	u.m.setIndex(0);
-	u.c.setIndex(1);
-	u.i.setIndex(2);
-
-	DefaultBindingStore bs = new DefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
+	createBindingStoreWithCleaningInterval1(new FSM_unsafeMapIterator().fsm);
 
 	// create bindings
-	Object[] boundObjects = new Object[finiteSpec.getFullParameterSet().size()];
-	Map map = new HashMap();
-	map.put(1, "a");
+	Map map = map(tuple(1, "a"));
 	Collection coll = map.entrySet();
-	boundObjects[0] = map;
-	boundObjects[1] = coll;
-	LowLevelBinding[] bindings = bs.getBindings(boundObjects);
+	LowLevelBinding[] bindings = bs.getBindings(array(map, coll));
+
 	LowLevelBinding mBinding = bindings[0];
 	LowLevelBinding cBinding = bindings[1];
 
@@ -255,8 +238,6 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	cBinding.registerNode(new WeakReference<Node>(cNode));
 
 	// nullify references
-	boundObjects[0] = null;
-	boundObjects[1] = null;
 	map = null;
 	coll = null;
 
@@ -268,7 +249,6 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// verify
 	verify(mNode).remove(mBinding);
 	verify(cNode).remove(cBinding);
-
     }
 
 }
