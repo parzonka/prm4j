@@ -10,10 +10,12 @@
  */
 package prm4j.indexing.realtime;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -39,7 +41,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	assertEquals(0, bs.size());
 
 	// exercise
-	bs.getOrCreateBinding(fsm.p1, object);
+	bs.getBindings(array(object));
 
 	// verify
 	assertEquals(1, bs.size());
@@ -52,10 +54,10 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	Object object = new Object();
 
 	// exercise
-	LowLevelBinding binding = bs.getOrCreateBinding(fsm.p1, object);
+	LowLevelBinding[] bindings = bs.getBindings(array(object));
 
 	// verify
-	assertEquals(binding, bs.getBinding(fsm.p1, object));
+	assertArrayEquals(bindings, array(bs.getBinding(fsm.p1, object)));
     }
 
     @Test
@@ -65,8 +67,8 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	Object object = new Object();
 
 	// exercise
-	LowLevelBinding binding = bs.getOrCreateBinding(fsm.p1, object);
-	bs.removeBinding(binding);
+	LowLevelBinding[] bindings = bs.getBindings(array(object));
+	bs.removeBinding(bindings[0]);
 
 	// verify
 	assertEquals(0, bs.size());
@@ -79,12 +81,12 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding binding = bs.getOrCreateBinding(fsm.p1, object);
+	LowLevelBinding[] bindings = bs.getBindings(array(object));
 	object = null;
 	runGarbageCollectorAFewTimes();
 
 	// verify
-	assertNull(binding.get());
+	assertNull(bindings[0].get());
     }
 
     @Test
@@ -94,12 +96,12 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding binding = bs.getOrCreateBinding(fsm.p1, object);
+	LowLevelBinding[] bindings = bs.getBindings(array(object));
 	object = null;
 	runGarbageCollectorAFewTimes();
 
 	// verify
-	assertEquals(binding, bs.getReferenceQueue().poll());
+	assertEquals(bindings[0], bs.getReferenceQueue().poll());
     }
 
     @Test
@@ -109,7 +111,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	bs.getOrCreateBinding(fsm.p1, object);
+	bs.getBindings(array(object));
 	object = null;
 	runGarbageCollectorAFewTimes();
 	bs.removeExpiredBindingsNow();
