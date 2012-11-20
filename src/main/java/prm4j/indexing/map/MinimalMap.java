@@ -201,7 +201,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 	}
     }
 
-    public void removeEntry(final E entryToRemove) {
+    public boolean removeEntry(final E entryToRemove) {
 
 	final int hashCode = entryToRemove.hashCode();
 	final int hashIndex = hashIndex(hashCode, table.length);
@@ -217,10 +217,12 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 		    lastEntry.setNext(nextEntry);
 		}
 		size--;
+		return true;
 	    }
 	    lastEntry = entry;
 	    entry = nextEntry;
 	}
+	return false;
     }
 
     /**
