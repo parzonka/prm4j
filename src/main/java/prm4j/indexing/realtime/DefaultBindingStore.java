@@ -103,14 +103,12 @@ public class DefaultBindingStore implements BindingStore {
 	}
 
 	private void removeExpiredBindings() {
-	    DefaultLowLevelBinding binding;
-	    do {
+	    DefaultLowLevelBinding binding = (DefaultLowLevelBinding) referenceQueue.poll();
+	    while (binding != null) {
+		stores[binding.getParameterIndex()].removeEntry(binding);
+		binding.release();
 		binding = (DefaultLowLevelBinding) referenceQueue.poll();
-		if (binding != null) {
-		    stores[binding.getParameterIndex()].removeEntry(binding);
-		    binding.release();
-		}
-	    } while (binding != null);
+	    }
 	}
     }
 
