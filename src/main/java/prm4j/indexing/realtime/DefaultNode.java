@@ -60,6 +60,11 @@ public class DefaultNode extends AbstractNode {
     }
 
     @Override
+    public void remove(LowLevelBinding binding) {
+	super.remove(binding, binding.hashCode());
+    }
+
+    @Override
     public MonitorSet getMonitorSet(int monitorSetId) {
 	// lazy creation
 	MonitorSet monitorSet = monitorSets[monitorSetId];
