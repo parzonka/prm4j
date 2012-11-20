@@ -85,7 +85,7 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     }
 
     protected Node getNode(Object... boundObjects) {
-	return nodeStore.getOrCreateNode(bindingStore.getBindings(boundObjects));
+	return nodeStore.getNode(bindingStore.getBindings(boundObjects));
     }
 
     protected void assertBoundObjects(AwareBaseMonitor monitor, Object... boundObjects) {

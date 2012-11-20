@@ -70,7 +70,7 @@ public class AwareDefaultNodeStore extends DefaultNodeStore {
     }
 
     public Node getNode(Set<LowLevelBinding> setOfBindings) {
-	return super.getOrCreateNode(prm4j.Util.asSortedList(setOfBindings).toArray(new LowLevelBinding[0]));
+	return super.getNode(prm4j.Util.asSortedList(setOfBindings).toArray(new LowLevelBinding[0]));
     }
 
     public Set<Node> getCreatedNodes() {
