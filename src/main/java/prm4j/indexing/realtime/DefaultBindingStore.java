@@ -61,6 +61,7 @@ public class DefaultBindingStore implements BindingStore {
 	return stores[parameter.getIndex()].get(boundObject);
     }
 
+    @Override
     public int size() {
 	int result = 0;
 	for (MinimalMap<Object, DefaultLowLevelBinding> store : stores) {
@@ -72,6 +73,11 @@ public class DefaultBindingStore implements BindingStore {
     @Override
     public LowLevelBinding getOrCreateBinding(Parameter<?> parameter, Object boundObject) {
 	return stores[parameter.getIndex()].getOrCreate(boundObject);
+    }
+
+    @Override
+    public boolean removeBinding(LowLevelBinding binding) {
+	return stores[binding.getParameterIndex()].removeEntry((DefaultLowLevelBinding) binding);
     }
 
     protected ReferenceQueue<Object> getReferenceQueue() {
@@ -109,7 +115,7 @@ public class DefaultBindingStore implements BindingStore {
 	private int attempts = 0;
 
 	public void clean() {
-	    if (attempts++ > cleaningInterval) {
+	    if (attempts++ >= cleaningInterval) {
 		removeExpiredBindings();
 		attempts = 0;
 	    }
@@ -118,7 +124,7 @@ public class DefaultBindingStore implements BindingStore {
 	private void removeExpiredBindings() {
 	    DefaultLowLevelBinding binding = (DefaultLowLevelBinding) referenceQueue.poll();
 	    while (binding != null) {
-		stores[binding.getParameterIndex()].removeEntry(binding);
+		removeBinding(binding);
 		binding.release();
 		binding = (DefaultLowLevelBinding) referenceQueue.poll();
 	    }
