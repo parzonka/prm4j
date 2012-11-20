@@ -88,7 +88,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
 	E lastEntry = null;
 	while (entry != null) {
-	    if (hashCode == entry.hashCode() && key == entry.getKey()) {
+	    if (key == entry.getKey()) {
 		return entry;
 	    }
 	    lastEntry = entry;
@@ -188,7 +188,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 	E lastEntry = null;
 	while (entry != null) {
 	    E nextEntry = entry.next();
-	    if (hashCode == entry.hashCode() && key == entry.getKey()) {
+	    if (key == entry.getKey()) {
 		if (lastEntry == null) {
 		    table[hashIndex] = nextEntry;
 		} else {
@@ -210,7 +210,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 	E lastEntry = null;
 	while (entry != null) {
 	    E nextEntry = entry.next();
-	    if (hashCode == entry.hashCode() && entryToRemove == entry) {
+	    if (entryToRemove == entry) {
 		if (lastEntry == null) {
 		    table[hashIndex] = nextEntry;
 		} else {
