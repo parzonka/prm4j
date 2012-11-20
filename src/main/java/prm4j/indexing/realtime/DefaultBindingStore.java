@@ -58,7 +58,7 @@ public class DefaultBindingStore implements BindingStore {
 
     @Override
     public LowLevelBinding getBinding(Parameter<?> parameter, Object boundObject) {
-	return stores[parameter.getIndex()].getOrCreate(boundObject);
+	return stores[parameter.getIndex()].get(boundObject);
     }
 
     protected ReferenceQueue<Object> getReferenceQueue() {
