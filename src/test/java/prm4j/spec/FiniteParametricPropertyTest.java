@@ -93,12 +93,12 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	}
 	expected.get(u.createColl).add(Collections.<Symbol> emptySet());
 	expected.get(u.createIter).add(asSet(u.createColl));
-	expected.get(u.createIter).add(asSet(u.createColl, u.updateMap));
+//	expected.get(u.createIter).add(asSet(u.createColl, u.updateMap)); // omitted by filtering loops on states
 	expected.get(u.useIter).add(asSet(u.createColl, u.createIter));
 	expected.get(u.useIter).add(asSet(u.createColl, u.createIter, u.updateMap));
 	expected.get(u.updateMap).add(asSet(u.createColl));
 	expected.get(u.updateMap).add(asSet(u.createColl, u.createIter));
-	expected.get(u.updateMap).add(asSet(u.createColl, u.createIter, u.useIter));
+//	expected.get(u.updateMap).add(asSet(u.createColl, u.createIter, u.useIter)); // omitted by filtering loops on states
 
 	assertEquals(expected, actual);
     }
