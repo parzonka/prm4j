@@ -34,7 +34,7 @@ public class GarbageCollectionTest extends AbstractTest {
     public void createDefaultParametricMonitorWithAwareComponents(FSM fsm, int cleaningInterval) {
 	FiniteSpec finiteSpec = new FSMSpec(fsm);
 	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
-	bindingStore = new DefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
+	bindingStore = new DefaultBindingStore(finiteSpec.getFullParameterSet(), cleaningInterval);
 	nodeStore = new DefaultNodeStore(converter.getMetaTree());
 	prototypeMonitor = new StatefulMonitor(finiteSpec.getInitialState());
 	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext());
@@ -121,6 +121,36 @@ public class GarbageCollectionTest extends AbstractTest {
 
 	// verify
 	assertEquals(0, nodeStore.getRootNode().size()); // node was removed
+    }
+
+    @Test
+    public void fiveExpiredBindings_bindingsAreRemovedFromNodeStore() throws Exception {
+
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 5);
+
+	// exercise
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object())));
+	assertEquals(1, nodeStore.getRootNode().size()); // node is stored
+
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object())));
+	assertEquals(2, nodeStore.getRootNode().size()); // node is stored
+
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object())));
+	assertEquals(3, nodeStore.getRootNode().size()); // node is stored
+	runGarbageCollectorAFewTimes(); // should do nothing
+
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object())));
+	assertEquals(4, nodeStore.getRootNode().size()); // node is stored
+
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object())));
+	assertEquals(5, nodeStore.getRootNode().size()); // node is stored
+	runGarbageCollectorAFewTimes();
+
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object()))); // triggers cleanup in nodeStore
+
+	// verify
+	assertEquals(1, nodeStore.getRootNode().size()); // first 5 nodes are removed, last node persists
     }
 
 }
