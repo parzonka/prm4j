@@ -113,12 +113,32 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// exercise
 	Object object = new Object();
 	bs.getBindings(array(object));
+
 	object = null;
 	runGarbageCollectorAFewTimes();
-	bs.removeExpiredBindingsNow();
+
+	bs.removeExpiredBindingsNow(); // manually triggers cleanup
 
 	// verify
 	assertEquals(0, bs.size());
+    }
+
+    @Test
+    public void getBinding_getAnotherBinding_twoBindingsPersist() throws Exception {
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	createBindingStoreWithCleaningInterval1(fsm.fsm);
+
+	// exercise
+	Object object = new Object();
+	bs.getBindings(array(object));
+
+	runGarbageCollectorAFewTimes(); // this should do nothing
+
+	Object object2 = new Object();
+	bs.getBindings(array(object2)); // get another binding
+
+	// verify
+	assertEquals(2, bs.size());
     }
 
     @Test
@@ -129,12 +149,41 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// exercise
 	Object object = new Object();
 	bs.getBindings(array(object));
+
 	object = null;
+
 	runGarbageCollectorAFewTimes();
-	bs.getBindings(array(new Object())); // get another binding
+
+	Object object2 = new Object();
+	bs.getBindings(array(object2)); // get another binding
 
 	// verify
 	assertEquals(1, bs.size()); // one got removed, one still persists
+    }
+
+    @Test
+    public void getBinding_getBinding_expiration_bindingGetsCleaned() throws Exception {
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	createBindingStoreWithCleaningInterval1(fsm.fsm);
+
+	// exercise
+	Object object = new Object();
+	bs.getBindings(array(object));
+
+	Object object2 = new Object();
+	bs.getBindings(array(object2)); // get another binding
+
+	Object object3 = new Object();
+	bs.getBindings(array(object3)); // get another binding
+
+	object = null;
+	object2 = null;
+	runGarbageCollectorAFewTimes();
+
+	bs.getBindings(array(object3)); // get third binding
+
+	// verify
+	assertEquals(1, bs.size()); // object and object2 got removed, object3 still persists
     }
 
     private void createBindingStoreWithCleaningInterval1(FSM fsm) {
