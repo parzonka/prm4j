@@ -10,6 +10,7 @@
  */
 package prm4j.indexing.realtime;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -27,6 +28,25 @@ import prm4j.api.fsm.FSMSpec;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultBindingStoreTest extends AbstractTest {
+
+    DefaultBindingStore bs;
+
+    @Test
+    public void getBinding_bindingPersists() throws Exception {
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	setup(fsm.fsm);
+	Object object = new Object();
+
+	// exercise
+	LowLevelBinding binding = bs.getOrCreateBinding(fsm.p1, object);
+
+	// verify
+	assertEquals(binding, bs.getBinding(fsm.p1, object));
+    }
+    private void setup(FSM fsm) {
+	FiniteSpec finiteSpec = new FSMSpec(fsm);
+	bs = new DefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
+    }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
