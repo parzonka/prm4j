@@ -56,6 +56,21 @@ public class GarbageCollectionTest extends AbstractTest {
     }
 
     @Test
+    public void aliveBinding_oneNodeIsStoredInRootnode() throws Exception {
+
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 1);
+
+	// exercise
+	Object object = new Object();
+	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+	nodeStore.getOrCreateNode(bindings);
+
+	// verify
+	assertEquals(1, nodeStore.getRootNode().size());
+    }
+
+    @Test
     public void aliveBinding_bindingIsPersistent() throws Exception {
 
 	FSM_obj_obj fsm = new FSM_obj_obj();
@@ -68,6 +83,44 @@ public class GarbageCollectionTest extends AbstractTest {
 
 	// verify
 	assertEquals(1, bindingStore.size());
+    }
+
+    @Test
+    public void expiredBinding_bindingIsRemovedFromBindingStore() throws Exception {
+
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 1);
+
+	// exercise
+	Object object = new Object();
+	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+	nodeStore.getOrCreateNode(bindings);
+	object = null;
+	runGarbageCollectorAFewTimes();
+	bindingStore.getBindings(array(new Object())); // object is collected, second object is added
+
+	// verify
+	assertEquals(1, bindingStore.size()); // second object persists
+    }
+
+    @Test
+    public void expiredBinding_bindingIsRemovedFromNodeStore() throws Exception {
+
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 1);
+
+	// exercise
+	Object object = new Object();
+	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+	nodeStore.getOrCreateNode(bindings);
+	assertEquals(1, nodeStore.getRootNode().size()); // node is stored
+
+	object = null;
+	runGarbageCollectorAFewTimes();
+	bindingStore.getBindings(array(new Object())); // object is collected, second object is added
+
+	// verify
+	assertEquals(0, nodeStore.getRootNode().size()); // node was removed
     }
 
 }
