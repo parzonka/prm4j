@@ -32,7 +32,21 @@ public class DefaultBindingStoreTest extends AbstractTest {
     DefaultBindingStore bs;
 
     @Test
-    public void getBinding_bindingPersists() throws Exception {
+    public void createBinding_sizeIncreases() throws Exception {
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	setup(fsm.fsm);
+	Object object = new Object();
+	assertEquals(0, bs.size());
+
+	// exercise
+	bs.getOrCreateBinding(fsm.p1, object);
+
+	// verify
+	assertEquals(1, bs.size());
+    }
+
+    @Test
+    public void createBinding_bindingPersists() throws Exception {
 	FSM_obj_obj fsm = new FSM_obj_obj();
 	setup(fsm.fsm);
 	Object object = new Object();
@@ -43,6 +57,67 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// verify
 	assertEquals(binding, bs.getBinding(fsm.p1, object));
     }
+
+    @Test
+    public void removeBinding_sizeHasDiminished() throws Exception {
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	setup(fsm.fsm);
+	Object object = new Object();
+
+	// exercise
+	LowLevelBinding binding = bs.getOrCreateBinding(fsm.p1, object);
+	bs.removeBinding(binding);
+
+	// verify
+	assertEquals(0, bs.size());
+    }
+
+    @Test
+    public void unreachableBoundObject_boundObjectIsNullInBinding() throws Exception {
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	setup(fsm.fsm);
+
+	// exercise
+	Object object = new Object();
+	LowLevelBinding binding = bs.getOrCreateBinding(fsm.p1, object);
+	object = null;
+	runGarbageCollectorAFewTimes();
+
+	// verify
+	assertNull(binding.get());
+    }
+
+    @Test
+    public void unreachableBoundObject_bindingIsEnqueuedInReferenceQueue() throws Exception {
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	setup(fsm.fsm);
+
+	// exercise
+	Object object = new Object();
+	LowLevelBinding binding = bs.getOrCreateBinding(fsm.p1, object);
+	object = null;
+	runGarbageCollectorAFewTimes();
+
+	// verify
+	assertEquals(binding, bs.getReferenceQueue().poll());
+    }
+
+    @Test
+    public void getBinding_bindingGetsRemovedByGarbageCollector() throws Exception {
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	setup(fsm.fsm);
+
+	// exercise
+	Object object = new Object();
+	bs.getOrCreateBinding(fsm.p1, object);
+	object = null;
+	runGarbageCollectorAFewTimes();
+	bs.removeExpiredBindingsNow();
+
+	// verify
+	assertEquals(0, bs.size());
+    }
+
     private void setup(FSM fsm) {
 	FiniteSpec finiteSpec = new FSMSpec(fsm);
 	bs = new DefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
