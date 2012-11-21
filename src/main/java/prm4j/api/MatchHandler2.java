@@ -25,10 +25,10 @@ public abstract class MatchHandler2<P1, P2> extends MatchHandler {
     }
 
     @Override
-    public void handleMatch(Binding[] bindings) {
-	handleMatch(getBoundObject(this.param1, bindings), getBoundObject(this.param2, bindings));
+    public void handleMatch(Binding[] bindings, Object auxiliaryData) {
+	handleMatch(getBoundObject(this.param1, bindings), getBoundObject(this.param2, bindings), auxiliaryData);
     }
 
-    public abstract void handleMatch(P1 obj1, P2 obj2);
+    public abstract void handleMatch(P1 obj1, P2 obj2, Object auxiliaryData);
 
 }

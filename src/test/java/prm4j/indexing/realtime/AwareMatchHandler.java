@@ -48,7 +48,7 @@ public class AwareMatchHandler<P1> {
 	}
 
 	@Override
-	public void handleMatch() {
+	public void handleMatch(Object auxiliaryData) {
 	    handledMatches++;
 	}
 
@@ -64,7 +64,7 @@ public class AwareMatchHandler<P1> {
 	}
 
 	@Override
-	public void handleMatch(P1 obj1) {
+	public void handleMatch(P1 obj1, Object auxiliaryData) {
 	    handledMatches.add(obj1);
 	}
 
@@ -89,7 +89,7 @@ public class AwareMatchHandler<P1> {
 	}
 
 	@Override
-	public void handleMatch(P1 obj1, P2 obj2) {
+	public void handleMatch(P1 obj1, P2 obj2, Object auxiliaryData) {
 	    handledMatches.add(Util.tuple(obj1, obj2));
 	}
 

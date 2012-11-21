@@ -18,10 +18,10 @@ public abstract class MatchHandler0 extends MatchHandler {
     }
 
     @Override
-    public void handleMatch(Binding[] bindings) {
-	handleMatch();
+    public void handleMatch(Binding[] bindings, Object auxiliaryData) {
+	handleMatch(auxiliaryData);
     }
 
-    public abstract void handleMatch();
+    public abstract void handleMatch(Object auxiliaryData);
 
 }

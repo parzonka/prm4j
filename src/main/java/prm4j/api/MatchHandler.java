@@ -18,7 +18,7 @@ public abstract class MatchHandler {
      */
     public final static MatchHandler NO_OP = new MatchHandler0() {
 	@Override
-	public void handleMatch() {
+	public void handleMatch(Object auxiliaryData) {
 	}
     };
 
@@ -27,7 +27,7 @@ public abstract class MatchHandler {
      *
      * @param bindings
      */
-    public abstract void handleMatch(Binding[] bindings);
+    public abstract void handleMatch(Binding[] bindings, Object auxiliaryData);
 
     /**
      * Retrieves the object which was stored in the monitor bindings. The object may be <code>null</code> if selected
