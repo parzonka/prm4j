@@ -11,6 +11,14 @@
 package prm4j.indexing.realtime;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -27,7 +35,7 @@ public class GarbageCollectionTest extends AbstractTest {
 
     protected StaticDataConverter converter;
     protected DefaultBindingStore bindingStore;
-    protected DefaultNodeStore nodeStore;
+    protected AwareDefaultNodeStore nodeStore;
     protected BaseMonitor prototypeMonitor;
     protected DefaultParametricMonitor pm;
 
@@ -35,7 +43,7 @@ public class GarbageCollectionTest extends AbstractTest {
 	FiniteSpec finiteSpec = new FSMSpec(fsm);
 	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
 	bindingStore = new DefaultBindingStore(finiteSpec.getFullParameterSet(), cleaningInterval);
-	nodeStore = new DefaultNodeStore(converter.getMetaTree());
+	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree());
 	prototypeMonitor = new StatefulMonitor(finiteSpec.getInitialState());
 	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext());
     }
@@ -153,4 +161,42 @@ public class GarbageCollectionTest extends AbstractTest {
 	assertEquals(1, nodeStore.getRootNode().size()); // first 5 nodes are removed, last node persists
     }
 
+    @Test
+    @SuppressWarnings("rawtypes")
+    public void twoEvents_expiredBindings_unsafeMapIterator_allCleaned() throws Exception {
+
+	FSM_unsafeMapIterator fsm = new FSM_unsafeMapIterator();
+	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 1);
+
+	Map map = mock(Map.class);
+	Collection collection = mock(Collection.class);
+	Iterator iterator = mock(Iterator.class);
+
+	// exercise
+	pm.processEvent(fsm.createColl.createEvent(map, collection));
+	pm.processEvent(fsm.createIter.createEvent(collection, iterator));
+
+	assertEquals(6, nodeStore.getCreatedNodes().size()); // six nodes are created
+
+	map = null;
+	collection = null;
+	iterator = null;
+
+	runGarbageCollectorAFewTimes(); // bindings reference null
+	bindingStore.removeExpiredBindingsNow(); // bindings remove themselves from the nodes
+	runGarbageCollectorAFewTimes(); // nodes are collected by the system gc
+
+	// verify
+	assertEquals(Collections.EMPTY_SET, nodeStore.getCreatedNodes()); // all nodes are deleted
+
+    }
+
+    protected void assertCreatedNodes(Object[]... instances) {
+	Set<Node> createdNodes = new HashSet<Node>(nodeStore.getCreatedNodes());
+	nodeStore.getCreatedNodes().clear();
+	for (Object[] instance : instances) {
+	    nodeStore.getOrCreateNode(bindingStore.getBindings(instance));
+	}
+	assertEquals(nodeStore.getCreatedNodes(), createdNodes);
+    }
 }
