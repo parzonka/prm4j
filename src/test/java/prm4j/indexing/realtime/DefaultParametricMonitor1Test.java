@@ -272,7 +272,7 @@ public class DefaultParametricMonitor1Test extends AbstractDefaultParametricMoni
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertEquals(list(a), fsm.matchHandler.getHandledMatches());
+	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
     }
 
     @Test
@@ -284,7 +284,7 @@ public class DefaultParametricMonitor1Test extends AbstractDefaultParametricMoni
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertEquals(list(a), fsm.matchHandler.getHandledMatches());
+	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
     }
 
 }
