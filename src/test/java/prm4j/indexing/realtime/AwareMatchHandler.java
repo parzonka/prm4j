@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import prm4j.Util;
-import prm4j.Util.Tuple;
 import prm4j.api.MatchHandler0;
 import prm4j.api.MatchHandler1;
 import prm4j.api.MatchHandler2;
@@ -36,44 +35,51 @@ public class AwareMatchHandler<P1> {
 
     public static class AwareMatchHandler0 extends MatchHandler0 {
 
-	private int handledMatches = 0;
+	private final List<Object> handledMatches;
 
-	/**
-	 * Returns a count of handled matches
-	 *
-	 * @return
-	 */
-	public int getHandledMatches() {
-	    return handledMatches;
+	public AwareMatchHandler0() {
+	    super();
+	    handledMatches = new ArrayList<Object>();
 	}
 
 	@Override
 	public void handleMatch(Object auxiliaryData) {
-	    handledMatches++;
+	    handledMatches.add(auxiliaryData);
+	}
+
+	/**
+	 * Returns the list of auxiliary data (can be null) if a match was handled. The length of the list represents
+	 * the number of matches.
+	 *
+	 * @return a list of auxiliary data
+	 */
+	public List<Object> getHandledMatches() {
+	    return handledMatches;
 	}
 
     }
 
     public static class AwareMatchHandler1<P1> extends MatchHandler1<P1> {
 
-	private final List<P1> handledMatches;
+	private final List<Object> handledMatches;
 
 	public AwareMatchHandler1(Parameter<P1> param1) {
 	    super(param1);
-	    handledMatches = new ArrayList<P1>();
+	    handledMatches = new ArrayList<Object>();
 	}
 
 	@Override
 	public void handleMatch(P1 obj1, Object auxiliaryData) {
-	    handledMatches.add(obj1);
+	    handledMatches.add(auxiliaryData);
 	}
 
 	/**
-	 * Returns a list of object which participated in a detected match.
+	 * Returns the list of auxiliary data (can be null) if a match was handled. The length of the list represents
+	 * the number of matches.
 	 *
-	 * @return
+	 * @return a list of auxiliary data
 	 */
-	public List<P1> getHandledMatches() {
+	public List<Object> getHandledMatches() {
 	    return handledMatches;
 	}
 
@@ -81,11 +87,11 @@ public class AwareMatchHandler<P1> {
 
     public static class AwareMatchHandler2<P1, P2> extends MatchHandler2<P1, P2> {
 
-	private final List<Tuple<P1, P2>> handledMatches;
+	private final List<Object> handledMatches;
 
 	public AwareMatchHandler2(Parameter<P1> param1, Parameter<P2> param2) {
 	    super(param1, param2);
-	    handledMatches = new ArrayList<Tuple<P1, P2>>();
+	    handledMatches = new ArrayList<Object>();
 	}
 
 	@Override
@@ -94,11 +100,12 @@ public class AwareMatchHandler<P1> {
 	}
 
 	/**
-	 * Returns a list of object tuples which participated in a detected match.
+	 * Returns the list of auxiliary data (can be null) if a match was handled. The length of the list represents
+	 * the number of matches.
 	 *
-	 * @return
+	 * @return a list of auxiliary data
 	 */
-	public List<Tuple<P1, P2>> getHandledMatches() {
+	public List<Object> getHandledMatches() {
 	    return handledMatches;
 	}
 
