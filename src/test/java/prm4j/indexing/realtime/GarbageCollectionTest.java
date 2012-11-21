@@ -185,6 +185,7 @@ public class GarbageCollectionTest extends AbstractTest {
 	runGarbageCollectorAFewTimes(); // bindings reference null
 	bindingStore.removeExpiredBindingsNow(); // bindings remove themselves from the nodes
 	runGarbageCollectorAFewTimes(); // nodes are collected by the system gc
+	runGarbageCollectorAFewTimes(); // gc needs more time here in 10% of all runs
 
 	// verify
 	assertEquals(Collections.EMPTY_SET, nodeStore.getCreatedNodes()); // all nodes are deleted
