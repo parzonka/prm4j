@@ -10,6 +10,8 @@
  */
 package prm4j.api;
 
+import java.util.Arrays;
+
 /**
  * An event contains a generic base event and a number of {@link Binding}s.
  */
@@ -43,6 +45,11 @@ public class Event {
 
     public Object getAuxiliaryData() {
 	return auxiliaryData;
+    }
+
+    @Override
+    public String toString() {
+        return baseEvent.toString() + Arrays.toString(boundObjects);
     }
 
 }
