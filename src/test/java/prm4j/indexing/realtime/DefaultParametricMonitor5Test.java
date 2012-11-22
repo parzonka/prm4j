@@ -39,14 +39,12 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
     BoundObject i2;
     BoundObject i3;
 
-    @Override
-    public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
-	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
-	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
-	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree());
-	prototypeMonitor = new AwareBaseMonitor(finiteSpec.getInitialState());
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext());
-
+    @Before
+    public void init() {
+	boundObjectCounter = 0;
+	instanceCounter = 0;
+	fsm = new FSM_unsafeMapIterator();
+	createDefaultParametricMonitorWithAwareComponents(new FSMSpec(fsm.fsm));
 	m1 = new BoundObject("m1");
 	c1 = new BoundObject("c1");
 	c2 = new BoundObject("c2");
@@ -56,10 +54,13 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	i3 = new BoundObject("i3");
     }
 
-    @Before
-    public void init() {
-	fsm = new FSM_unsafeMapIterator();
-	createDefaultParametricMonitorWithAwareComponents(new FSMSpec(fsm.fsm));
+    @Override
+    public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
+	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
+	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
+	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree());
+	prototypeMonitor = new AwareBaseMonitor(finiteSpec.getInitialState());
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext());
     }
 
     @Test
