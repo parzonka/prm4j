@@ -18,11 +18,15 @@ import prm4j.indexing.staticdata.ChainData;
 
 public class MonitorSet {
 
+    protected static final int DEFAULT_CAPACITY = 16;
+
+    private int capacity;
     private int size = 0;
-    private final BaseMonitor[] monitorSet;
+    private BaseMonitor[] monitorSet;
 
     public MonitorSet() {
-	monitorSet = new BaseMonitor[8];
+	capacity = DEFAULT_CAPACITY;
+	monitorSet = new BaseMonitor[capacity];
     }
 
     public void add(BaseMonitor monitor) {
@@ -31,7 +35,10 @@ public class MonitorSet {
     }
 
     private void ensureCapacity() {
-	// TODO ensureCapacity
+	if (size >= capacity) {
+	    capacity = (capacity * 3) / 2 + 1;
+	    monitorSet = Arrays.copyOf(monitorSet, capacity);
+	}
     }
 
     public void processEvent(Event event) {
