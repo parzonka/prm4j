@@ -29,10 +29,12 @@ public class StatefulMonitor extends BaseMonitor {
     @Override
     public boolean processEvent(Event event) {
 	if (state == null) {
+	    terminate();
 	    return false;
 	}
 	state = state.getSuccessor(event.getBaseEvent());
 	if (state == null) {
+	    terminate();
 	    return false;
 	}
 	MatchHandler matchHandler = state.getMatchHandler();
@@ -40,6 +42,10 @@ public class StatefulMonitor extends BaseMonitor {
 	    matchHandler.handleMatch(getBindings(), event.getAuxiliaryData());
 	    // when a state is a final state, it is still possible we will reach another final state (or loop on a
 	    // final state), so we don't return false here
+	    if (state.isFinal()) {
+		terminate();
+		return false;
+	    }
 	}
 	return true;
     }
