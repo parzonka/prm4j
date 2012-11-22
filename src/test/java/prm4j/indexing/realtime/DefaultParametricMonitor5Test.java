@@ -29,6 +29,7 @@ import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMonitorTest {
 
+    public final static BoundObject _ = null;
     private static int boundObjectCounter = 0;
     private static int instanceCounter = 0;
 
@@ -126,6 +127,47 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 
 	assertTrace(array(m1, c1, i1), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
 	assertTrace(array(m1, c2, i2), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
+	assertEquals(list(0,1), fsm.matchHandler.getHandledMatches());
+    }
+
+    @Test
+    public void m1c1i1_m1c2ci_update4_correctTracesAndMatch() throws Exception {
+
+	// different kind of specification using _ for null, forcing new object creation
+	final ParametricInstance instance1 = instance(m1, _, _);
+	final ParametricInstance instance2 = instance(m1, _, _);
+
+	pm.processEvent(instance1.createEvent(fsm.createColl));
+	pm.processEvent(instance1.createEvent(fsm.createIter));
+	pm.processEvent(instance2.createEvent(fsm.createColl));
+	pm.processEvent(instance2.createEvent(fsm.createIter));
+	pm.processEvent(instance1.createEvent(fsm.updateMap));
+	pm.processEvent(instance1.createEvent(fsm.useIter));
+	pm.processEvent(instance2.createEvent(fsm.useIter));
+
+	assertTrace(instance1.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
+	assertTrace(instance2.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
+	assertEquals(list(0,1), fsm.matchHandler.getHandledMatches());
+    }
+
+    @Test
+    public void m1c1i1_m1c2ci_update5_correctTracesAndMatch() throws Exception {
+
+	final ParametricInstance instance1 = instance(m1, _, _);
+	final ParametricInstance instance2 = instance(m1, _, _);
+
+	pm.processEvent(instance1.createEvent(fsm.createColl));
+	pm.processEvent(instance1.createEvent(fsm.createIter));
+	pm.processEvent(instance1.createEvent(fsm.updateMap));
+	pm.processEvent(instance1.createEvent(fsm.useIter));
+
+	pm.processEvent(instance2.createEvent(fsm.createColl));
+	pm.processEvent(instance2.createEvent(fsm.createIter));
+	pm.processEvent(instance2.createEvent(fsm.updateMap));
+	pm.processEvent(instance2.createEvent(fsm.useIter));
+
+	assertTrace(instance1.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter, fsm.updateMap);
+	assertTrace(instance2.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
 	assertEquals(list(0,1), fsm.matchHandler.getHandledMatches());
     }
 

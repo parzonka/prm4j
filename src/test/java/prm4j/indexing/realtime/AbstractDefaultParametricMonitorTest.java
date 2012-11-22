@@ -146,6 +146,10 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     }
 
     protected void assertTrace(Object[] boundObjects, Symbol... symbols) {
+	if (getNode(boundObjects) == null)
+	    throw new NullPointerException("Node could not be found for " + Arrays.toString(boundObjects));
+	if (getNode(boundObjects).getMonitor() == null)
+	    throw new NullPointerException("No monitor stored for node " + Arrays.toString(boundObjects));
 	assertEquals(Arrays.asList(symbols), ((AwareBaseMonitor) getNode(boundObjects).getMonitor()).getBaseEventTrace());
     }
 
