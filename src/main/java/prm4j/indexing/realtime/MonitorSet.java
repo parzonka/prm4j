@@ -35,12 +35,15 @@ public class MonitorSet {
     }
 
     public void processEvent(Event event) {
+	int aliveMonitors = 0;
 	for (int i = 0; i < size; i++) { // 63
-	    final BaseMonitor compatibleMonitor = monitorSet[i];
-	    if (compatibleMonitor == null) {
-		break;
+	    final BaseMonitor monitor = monitorSet[i];
+	    if (monitor.getLowLevelBindings() == null || !monitor.isAcceptingStateReachable()) {
+		continue;
+	    } else {
+		monitorSet[aliveMonitors++] = monitor;
 	    }
-	    compatibleMonitor.processEvent(event);
+	    monitor.processEvent(event);
 	}
 
     }
@@ -50,6 +53,7 @@ public class MonitorSet {
 	// iterate over all compatible nodes
 	LowLevelBinding[] joinable = joinableBindings.clone(); // 62
 
+	int aliveMonitors = 0;
 	for (int i = 0; i < size; i++) { // 63
 
 	    // TODO check for liveliness and cleanup
@@ -66,7 +70,9 @@ public class MonitorSet {
 	    if (lastNode.getMonitor() == null) { // 72
 		// inlined DefineTo // 73
 		final BaseMonitor monitor = compatibleMonitor.copy(joinable); // 102-105
-		monitor.processEvent(event); // 103
+		if (monitor.processEvent(event)) { // 103
+		    monitorSet[aliveMonitors++] = compatibleMonitor;
+		}
 		lastNode.setMonitor(monitor); // 106
 		// chain phase
 		for (ChainData chainData : lastNode.getMetaNode().getChainDataArray()) {
@@ -75,6 +81,9 @@ public class MonitorSet {
 		} // 99
 		joinable = joinableBindings.clone(); // 74
 	    }
+	}
+	for (int i = aliveMonitors; i < size; i++) {
+	    monitorSet[i] = null;
 	}
     }
 
