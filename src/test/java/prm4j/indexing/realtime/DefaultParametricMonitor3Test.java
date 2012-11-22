@@ -227,7 +227,8 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 
 	// verify
 	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e1);
-	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2, fsm.e3, fsm.e2, fsm.e1, fsm.e3);
+	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2, fsm.e3);
+	// no more matches since the accepting state is a final state, and is cleaned from the monitor set
     }
 
     @Test
