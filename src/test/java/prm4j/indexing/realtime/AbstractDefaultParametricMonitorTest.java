@@ -31,6 +31,7 @@ import prm4j.spec.FiniteSpec;
 
 public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 
+    public final static Object _ = null;
     protected StaticDataConverter converter;
     protected AwareDefaultBindingStore bindingStore;
     protected AwareDefaultNodeStore nodeStore;
