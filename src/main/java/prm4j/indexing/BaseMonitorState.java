@@ -22,7 +22,8 @@ public abstract class BaseMonitorState {
      * Tests, if a accepting state can be reached by some event in the future. Checks interally, if all bindings are
      * still alive, needed to reach a accepting state.
      *
-     * @param bindings bindings to be checked
+     * @param bindings
+     *            bindings to be checked
      * @return true, if accepting state can be reached
      */
     public boolean isAcceptingStateReachable(LowLevelBinding[] bindings) {
@@ -37,6 +38,11 @@ public abstract class BaseMonitorState {
 
     public abstract BaseMonitorState getSuccessor(BaseEvent baseEvent);
 
+    /**
+     * Tests, if the current state is an accepting state.
+     *
+     * @return <code>true</code> if the current state is accepting
+     */
     public abstract boolean isAccepting();
 
     public abstract MatchHandler getMatchHandler();
@@ -45,6 +51,12 @@ public abstract class BaseMonitorState {
 	this.acceptingParameters = acceptingParameters;
     }
 
+    /**
+     * Tests, if all successor states are dead states. (A dead state is a non-accepting state, where all successors are
+     * dead states. Because final state <i>may</i> be an accepting state, it is not always a dead state.)
+     *
+     * @return <code>true</code> if all successor states are dead states
+     */
     public abstract boolean isFinal();
 
 }
