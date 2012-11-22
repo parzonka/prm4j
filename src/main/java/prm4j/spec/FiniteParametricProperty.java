@@ -55,12 +55,15 @@ public class FiniteParametricProperty implements ParametricProperty {
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainData;
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> monitorSetData;
     private final static Set<Parameter<?>> EMPTY_PARAMETER_SET = new HashSet<Parameter<?>>();
+    private Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates;
 
     public FiniteParametricProperty(FiniteSpec finiteSpec) {
 
 	this.finiteSpec = finiteSpec;
 	creationEvents = calculateCreationEvents();
 	disablingEvents = calculateDisablingEvents();
+
+	updates = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>();
 
 	PossibleParameterAndEnablingEventSetCalculator p = new PossibleParameterAndEnablingEventSetCalculator();
 	enablingEventSets = Collections.unmodifiableMap(p.getEnablingEventSets());
@@ -152,18 +155,20 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    possibleParameterSets.add(parameterSet); // 7
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 8
 		final BaseMonitorState nextState = state.getSuccessor(baseEvent);
+		final Set<BaseEvent> nextSeenBaseEvents = new HashSet<BaseEvent>(seenBaseEvents); // 11
+		nextSeenBaseEvents.add(baseEvent);// 11
+		final Set<Parameter<?>> nextParameterSet = new HashSet<Parameter<?>>(parameterSet); // 12
+		nextParameterSet.addAll(baseEvent.getParameters()); // 12
+		if (state != nextState && !baseEvent.getParameters().equals(nextParameterSet)) {
+		    // add to updates only if the base event does change state and it is no self-update
+		    updates.add(tuple(baseEvent.getParameters(), nextParameterSet));
+		}
 		if (nextState != null) { // 9 TODO path to accepting state
 		    final Set<BaseEvent> seenBaseEventsWithoutSelfloop = new HashSet<BaseEvent>(seenBaseEvents); // 10
 		    seenBaseEventsWithoutSelfloop.remove(baseEvent); // 10
 		    enablingEventSets.get(baseEvent).add(unmodifiableSet(seenBaseEventsWithoutSelfloop)); // 10
-		    final Set<BaseEvent> nextSeenBaseEvents = new HashSet<BaseEvent>(seenBaseEvents); // 11
-		    final Set<Parameter<?>> nextParameterSet = new HashSet<Parameter<?>>(parameterSet); // 12
 		    // filter loops on states
-		    if (nextState != state) {
-			nextSeenBaseEvents.add(baseEvent); // 11
-			nextParameterSet.addAll(baseEvent.getParameters()); // 12
-		    }
-		    if (!stateToSeenBaseEvents.get(state).contains(nextSeenBaseEvents)) { // 11
+		    if (nextState != state && !stateToSeenBaseEvents.get(state).contains(nextSeenBaseEvents)) { // 11
 			computeEnableSets(state.getSuccessor(baseEvent), unmodifiableSet(nextSeenBaseEvents),
 				unmodifiableSet(nextParameterSet)); // 12
 		    } // 13
@@ -198,14 +203,8 @@ public class FiniteParametricProperty implements ParametricProperty {
      * presented in thesis.
      */
     private void calculateStaticData() { // 1
-	Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>(); // 2
 	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
 	    Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
-	    for (Set<Parameter<?>> parameterSet2 : possibleParameterSets) { // 5
-		if (isSubset(parameterSet, parameterSet2)) { // 6
-		    updates.add(tuple(parameterSet, parameterSet2)); // 7
-		} // 8
-	    } // 9
 	    List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
 		    enablingParameterSets.get(baseEvent));
 	    Collections.sort(enableSetInReverseTopolicalOrdering, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR);
@@ -325,6 +324,10 @@ public class FiniteParametricProperty implements ParametricProperty {
     @Override
     public Set<Parameter<?>> getParameters() {
 	return finiteSpec.getFullParameterSet();
+    }
+
+    public Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getUpdates() {
+	return updates;
     }
 
 }
