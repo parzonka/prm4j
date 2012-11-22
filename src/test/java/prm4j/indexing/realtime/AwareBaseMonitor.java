@@ -52,12 +52,8 @@ public class AwareBaseMonitor extends StatefulMonitor {
     public boolean processEvent(Event event) {
 	updatedMonitors.add(this);
 	baseEventTrace.add(event.getBaseEvent());
+	System.out.println("Processing " + event);
 	return super.processEvent(event);
-    }
-
-    @Override
-    public boolean isAcceptingStateReachable() {
-	return true;
     }
 
     @Override
