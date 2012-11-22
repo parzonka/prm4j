@@ -93,12 +93,13 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	}
 	expected.get(u.createColl).add(Collections.<Symbol> emptySet());
 	expected.get(u.createIter).add(asSet(u.createColl));
-//	expected.get(u.createIter).add(asSet(u.createColl, u.updateMap)); // omitted by filtering loops on states
+	// expected.get(u.createIter).add(asSet(u.createColl, u.updateMap)); // omitted by filtering loops on states
 	expected.get(u.useIter).add(asSet(u.createColl, u.createIter));
 	expected.get(u.useIter).add(asSet(u.createColl, u.createIter, u.updateMap));
 	expected.get(u.updateMap).add(asSet(u.createColl));
 	expected.get(u.updateMap).add(asSet(u.createColl, u.createIter));
-//	expected.get(u.updateMap).add(asSet(u.createColl, u.createIter, u.useIter)); // omitted by filtering loops on states
+	// expected.get(u.updateMap).add(asSet(u.createColl, u.createIter, u.useIter)); // omitted by filtering loops on
+	// states
 
 	assertEquals(expected, actual);
     }
@@ -160,9 +161,9 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = fs.getChainData();
 
 	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = HashMultimap.create();
-	// could be optimized away by self-loop detector
-	expected.put(asSet(u.m, u.c), tuple(asSet(u.m), EMPTY_PARAMETER_SET)); // m -> mc (update)
-	// necessary for joins
+	// optimized away by recognizing non-state changing transitions:
+	// expected.put(asSet(u.m, u.c), tuple(asSet(u.m), EMPTY_PARAMETER_SET)); // m -> mc (update)
+	// necessary for joins:
 	expected.put(asSet(u.m, u.c), tuple(asSet(u.c), asSet(u.m, u.c))); // c -> mc (join)
 	// could be optimized away from a self-loop spec
 	expected.put(asSet(u.m, u.c, u.i), tuple(asSet(u.c, u.i), EMPTY_PARAMETER_SET)); // ci -> mci (update)

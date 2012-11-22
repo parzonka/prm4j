@@ -397,7 +397,8 @@ public class StaticDataConverterTest extends AbstractTest {
 	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(2), 0));
 	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(0, 1), 0));
 	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(1, 2), 0));
-	expected.put(asSet(u.m, u.c), new ChainData(list(0), 0));
+	// optimized away by recognizing non-state changing transitions:
+	// expected.put(asSet(u.m, u.c), new ChainData(list(0), 0));
 	expected.put(asSet(u.m, u.c), new ChainData(list(1), 0));
 
 	assertEquals(expected, actual);
@@ -431,7 +432,7 @@ public class StaticDataConverterTest extends AbstractTest {
 
 	// depth 2
 	expected.getMetaNode(u.m, u.c).setChainData(
-		asSet(new ChainData(toNodeMask(u.m), 0), new ChainData(toNodeMask(u.c), 0)));
+		asSet(new ChainData(toNodeMask(u.c), 0)));
 	expected.getMetaNode(u.m, u.c).setMonitorSetCount(1);
 
 	expected.getMetaNode(u.c, u.i).setChainData(emptyChainDataSet);
