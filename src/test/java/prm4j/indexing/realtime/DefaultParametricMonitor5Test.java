@@ -10,6 +10,9 @@
  */
 package prm4j.indexing.realtime;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,6 +107,26 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 
 	assertTrace(array(m1, c1, i1), fsm.createColl, fsm.createIter, fsm.updateMap);
 	assertTrace(array(m1, c2, i2), fsm.createColl, fsm.createIter, fsm.updateMap);
+	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+    }
+
+    @Test
+    public void m1c1i1_m1c2ci_update3_correctTracesAndMatch() throws Exception {
+
+	final ParametricInstance instance1 = instance(m1, c1, i1);
+	final ParametricInstance instance2 = instance(m1, c2, i2);
+
+	pm.processEvent(instance1.createEvent(fsm.createColl));
+	pm.processEvent(instance1.createEvent(fsm.createIter));
+	pm.processEvent(instance2.createEvent(fsm.createColl));
+	pm.processEvent(instance2.createEvent(fsm.createIter));
+	pm.processEvent(instance1.createEvent(fsm.updateMap));
+	pm.processEvent(instance1.createEvent(fsm.useIter));
+	pm.processEvent(instance2.createEvent(fsm.useIter));
+
+	assertTrace(array(m1, c1, i1), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
+	assertTrace(array(m1, c2, i2), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
+	assertEquals(list(0,1), fsm.matchHandler.getHandledMatches());
     }
 
     protected void processEvents(ParametricInstance eventGenerator, BaseEvent... baseEvents) {
