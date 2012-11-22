@@ -10,7 +10,9 @@
  */
 package prm4j.indexing.realtime;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -127,7 +129,7 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 
 	assertTrace(array(m1, c1, i1), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
 	assertTrace(array(m1, c2, i2), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
-	assertEquals(list(0,1), fsm.matchHandler.getHandledMatches());
+	assertEquals(list(0, 1), fsm.matchHandler.getHandledMatches());
     }
 
     @Test
@@ -147,7 +149,7 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 
 	assertTrace(instance1.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
 	assertTrace(instance2.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
-	assertEquals(list(0,1), fsm.matchHandler.getHandledMatches());
+	assertEquals(list(0, 1), fsm.matchHandler.getHandledMatches());
     }
 
     @Test
@@ -166,9 +168,44 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	pm.processEvent(instance2.createEvent(fsm.updateMap));
 	pm.processEvent(instance2.createEvent(fsm.useIter));
 
-	assertTrace(instance1.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter, fsm.updateMap);
+	assertTrace(instance1.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
 	assertTrace(instance2.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
-	assertEquals(list(0,1), fsm.matchHandler.getHandledMatches());
+	assertEquals(list(0, 1), fsm.matchHandler.getHandledMatches());
+    }
+
+    @Test
+    public void FSM_unsafeMapIterator_ensureCorrectFinalStates() throws Exception {
+	assertFalse(fsm.initial.isFinal());
+	assertFalse(fsm.s1.isFinal());
+	assertFalse(fsm.s2.isFinal());
+	assertTrue(fsm.error.isFinal());
+    }
+
+    @Test
+    public void m1c1i1_m1c2ci_update5_monitorsAreDeadAfterReachingErrorState() throws Exception {
+
+	final ParametricInstance instance1 = instance(m1, _, _);
+
+	pm.processEvent(instance1.createEvent(fsm.createColl));
+	pm.processEvent(instance1.createEvent(fsm.createIter));
+	pm.processEvent(instance1.createEvent(fsm.updateMap));
+	pm.processEvent(instance1.createEvent(fsm.useIter));
+
+	assertEquals(list(0), fsm.matchHandler.getHandledMatches());
+	// assertFalse(getNode(instance1.boundObjects).getMonitor().isAcceptingStateReachable());
+    }
+
+    @Test
+    public void multipleInstances_correctNumberOfMatches() throws Exception {
+
+	for (int i = 0; i < 10; i++) {
+	    final ParametricInstance instance = instance(m1, _, _);
+	    pm.processEvent(instance.createEvent(fsm.createColl));
+	    pm.processEvent(instance.createEvent(fsm.createIter));
+	    pm.processEvent(instance.createEvent(fsm.updateMap));
+	    pm.processEvent(instance.createEvent(fsm.useIter));
+	}
+	assertEquals(10, fsm.matchHandler.getHandledMatches().size());
     }
 
     protected void processEvents(ParametricInstance eventGenerator, BaseEvent... baseEvents) {
