@@ -55,6 +55,7 @@ public abstract class FSMDefinitions {
 
 	public FSM_unsafeMapIterator() {
 	    initial.addTransition(createColl, s1);
+	    initial.addTransition(updateMap, initial);
 	    s1.addTransition(updateMap, s1);
 	    s1.addTransition(createIter, s2);
 	    s2.addTransition(useIter, s2);
