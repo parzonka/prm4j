@@ -252,6 +252,17 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     }
 
     @Test
+    public void getChainData_FSM_a_a_a() throws Exception {
+	FSM_a_a_a fsm = new FSM_a_a_a();
+	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = fs.getChainData();
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = HashMultimap.create();
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
     @SuppressWarnings("unchecked")
     public void getEnablingEventSets_FSM_ab_b_with_initial_b_loop() throws Exception {
 	FSM_ab_b_with_initial_b_loop fsm = new FSM_ab_b_with_initial_b_loop();
