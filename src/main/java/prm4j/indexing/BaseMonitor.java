@@ -61,6 +61,23 @@ public abstract class BaseMonitor {
 	return bindings;
     }
 
+    /**
+     * Ends the life-span of this monitor. A terminated monitor can be removed from all data structures it is referenced
+     * by.
+     */
+    public final void terminate() {
+	bindings = null;
+    }
+
+    /**
+     * Returns <code>true</code>, if the life of this monitor is over.
+     *
+     * @return <code>true</code> if terminated
+     */
+    public final boolean isTerminated() {
+	return bindings == null;
+    }
+
     public final long getCreationTime() {
 	return timestamp;
     }
