@@ -192,7 +192,6 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	pm.processEvent(instance1.createEvent(fsm.useIter));
 
 	assertEquals(list(0), fsm.matchHandler.getHandledMatches());
-	// assertFalse(getNode(instance1.boundObjects).getMonitor().isAcceptingStateReachable());
     }
 
     @Test
@@ -204,8 +203,34 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	    pm.processEvent(instance.createEvent(fsm.createIter));
 	    pm.processEvent(instance.createEvent(fsm.updateMap));
 	    pm.processEvent(instance.createEvent(fsm.useIter));
+	    assertTrace(instance.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
 	}
 	assertEquals(10, fsm.matchHandler.getHandledMatches().size());
+    }
+
+    @Test
+    public void multipleAcceptingInstances_monitorSetSizeStays1() throws Exception {
+
+	for (int i = 0; i < 10; i++) {
+	    final ParametricInstance instance = instance(m1, _, _);
+	    pm.processEvent(instance.createEvent(fsm.createColl));
+	    pm.processEvent(instance.createEvent(fsm.createIter));
+	    pm.processEvent(instance.createEvent(fsm.updateMap));
+	    pm.processEvent(instance.createEvent(fsm.useIter));
+	    assertEquals(1, getNode(m1, _,_).getMonitorSet(0).getSize());
+	}
+    }
+
+    @Test
+    public void multipleOpenInstances_monitorSetSizeGrows() throws Exception {
+
+	for (int i = 0; i < 100; i++) {
+	    final ParametricInstance instance = instance(m1, _, _);
+	    pm.processEvent(instance.createEvent(fsm.createColl));
+	    pm.processEvent(instance.createEvent(fsm.createIter));
+	    pm.processEvent(instance.createEvent(fsm.updateMap));
+	    assertEquals(i+1, getNode(m1, _,_).getMonitorSet(0).getSize());
+	}
     }
 
     protected void processEvents(ParametricInstance eventGenerator, BaseEvent... baseEvents) {
