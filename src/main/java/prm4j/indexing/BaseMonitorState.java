@@ -45,4 +45,6 @@ public abstract class BaseMonitorState {
 	this.acceptingParameters = acceptingParameters;
     }
 
+    public abstract boolean isFinal();
+
 }

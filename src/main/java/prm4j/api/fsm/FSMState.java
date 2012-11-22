@@ -20,13 +20,15 @@ import prm4j.indexing.BaseMonitorState;
 public class FSMState extends BaseMonitorState {
 
     private FSMState[] successorTable;
-    private final boolean isFinal;
+    private final boolean isAccepting;
+    private boolean isFinal;
     private final String label;// for display purposes only
     private final Alphabet alphabet;
     private final MatchHandler matchHandler;
 
-    public FSMState(Alphabet alphabet, boolean isFinal, MatchHandler matchHandler, String label) {
-	this.isFinal = isFinal;
+    public FSMState(Alphabet alphabet, boolean isAccepting, MatchHandler matchHandler, String label) {
+	this.isAccepting = isAccepting;
+	isFinal = true; // a state is final if it has no successor
 	this.label = label;
 	this.alphabet = alphabet;
 	this.matchHandler = matchHandler;
@@ -39,6 +41,7 @@ public class FSMState extends BaseMonitorState {
 	    throw new IllegalArgumentException("Symbol for transition is not contained in alphabet!");
 	}
 	successorTable[symbol.getIndex()] = successor;
+	isFinal = false;
     }
 
     @Override
@@ -53,12 +56,17 @@ public class FSMState extends BaseMonitorState {
 
     @Override
     public boolean isAccepting() {
-	return isFinal;
+	return isAccepting;
     }
 
     @Override
     public MatchHandler getMatchHandler() {
 	return matchHandler;
+    }
+
+    @Override
+    public boolean isFinal() {
+	return isFinal;
     }
 
 }
