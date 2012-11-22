@@ -75,6 +75,36 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 
     }
 
+    @Test
+    public void m1c1i1_m1c2ci_update_correctTraces() throws Exception {
+
+	final ParametricInstance instance1 = instance(m1, c1, i1);
+	final ParametricInstance instance2 = instance(m1, c2, i2);
+
+	pm.processEvent(instance1.createEvent(fsm.createColl));
+	pm.processEvent(instance2.createEvent(fsm.createColl));
+	pm.processEvent(instance1.createEvent(fsm.updateMap));
+
+	assertTrace(array(m1, c1, _), fsm.createColl);
+	assertTrace(array(m1, c2, _), fsm.createColl);
+    }
+
+    @Test
+    public void m1c1i1_m1c2ci_update2_correctTraces() throws Exception {
+
+	final ParametricInstance instance1 = instance(m1, c1, i1);
+	final ParametricInstance instance2 = instance(m1, c2, i2);
+
+	pm.processEvent(instance1.createEvent(fsm.createColl));
+	pm.processEvent(instance1.createEvent(fsm.createIter));
+	pm.processEvent(instance2.createEvent(fsm.createColl));
+	pm.processEvent(instance2.createEvent(fsm.createIter));
+	pm.processEvent(instance1.createEvent(fsm.updateMap));
+
+	assertTrace(array(m1, c1, i1), fsm.createColl, fsm.createIter, fsm.updateMap);
+	assertTrace(array(m1, c2, i2), fsm.createColl, fsm.createIter, fsm.updateMap);
+    }
+
     protected void processEvents(ParametricInstance eventGenerator, BaseEvent... baseEvents) {
 	for (BaseEvent baseEvent : baseEvents) {
 	    pm.processEvent(eventGenerator.createEvent(baseEvent));
