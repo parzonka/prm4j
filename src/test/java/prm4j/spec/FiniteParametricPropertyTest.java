@@ -73,7 +73,6 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
 	Set<BaseEvent> expected = new HashSet<BaseEvent>();
 	expected.add(u.createIter);
-	expected.add(u.updateMap);
 	expected.add(u.useIter);
 
 	assertEquals(expected, actual);
@@ -96,6 +95,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	// expected.get(u.createIter).add(asSet(u.createColl, u.updateMap)); // omitted by filtering loops on states
 	expected.get(u.useIter).add(asSet(u.createColl, u.createIter));
 	expected.get(u.useIter).add(asSet(u.createColl, u.createIter, u.updateMap));
+	expected.get(u.updateMap).add(Collections.<Symbol> emptySet());
 	expected.get(u.updateMap).add(asSet(u.createColl));
 	expected.get(u.updateMap).add(asSet(u.createColl, u.createIter));
 	// expected.get(u.updateMap).add(asSet(u.createColl, u.createIter, u.useIter)); // omitted by filtering loops on
@@ -119,6 +119,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	expected.get(u.createColl).add(Collections.<Parameter<?>> emptySet());
 	expected.get(u.createIter).add(asSet(u.m, u.c));
 	expected.get(u.useIter).add(asSet(u.m, u.c, u.i));
+	expected.get(u.updateMap).add(EMPTY_PARAMETER_SET);
 	expected.get(u.updateMap).add(asSet(u.m, u.c));
 	expected.get(u.updateMap).add(asSet(u.m, u.c, u.i));
 
