@@ -32,6 +32,7 @@ import prm4j.spec.FiniteSpec;
 public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 
     public final static Object _ = null;
+    protected FiniteParametricProperty fpp;
     protected StaticDataConverter converter;
     protected AwareDefaultBindingStore bindingStore;
     protected AwareDefaultNodeStore nodeStore;
@@ -41,7 +42,8 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     protected AwareBaseMonitor monitor; // working variable
 
     public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
-	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
+	fpp = new FiniteParametricProperty(finiteSpec);
+	converter = new StaticDataConverter(fpp);
 	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
 	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree());
 	prototypeMonitor = new AwareBaseMonitor(finiteSpec.getInitialState());
@@ -141,6 +143,10 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 
     protected void assertTrace(AwareBaseMonitor monitor, Symbol... symbols) {
 	assertEquals(Arrays.asList(symbols), monitor.getBaseEventTrace());
+    }
+
+    protected void assertTrace(Object[] boundObjects, Symbol... symbols) {
+	assertEquals(Arrays.asList(symbols), ((AwareBaseMonitor) getNode(boundObjects).getMonitor()).getBaseEventTrace());
     }
 
     @After

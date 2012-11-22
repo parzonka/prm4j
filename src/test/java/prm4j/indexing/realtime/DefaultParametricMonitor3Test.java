@@ -138,6 +138,17 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
     }
 
     @Test
+    @SuppressWarnings("unchecked")
+    public void finiteParametricProperty_ensureCorrectUpdates() throws Exception {
+
+	// verify
+	assertEquals(
+		asSet(tuple(asSet(fsm.p1, fsm.p2), asSet(fsm.p1, fsm.p2, fsm.p3)),
+			tuple(asSet(fsm.p2, fsm.p3), asSet(fsm.p1, fsm.p2, fsm.p3)),
+			tuple(asSet(fsm.p3), asSet(fsm.p1, fsm.p2, fsm.p3))), fpp.getUpdates());
+    }
+
+    @Test
     public void joining_ab_bc_chainingFromABtoABCexists() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a, b));
