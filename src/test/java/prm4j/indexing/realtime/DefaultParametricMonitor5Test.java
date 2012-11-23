@@ -32,8 +32,6 @@ import prm4j.spec.FiniteSpec;
 public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMonitorTest {
 
     public final static BoundObject _ = null;
-    private static int boundObjectCounter = 0;
-    private static int instanceCounter = 0;
 
     FSM_unsafeMapIterator fsm;
 
@@ -47,8 +45,6 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 
     @Before
     public void init() {
-	boundObjectCounter = 0;
-	instanceCounter = 0;
 	fsm = new FSM_unsafeMapIterator();
 	createDefaultParametricMonitorWithAwareComponents(new FSMSpec(fsm.fsm));
 	m1 = new BoundObject("m1");
@@ -147,8 +143,8 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	pm.processEvent(instance1.createEvent(fsm.useIter));
 	pm.processEvent(instance2.createEvent(fsm.useIter));
 
-	assertTrace(instance1.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
-	assertTrace(instance2.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
+	assertTrace(instance1.getBoundObjects(), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
+	assertTrace(instance2.getBoundObjects(), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
 	assertEquals(list(0, 1), fsm.matchHandler.getHandledMatches());
     }
 
@@ -168,8 +164,8 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	pm.processEvent(instance2.createEvent(fsm.updateMap));
 	pm.processEvent(instance2.createEvent(fsm.useIter));
 
-	assertTrace(instance1.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
-	assertTrace(instance2.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
+	assertTrace(instance1.getBoundObjects(), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
+	assertTrace(instance2.getBoundObjects(), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
 	assertEquals(list(0, 1), fsm.matchHandler.getHandledMatches());
     }
 
@@ -203,7 +199,7 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	    pm.processEvent(instance.createEvent(fsm.createIter));
 	    pm.processEvent(instance.createEvent(fsm.updateMap));
 	    pm.processEvent(instance.createEvent(fsm.useIter));
-	    assertTrace(instance.boundObjects, fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
+	    assertTrace(instance.getBoundObjects(), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
 	}
 	assertEquals(10, fsm.matchHandler.getHandledMatches().size());
     }
@@ -237,70 +233,6 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	for (BaseEvent baseEvent : baseEvents) {
 	    pm.processEvent(eventGenerator.createEvent(baseEvent));
 	}
-    }
-
-    protected ParametricInstance instance(BoundObject... boundObjects) {
-	return new ParametricInstance(boundObjects);
-    }
-
-    public class ParametricInstance {
-
-	final int instanceId;
-	final BoundObject[] boundObjects;
-	final String[] boundObjectIds;
-
-	public ParametricInstance(BoundObject[] boundObjects) {
-	    this.boundObjects = new BoundObject[boundObjects.length];
-	    boundObjectIds = new String[boundObjects.length];
-	    for (int i = 0; i < boundObjects.length; i++) {
-		BoundObject boundObject = boundObjects[i];
-		if (boundObject == null) {
-		    boundObject = new BoundObject();
-		}
-		this.boundObjects[i] = boundObject;
-		boundObjectIds[i] = boundObject.id;
-	    }
-	    instanceId = instanceCounter++;
-	}
-
-	public Event createEvent(BaseEvent baseEvent) {
-	    final Object[] obj = new Object[boundObjects.length];
-	    for (Parameter<?> parameter : baseEvent.getParameters()) {
-		obj[parameter.getIndex()] = boundObjects[parameter.getIndex()];
-	    }
-	    return new Event(baseEvent, obj, instanceId);
-	}
-
-	public List<Event> createEvents(BaseEvent... baseEvents) {
-	    final List<Event> result = new ArrayList<Event>();
-	    for (BaseEvent baseEvent : baseEvents) {
-		final Object[] objects = new Object[boundObjects.length];
-		for (Parameter<?> parameter : baseEvent.getParameters()) {
-		    objects[parameter.getIndex()] = boundObjects[parameter.getIndex()];
-		}
-		result.add(new Event(baseEvent, objects, instanceId));
-	    }
-	    return result;
-	}
-    }
-
-    public class BoundObject {
-
-	public final String id;
-
-	public BoundObject(String id) {
-	    this.id = id;
-	}
-
-	public BoundObject() {
-	    id = "" + boundObjectCounter++;
-	}
-
-	@Override
-	public String toString() {
-	    return id;
-	}
-
     }
 
 }

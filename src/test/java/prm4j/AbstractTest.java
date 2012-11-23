@@ -18,6 +18,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Before;
+
+import prm4j.api.BaseEvent;
+import prm4j.api.Event;
 import prm4j.api.Parameter;
 import prm4j.api.Symbol;
 import prm4j.util.FSMDefinitions;
@@ -28,6 +32,15 @@ import prm4j.util.FSMDefinitions;
 public abstract class AbstractTest extends FSMDefinitions /* we mix in other definitions layer by layer */{
 
     public final static Set<Parameter<?>> EMPTY_PARAMETER_SET = new HashSet<Parameter<?>>();
+
+    private static int boundObjectCounter = 0;
+    private static int instanceCounter = 0;
+
+    @Before
+    public void resetCounters() {
+	boundObjectCounter = 0;
+	instanceCounter = 0;
+    }
 
     /**
      * Downcast SymbolN to Symbol.
@@ -72,8 +85,8 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
     }
 
     public static <T> boolean[] array(boolean... objects) {
-   	return objects;
-       }
+	return objects;
+    }
 
     public static <T> T[] array(T... objects) {
 	return objects;
@@ -112,14 +125,82 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
     }
 
     protected static void runGarbageCollectorAFewTimes() {
-   	System.gc();
-   	System.gc();
-   	System.gc();
-   	System.gc();
-   	System.gc();
-   	System.gc();
-   	System.gc();
-   	System.gc();
-       }
+	System.gc();
+	System.gc();
+	System.gc();
+	System.gc();
+	System.gc();
+	System.gc();
+	System.gc();
+	System.gc();
+    }
+
+    public class ParametricInstance {
+
+	final int instanceId;
+	private final BoundObject[] boundObjects;
+	final String[] boundObjectIds;
+
+	public ParametricInstance(BoundObject[] boundObjects) {
+	    this.boundObjects = new BoundObject[boundObjects.length];
+	    boundObjectIds = new String[boundObjects.length];
+	    for (int i = 0; i < boundObjects.length; i++) {
+		BoundObject boundObject = boundObjects[i];
+		if (boundObject == null) {
+		    boundObject = new BoundObject();
+		}
+		this.getBoundObjects()[i] = boundObject;
+		boundObjectIds[i] = boundObject.id;
+	    }
+	    instanceId = instanceCounter++;
+	}
+
+	public Event createEvent(BaseEvent baseEvent) {
+	    final Object[] obj = new Object[getBoundObjects().length];
+	    for (Parameter<?> parameter : baseEvent.getParameters()) {
+		obj[parameter.getIndex()] = getBoundObjects()[parameter.getIndex()];
+	    }
+	    return new Event(baseEvent, obj, instanceId);
+	}
+
+	public List<Event> createEvents(BaseEvent... baseEvents) {
+	    final List<Event> result = new ArrayList<Event>();
+	    for (BaseEvent baseEvent : baseEvents) {
+		final Object[] objects = new Object[getBoundObjects().length];
+		for (Parameter<?> parameter : baseEvent.getParameters()) {
+		    objects[parameter.getIndex()] = getBoundObjects()[parameter.getIndex()];
+		}
+		result.add(new Event(baseEvent, objects, instanceId));
+	    }
+	    return result;
+	}
+
+	public BoundObject[] getBoundObjects() {
+	    return boundObjects;
+	}
+    }
+
+    public ParametricInstance instance(BoundObject... boundObjects) {
+	return new ParametricInstance(boundObjects);
+    }
+
+    public class BoundObject {
+
+	public final String id;
+
+	public BoundObject(String id) {
+	    this.id = id;
+	}
+
+	public BoundObject() {
+	    id = "" + boundObjectCounter++;
+	}
+
+	@Override
+	public String toString() {
+	    return id;
+	}
+
+    }
 
 }
