@@ -50,9 +50,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
 	final BaseEvent baseEvent = event.getBaseEvent();
 	Node instanceNode = nodeStore.getNode(bindings);
-	final BaseMonitor instanceMonitor = instanceNode.getMonitor();
+	BaseMonitor instanceMonitor = instanceNode.getMonitor();
 
-	if (eventContext.isDisablingEvent(event.getBaseEvent())) { // 2
+	if (eventContext.isDisablingEvent(baseEvent)) { // 2
 	    for (LowLevelBinding binding : bindings) { // 3
 		binding.setDisabled(true); // 4
 	    } // 5
@@ -66,11 +66,12 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		}
 	    }
 	    findMaxPhase: for (MaxData maxData : eventContext.getMaxData(baseEvent)) { // 8
-		BaseMonitor m = nodeStore.getNode(bindings, maxData.getNodeMask()).getMonitor(); // 9
-		if (m != null) { // 10
+		BaseMonitor maxMonitor = nodeStore.getNode(bindings, maxData.getNodeMask()).getMonitor(); // 9
+		if (maxMonitor != null) { // 10
 		    for (int i : maxData.getDiffMask()) { // 11
 			LowLevelBinding b = bindings[i];
-			if (b.getTimestamp() < timestamp && (b.getTimestamp() > m.getCreationTime() || b.isDisabled())) { // 12
+			if (b.getTimestamp() < timestamp
+				&& (b.getTimestamp() > maxMonitor.getCreationTime() || b.isDisabled())) { // 12
 			    continue findMaxPhase; // 13
 			}
 		    }
@@ -78,36 +79,36 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 			instanceNode = nodeStore.getOrCreateNode(bindings); // get real instance node
 		    }
 		    // inlined DefineTo from 73
-		    BaseMonitor monitor = m.copy(bindings); // 102-105
-		    monitor.processEvent(event); // 103
-		    instanceNode.setMonitor(monitor); // 106
+		    instanceMonitor = maxMonitor.copy(bindings); // 102-105
+		    instanceMonitor.processEvent(event); // 103
+		    instanceNode.setMonitor(instanceMonitor); // 106
 
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
-			nodeStore.getOrCreateNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
-				.add(monitor); // 111
+			nodeStore.getOrCreateNode(bindings, chainData.getNodeMask())
+				.getMonitorSet(chainData.getMonitorSetId()).add(instanceMonitor); // 111
 		    } // 107
 		    break findMaxPhase;
 		}
 	    }
-	    monitorCreation: if (instanceNode.getMonitor() == null) {
+	    monitorCreation: if (instanceMonitor == null) {
 		if (eventContext.isCreationEvent(baseEvent)) { // 20
-		    for (LowLevelBinding b : bindings) { // 21
-			if (b.isDisabled()) { // 22
+		    for (LowLevelBinding binding : bindings) { // 21
+			if (binding.isDisabled()) { // 22
 			    break monitorCreation; // 23
 			}
 		    }
 		    // inlined DefineNew from 93
-		    BaseMonitor monitor = monitorPrototype.copy(bindings, timestamp); // 94 - 97
-		    monitor.processEvent(event); // 95
+		    instanceMonitor = monitorPrototype.copy(bindings, timestamp); // 94 - 97
+		    instanceMonitor.processEvent(event); // 95
 		    if (instanceNode == NullNode.instance) {
 			instanceNode = nodeStore.getOrCreateNode(bindings); // get real instance node
 		    }
-		    instanceNode.setMonitor(monitor); // 98
+		    instanceNode.setMonitor(instanceMonitor); // 98
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
-			nodeStore.getOrCreateNode(bindings, chainData.getNodeMask()).getMonitorSet(chainData.getMonitorSetId())
-				.add(monitor); // 111
+			nodeStore.getOrCreateNode(bindings, chainData.getNodeMask())
+				.getMonitorSet(chainData.getMonitorSetId()).add(instanceMonitor); // 111
 		    } // 99
 		}
 	    }
