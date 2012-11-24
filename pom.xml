@@ -77,16 +77,6 @@
 			<version>12.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sourceforge.collections</groupId>
-			<artifactId>collections-generic</artifactId>
-			<version>4.01</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jsr166-mirror</groupId>
-			<artifactId>jsr166</artifactId>
-			<version>1.7.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.6</version>
@@ -116,8 +106,6 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
-
 
 </project>
