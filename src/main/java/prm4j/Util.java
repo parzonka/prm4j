@@ -97,7 +97,20 @@ public class Util {
 	return result;
     }
 
-    public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
+    /**
+     * Unfortunately, when compiling with javac 1.6.x, this method can not be applied to Ts containing wildcards. Works
+     * in EJC though.
+     *
+     * @param c
+     * @return
+     */
+    public static <T extends Comparable<T>> List<T> asSortedList(Collection<T> c) {
+	List<T> list = new ArrayList<T>(c);
+	java.util.Collections.sort(list);
+	return list;
+    }
+
+    public static <T extends Parameter<?>> List<T> asSortedParameterList(Collection<T> c) {
 	List<T> list = new ArrayList<T>(c);
 	java.util.Collections.sort(list);
 	return list;
