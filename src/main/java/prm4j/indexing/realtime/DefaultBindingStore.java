@@ -31,7 +31,7 @@ public class DefaultBindingStore implements BindingStore {
 	this.cleaningInterval = cleaningInterval;
 
 	stores = new MinimalMap[fullParameterSet.size()];
-	for (Parameter<?> parameter : Util.asSortedParameterList(fullParameterSet)) {
+	for (Parameter<?> parameter : Util.asSortedList(fullParameterSet)) {
 	    stores[parameter.getIndex()] = new SingleBindingStore(parameter);
 	}
     }

@@ -188,7 +188,7 @@ public class StaticDataConverter {
 	allParameterSets.addAll(pp.getPossibleParameterSets());
 	for (Set<Parameter<?>> parameterSet : allParameterSets) {
 	    MetaNode node = metaTree;
-	    for (Parameter<?> parameter : Util.asSortedParameterList(parameterSet)) {
+	    for (Parameter<?> parameter : Util.asSortedList(parameterSet)) {
 		node = node.getMetaNode(parameter);
 		node.setChainData(chainData.get(node.getNodeParameterSet()));
 		node.setMonitorSetCount(monitorSetIds.row(node.getNodeParameterSet()).size());
@@ -223,7 +223,7 @@ public class StaticDataConverter {
 	int[] result = new int[subset.size()];
 	int i = 0;
 	int j = 0;
-	for (Parameter<?> parameter : Util.asSortedParameterList(parameterSet)) {
+	for (Parameter<?> parameter : Util.asSortedList(parameterSet)) {
 	    if (subset.contains(parameter)) {
 		result[i++] = j;
 	    }

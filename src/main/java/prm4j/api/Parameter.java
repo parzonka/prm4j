@@ -16,7 +16,7 @@ package prm4j.api;
  * @param <T>
  *            the type of the object which can be bound to this parameter
  */
-public class Parameter<T> implements Comparable<Parameter<T>> {
+public class Parameter<T> implements Comparable<Parameter<?>> {
 
     private int parameterIndex = -1;
     private final String uniqueName;
@@ -60,7 +60,7 @@ public class Parameter<T> implements Comparable<Parameter<T>> {
     }
 
     @Override
-    public int compareTo(Parameter<T> o) {
+    public int compareTo(Parameter<?> o) {
 	if (parameterIndex < 0) {
 	    throw new IllegalStateException("Parameter index was not set yet.");
 	}
