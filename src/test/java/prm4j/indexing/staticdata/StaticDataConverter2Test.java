@@ -115,7 +115,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 
     protected static void assertChainData(MetaNode metaTree, Set<Parameter<?>> parameterSet, ChainData... chainDatas) {
 	Set<ChainData> chainDataSet = new HashSet<ChainData>(Arrays.asList(chainDatas));
-	assertEquals(chainDataSet, metaTree.getMetaNode(Util.asSortedList(parameterSet)).getChainDataSet());
+	assertEquals(chainDataSet, metaTree.getMetaNode(Util.asSortedParameterList(parameterSet)).getChainDataSet());
     }
 
     protected static void assertJoinData(EventContext eventContext, BaseEvent baseEvent, JoinData... joinDatas) {
