@@ -116,10 +116,6 @@ public class Util {
 	return list;
     }
 
-    public static <S, T extends S> Set<S> covariantUnmodifiableSet(Set<T> set) {
-	return Collections.unmodifiableSet(new HashSet<S>(set));
-    }
-
     public static int[] toNodeMask(Parameter<?>... parameters) {
 	int[] nodeMask = new int[parameters.length];
 	int i = 0;

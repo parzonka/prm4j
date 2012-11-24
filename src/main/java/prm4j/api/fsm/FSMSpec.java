@@ -10,8 +10,9 @@
  */
 package prm4j.api.fsm;
 
-import static prm4j.Util.covariantUnmodifiableSet;
+import static java.util.Collections.unmodifiableSet;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import prm4j.api.BaseEvent;
@@ -29,9 +30,9 @@ public class FSMSpec implements FiniteSpec {
     private final BaseMonitorState initialState;
 
     public FSMSpec(FSM fsm) {
-	baseEvents = covariantUnmodifiableSet(fsm.getAlphabet().getSymbols());
-	parameters = covariantUnmodifiableSet(fsm.getAlphabet().getParameters());
-	states = covariantUnmodifiableSet(fsm.getStates());
+	baseEvents = unmodifiableSet(new HashSet<BaseEvent>(fsm.getAlphabet().getSymbols()));
+	parameters = unmodifiableSet(fsm.getAlphabet().getParameters());
+	states = unmodifiableSet(new HashSet<BaseMonitorState>(fsm.getStates()));
 	initialState = fsm.getInitialState();
     }
 
