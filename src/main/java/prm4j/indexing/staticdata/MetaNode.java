@@ -129,7 +129,7 @@ public class MetaNode {
      * @return parameters sorted by parameter id
      */
     public List<Parameter<?>> getNodeParameterList() {
-	return Util.asSortedList(nodeParameterSet);
+	return Util.asSortedParameterList(nodeParameterSet);
     }
 
     /**
