@@ -42,7 +42,7 @@ public class FSM_unsafeMapIterator {
 	public final FSMState s1 = fsm.createState();
 	public final FSMState s2 = fsm.createState();
 	public final FSMState s3 = fsm.createState();
-	public final FSMState error = fsm.createAcceptingState(MatchHandler.SYS_OUT);
+	public final FSMState error = fsm.createAcceptingState(MatchHandler.NO_OP);
 
 	public FSM_unsafeMapIterator() {
 	    initial.addTransition(createColl, s1);
