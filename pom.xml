@@ -42,12 +42,36 @@
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal><!-- to weave all your main classes -->
+							<goal>test-compile</goal><!-- to weave all your test classes -->
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<complianceLevel>1.6</complianceLevel>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
 		</plugins>
 
 
 	</build>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.6.11</version>
+		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
