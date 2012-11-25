@@ -23,6 +23,16 @@ public abstract class MatchHandler {
     };
 
     /**
+     * This {@link MatchHandler} prints on match to the standard output stream.
+     */
+    public final static MatchHandler SYS_OUT = new MatchHandler0() {
+	@Override
+	public void handleMatch(Object auxiliaryData) {
+	    System.out.println("Match detected!");
+	}
+    };
+
+    /**
      * Retrieve bound objects with getBoundObject(...) TODO doc method.
      *
      * @param bindings
