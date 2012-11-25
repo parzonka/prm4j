@@ -71,9 +71,14 @@ public class MonitorSet {
 		break;
 	    }
 	    if (someBindingsAreKnown && compatibleMonitor.getCreationTime() < tmax) { // 64
+		aliveMonitors++; // this monitor may be still alive, we just avoid joining with it
 		continue; // 65
 	    }
-	    createJoin(joinable, compatibleMonitor.getLowLevelBindings(), copyPattern); // 67 - 71
+	    final LowLevelBinding[] compatibleBindings = compatibleMonitor.getLowLevelBindings();
+	    if (compatibleBindings == null) {
+		continue; // this monitor will be removed from the set
+	    }
+	    createJoin(joinable, compatibleBindings, copyPattern); // 67 - 71
 	    final Node lastNode = nodeStore.getOrCreateNode(joinable);
 	    if (lastNode.getMonitor() == null) { // 72
 		// inlined DefineTo // 73
