@@ -10,6 +10,8 @@
  */
 package prm4j.indexing.realtime;
 
+import java.lang.ref.WeakReference;
+
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.map.MinimalMapEntry;
 import prm4j.indexing.staticdata.MetaNode;
@@ -51,5 +53,7 @@ public interface Node extends MinimalMapEntry<LowLevelBinding, Node> {
     public MonitorSet[] getMonitorSets();
 
     public int size();
+
+    public WeakReference<Node> getNodeRef();
 
 }

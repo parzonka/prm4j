@@ -24,6 +24,9 @@ public class DefaultNode extends AbstractNode {
     private BaseMonitor monitor;
     private final WeakReference<Node> nodeRef;
 
+    private WeakReference<Node> cachedNodeRef = null;
+    private LowLevelBinding cachedBinding = null;
+
     /**
      * @param metaNode
      * @param key
@@ -51,12 +54,26 @@ public class DefaultNode extends AbstractNode {
     @Override
     public Node getOrCreateNode(LowLevelBinding binding) {
 	binding.registerNode(nodeRef);
-	return getOrCreate(binding, binding.hashCode());
+	if (cachedBinding != binding) {
+	    cachedBinding = binding;
+	    cachedNodeRef = getOrCreate(binding, binding.hashCode()).getNodeRef();
+	}
+	return cachedNodeRef.get();
     }
 
     @Override
     public Node getNode(LowLevelBinding binding) {
-	return get(binding, binding.hashCode());
+	if (cachedBinding != binding) {
+	    final Node node = get(binding, binding.hashCode());
+	    if (node != null) {
+		cachedBinding = binding;
+		cachedNodeRef = node.getNodeRef();
+		return node;
+	    } else {
+		return null;
+	    }
+	}
+	return cachedNodeRef.get();
     }
 
     @Override
@@ -107,6 +124,11 @@ public class DefaultNode extends AbstractNode {
 	    sb.append(key).append(")");
 	    return sb.toString();
 	}
+    }
+
+    @Override
+    public WeakReference<Node> getNodeRef() {
+	return nodeRef;
     }
 
 }

@@ -10,6 +10,8 @@
  */
 package prm4j.indexing.realtime;
 
+import java.lang.ref.WeakReference;
+
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.MetaNode;
 
@@ -81,6 +83,11 @@ public class NullNode implements Node {
     @Override
     public int size() {
 	return 0;
+    }
+
+    @Override
+    public WeakReference<Node> getNodeRef() {
+	return null;
     }
 
 }
