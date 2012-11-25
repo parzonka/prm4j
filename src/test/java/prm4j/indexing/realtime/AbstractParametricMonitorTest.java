@@ -36,7 +36,7 @@ public class AbstractParametricMonitorTest extends AbstractTest {
     protected BaseMonitor prototypeMonitor;
     protected ParametricMonitor pm;
 
-    public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
+    public void createDefaultParametricMonitor(FiniteSpec finiteSpec) {
 	fpp = new FiniteParametricProperty(finiteSpec);
 	converter = new StaticDataConverter(fpp);
 	bindingStore = new DefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
