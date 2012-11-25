@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aspectj>
 	<aspects>
-		<aspect name="eval.UnsafeIterator" />
+		<aspect name="prm4j.eval.UnsafeMapIterator" />
 	</aspects>
 	<weaver>
 		<exclude within="com.google.common..*" />
