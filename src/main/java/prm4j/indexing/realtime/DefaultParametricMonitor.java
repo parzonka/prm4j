@@ -45,7 +45,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     }
 
     @Override
-    public void processEvent(Event event) {
+    public synchronized void processEvent(Event event) {
 
 	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
 	final BaseEvent baseEvent = event.getBaseEvent();
