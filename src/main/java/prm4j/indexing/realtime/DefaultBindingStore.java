@@ -19,6 +19,12 @@ import prm4j.indexing.map.MinimalMap;
 
 public class DefaultBindingStore implements BindingStore {
 
+    /**
+     * Specifies the number of retrieve-operations after which the store will try to clean expired bindings. It will
+     * poll the a reference queue and remove the bindings from the store, triggering their resource removal.
+     */
+    public static final int DEFAULT_CLEANING_INTERVAL = 1024;
+
     private final ReferenceQueue<Object> referenceQueue;
     private final MinimalMap<Object, DefaultLowLevelBinding>[] stores;
     private final Cleaner cleaner = new Cleaner();
@@ -34,6 +40,10 @@ public class DefaultBindingStore implements BindingStore {
 	for (Parameter<?> parameter : Util.asSortedList(fullParameterSet)) {
 	    stores[parameter.getIndex()] = new SingleBindingStore(parameter);
 	}
+    }
+
+    public DefaultBindingStore(Set<Parameter<?>> fullParameterSet) {
+	this(fullParameterSet, DEFAULT_CLEANING_INTERVAL);
     }
 
     @Override

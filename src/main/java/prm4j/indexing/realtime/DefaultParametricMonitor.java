@@ -29,13 +29,29 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     private final EventContext eventContext;
     private long timestamp = 0L;
 
+    /**
+     * Creates a DefaultParametricMonitor using default {@link BindingStore} and {@link NodeStore} implementations (and
+     * configurations).
+     *
+     * @param metaTree
+     * @param eventContext
+     * @param spec
+     */
     public DefaultParametricMonitor(MetaNode metaTree, EventContext eventContext, Spec spec) {
 	this.eventContext = eventContext;
-	bindingStore = new DefaultBindingStore(spec.getFullParameterSet(), 1);
+	bindingStore = new DefaultBindingStore(spec.getFullParameterSet());
 	nodeStore = new DefaultNodeStore(metaTree);
 	monitorPrototype = spec.getInitialMonitor();
     }
 
+    /**
+     * Creates a DefaultParametricMonitor which externally configurable BindingStore and NodeStore.
+     *
+     * @param bindingStore
+     * @param nodeStore
+     * @param monitorPrototype
+     * @param eventContext
+     */
     public DefaultParametricMonitor(BindingStore bindingStore, NodeStore nodeStore, BaseMonitor monitorPrototype,
 	    EventContext eventContext) {
 	this.bindingStore = bindingStore;
