@@ -111,4 +111,11 @@
 		</dependency>
 	</dependencies>
 
+	<distributionManagement>
+		<repository>
+			<id>repo</id>
+			<url>${repo.url}</url>
+		</repository>
+	</distributionManagement>
+
 </project>
