@@ -33,6 +33,14 @@ public class Util {
     public static Comparator<Set<?>> TOPOLOGICAL_SET_COMPARATOR = new TopologicalSetComparator();
     public static Comparator<Set<?>> REVERSE_TOPOLOGICAL_SET_COMPARATOR = new ReverseTopologicalSetComparator();
 
+    public static <T> Set<T> set(T... values) {
+   	Set<T> set = new HashSet<T>();
+   	for (T s : values) {
+   	    set.add(s);
+   	}
+   	return set;
+       }
+
     public static <T> Set<T> union(Set<T> set1, Set<T> set2) {
 	Set<T> result = new HashSet<T>(set1);
 	result.addAll(set2);
@@ -64,6 +72,18 @@ public class Util {
     public static <T> boolean isSuperset(Set<T> set1, Set<T> set2) {
 	return set1.containsAll(set2);
     }
+
+    public static <T> Set<T> unmodifiableUnion(Set<T> set1, Set<T> set2) {
+   	Set<T> result = new HashSet<T>(set1);
+   	result.addAll(set2);
+   	return Collections.unmodifiableSet(result);
+       }
+
+    public static <T> Set<T> unmodifiableDifference(Set<T> set1, Set<T> set2) {
+   	Set<T> result = new HashSet<T>(set1);
+   	result.removeAll(set2);
+   	return Collections.unmodifiableSet(result);
+       }
 
     static class TopologicalSetComparator implements Comparator<Set<?>> {
 	@Override

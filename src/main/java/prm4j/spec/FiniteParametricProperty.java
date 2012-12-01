@@ -11,11 +11,12 @@
 package prm4j.spec;
 
 import static prm4j.Util.intersection;
-import static prm4j.Util.isSubset;
-import static prm4j.Util.isSuperset;
 import static prm4j.Util.isSubsetEq;
+import static prm4j.Util.isSuperset;
+import static prm4j.Util.set;
 import static prm4j.Util.tuple;
-import static java.util.Collections.unmodifiableSet;
+import static prm4j.Util.unmodifiableDifference;
+import static prm4j.Util.unmodifiableUnion;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +56,7 @@ public class FiniteParametricProperty implements ParametricProperty {
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainData;
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> monitorSetData;
     private final static Set<Parameter<?>> EMPTY_PARAMETER_SET = new HashSet<Parameter<?>>();
-    private Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates;
+    private final Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates;
 
     public FiniteParametricProperty(FiniteSpec finiteSpec) {
 
@@ -63,12 +64,11 @@ public class FiniteParametricProperty implements ParametricProperty {
 	creationEvents = calculateCreationEvents();
 	disablingEvents = calculateDisablingEvents();
 
-	updates = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>();
-
-	PossibleParameterAndEnablingEventSetCalculator p = new PossibleParameterAndEnablingEventSetCalculator();
+	RelationCalculator p = new RelationCalculator();
 	enablingEventSets = Collections.unmodifiableMap(p.getEnablingEventSets());
 	possibleParameterSets = Collections.unmodifiableSet(p.getPossibleParameterSets());
 	enablingParameterSets = Collections.unmodifiableMap(toMap2SetOfSetOfParameters(enablingEventSets));
+	updates = Collections.unmodifiableSet(p.getUpdates());
 
 	maxData = ArrayListMultimap.create();
 	joinData = ArrayListMultimap.create();
@@ -120,23 +120,25 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return disablingEvents;
     }
 
-    private class PossibleParameterAndEnablingEventSetCalculator {
+    private class RelationCalculator {
 
 	private final Map<BaseEvent, Set<Set<BaseEvent>>> enablingEventSets;
 	private final Set<Set<Parameter<?>>> possibleParameterSets;
 	private final Map<BaseMonitorState, Set<Set<BaseEvent>>> stateToSeenBaseEvents;
+	private final Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates;
 
-	public PossibleParameterAndEnablingEventSetCalculator() {
+	public RelationCalculator() {
 	    enablingEventSets = new HashMap<BaseEvent, Set<Set<BaseEvent>>>();
 	    possibleParameterSets = new HashSet<Set<Parameter<?>>>();
 	    stateToSeenBaseEvents = new HashMap<BaseMonitorState, Set<Set<BaseEvent>>>();
+	    updates = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>();
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
 		enablingEventSets.put(baseEvent, new HashSet<Set<BaseEvent>>());
 	    }
 	    for (BaseMonitorState state : finiteSpec.getStates()) {
 		stateToSeenBaseEvents.put(state, new HashSet<Set<BaseEvent>>());
 	    }
-	    computeEnableSets(finiteSpec.getInitialState(), new HashSet<BaseEvent>(), new HashSet<Parameter<?>>()); // 2
+	    computeRelations(finiteSpec.getInitialState(), new HashSet<BaseEvent>(), new HashSet<Parameter<?>>()); // 2
 	}
 
 	public Map<BaseEvent, Set<Set<BaseEvent>>> getEnablingEventSets() {
@@ -147,30 +149,32 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    return possibleParameterSets;
 	}
 
-	private void computeEnableSets(BaseMonitorState state, Set<BaseEvent> seenBaseEvents,
+	public Set<? extends Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getUpdates() {
+	    return updates;
+	}
+
+	private void computeRelations(BaseMonitorState state, Set<BaseEvent> seenBaseEvents,
 		Set<Parameter<?>> parameterSet) { // 5
-	    if (state == null)
-		throw new NullPointerException("state may not be null!");
 	    stateToSeenBaseEvents.get(state).add(seenBaseEvents); // 6
 	    possibleParameterSets.add(parameterSet); // 7
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 8
 		final BaseMonitorState nextState = state.getSuccessor(baseEvent);
-		final Set<BaseEvent> nextSeenBaseEvents = new HashSet<BaseEvent>(seenBaseEvents); // 11
-		nextSeenBaseEvents.add(baseEvent);// 11
-		final Set<Parameter<?>> nextParameterSet = new HashSet<Parameter<?>>(parameterSet); // 12
-		nextParameterSet.addAll(baseEvent.getParameters()); // 12
+		final Set<BaseEvent> nextSeenBaseEvents = unmodifiableUnion(seenBaseEvents, set(baseEvent)); // 11
+		final Set<Parameter<?>> nextParameterSet = unmodifiableUnion(parameterSet, baseEvent.getParameters()); // 12
+		// add to updates only if the base event does change state and it is no self-update:
 		if (state != nextState && !baseEvent.getParameters().equals(nextParameterSet)) {
-		    // add to updates only if the base event does change state and it is no self-update
 		    updates.add(tuple(baseEvent.getParameters(), nextParameterSet));
 		}
 		if (nextState != null) { // 9 TODO path to accepting state
-		    final Set<BaseEvent> seenBaseEventsWithoutSelfloop = new HashSet<BaseEvent>(seenBaseEvents); // 10
-		    seenBaseEventsWithoutSelfloop.remove(baseEvent); // 10
-		    enablingEventSets.get(baseEvent).add(unmodifiableSet(seenBaseEventsWithoutSelfloop)); // 10
-		    // filter loops on states
+		    // we remove the current base event because an event does not need to enable itself
+		    final Set<BaseEvent> seenBaseEventsWithoutCurrentBaseEvent = unmodifiableDifference(seenBaseEvents,
+			    set(baseEvent)); // 10
+		    enablingEventSets.get(baseEvent).add(seenBaseEventsWithoutCurrentBaseEvent); // 10
+
+		    // compute from next different state if state was not visited before carrying the same
+		    // nextSeenBaseEvents
 		    if (nextState != state && !stateToSeenBaseEvents.get(state).contains(nextSeenBaseEvents)) { // 11
-			computeEnableSets(state.getSuccessor(baseEvent), unmodifiableSet(nextSeenBaseEvents),
-				unmodifiableSet(nextParameterSet)); // 12
+			computeRelations(state.getSuccessor(baseEvent), nextSeenBaseEvents, nextParameterSet); // 12
 		    } // 13
 		} // 14
 	    } // 15
