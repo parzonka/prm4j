@@ -204,11 +204,8 @@ public class FiniteParametricProperty implements ParametricProperty {
      */
     private void calculateStaticData() { // 1
 	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
-	    Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
-	    List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
-		    enablingParameterSets.get(baseEvent));
-	    Collections.sort(enableSetInReverseTopolicalOrdering, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR);
-	    for (Set<Parameter<?>> enablingParameterSet : enableSetInReverseTopolicalOrdering) { // 10
+	    final Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
+	    for (Set<Parameter<?>> enablingParameterSet : getEnableSetsInReverseTopologicalOrdering(baseEvent)) { // 10
 		if (!enablingParameterSet.equals(EMPTY_PARAMETER_SET)
 			&& !isSubsetEq(parameterSet, enablingParameterSet)) { // 11
 		    if (isSuperset(parameterSet, enablingParameterSet)) { // 12
@@ -235,6 +232,13 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    } // 30
 	} // 31
     }// 32
+
+    private List<Set<Parameter<?>>> getEnableSetsInReverseTopologicalOrdering(BaseEvent baseEvent) {
+	List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
+		enablingParameterSets.get(baseEvent));
+	Collections.sort(enableSetInReverseTopolicalOrdering, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR);
+	return enableSetInReverseTopolicalOrdering;
+    }
 
     private void calculateAcceptingParameters() {
 	// TODO implement calculateAcceptingParameters
