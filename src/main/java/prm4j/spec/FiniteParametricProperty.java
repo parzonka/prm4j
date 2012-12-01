@@ -51,7 +51,7 @@ public class FiniteParametricProperty implements ParametricProperty {
     private final SetMultimap<BaseEvent, Set<Parameter<?>>> enablingParameterSets;
     private final Set<Set<Parameter<?>>> possibleParameterSets;
     private final SetMultimap<BaseMonitorState, Set<BaseEvent>> coenablingEventSets; // TODO
-    private final SetMultimap<BaseMonitorState,Set<Parameter<?>>> coenablingParameterSets; // TODO
+    private final SetMultimap<BaseMonitorState, Set<Parameter<?>>> coenablingParameterSets; // TODO
     private final ListMultimap<BaseEvent, Set<Parameter<?>>> maxData;
     private final ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinData;
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainData;
@@ -209,35 +209,35 @@ public class FiniteParametricProperty implements ParametricProperty {
     private void calculateStaticData() { // 1
 	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
 	    final Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
-	    for (Set<Parameter<?>> enablingParameterSet : getEnableSetsInReverseTopologicalOrdering(baseEvent)) { // 10
+	    for (Set<Parameter<?>> enablingParameterSet : getEnablingParameterSetsInReverseTopologicalOrdering(baseEvent)) { // 5
 		if (!enablingParameterSet.equals(EMPTY_PARAMETER_SET)
-			&& !isSubsetEq(parameterSet, enablingParameterSet)) { // 11
-		    if (isSuperset(parameterSet, enablingParameterSet)) { // 12
-			maxData.get(baseEvent).add(enablingParameterSet); // 13
-		    } else { // 14
-			final Set<Parameter<?>> compatibleSubset = intersection(parameterSet, enablingParameterSet); // 15
+			&& !isSubsetEq(parameterSet, enablingParameterSet)) { // 6
+		    if (isSuperset(parameterSet, enablingParameterSet)) { // 7
+			maxData.put(baseEvent, enablingParameterSet); // 8
+		    } else { // 9
+			final Set<Parameter<?>> compatibleSubset = intersection(parameterSet, enablingParameterSet); // 10
 			final Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple = tuple(compatibleSubset,
 				enablingParameterSet);
-			joinData.put(baseEvent, tuple); // 16
-			chainData.put(enablingParameterSet, tuple); // 17
-			if (updates.contains(tuple)) { // 18
-			    monitorSetData.put(compatibleSubset, tuple(enablingParameterSet, true)); // 19
-			} else { // 20
-			    monitorSetData.put(compatibleSubset, tuple(enablingParameterSet, false)); // 21
-			} // 22
-		    } // 23
-		} // 24
-	    } // 25
-	} // 26
-	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : updates) { // 27
-	    if (!monitorSetData.get(tuple.getLeft()).contains(tuple(tuple.getRight(), true))) { // 28
-		chainData.put(tuple.getRight(), tuple(tuple.getLeft(), EMPTY_PARAMETER_SET)); // 29
-		monitorSetData.put(tuple.getLeft(), tuple(EMPTY_PARAMETER_SET, true)); // 30
-	    } // 30
-	} // 31
-    }// 32
+			joinData.put(baseEvent, tuple); // 11
+			chainData.put(enablingParameterSet, tuple); // 12
+			if (updates.contains(tuple)) { // 13
+			    monitorSetData.put(compatibleSubset, tuple(enablingParameterSet, true)); // 14
+			} else { // 15
+			    monitorSetData.put(compatibleSubset, tuple(enablingParameterSet, false)); // 16
+			} // 17
+		    } // 18
+		} // 19
+	    } // 20
+	} // 21
+	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : updates) { // 22
+	    if (!monitorSetData.containsEntry(tuple.getLeft(), tuple(tuple.getRight(), true))) { // 23
+		chainData.put(tuple.getRight(), tuple(tuple.getLeft(), EMPTY_PARAMETER_SET)); // 24
+		monitorSetData.put(tuple.getLeft(), tuple(EMPTY_PARAMETER_SET, true)); // 25
+	    } // 26
+	} // 27
+    }// 28
 
-    private List<Set<Parameter<?>>> getEnableSetsInReverseTopologicalOrdering(BaseEvent baseEvent) {
+    private List<Set<Parameter<?>>> getEnablingParameterSetsInReverseTopologicalOrdering(BaseEvent baseEvent) {
 	List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
 		enablingParameterSets.get(baseEvent));
 	Collections.sort(enableSetInReverseTopolicalOrdering, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR);
@@ -311,11 +311,11 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return enablingParameterSets;
     }
 
-    SetMultimap<BaseMonitorState,Set<BaseEvent>> getStatePropertyCoEnableSets() {
+    SetMultimap<BaseMonitorState, Set<BaseEvent>> getStatePropertyCoEnableSets() {
 	return coenablingEventSets;
     }
 
-    SetMultimap<BaseMonitorState,Set<Parameter<?>>> getStateParameterCoEnableSets() {
+    SetMultimap<BaseMonitorState, Set<Parameter<?>>> getStateParameterCoEnableSets() {
 	return coenablingParameterSets;
     }
 
