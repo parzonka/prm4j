@@ -84,21 +84,19 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
-	Map<BaseEvent, Set<Set<BaseEvent>>> actual = fs.getEnablingEventSets();
+	SetMultimap<BaseEvent, Set<BaseEvent>> actual = fs.getEnablingEventSets();
 
-	Map<Symbol, Set<Set<Symbol>>> expected = new HashMap<Symbol, Set<Set<Symbol>>>();
-	for (Symbol symbol : u.alphabet.getSymbols()) {
-	    expected.put(symbol, new HashSet<Set<Symbol>>());
-	}
-	expected.get(u.createColl).add(Collections.<Symbol> emptySet());
-	expected.get(u.createIter).add(asSet(u.createColl));
-	// expected.get(u.createIter).add(asSet(u.createColl, u.updateMap)); // omitted by filtering loops on states
-	expected.get(u.useIter).add(asSet(u.createColl, u.createIter));
-	expected.get(u.useIter).add(asSet(u.createColl, u.createIter, u.updateMap));
-	expected.get(u.updateMap).add(Collections.<Symbol> emptySet());
-	expected.get(u.updateMap).add(asSet(u.createColl));
-	expected.get(u.updateMap).add(asSet(u.createColl, u.createIter));
-	// expected.get(u.updateMap).add(asSet(u.createColl, u.createIter, u.useIter)); // omitted by filtering loops on
+	SetMultimap<Symbol, Set<Symbol>> expected = HashMultimap.create();
+
+	expected.put(u.createColl, Collections.<Symbol> emptySet());
+	expected.put(u.createIter, asSet(u.createColl));
+	// expected.put(u.createIter, asSet(u.createColl, u.updateMap)); // omitted by filtering loops on states
+	expected.put(u.useIter, asSet(u.createColl, u.createIter));
+	expected.put(u.useIter, asSet(u.createColl, u.createIter, u.updateMap));
+	expected.put(u.updateMap, Collections.<Symbol> emptySet());
+	expected.put(u.updateMap, asSet(u.createColl));
+	expected.put(u.updateMap, asSet(u.createColl, u.createIter));
+	// expected.put(u.updateMap, asSet(u.createColl, u.createIter, u.useIter)); // omitted by filtering loops on
 	// states
 
 	assertEquals(expected, actual);
@@ -110,18 +108,16 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
-	Map<BaseEvent, Set<Set<Parameter<?>>>> actual = fs.getEnablingParameterSets();
+	SetMultimap<BaseEvent, Set<Parameter<?>>> actual = fs.getEnablingParameterSets();
 
-	Map<Symbol, Set<Set<Parameter<?>>>> expected = new HashMap<Symbol, Set<Set<Parameter<?>>>>();
-	for (Symbol symbol : u.alphabet.getSymbols()) {
-	    expected.put(symbol, new HashSet<Set<Parameter<?>>>());
-	}
-	expected.get(u.createColl).add(Collections.<Parameter<?>> emptySet());
-	expected.get(u.createIter).add(asSet(u.m, u.c));
-	expected.get(u.useIter).add(asSet(u.m, u.c, u.i));
-	expected.get(u.updateMap).add(EMPTY_PARAMETER_SET);
-	expected.get(u.updateMap).add(asSet(u.m, u.c));
-	expected.get(u.updateMap).add(asSet(u.m, u.c, u.i));
+	SetMultimap<BaseEvent, Set<Parameter<?>>> expected = HashMultimap.create();
+
+	expected.put(u.createColl, Collections.<Parameter<?>> emptySet());
+	expected.put(u.createIter, asSet(u.m, u.c));
+	expected.put(u.useIter, asSet(u.m, u.c, u.i));
+	expected.put(u.updateMap, EMPTY_PARAMETER_SET);
+	expected.put(u.updateMap, asSet(u.m, u.c));
+	expected.put(u.updateMap, asSet(u.m, u.c, u.i));
 
 	assertEquals(expected, actual);
     }
@@ -235,7 +231,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
-	Map<BaseMonitorState, Set<Set<BaseEvent>>> actual = fs.getStatePropertyCoEnableSets();
+	SetMultimap<BaseMonitorState, Set<BaseEvent>> actual = fs.getStatePropertyCoEnableSets();
 
 	Map<BaseMonitorState, Set<Set<Symbol>>> expected = new HashMap<BaseMonitorState, Set<Set<Symbol>>>();
 	for (BaseMonitorState state : u.fsm.getStates()) {
@@ -263,16 +259,16 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void getEnablingEventSets_FSM_ab_b_with_initial_b_loop() throws Exception {
 	FSM_ab_b_with_initial_b_loop fsm = new FSM_ab_b_with_initial_b_loop();
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
 
-	Map<BaseEvent, Set<Set<BaseEvent>>> actual = fs.getEnablingEventSets();
-	Map<BaseEvent, Set<Set<BaseEvent>>> expected = new HashMap<BaseEvent, Set<Set<BaseEvent>>>();
+	SetMultimap<BaseEvent, Set<BaseEvent>> actual = fs.getEnablingEventSets();
+	SetMultimap<BaseEvent, Set<BaseEvent>> expected = HashMultimap.create();
 
-	expected.put(fsm.e1, asSet(Collections.<BaseEvent> emptySet()));
-	expected.put(fsm.e2, asSet(asSet((BaseEvent) fsm.e1), Collections.<BaseEvent> emptySet()));
+	expected.put(fsm.e1, Collections.<BaseEvent> emptySet());
+	expected.put(fsm.e2, Collections.<BaseEvent> emptySet());
+	expected.put(fsm.e2, asSet((BaseEvent) fsm.e1));
 
 	assertEquals(expected, actual);
     }

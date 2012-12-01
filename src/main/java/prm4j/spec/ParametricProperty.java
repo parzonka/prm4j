@@ -10,7 +10,6 @@
  */
 package prm4j.spec;
 
-import java.util.Map;
 import java.util.Set;
 
 import prm4j.Util.Tuple;
@@ -38,9 +37,9 @@ public interface ParametricProperty {
 
     public Set<Set<Parameter<?>>> getPossibleParameterSets();
 
-    public Map<BaseEvent, Set<Set<BaseEvent>>> getEnablingEventSets();
+    public SetMultimap<BaseEvent, Set<BaseEvent>> getEnablingEventSets();
 
-    public Map<BaseEvent, Set<Set<Parameter<?>>>> getEnablingParameterSets();
+    public SetMultimap<BaseEvent, Set<Parameter<?>>> getEnablingParameterSets();
 
     /**
      * @return mapping of base events to a list of subinstances in its enabling set
