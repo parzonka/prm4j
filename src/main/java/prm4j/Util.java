@@ -34,12 +34,12 @@ public class Util {
     public static Comparator<Set<?>> REVERSE_TOPOLOGICAL_SET_COMPARATOR = new ReverseTopologicalSetComparator();
 
     public static <T> Set<T> set(T... values) {
-   	Set<T> set = new HashSet<T>();
-   	for (T s : values) {
-   	    set.add(s);
-   	}
-   	return set;
-       }
+	Set<T> set = new HashSet<T>();
+	for (T s : values) {
+	    set.add(s);
+	}
+	return set;
+    }
 
     public static <T> Set<T> union(Set<T> set1, Set<T> set2) {
 	Set<T> result = new HashSet<T>(set1);
@@ -61,29 +61,50 @@ public class Util {
 	return result;
     }
 
+    /**
+     * Tests if set1 is a real subset of set2.
+     *
+     * @param set1
+     * @param set2
+     * @return <code>true</code>, if set1 is a real subset of set2.
+     */
     public static <T> boolean isSubset(Set<T> set1, Set<T> set2) {
-	return set2.containsAll(set1) && !set1.equals(set2);
+	return !set1.equals(set2) && set2.containsAll(set1);
     }
 
+    /**
+     * Tests if set1 is a subset or equal to set2.
+     *
+     * @param set1
+     * @param set2
+     * @return <code>true</code>, if set1 is a subset or equal to set2.
+     */
     public static <T> boolean isSubsetEq(Set<T> set1, Set<T> set2) {
 	return set2.containsAll(set1);
     }
 
+    /**
+     * Tests if set1 is a real superset of set2.
+     *
+     * @param set1
+     * @param set2
+     * @return <code>true</code>, if set1 is a real superset of set2.
+     */
     public static <T> boolean isSuperset(Set<T> set1, Set<T> set2) {
-	return set1.containsAll(set2);
+	return !set1.equals(set2) && set1.containsAll(set2);
     }
 
     public static <T> Set<T> unmodifiableUnion(Set<T> set1, Set<T> set2) {
-   	Set<T> result = new HashSet<T>(set1);
-   	result.addAll(set2);
-   	return Collections.unmodifiableSet(result);
-       }
+	Set<T> result = new HashSet<T>(set1);
+	result.addAll(set2);
+	return Collections.unmodifiableSet(result);
+    }
 
     public static <T> Set<T> unmodifiableDifference(Set<T> set1, Set<T> set2) {
-   	Set<T> result = new HashSet<T>(set1);
-   	result.removeAll(set2);
-   	return Collections.unmodifiableSet(result);
-       }
+	Set<T> result = new HashSet<T>(set1);
+	result.removeAll(set2);
+	return Collections.unmodifiableSet(result);
+    }
 
     static class TopologicalSetComparator implements Comparator<Set<?>> {
 	@Override
