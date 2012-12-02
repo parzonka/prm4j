@@ -61,45 +61,57 @@ public class StaticDataConverter {
     /**
      * Creates arrays of maxData, joinData, chainData.
      */
-    private void convertToLowLevelStaticData() {
-	for (Set<Parameter<?>> parameterSet : pp.getMonitorSetData().keys()) {
-	    ArrayList<Tuple<Set<Parameter<?>>, Boolean>> tupleList = new ArrayList<Tuple<Set<Parameter<?>>, Boolean>>(
-		    pp.getMonitorSetData().get(parameterSet));
-	    Collections.sort(tupleList, new Comparator<Tuple<Set<Parameter<?>>, Boolean>>() {
-		@Override
-		public int compare(Tuple<Set<Parameter<?>>, Boolean> t1, Tuple<Set<Parameter<?>>, Boolean> t2) {
-		    return t1.getLeft().size() - t2.getLeft().size();
-		}
-	    });
-	    int i = 0;
-	    for (Tuple<Set<Parameter<?>>, Boolean> tuple : tupleList) {
-		monitorSetIds.put(parameterSet, tuple.getLeft(), i++);
-	    }
-	}
-	for (BaseEvent baseEvent : pp.getBaseEvents()) {
-	    for (Set<Parameter<?>> parameterSet : pp.getMaxData().get(baseEvent)) {
-		final int[] nodeMask = toParameterMask(parameterSet);
-		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), parameterSet));
-		maxData.put(baseEvent, new MaxData(nodeMask, diffMask));
-	    }
-	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) {
+    private void convertToLowLevelStaticData() { // 1
+	for (Set<Parameter<?>> parameterSet : pp.getMonitorSetData().keys()) { // 2
+	    int i = 0; // 3
+	    for (Tuple<Set<Parameter<?>>, Boolean> tuple : getMonitorSetDataInTopologicalOrdering(parameterSet)) { // 4
+		monitorSetIds.put(parameterSet, tuple.getLeft(), i++); // 5, 6
+	    } // 7
+	} // 8
+	for (BaseEvent baseEvent : pp.getBaseEvents()) { // 9
+	    for (Set<Parameter<?>> parameterSet : pp.getMaxData().get(baseEvent)) { // 10
+		final int[] nodeMask = toParameterMask(parameterSet); // 12
+		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), parameterSet)); // 13
+		maxData.put(baseEvent, new MaxData(nodeMask, diffMask)); // 11, 14
+	    } // 15
+	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) { // 16
 		// we have to select the compatible parameters from the parameters in the base event
-		final int[] nodeMask = toParameterSubsetMask(tuple.getLeft(), baseEvent.getParameters());
-		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
-		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
-		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight());
+		final int[] nodeMask = toParameterSubsetMask(tuple.getLeft(), baseEvent.getParameters()); // 18
+		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight()); // 19
+		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight()); // 20
+		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight()); // 21
 		final int[] diffMask = toParameterSubsetMask(
-			Util.difference(baseEvent.getParameters(), tuple.getLeft()), baseEvent.getParameters());
-		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask));
+			Util.difference(baseEvent.getParameters(), tuple.getLeft()), baseEvent.getParameters()); // 22
+		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask)); // 23
+	    } // 24
+	} // 25
+	for (Set<Parameter<?>> parameterSet : pp.getChainData().keys()) { // 26
+	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getChainData().get(parameterSet)) { // 27
+		final int[] nodeMask = toParameterMask(tuple.getLeft()); // 29
+		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight()); // 30
+		chainData.put(parameterSet, new ChainData(nodeMask, monitorSetId)); // 28, 31
+	    } // 32
+	} // 33
+    } // 34
+
+    /**
+     * Return a ordered list of tuples. The ordering is not neccessary for correctness. It is just useful for display
+     * purposes so that the empty set (as left component) will get associated with the id 0.
+     *
+     * @param parameterSet
+     * @return a list of tuples (Set, Boolean) ordered by size of the set.
+     */
+    private List<Tuple<Set<Parameter<?>>, Boolean>> getMonitorSetDataInTopologicalOrdering(
+	    Set<Parameter<?>> parameterSet) {
+	ArrayList<Tuple<Set<Parameter<?>>, Boolean>> tupleList = new ArrayList<Tuple<Set<Parameter<?>>, Boolean>>(pp
+		.getMonitorSetData().get(parameterSet));
+	Collections.sort(tupleList, new Comparator<Tuple<Set<Parameter<?>>, Boolean>>() {
+	    @Override
+	    public int compare(Tuple<Set<Parameter<?>>, Boolean> t1, Tuple<Set<Parameter<?>>, Boolean> t2) {
+		return t1.getLeft().size() - t2.getLeft().size();
 	    }
-	}
-	for (Set<Parameter<?>> parameterSet : pp.getChainData().keys()) {
-	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getChainData().get(parameterSet)) {
-		final int[] nodeMask = toParameterMask(tuple.getLeft());
-		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight());
-		chainData.put(parameterSet, new ChainData(nodeMask, monitorSetId));
-	    }
-	}
+	});
+	return tupleList;
     }
 
     /**
