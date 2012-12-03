@@ -63,6 +63,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     @Override
     public synchronized void processEvent(Event event) {
 
+	@Deprecated
 	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
 	final LowLevelBinding[] bindingsUncompressed = bindingStore.getBindingsNoCompression(event.getBoundObjects());
 	final BaseEvent baseEvent = event.getBaseEvent();
@@ -156,8 +157,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		final boolean someBindingsAreKnown = tmax < timestamp;
 
 		// calculate once the bindings to be joined with the whole monitor set
-		final LowLevelBinding[] joinableBindings = createJoinableBindings(bindings,
-			joinData.getExtensionPattern()); // 56 - 61
+		final LowLevelBinding[] joinableBindings = createJoinableBindings(bindingsUncompressed,
+			joinData.getExtensionPatternNew()); // 56 - 61
 
 		// join is performed in monitor set
 		compatibleNode.getMonitorSet(joinData.getMonitorSetId()).join(nodeStore, bindings, event,
