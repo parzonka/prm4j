@@ -143,7 +143,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		long tmax = 0L; // 44
 		final int[] diffMask = joinData.getDiffMask();
 		for (int i = 0; i < diffMask.length; i++) { // 45
-		    final LowLevelBinding b = bindings[diffMask[i]];
+		    final LowLevelBinding b = bindingsUncompressed[diffMask[i]];
 		    final long bTimestamp = b.getTimestamp();
 		    if (bTimestamp < timestamp) { // 46
 			if (b.isDisabled()) { // 47
