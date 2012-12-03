@@ -29,9 +29,15 @@ public interface Node extends MinimalMapEntry<LowLevelBinding, Node> {
 
     public void setMonitor(BaseMonitor monitor);
 
+    @Deprecated
     public Node getOrCreateNode(LowLevelBinding binding);
 
+    public Node getOrCreateNode(int parameterIndex, LowLevelBinding binding);
+
+    @Deprecated
     public Node getNode(LowLevelBinding binding);
+
+    public Node getNode(int parameterIndex, LowLevelBinding binding);
 
     public void remove(LowLevelBinding binding);
 
