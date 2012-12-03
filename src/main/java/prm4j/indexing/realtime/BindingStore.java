@@ -22,6 +22,8 @@ public interface BindingStore {
      */
     public LowLevelBinding[] getBindings(Object[] boundObjects);
 
+    public LowLevelBinding[] getBindingsNoCompression(Object[] boundObjects);
+
     public LowLevelBinding getBinding(Parameter<?> parameter, Object boundObject);
 
     public LowLevelBinding getOrCreateBinding(Parameter<?> parameter, Object boundObject);

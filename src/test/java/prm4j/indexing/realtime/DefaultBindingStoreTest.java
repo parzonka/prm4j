@@ -21,6 +21,7 @@ import static prm4j.Util.tuple;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.junit.Test;
@@ -281,6 +282,55 @@ public class DefaultBindingStoreTest extends AbstractTest {
     private void createBindingStore(FSM fsm, int cleaningInterval) {
 	FiniteSpec finiteSpec = new FSMSpec(fsm);
 	bs = new DefaultBindingStore(finiteSpec.getFullParameterSet(), cleaningInterval);
+    }
+
+    @Test
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void getBindingsNoCompression_unsafeMapIterator() throws Exception {
+	createBindingStore(new FSM_unsafeMapIterator().fsm, 1);
+
+	// create bindings
+	Map map = map(tuple(1, "a"));
+	Collection coll = map.entrySet();
+	LowLevelBinding[] bindings = bs.getBindingsNoCompression(array(map, coll, null));
+
+	LowLevelBinding mBinding = bindings[0];
+	LowLevelBinding cBinding = bindings[1];
+
+	// verify no 'compression'
+	assertEquals(3, bindings.length);
+
+	// verify bound objects
+	assertTrue(map == mBinding.get());
+	assertTrue(coll == cBinding.get());
+	// verify parameter index
+	assertEquals(0, mBinding.getParameterIndex());
+	assertEquals(1, cBinding.getParameterIndex());
+    }
+
+    @Test
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void getBindingsNoCompression_unsafeMapIterator2() throws Exception {
+	createBindingStore(new FSM_unsafeMapIterator().fsm, 1);
+
+	// create bindings
+	Map map = map(tuple(1, "a"));
+	Collection coll = map.entrySet();
+	Iterator iter = coll.iterator();
+	LowLevelBinding[] bindings = bs.getBindingsNoCompression(array(map, null, iter));
+
+	LowLevelBinding mBinding = bindings[0];
+	LowLevelBinding iBinding = bindings[2];
+
+	// verify no 'compression'
+	assertEquals(3, bindings.length);
+
+	// verify bound objects
+	assertTrue(map == mBinding.get());
+	assertTrue(iter == iBinding.get());
+	// verify parameter index
+	assertEquals(0, mBinding.getParameterIndex());
+	assertEquals(2, iBinding.getParameterIndex());
     }
 
 }
