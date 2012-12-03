@@ -64,7 +64,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     public synchronized void processEvent(Event event) {
 
 	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
+	final LowLevelBinding[] bindingsUncompressed = bindingStore.getBindingsNoCompression(event.getBoundObjects());
 	final BaseEvent baseEvent = event.getBaseEvent();
+	final int[] parameterMask = event.getBaseEvent().getParameterMask();
 	Node instanceNode = nodeStore.getNode(bindings);
 	BaseMonitor instanceMonitor = instanceNode.getMonitor();
 
@@ -92,7 +94,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 			}
 		    }
 		    if (instanceNode == NullNode.instance) {
-			instanceNode = nodeStore.getOrCreateNode(bindings); // get real instance node
+			instanceNode = nodeStore.getOrCreateNode(bindingsUncompressed, parameterMask); // get real instance node
 		    }
 		    // inlined DefineTo from 73
 		    instanceMonitor = maxMonitor.copy(bindings); // 102-105
@@ -101,7 +103,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
-			nodeStore.getOrCreateNode(bindings, chainData.getNodeMask())
+			nodeStore.getOrCreateNode(bindingsUncompressed, chainData.getNodeMask())
 				.getMonitorSet(chainData.getMonitorSetId()).add(instanceMonitor); // 111
 		    } // 107
 		    break findMaxPhase;
@@ -109,21 +111,21 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    }
 	    monitorCreation: if (instanceMonitor == null) {
 		if (eventContext.isCreationEvent(baseEvent)) { // 20
-		    for (LowLevelBinding binding : bindings) { // 21
-			if (binding.isDisabled()) { // 22
+		    for (int i = 0; i < parameterMask.length; i++) { // 21
+			if (bindingsUncompressed[i].isDisabled()) // 22
 			    break monitorCreation; // 23
-			}
 		    }
+
 		    // inlined DefineNew from 93
 		    instanceMonitor = monitorPrototype.copy(bindings, timestamp); // 94 - 97
 		    instanceMonitor.processEvent(event); // 95
 		    if (instanceNode == NullNode.instance) {
-			instanceNode = nodeStore.getOrCreateNode(bindings); // get real instance node
+			instanceNode = nodeStore.getOrCreateNode(bindingsUncompressed, parameterMask); // get real instance node
 		    }
 		    instanceNode.setMonitor(instanceMonitor); // 98
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
-			nodeStore.getOrCreateNode(bindings, chainData.getNodeMask())
+			nodeStore.getOrCreateNode(bindingsUncompressed, chainData.getNodeMask())
 				.getMonitorSet(chainData.getMonitorSetId()).add(instanceMonitor); // 111
 		    } // 99
 		}
