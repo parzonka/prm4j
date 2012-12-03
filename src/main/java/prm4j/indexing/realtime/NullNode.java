@@ -90,4 +90,14 @@ public class NullNode implements Node {
 	return null;
     }
 
+    @Override
+    public Node getOrCreateNode(int parameterIndex, LowLevelBinding binding) {
+	return null;
+    }
+
+    @Override
+    public Node getNode(int parameterIndex, LowLevelBinding binding) {
+	return null;
+    }
+
 }

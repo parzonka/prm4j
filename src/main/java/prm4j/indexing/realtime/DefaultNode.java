@@ -26,6 +26,7 @@ public class DefaultNode extends AbstractNode {
 
     private WeakReference<Node> cachedNodeRef = null;
     private LowLevelBinding cachedBinding = null;
+    private int cachedParameterIndex = -1;
 
     /**
      * @param metaNode
@@ -66,6 +67,33 @@ public class DefaultNode extends AbstractNode {
 	if (cachedBinding != binding) {
 	    final Node node = get(binding, binding.hashCode());
 	    if (node != null) {
+		cachedBinding = binding;
+		cachedNodeRef = node.getNodeRef();
+		return node;
+	    } else {
+		return null;
+	    }
+	}
+	return cachedNodeRef.get();
+    }
+
+    @Override
+    public Node getOrCreateNode(int parameterIndex, LowLevelBinding binding) {
+	binding.registerNode(nodeRef);
+	if (cachedParameterIndex != parameterIndex || cachedBinding != binding) {
+	    cachedParameterIndex = parameterIndex;
+	    cachedBinding = binding;
+	    cachedNodeRef = getOrCreate(binding, binding.hashCode()).getNodeRef();
+	}
+	return cachedNodeRef.get();
+    }
+
+    @Override
+    public Node getNode(int parameterIndex, LowLevelBinding binding) {
+	if (cachedParameterIndex != parameterIndex || cachedBinding != binding) {
+	    final Node node = get(binding, binding.hashCode());
+	    if (node != null) {
+		cachedParameterIndex = parameterIndex;
 		cachedBinding = binding;
 		cachedNodeRef = node.getNodeRef();
 		return node;
