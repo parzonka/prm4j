@@ -123,23 +123,14 @@ public class StaticDataConverterNoCompression {
      * @return
      */
     protected static int[] getExtensionPattern(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
-	final int[] baseArray = toParameterMask(baseSet);
-	final int[] joiningArray = toParameterMask(joiningSet);
 	final List<Integer> result = new ArrayList<Integer>();
-
-	int i = 0;
-	int j = 0;
-	while (i < baseSet.size() || j < joiningSet.size()) {
-	    if (i < baseSet.size() && j < joiningSet.size() && baseArray[i] == joiningArray[j]) {
-		result.add(baseArray[i]);
-		i++;
-		j++;
-	    } else if (i < baseSet.size() && (j >= joiningSet.size() || baseArray[i] < joiningArray[j])) {
-		result.add(baseArray[i]);
-		i++;
+	final Set<Integer> baseParameterIndexSet = toParameterIndexSet(baseSet);
+	final int[] joinedArray = toParameterMask(Util.union(baseSet, joiningSet));
+	for (int parameterIndex : joinedArray) {
+	    if (baseParameterIndexSet.contains(parameterIndex)) {
+		result.add(parameterIndex);
 	    } else {
 		result.add(-1);
-		j++;
 	    }
 	}
 	return toPrimitiveIntegerArray(result);
@@ -172,15 +163,6 @@ public class StaticDataConverterNoCompression {
 	    }
 	}
 	return toPrimitiveIntegerArray(result);
-    }
-
-    private static boolean[] toPrimitiveBooleanArray(Collection<Boolean> collection) {
-	boolean[] result = new boolean[collection.size()];
-	int i = 0;
-	for (Boolean b : collection) {
-	    result[i++] = b;
-	}
-	return result;
     }
 
     private static int[] toPrimitiveIntegerArray(Collection<Integer> collection) {
@@ -222,6 +204,14 @@ public class StaticDataConverterNoCompression {
 	    result[i++] = parameter.getIndex();
 	}
 	Arrays.sort(result);
+	return result;
+    }
+
+    protected static Set<Integer> toParameterIndexSet(Set<Parameter<?>> parameterSet) {
+	Set<Integer> result = new HashSet<Integer>();
+	for (Parameter<?> parameter : parameterSet) {
+	    result.add(parameter.getIndex());
+	}
 	return result;
     }
 
