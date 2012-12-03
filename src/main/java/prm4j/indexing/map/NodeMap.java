@@ -65,16 +65,6 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
     protected abstract E[] createTable(int size);
 
     /**
-     * Retrieves the entry associated with this key using hash code variant implemented in this class.
-     *
-     * @param key
-     * @return the entry
-     */
-    public E getOrCreate(final int parameterIndex, final LowLevelBinding key) {
-	return getOrCreate(parameterIndex, key, hashCode(key));
-    }
-
-    /**
      * Retrieves the entry associated with this key and the provided hash code or creates a and stores new entry based
      * on the key and hash code.
      *
@@ -83,9 +73,9 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
      *            should be consistently calculated with the provided method of this class (or a subtype)
      * @return the entry
      */
-    public E getOrCreate(final int parameterIndex, final LowLevelBinding key, final int hashCode) {
+    public E getOrCreate(final int parameterIndex, final LowLevelBinding key) {
 
-	final int index = hashIndex(hashCode, table.length);
+	final int index = hashIndex(key.hashCode(), table.length);
 	E entry = table[index];
 
 	E lastEntry = null;
@@ -96,7 +86,7 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
 	    lastEntry = entry;
 	    entry = entry.next();
 	}
-	entry = createEntry(key, parameterIndex, hashCode);
+	entry = createEntry(parameterIndex, key);
 	if (lastEntry == null) {
 	    table[index] = entry;
 	} else {
@@ -108,16 +98,6 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
     }
 
     /**
-     * Retrieves the entry associated with this key or returns null.
-     *
-     * @param key
-     * @return the entry or null, if entry is not stored in the map
-     */
-    public E get(final int parameterIndex, final LowLevelBinding key) {
-	return get(parameterIndex, key, hashCode(key));
-    }
-
-    /**
      * Retrieves the entry associated with this key and the provided hash code or returns null.
      *
      * @param key
@@ -125,9 +105,9 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
      *            should be consistently calculated with the provided method of this class (or a subtype)
      * @return the entry or null, if entry is not stored in the map
      */
-    public E get(final int parameterIndex, final LowLevelBinding key, final int hashCode) {
+    public E get(final int parameterIndex, final LowLevelBinding key) {
 
-	final int index = hashIndex(hashCode, table.length);
+	final int index = hashIndex(key.hashCode(), table.length);
 	E entry = table[index];
 
 	while (entry != null) {
@@ -156,7 +136,8 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
 		    oldTable[i] = null; // help gc
 		    do {
 			E nextEntry = entry.next();
-			int newIndex = hashIndex(entry.hashCode(), newCapacity);
+			// hashCode of the key is used, so we do not need to store the hashCode in the entry
+			int newIndex = hashIndex(entry.getKey().hashCode(), newCapacity);
 			entry.setNext(newTable[newIndex]);
 			newTable[newIndex] = entry;
 			entry = nextEntry;
@@ -176,11 +157,7 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
      * @param hashCode
      * @return the entry
      */
-    protected abstract E createEntry(LowLevelBinding key, final int parameterIndex, int hashCode);
-
-    public void remove(final LowLevelBinding key) {
-	remove(key, hashCode(key));
-    }
+    protected abstract E createEntry(final int parameterIndex, LowLevelBinding key);
 
     /**
      * Removes <b>all</b> entries with the given binding, regardless of any parameterIndex.
@@ -188,9 +165,9 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
      * @param key
      * @param hashCode
      */
-    public void remove(final LowLevelBinding key, final int hashCode) {
+    public void remove(final LowLevelBinding key) {
 
-	final int hashIndex = hashIndex(hashCode, table.length);
+	final int hashIndex = hashIndex(key.hashCode(), table.length);
 	E entry = table[hashIndex];
 
 	E lastEntry = null;
@@ -231,22 +208,6 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
 	    entry = nextEntry;
 	}
 	return false;
-    }
-
-    /**
-     * Calculates the hashcode for the given key, which defaults to a variant of its object identity. Subclasses may
-     * implement their own hash code.
-     *
-     * @param key
-     * @return the hash code
-     */
-    public int hashCode(LowLevelBinding key) {
-	int h = System.identityHashCode(key);
-	// This function ensures that hashCodes that differ only by
-	// constant multiples at each bit position have a bounded
-	// number of collisions (approximately 8 at default load factor).
-	h ^= (h >>> 20) ^ (h >>> 12);
-	return h ^ (h >>> 7) ^ (h >>> 4);
     }
 
     protected int hashIndex(int hashCode, int tableLength) {
