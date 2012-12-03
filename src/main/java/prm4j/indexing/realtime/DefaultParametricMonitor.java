@@ -186,6 +186,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
      *            allows transformation of the bindings to joinable bindings
      * @return joinable bindings
      */
+    @Deprecated
     static LowLevelBinding[] createJoinableBindings(LowLevelBinding[] bindings, boolean[] extensionPattern) {
 	final LowLevelBinding[] joinableBindings = new LowLevelBinding[extensionPattern.length];
 	int sourceIndex = 0;
@@ -195,6 +196,25 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    }
 	}
 	assert sourceIndex == bindings.length : "All bindings have to be taken into account.";
+	return joinableBindings;
+    }
+
+    /**
+     * Returns an array of bindings containing "gaps" enabling efficient joins by filling these gaps.
+     *
+     * @param bindings
+     * @param extensionPattern
+     *            allows transformation of the bindings to joinable bindings
+     * @return joinable bindings
+     */
+    static LowLevelBinding[] createJoinableBindings(LowLevelBinding[] bindings, int[] extensionPattern) {
+	final LowLevelBinding[] joinableBindings = new LowLevelBinding[extensionPattern.length];
+	for (int i = 0; i < extensionPattern.length; i++) {
+	    final int e = extensionPattern[i];
+	    if (e >= 0) {
+		joinableBindings[i] = bindings[e];
+	    }
+	}
 	return joinableBindings;
     }
 
