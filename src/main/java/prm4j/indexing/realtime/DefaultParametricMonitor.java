@@ -72,8 +72,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	BaseMonitor instanceMonitor = instanceNode.getMonitor();
 
 	if (eventContext.isDisablingEvent(baseEvent)) { // 2
-	    for (LowLevelBinding binding : bindings) { // 3
-		binding.setDisabled(true); // 4
+	    for (int i = 0; i < parameterMask.length; i++) { // 3
+		bindingsUncompressed[parameterMask[i]].setDisabled(true); // 4
 	    } // 5
 	} // 6
 
@@ -95,7 +95,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 			}
 		    }
 		    if (instanceNode == NullNode.instance) {
-			instanceNode = nodeStore.getOrCreateNode(bindingsUncompressed, parameterMask); // get real instance node
+			instanceNode = nodeStore.getOrCreateNode(bindingsUncompressed, parameterMask); // get real
+												       // instance node
 		    }
 		    // inlined DefineTo from 73
 		    instanceMonitor = maxMonitor.copy(bindings); // 102-105
@@ -121,7 +122,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    instanceMonitor = monitorPrototype.copy(bindings, timestamp); // 94 - 97
 		    instanceMonitor.processEvent(event); // 95
 		    if (instanceNode == NullNode.instance) {
-			instanceNode = nodeStore.getOrCreateNode(bindingsUncompressed, parameterMask); // get real instance node
+			instanceNode = nodeStore.getOrCreateNode(bindingsUncompressed, parameterMask); // get real
+												       // instance node
 		    }
 		    instanceNode.setMonitor(instanceMonitor); // 98
 		    // inlined chain-method
