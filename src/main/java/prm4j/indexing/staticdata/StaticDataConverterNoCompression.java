@@ -76,12 +76,12 @@ public class StaticDataConverterNoCompression {
 	    } // 15
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) { // 16
 		// we have to select the compatible parameters from the parameters in the base event
-		final int[] nodeMask = toParameterSubsetMask(tuple.getLeft(), baseEvent.getParameters()); // 18
+		final int[] nodeMask = toParameterMask(Util.intersection(tuple.getLeft(), baseEvent.getParameters())); // 18
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight()); // 19
-		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight()); // 20
+		// FIXME make int // getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
+		final boolean[] extensionPattern = null; // 20
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight()); // 21
-		final int[] diffMask = toParameterSubsetMask(
-			Util.difference(baseEvent.getParameters(), tuple.getLeft()), baseEvent.getParameters()); // 22
+		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft())); // 22
 		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask)); // 23
 	    } // 24
 	} // 25
@@ -122,26 +122,27 @@ public class StaticDataConverterNoCompression {
      *            new parameters from this set will join
      * @return
      */
-    protected static boolean[] getExtensionPattern(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
-	List<Boolean> result = new ArrayList<Boolean>();
+    protected static int[] getExtensionPattern(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
+	final int[] baseArray = toParameterMask(baseSet);
+	final int[] joiningArray = toParameterMask(joiningSet);
+	final List<Integer> result = new ArrayList<Integer>();
+
 	int i = 0;
 	int j = 0;
 	while (i < baseSet.size() || j < joiningSet.size()) {
-	    if (i < baseSet.size() && j < joiningSet.size()
-		    && toParameterMask(baseSet)[i] == toParameterMask(joiningSet)[j]) {
-		result.add(true);
+	    if (i < baseSet.size() && j < joiningSet.size() && baseArray[i] == joiningArray[j]) {
+		result.add(baseArray[i]);
 		i++;
 		j++;
-	    } else if (i < baseSet.size()
-		    && (j >= joiningSet.size() || toParameterMask(baseSet)[i] < toParameterMask(joiningSet)[j])) {
-		result.add(true);
+	    } else if (i < baseSet.size() && (j >= joiningSet.size() || baseArray[i] < joiningArray[j])) {
+		result.add(baseArray[i]);
 		i++;
 	    } else {
-		result.add(false);
+		result.add(-1);
 		j++;
 	    }
 	}
-	return toPrimitiveBooleanArray(result);
+	return toPrimitiveIntegerArray(result);
     }
 
     /**
