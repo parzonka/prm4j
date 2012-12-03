@@ -88,7 +88,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		BaseMonitor maxMonitor = nodeStore.getNode(bindings, maxData.getNodeMask()).getMonitor(); // 9
 		if (maxMonitor != null) { // 10
 		    for (int i : maxData.getDiffMask()) { // 11
-			LowLevelBinding b = bindings[i];
+			LowLevelBinding b = bindingsUncompressed[i];
 			if (b.getTimestamp() < timestamp
 				&& (b.getTimestamp() > maxMonitor.getCreationTime() || b.isDisabled())) { // 12
 			    continue findMaxPhase; // 13
@@ -99,7 +99,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 												       // instance node
 		    }
 		    // inlined DefineTo from 73
-		    instanceMonitor = maxMonitor.copy(bindings); // 102-105
+		    instanceMonitor = maxMonitor.copy(toCompressedBindings(bindingsUncompressed, parameterMask)); // 102-105
 		    instanceMonitor.processEvent(event); // 103
 		    instanceNode.setMonitor(instanceMonitor); // 106
 
@@ -179,6 +179,15 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    b.setTimestamp(timestamp); // 38
 	} // 39
 	timestamp++; // 40
+    }
+
+    private static LowLevelBinding[] toCompressedBindings(LowLevelBinding[] uncompressedBindings, int[] parameterMask) {
+	LowLevelBinding[] result = new LowLevelBinding[parameterMask.length];
+	int j = 0;
+	for (int i = 0; i < parameterMask.length; i++) {
+	    result[j++] = uncompressedBindings[parameterMask[i]];
+	}
+	return result;
     }
 
     /**
