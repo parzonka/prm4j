@@ -78,8 +78,7 @@ public class StaticDataConverterNoCompression {
 		// we have to select the compatible parameters from the parameters in the base event
 		final int[] nodeMask = toParameterMask(Util.intersection(tuple.getLeft(), baseEvent.getParameters())); // 18
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight()); // 19
-		// FIXME make int // getExtensionPattern(baseEvent.getParameters(), tuple.getRight());
-		final boolean[] extensionPattern = null; // 20
+		final int[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight()); // 20
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight()); // 21
 		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft())); // 22
 		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask)); // 23

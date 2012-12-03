@@ -25,17 +25,31 @@ public class JoinData {
     // strictly more informative than the node, selected by the nodeMask)
     private final int monitorSetId;
     // prepares the event bindings for the join
-    private final boolean[] extensionPattern;
+    @Deprecated private final boolean[] extensionPattern;
+    private final int[] extensionPatternNew;
+
     // identifies the bindings which will be used for the join, picking out only "new" parameters
     private final int[] copyPattern;
     // identifies the bindings which are in given binding without joining binding; used for disable-calculation
     private final int[] diffMask;
 
+    @Deprecated
     public JoinData(int[] nodeMask, int monitorSetId, boolean[] extensionPattern, int[] copyPattern, int[] diffMask) {
+	this(nodeMask, monitorSetId, extensionPattern, null, copyPattern, diffMask);
+    }
+
+    public JoinData(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern, int[] diffMask) {
+	this(nodeMask, monitorSetId, null, extensionPattern, copyPattern, diffMask);
+    }
+
+    @Deprecated
+    public JoinData(int[] nodeMask, int monitorSetId, boolean[] extensionPattern, int[] extensionPatternNew,
+	    int[] copyPattern, int[] diffMask) {
 	super();
 	this.nodeMask = nodeMask;
 	this.monitorSetId = monitorSetId;
 	this.extensionPattern = extensionPattern;
+	this.extensionPatternNew = extensionPatternNew;
 	this.copyPattern = copyPattern;
 	this.diffMask = diffMask;
     }
@@ -48,8 +62,13 @@ public class JoinData {
 	return monitorSetId;
     }
 
+    @Deprecated
     public boolean[] getExtensionPattern() {
 	return extensionPattern;
+    }
+
+    public int[] getExtensionPatternNew() {
+	return extensionPatternNew;
     }
 
     /**

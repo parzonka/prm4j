@@ -78,10 +78,13 @@ public class StaticDataConverter {
 		// we have to select the compatible parameters from the parameters in the base event
 		final int[] nodeMask = toParameterMask(Util.intersection(tuple.getLeft(), baseEvent.getParameters())); // 18
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight()); // 19
+		@Deprecated
 		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight()); // 20
+		final int[] extensionPatternNew = getExtensionPatternNew(baseEvent.getParameters(), tuple.getRight()); // 20
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight()); // 21
 		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft())); // 22
-		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask)); // 23
+		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, extensionPatternNew,
+			copyPattern, diffMask)); // 23
 	    } // 24
 	} // 25
 	for (Set<Parameter<?>> parameterSet : pp.getChainData().keys()) { // 26
@@ -121,6 +124,7 @@ public class StaticDataConverter {
      *            new parameters from this set will join
      * @return
      */
+    @Deprecated
     protected static boolean[] getExtensionPattern(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
 	List<Boolean> result = new ArrayList<Boolean>();
 	int i = 0;
@@ -141,6 +145,36 @@ public class StaticDataConverter {
 	    }
 	}
 	return toPrimitiveBooleanArray(result);
+    }
+
+    /**
+     *
+     * @param baseSet
+     *            all parameters of this set will be kept
+     * @param joiningSet
+     *            new parameters from this set will join
+     * @return
+     */
+    protected static int[] getExtensionPatternNew(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
+	final List<Integer> result = new ArrayList<Integer>();
+	final Set<Integer> baseParameterIndexSet = toParameterIndexSet(baseSet);
+	final int[] joinedArray = toParameterMask(Util.union(baseSet, joiningSet));
+	for (int parameterIndex : joinedArray) {
+	    if (baseParameterIndexSet.contains(parameterIndex)) {
+		result.add(parameterIndex);
+	    } else {
+		result.add(-1);
+	    }
+	}
+	return toPrimitiveIntegerArray(result);
+    }
+
+    protected static Set<Integer> toParameterIndexSet(Set<Parameter<?>> parameterSet) {
+	Set<Integer> result = new HashSet<Integer>();
+	for (Parameter<?> parameter : parameterSet) {
+	    result.add(parameter.getIndex());
+	}
+	return result;
     }
 
     /**
