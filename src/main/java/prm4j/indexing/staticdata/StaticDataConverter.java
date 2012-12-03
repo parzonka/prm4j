@@ -76,7 +76,7 @@ public class StaticDataConverter {
 	    } // 15
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) { // 16
 		// we have to select the compatible parameters from the parameters in the base event
-		final int[] nodeMask = toParameterSubsetMask(tuple.getLeft(), baseEvent.getParameters()); // 18
+		final int[] nodeMask = toParameterMask(Util.intersection(tuple.getLeft(), baseEvent.getParameters())); // 18
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight()); // 19
 		final boolean[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight()); // 20
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight()); // 21
