@@ -10,10 +10,10 @@
  */
 package prm4j.api;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 
 /**
  * Immutable.<br>
@@ -24,21 +24,46 @@ public abstract class Symbol implements BaseEvent {
     private final Alphabet alphabet;
     private final int index;
     private final String uniqueName;
-    private final int parameterCount;
-    protected final Set<Parameter<?>> parameters;
+    private Set<Parameter<?>> parameterSet;
+    private int[] parameterMask;
 
     protected Symbol(Alphabet alphabet, int index, String uniqueName, int parameterCount) {
 	super();
 	this.alphabet = alphabet;
 	this.index = index;
 	this.uniqueName = uniqueName;
-	parameters = new HashSet<Parameter<?>>();
-	this.parameterCount = parameterCount;
+	parameterSet = new HashSet<Parameter<?>>();
     }
 
     @Override
     public int getIndex() {
 	return index;
+    }
+
+    /**
+     * Sets the set representation and the parameter mask representation of the parameters associated with this symbol.
+     *
+     * @param parameters
+     */
+    protected void setParameters(Parameter<?>... parameters) {
+	final Set<Parameter<?>> parameterSet = new HashSet<Parameter<?>>();
+	for (int i = 0; i < parameters.length; i++) {
+	    if (parameters[i] != null) {
+		parameterSet.add(parameters[i]);
+	    }
+	}
+	final int[] parameterMask = new int[parameterSet.size()];
+	int j = 0;
+	for (int i = 0; i < parameters.length; i++) {
+	    if (parameters[i] != null) {
+		parameterMask[j++] = parameters[i].getIndex();
+	    }
+	}
+	assert parameterMask.length == parameterSet.size();
+
+	Arrays.sort(parameterMask);
+	this.parameterMask = parameterMask;
+	this.parameterSet = parameterSet;
     }
 
     /**
@@ -55,12 +80,12 @@ public abstract class Symbol implements BaseEvent {
 
     @Override
     public Set<Parameter<?>> getParameters() {
-	return Collections.unmodifiableSet(parameters);
+	return Collections.unmodifiableSet(parameterSet);
     }
 
     @Override
     public int getParameterCount() {
-	return parameterCount;
+	return parameterSet.size();
     }
 
     /**
@@ -75,6 +100,11 @@ public abstract class Symbol implements BaseEvent {
     @Override
     public String toString() {
 	return uniqueName;
+    }
+
+    @Override
+    public int[] getParameterMask() {
+	return parameterMask;
     }
 
 }

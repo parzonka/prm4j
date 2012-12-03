@@ -10,7 +10,6 @@
  */
 package prm4j.api;
 
-
 public class Symbol2<P1, P2> extends Symbol {
 
     private final Parameter<P1> param1;
@@ -20,8 +19,7 @@ public class Symbol2<P1, P2> extends Symbol {
 	super(alphabet, uniqueId, uniqueName, 2);
 	this.param1 = param1;
 	this.param2 = param2;
-	parameters.add(param1);
-	parameters.add(this.param2);
+	setParameters(param1, param2);
     }
 
     public Event createEvent(P1 obj1, P2 obj2) {

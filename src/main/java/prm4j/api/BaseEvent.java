@@ -12,7 +12,6 @@ package prm4j.api;
 
 import java.util.Set;
 
-
 public interface BaseEvent {
 
     /**
@@ -35,5 +34,13 @@ public interface BaseEvent {
      * @return the parameter count
      */
     public int getParameterCount();
+
+    /**
+     * Returns an compressed (without null-values) array representation of all parameter indices of the associated
+     * parameters to this base event.
+     *
+     * @return uncompressed parameter indices
+     */
+    public int[] getParameterMask();
 
 }

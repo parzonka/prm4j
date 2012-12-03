@@ -10,7 +10,6 @@
  */
 package prm4j.api;
 
-
 public class Symbol3<P1, P2, P3> extends Symbol {
 
     private final Parameter<P1> param1;
@@ -23,9 +22,7 @@ public class Symbol3<P1, P2, P3> extends Symbol {
 	this.param1 = param1;
 	this.param2 = param2;
 	this.param3 = param3;
-	parameters.add(param1);
-	parameters.add(param2);
-	parameters.add(param3);
+	setParameters(param1, param2, param3);
     }
 
     public Event createEvent(P1 obj1, P2 obj2, P3 obj3) {
