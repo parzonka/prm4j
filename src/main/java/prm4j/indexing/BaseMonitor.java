@@ -13,6 +13,7 @@ package prm4j.indexing;
 import prm4j.api.Event;
 import prm4j.api.ParametricMonitor;
 import prm4j.indexing.realtime.LowLevelBinding;
+import prm4j.indexing.staticdata.MetaNode;
 
 /**
  * Abstract base class for a concrete monitor instance, representing the internal state of a {@link ParametricMonitor}
@@ -22,6 +23,7 @@ public abstract class BaseMonitor {
 
     private final static LowLevelBinding[] EMPTY_BINDINGS = new LowLevelBinding[0];
 
+    private MetaNode metaNode;
     // low level access
     private LowLevelBinding[] bindings;
     // low level access
@@ -102,5 +104,13 @@ public abstract class BaseMonitor {
      * Creates a deep copy of this base monitor.
      */
     public abstract BaseMonitor copy();
+
+    public MetaNode getMetaNode() {
+	return metaNode;
+    }
+
+    public void setMetaNode(MetaNode metaNode) {
+	this.metaNode = metaNode;
+    }
 
 }

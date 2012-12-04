@@ -15,7 +15,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import prm4j.api.Parameter;
 import prm4j.indexing.map.MinimalMapEntry;
 
 public class DefaultLowLevelBinding extends WeakReference<Object> implements LowLevelBinding,
@@ -25,37 +24,14 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     private boolean disabled;
     private final int hashCode;
     @Deprecated
-    private final Parameter<?> parameter;
     private DefaultLowLevelBinding next;
     private List<WeakReference<Node>> nodeRefs;
-
-    @Deprecated
-    public DefaultLowLevelBinding(Object boundObject, Parameter<?> parameter, int hashCode, ReferenceQueue<Object> q) {
-	super(boundObject, q);
-	this.hashCode = hashCode;
-	this.parameter = parameter;
-	timestamp = Long.MAX_VALUE; // indicates the binding was just created
-	nodeRefs = new ArrayList<WeakReference<Node>>();
-    }
 
     public DefaultLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q) {
 	super(boundObject, q);
 	this.hashCode = hashCode;
-	parameter = null;
 	timestamp = Long.MAX_VALUE; // indicates the binding was just created
 	nodeRefs = new ArrayList<WeakReference<Node>>();
-    }
-
-    @Deprecated
-    @Override
-    public Parameter<?> getParameter() {
-	return parameter;
-    }
-
-    @Deprecated
-    @Override
-    public int getParameterIndex() {
-	return parameter.getIndex();
     }
 
     /**
@@ -122,13 +98,7 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 
     @Override
     public String toString() {
-	return parameter + "=" + get();
-    }
-
-    @Override
-    @Deprecated
-    public int compareTo(LowLevelBinding o) {
-	return this.getParameterIndex() - o.getParameterIndex();
+	return "" + get();
     }
 
 }

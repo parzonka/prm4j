@@ -10,7 +10,6 @@
  */
 package prm4j.api;
 
-
 public abstract class MatchHandler {
 
     /**
@@ -50,17 +49,8 @@ public abstract class MatchHandler {
      * @return the object which was bound to the given parameter. <code>null</code>, if the object was already garbage
      *         collected.
      */
+    @SuppressWarnings("unchecked")
     protected <P> P getBoundObject(Parameter<P> param, Binding[] bindings) {
-	// matches are rare, so we simply search the bindings linearly
-	for (Binding binding : bindings) {
-	    if (binding != null && binding.getParameterIndex() == param.getIndex()) {
-		@SuppressWarnings("unchecked")
-		P boundObject = (P) binding.get();
-		return boundObject;
-	    }
-	}
-	throw new IllegalArgumentException("Bound object for parameter ["
-		+ "] coult not be retrieved from the bindings!");
+	return (P) bindings[param.getIndex()];
     }
-
 }

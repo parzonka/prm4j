@@ -82,6 +82,7 @@ public class DefaultNode extends AbstractNode {
     @Override
     public void setMonitor(BaseMonitor monitor) {
 	this.monitor = monitor;
+	monitor.setMetaNode(metaNode);
     }
 
     @Override

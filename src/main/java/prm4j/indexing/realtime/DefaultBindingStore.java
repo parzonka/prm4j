@@ -13,7 +13,6 @@ package prm4j.indexing.realtime;
 import java.lang.ref.ReferenceQueue;
 import java.util.Set;
 
-import prm4j.Util;
 import prm4j.api.Parameter;
 import prm4j.indexing.map.MinimalMap;
 
@@ -26,20 +25,16 @@ public class DefaultBindingStore implements BindingStore {
     public static final int DEFAULT_CLEANING_INTERVAL = 1024;
 
     private final ReferenceQueue<Object> referenceQueue;
-    private final MinimalMap<Object, DefaultLowLevelBinding>[] stores;
+    private final SingleBindingStore stores;
     private final Cleaner cleaner = new Cleaner();
     private final int cleaningInterval;
 
-    @SuppressWarnings("unchecked")
     public DefaultBindingStore(Set<Parameter<?>> fullParameterSet, int cleaningInterval) {
 
 	referenceQueue = new ReferenceQueue<Object>();
 	this.cleaningInterval = cleaningInterval;
 
-	stores = new MinimalMap[fullParameterSet.size()];
-	for (Parameter<?> parameter : Util.asSortedList(fullParameterSet)) {
-	    stores[parameter.getIndex()] = new SingleBindingStore(parameter);
-	}
+	stores = new SingleBindingStore();
     }
 
     public DefaultBindingStore(Set<Parameter<?>> fullParameterSet) {
@@ -52,7 +47,7 @@ public class DefaultBindingStore implements BindingStore {
 	for (int i = 0; i < boundObjects.length; i++) {
 	    final Object boundObject = boundObjects[i];
 	    if (boundObject != null) {
-		result[i] = stores[i].getOrCreate(boundObject);
+		result[i] = stores.getOrCreate(boundObject);
 	    }
 	}
 	cleaner.clean();
@@ -61,26 +56,22 @@ public class DefaultBindingStore implements BindingStore {
 
     @Override
     public LowLevelBinding getBinding(Parameter<?> parameter, Object boundObject) {
-	return stores[parameter.getIndex()].get(boundObject);
+	return stores.get(boundObject);
     }
 
     @Override
     public int size() {
-	int result = 0;
-	for (MinimalMap<Object, DefaultLowLevelBinding> store : stores) {
-	    result += store.size();
-	}
-	return result;
+	return stores.size();
     }
 
     @Override
     public LowLevelBinding getOrCreateBinding(Parameter<?> parameter, Object boundObject) {
-	return stores[parameter.getIndex()].getOrCreate(boundObject);
+	return stores.getOrCreate(boundObject);
     }
 
     @Override
     public boolean removeBinding(LowLevelBinding binding) {
-	return stores[binding.getParameterIndex()].removeEntry((DefaultLowLevelBinding) binding);
+	return stores.removeEntry((DefaultLowLevelBinding) binding);
     }
 
     protected ReferenceQueue<Object> getReferenceQueue() {
@@ -96,12 +87,6 @@ public class DefaultBindingStore implements BindingStore {
      */
     class SingleBindingStore extends MinimalMap<Object, DefaultLowLevelBinding> {
 
-	private final Parameter<?> parameter;
-
-	public SingleBindingStore(Parameter<?> parameter) {
-	    this.parameter = parameter;
-	}
-
 	@Override
 	protected DefaultLowLevelBinding[] createTable(int size) {
 	    return new DefaultLowLevelBinding[size];
@@ -109,7 +94,7 @@ public class DefaultBindingStore implements BindingStore {
 
 	@Override
 	protected DefaultLowLevelBinding createEntry(Object key, int hashCode) {
-	    return new DefaultLowLevelBinding(key, parameter, hashCode, referenceQueue);
+	    return new DefaultLowLevelBinding(key, hashCode, referenceQueue);
 	}
     }
 

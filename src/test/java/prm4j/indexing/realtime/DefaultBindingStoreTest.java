@@ -241,9 +241,6 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// verify bound objects
 	assertTrue(map == mBinding.get());
 	assertTrue(coll == cBinding.get());
-	// verify parameter index
-	assertEquals(0, mBinding.getParameterIndex());
-	assertEquals(1, cBinding.getParameterIndex());
     }
 
     @Test
@@ -303,9 +300,6 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// verify bound objects
 	assertTrue(map == mBinding.get());
 	assertTrue(coll == cBinding.get());
-	// verify parameter index
-	assertEquals(0, mBinding.getParameterIndex());
-	assertEquals(1, cBinding.getParameterIndex());
     }
 
     @Test
@@ -328,9 +322,6 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// verify bound objects
 	assertTrue(map == mBinding.get());
 	assertTrue(iter == iBinding.get());
-	// verify parameter index
-	assertEquals(0, mBinding.getParameterIndex());
-	assertEquals(2, iBinding.getParameterIndex());
     }
 
 }

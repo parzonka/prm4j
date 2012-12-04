@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import prm4j.Util;
+import prm4j.api.Binding;
 import prm4j.api.Parameter;
 import prm4j.indexing.realtime.DefaultNode;
 import prm4j.indexing.realtime.LowLevelBinding;
@@ -158,6 +159,22 @@ public class MetaNode {
 
     public void setMonitorSetCount(int monitorSetCount) {
 	this.monitorSetCount = monitorSetCount;
+    }
+
+    /**
+     * Transforms bindings from the compressed representation to the uncompressed representation.
+     *
+     * @param compressedBindings
+     * @return uncompressed bindings
+     */
+    public Binding[] uncompressBindings(Binding[] compressedBindings) {
+	assert compressedBindings.length == nodeParameterList.size();
+	Binding[] result = new Binding[fullParameterSet.size()];
+	for (int i = 0; i < compressedBindings.length; i++) {
+	    result[nodeParameterList.get(i).getIndex()] = compressedBindings[i];
+	}
+	return result;
+
     }
 
     @Override

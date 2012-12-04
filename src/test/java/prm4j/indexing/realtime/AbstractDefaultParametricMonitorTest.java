@@ -22,8 +22,6 @@ import java.util.Set;
 import org.junit.After;
 
 import prm4j.AbstractTest;
-import prm4j.Util.Tuple;
-import prm4j.api.Parameter;
 import prm4j.api.Symbol;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
@@ -72,19 +70,6 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	if (bindingStore.getListOfBindings().isEmpty())
 	    fail("There were no more retrieved bindings!");
 	return bindingStore.getListOfBindings().pop().get();
-    }
-
-    @SuppressWarnings("rawtypes")
-    protected Node getNode(Tuple... bindings) {
-	Set<LowLevelBinding> setOfBindings = new HashSet<LowLevelBinding>();
-	for (Tuple tuple : bindings) {
-	    LowLevelBinding llBinding = bindingStore.getBinding((Parameter<?>) tuple.getLeft(), tuple.getRight());
-	    if (llBinding == null) {
-		fail("Binding for " + tuple + " was not found in binding store!");
-	    }
-	    setOfBindings.add(llBinding);
-	}
-	return nodeStore.getNode(setOfBindings);
     }
 
     protected Node getNode(Object... boundObjects) {

@@ -16,6 +16,7 @@ import prm4j.indexing.realtime.LowLevelBinding;
 
 public abstract class BaseMonitorState {
 
+    @SuppressWarnings("unused") // FIXME
     private boolean[] acceptingParameters;
 
     /**
@@ -27,12 +28,7 @@ public abstract class BaseMonitorState {
      * @return true, if accepting state can be reached
      */
     public boolean isAcceptingStateReachable(LowLevelBinding[] bindings) {
-	for (LowLevelBinding b : bindings) {
-	    if (acceptingParameters[b.getParameterIndex()]) {
-		if (b.get() == null)
-		    return false;
-	    }
-	}
+	// TODO isAcceptingStateReachable
 	return true;
     }
 

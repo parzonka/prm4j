@@ -16,10 +16,6 @@ package prm4j.api;
  */
 public interface Binding {
 
-    public Parameter<?> getParameter();
-
-    public int getParameterIndex();
-
     public Object get();
 
 }
