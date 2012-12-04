@@ -74,12 +74,12 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 
     protected Node getNode(Object... boundObjects) {
 	int[] parameterMask = toParameterMask(boundObjects);
-	return nodeStore.getNode(bindingStore.getBindingsNoCompression(boundObjects), parameterMask);
+	return nodeStore.getNode(bindingStore.getBindings(boundObjects), parameterMask);
     }
 
     protected Node getOrCreateNode(Object... boundObjects) {
 	int[] parameterMask = toParameterMask(boundObjects);
-	return nodeStore.getOrCreateNode(bindingStore.getBindingsNoCompression(boundObjects), parameterMask);
+	return nodeStore.getOrCreateNode(bindingStore.getBindings(boundObjects), parameterMask);
     }
 
     protected void assertBoundObjects(AwareBaseMonitor monitor, Object... boundObjects) {

@@ -65,7 +65,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
 	final BaseEvent baseEvent = event.getBaseEvent();
 	final int[] parameterMask = baseEvent.getParameterMask();
-	final LowLevelBinding[] bindingsUncompressed = bindingStore.getBindingsNoCompression(event.getBoundObjects());
+	final LowLevelBinding[] bindingsUncompressed = bindingStore.getBindings(event.getBoundObjects());
 	final LowLevelBinding[] bindings = toCompressedBindings(bindingsUncompressed, parameterMask);
 	Node instanceNode = nodeStore.getNode(bindingsUncompressed, parameterMask);
 	BaseMonitor instanceMonitor = instanceNode.getMonitor();

@@ -42,7 +42,7 @@ public class DefaultBindingStore implements BindingStore {
     }
 
     @Override
-    public LowLevelBinding[] getBindingsNoCompression(Object[] boundObjects) {
+    public LowLevelBinding[] getBindings(Object[] boundObjects) {
 	LowLevelBinding[] result = new LowLevelBinding[boundObjects.length];
 	for (int i = 0; i < boundObjects.length; i++) {
 	    final Object boundObject = boundObjects[i];

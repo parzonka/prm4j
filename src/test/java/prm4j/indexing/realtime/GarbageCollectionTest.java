@@ -56,7 +56,7 @@ public class GarbageCollectionTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindingsNoCompression(array(object));
+	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
 	Node node = nodeStore.getOrCreateNode(bindings);
 
 	// verify
@@ -71,7 +71,7 @@ public class GarbageCollectionTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindingsNoCompression(array(object));
+	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
 	nodeStore.getOrCreateNode(bindings);
 
 	// verify
@@ -86,7 +86,7 @@ public class GarbageCollectionTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindingsNoCompression(array(object));
+	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
 	nodeStore.getOrCreateNode(bindings);
 
 	// verify
@@ -101,11 +101,11 @@ public class GarbageCollectionTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindingsNoCompression(array(object));
+	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
 	nodeStore.getOrCreateNode(bindings);
 	object = null;
 	runGarbageCollectorAFewTimes();
-	bindingStore.getBindingsNoCompression(array(new Object())); // object is collected, second object is added
+	bindingStore.getBindings(array(new Object())); // object is collected, second object is added
 
 	// verify
 	assertEquals(1, bindingStore.size()); // second object persists
@@ -119,13 +119,13 @@ public class GarbageCollectionTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindingsNoCompression(array(object));
+	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
 	nodeStore.getOrCreateNode(bindings);
 	assertEquals(1, nodeStore.getRootNode().size()); // node is stored
 
 	object = null;
 	runGarbageCollectorAFewTimes();
-	bindingStore.getBindingsNoCompression(array(new Object())); // object is collected, second object is added
+	bindingStore.getBindings(array(new Object())); // object is collected, second object is added
 
 	// verify
 	assertEquals(0, nodeStore.getRootNode().size()); // node was removed
@@ -138,24 +138,24 @@ public class GarbageCollectionTest extends AbstractTest {
 	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 5);
 
 	// exercise
-	nodeStore.getOrCreateNode(bindingStore.getBindingsNoCompression(array(new Object())));
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object())));
 	assertEquals(1, nodeStore.getRootNode().size()); // node is stored
 
-	nodeStore.getOrCreateNode(bindingStore.getBindingsNoCompression(array(new Object())));
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object())));
 	assertEquals(2, nodeStore.getRootNode().size()); // node is stored
 
-	nodeStore.getOrCreateNode(bindingStore.getBindingsNoCompression(array(new Object())));
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object())));
 	assertEquals(3, nodeStore.getRootNode().size()); // node is stored
 	runGarbageCollectorAFewTimes(); // should do nothing
 
-	nodeStore.getOrCreateNode(bindingStore.getBindingsNoCompression(array(new Object())));
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object())));
 	assertEquals(4, nodeStore.getRootNode().size()); // node is stored
 
-	nodeStore.getOrCreateNode(bindingStore.getBindingsNoCompression(array(new Object())));
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object())));
 	assertEquals(5, nodeStore.getRootNode().size()); // node is stored
 	runGarbageCollectorAFewTimes();
 
-	nodeStore.getOrCreateNode(bindingStore.getBindingsNoCompression(array(new Object()))); // triggers cleanup in nodeStore
+	nodeStore.getOrCreateNode(bindingStore.getBindings(array(new Object()))); // triggers cleanup in nodeStore
 
 	// verify
 	assertEquals(1, nodeStore.getRootNode().size()); // first 5 nodes are removed, last node persists
@@ -196,7 +196,7 @@ public class GarbageCollectionTest extends AbstractTest {
 	Set<Node> createdNodes = new HashSet<Node>(nodeStore.getCreatedNodes());
 	nodeStore.getCreatedNodes().clear();
 	for (Object[] instance : instances) {
-	    nodeStore.getOrCreateNode(bindingStore.getBindingsNoCompression(instance));
+	    nodeStore.getOrCreateNode(bindingStore.getBindings(instance));
 	}
 	assertEquals(nodeStore.getCreatedNodes(), createdNodes);
     }

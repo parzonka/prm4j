@@ -30,8 +30,8 @@ public class AwareDefaultBindingStore extends DefaultBindingStore {
     }
 
     @Override
-    public LowLevelBinding[] getBindingsNoCompression(Object[] boundObjects) {
-	LowLevelBinding[] bindings = super.getBindingsNoCompression(boundObjects);
+    public LowLevelBinding[] getBindings(Object[] boundObjects) {
+	LowLevelBinding[] bindings = super.getBindings(boundObjects);
 	getListOfBindings().add(new WeakReference<LowLevelBinding[]>(bindings));
 	return bindings;
     }
