@@ -64,15 +64,19 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     public synchronized void processEvent(Event event) {
 
 	final BaseEvent baseEvent = event.getBaseEvent();
+	// selects all bindings from 'bindings' which are not null
 	final int[] parameterMask = baseEvent.getParameterMask();
-	final LowLevelBinding[] bindingsUncompressed = bindingStore.getBindings(event.getBoundObjects());
-	final LowLevelBinding[] bindings = toCompressedBindings(bindingsUncompressed, parameterMask);
-	Node instanceNode = nodeStore.getNode(bindingsUncompressed, parameterMask);
+	// uncompressed representation of bindings
+	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
+	// node associated to the current bindings. May be NullNode if binding is encountered the first time
+	Node instanceNode = nodeStore.getNode(bindings, parameterMask);
+	// monitor associated with the instance node. May be null if the instance node is a NullNode
 	BaseMonitor instanceMonitor = instanceNode.getMonitor();
 
+	// disable all bindings which are
 	if (eventContext.isDisablingEvent(baseEvent)) { // 2
 	    for (int i = 0; i < parameterMask.length; i++) { // 3
-		bindingsUncompressed[parameterMask[i]].setDisabled(true); // 4
+		bindings[parameterMask[i]].setDisabled(true); // 4
 	    } // 5
 	} // 6
 
@@ -87,24 +91,24 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		BaseMonitor maxMonitor = nodeStore.getNode(bindings, maxData.getNodeMask()).getMonitor(); // 9
 		if (maxMonitor != null) { // 10
 		    for (int i : maxData.getDiffMask()) { // 11
-			LowLevelBinding b = bindingsUncompressed[i];
+			LowLevelBinding b = bindings[i];
 			if (b.getTimestamp() < timestamp
 				&& (b.getTimestamp() > maxMonitor.getCreationTime() || b.isDisabled())) { // 12
 			    continue findMaxPhase; // 13
 			}
 		    }
 		    if (instanceNode == NullNode.instance) {
-			instanceNode = nodeStore.getOrCreateNode(bindingsUncompressed, parameterMask); // get real
+			instanceNode = nodeStore.getOrCreateNode(bindings, parameterMask); // get real
 												       // instance node
 		    }
 		    // inlined DefineTo from 73
-		    instanceMonitor = maxMonitor.copy(toCompressedBindings(bindingsUncompressed, parameterMask)); // 102-105
+		    instanceMonitor = maxMonitor.copy(toCompressedBindings(bindings, parameterMask)); // 102-105
 		    instanceMonitor.processEvent(event); // 103
 		    instanceNode.setMonitor(instanceMonitor); // 106
 
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
-			nodeStore.getOrCreateNode(bindingsUncompressed, chainData.getNodeMask())
+			nodeStore.getOrCreateNode(bindings, chainData.getNodeMask())
 				.getMonitorSet(chainData.getMonitorSetId()).add(instanceMonitor); // 111
 		    } // 107
 		    break findMaxPhase;
@@ -114,21 +118,22 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    monitorCreation: if (instanceMonitor == null) {
 		if (eventContext.isCreationEvent(baseEvent)) { // 20
 		    for (int i = 0; i < parameterMask.length; i++) { // 21
-			if (bindingsUncompressed[i].isDisabled()) // 22
+			if (bindings[i].isDisabled()) // 22
 			    break monitorCreation; // 23
 		    }
 
 		    // inlined DefineNew from 93
-		    instanceMonitor = monitorPrototype.copy(bindings, timestamp); // 94 - 97
+		    instanceMonitor = monitorPrototype.copy(toCompressedBindings(bindings, parameterMask),
+			    timestamp); // 94 - 97
 		    instanceMonitor.processEvent(event); // 95
 		    if (instanceNode == NullNode.instance) {
-			instanceNode = nodeStore.getOrCreateNode(bindingsUncompressed, parameterMask); // get real
+			instanceNode = nodeStore.getOrCreateNode(bindings, parameterMask); // get real
 												       // instance node
 		    }
 		    instanceNode.setMonitor(instanceMonitor); // 98
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
-			node = nodeStore.getOrCreateNode(bindingsUncompressed, chainData.getNodeMask());
+			node = nodeStore.getOrCreateNode(bindings, chainData.getNodeMask());
 			node.getMonitorSet(chainData.getMonitorSetId()).add(instanceMonitor); // 111
 		    } // 99
 		}
@@ -137,7 +142,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    joinPhase: for (JoinData joinData : eventContext.getJoinData(baseEvent)) { // 43
 
 		// if node does not exist there can't be any joinable monitors
-		final Node compatibleNode = nodeStore.getNode(bindingsUncompressed, joinData.getNodeMask());
+		final Node compatibleNode = nodeStore.getNode(bindings, joinData.getNodeMask());
 		if (compatibleNode == NullNode.instance) {
 		    continue joinPhase;
 		}
@@ -146,7 +151,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		long tmax = 0L; // 44
 		final int[] diffMask = joinData.getDiffMask();
 		for (int i = 0; i < diffMask.length; i++) { // 45
-		    final LowLevelBinding b = bindingsUncompressed[diffMask[i]];
+		    final LowLevelBinding b = bindings[diffMask[i]];
 		    final long bTimestamp = b.getTimestamp();
 		    if (bTimestamp < timestamp) { // 46
 			if (b.isDisabled()) { // 47
@@ -159,12 +164,12 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		final boolean someBindingsAreKnown = tmax < timestamp;
 
 		// calculate once the bindings to be joined with the whole monitor set
-		final LowLevelBinding[] joinableBindings = createJoinableBindings(bindingsUncompressed,
+		final LowLevelBinding[] joinableBindings = createJoinableBindings(bindings,
 			joinData.getExtensionPattern()); // 56 - 61
 
 		// join is performed in monitor set
-		compatibleNode.getMonitorSet(joinData.getMonitorSetId()).join(nodeStore, bindings, event,
-			joinableBindings, someBindingsAreKnown, tmax, joinData.getCopyPattern());
+		compatibleNode.getMonitorSet(joinData.getMonitorSetId()).join(nodeStore, event, joinableBindings,
+			someBindingsAreKnown, tmax, joinData.getCopyPattern());
 	    }
 	} else {
 	    // update phase
@@ -175,9 +180,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		}
 	    }
 	}
-	for (LowLevelBinding b : bindings) { // 37
-	    b.setTimestamp(timestamp); // 38
-	} // 39
+	for (int i = 0; i < parameterMask.length; i++) { // 37
+	    bindings[parameterMask[i]].setTimestamp(timestamp);
+	}
 	timestamp++; // 40
     }
 

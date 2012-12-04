@@ -58,7 +58,7 @@ public class MonitorSet {
 	size = aliveMonitors;
     }
 
-    public void join(NodeStore nodeStore, LowLevelBinding[] bindings, Event event,
+    public void join(NodeStore nodeStore, Event event,
 	    final LowLevelBinding[] joinableBindings, boolean someBindingsAreKnown, long tmax, int[] copyPattern) {
 	// iterate over all compatible nodes
 	LowLevelBinding[] joinable = joinableBindings.clone(); // 62
