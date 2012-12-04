@@ -10,20 +10,14 @@
  */
 package prm4j.indexing.realtime;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.BaseEvent;
-import prm4j.api.Event;
-import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;

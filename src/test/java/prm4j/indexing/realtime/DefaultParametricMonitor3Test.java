@@ -10,10 +10,8 @@
  */
 package prm4j.indexing.realtime;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static prm4j.Util.tuple;
 
@@ -21,7 +19,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.BaseMonitor;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMonitorTest {

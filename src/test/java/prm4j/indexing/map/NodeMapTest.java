@@ -12,24 +12,14 @@ package prm4j.indexing.map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import java.lang.ref.WeakReference;
-
-import org.junit.Before;
 import org.junit.Test;
 
-import prm4j.api.Parameter;
-import prm4j.indexing.BaseMonitor;
-import prm4j.indexing.map.MinimalMapTest.MockEntry;
-import prm4j.indexing.map.MinimalMapTest.MockMap;
 import prm4j.indexing.realtime.DefaultLowLevelBinding;
 import prm4j.indexing.realtime.LowLevelBinding;
-import prm4j.indexing.realtime.MonitorSet;
-import prm4j.indexing.realtime.Node;
-import prm4j.indexing.staticdata.MetaNode;
 
-@SuppressWarnings("rawtypes")
 public class NodeMapTest {
 
     private final static LowLevelBinding b0 = new DefaultLowLevelBinding(null, 0, null);
