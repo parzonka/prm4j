@@ -116,37 +116,7 @@ public class StaticDataConverter {
     }
 
     /**
-     *
-     * @param baseSet
-     *            all parameters of this set will be kept
-     * @param joiningSet
-     *            new parameters from this set will join
-     * @return
-     */
-    @Deprecated
-    protected static boolean[] getExtensionPattern(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
-	List<Boolean> result = new ArrayList<Boolean>();
-	int i = 0;
-	int j = 0;
-	while (i < baseSet.size() || j < joiningSet.size()) {
-	    if (i < baseSet.size() && j < joiningSet.size()
-		    && toParameterMask(baseSet)[i] == toParameterMask(joiningSet)[j]) {
-		result.add(true);
-		i++;
-		j++;
-	    } else if (i < baseSet.size()
-		    && (j >= joiningSet.size() || toParameterMask(baseSet)[i] < toParameterMask(joiningSet)[j])) {
-		result.add(true);
-		i++;
-	    } else {
-		result.add(false);
-		j++;
-	    }
-	}
-	return toPrimitiveBooleanArray(result);
-    }
-
-    /**
+     * Creates a int pattern needed for the join operation.
      *
      * @param baseSet
      *            all parameters of this set will be kept
@@ -203,15 +173,6 @@ public class StaticDataConverter {
 	    }
 	}
 	return toPrimitiveIntegerArray(result);
-    }
-
-    private static boolean[] toPrimitiveBooleanArray(Collection<Boolean> collection) {
-	boolean[] result = new boolean[collection.size()];
-	int i = 0;
-	for (Boolean b : collection) {
-	    result[i++] = b;
-	}
-	return result;
     }
 
     private static int[] toPrimitiveIntegerArray(Collection<Integer> collection) {
