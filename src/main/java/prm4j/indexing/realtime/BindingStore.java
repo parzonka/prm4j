@@ -10,25 +10,44 @@
  */
 package prm4j.indexing.realtime;
 
-import prm4j.api.Parameter;
-
+/**
+ * Stores bindings for all monitored objects.
+ */
 public interface BindingStore {
 
     /**
-     * Returns an array of {@link LowLevelBinding}s modeling an instance for the given bound objects.
+     * Returns an uncompressed array of {@link LowLevelBinding}s modeling an instance for the given bound objects.
      *
      * @param boundObjects
-     * @return the instance
+     *            (uncompressed)
+     * @return bindings (uncompressed)
      */
     public LowLevelBinding[] getBindings(Object[] boundObjects);
 
-    public LowLevelBinding getBinding(Parameter<?> parameter, Object boundObject);
+    /**
+     * Retrieves the binding for a given bound object, or returns <code>null</code>, if the binding does not exist.
+     *
+     * @param boundObject
+     * @return the binding
+     */
+    public LowLevelBinding getBinding(Object boundObject);
 
-    public LowLevelBinding getOrCreateBinding(Parameter<?> parameter, Object boundObject);
+    /**
+     * Creates the binding for a given bound object, or retrieves it if it already exists.
+     *
+     * @param parameter
+     * @return the binding
+     */
+    public LowLevelBinding getOrCreateBinding(Object boundObject);
 
-    boolean removeBinding(LowLevelBinding binding);
+    /**
+     * Removes a binding from the binding store.
+     *
+     * @param binding
+     * @return <code>true</code> if the binding could found and removed successfully
+     */
+    public boolean removeBinding(LowLevelBinding binding);
 
     public int size();
-
 
 }

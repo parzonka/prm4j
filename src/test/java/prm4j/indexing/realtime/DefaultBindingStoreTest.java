@@ -60,7 +60,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	LowLevelBinding[] bindings = bs.getBindings(array(object));
 
 	// verify
-	assertArrayEquals(bindings, array(bs.getBinding(fsm.p1, object)));
+	assertArrayEquals(bindings, array(bs.getBinding(object)));
     }
 
     @Test

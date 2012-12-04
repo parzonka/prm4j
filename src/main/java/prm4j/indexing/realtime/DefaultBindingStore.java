@@ -25,7 +25,7 @@ public class DefaultBindingStore implements BindingStore {
     public static final int DEFAULT_CLEANING_INTERVAL = 1024;
 
     private final ReferenceQueue<Object> referenceQueue;
-    private final SingleBindingStore stores;
+    private final Store store;
     private final Cleaner cleaner = new Cleaner();
     private final int cleaningInterval;
 
@@ -34,7 +34,7 @@ public class DefaultBindingStore implements BindingStore {
 	referenceQueue = new ReferenceQueue<Object>();
 	this.cleaningInterval = cleaningInterval;
 
-	stores = new SingleBindingStore();
+	store = new Store();
     }
 
     public DefaultBindingStore(Set<Parameter<?>> fullParameterSet) {
@@ -47,7 +47,7 @@ public class DefaultBindingStore implements BindingStore {
 	for (int i = 0; i < boundObjects.length; i++) {
 	    final Object boundObject = boundObjects[i];
 	    if (boundObject != null) {
-		result[i] = stores.getOrCreate(boundObject);
+		result[i] = store.getOrCreate(boundObject);
 	    }
 	}
 	cleaner.clean();
@@ -55,23 +55,23 @@ public class DefaultBindingStore implements BindingStore {
     }
 
     @Override
-    public LowLevelBinding getBinding(Parameter<?> parameter, Object boundObject) {
-	return stores.get(boundObject);
+    public LowLevelBinding getBinding(Object boundObject) {
+	return store.get(boundObject);
     }
 
     @Override
-    public int size() {
-	return stores.size();
-    }
-
-    @Override
-    public LowLevelBinding getOrCreateBinding(Parameter<?> parameter, Object boundObject) {
-	return stores.getOrCreate(boundObject);
+    public LowLevelBinding getOrCreateBinding(Object boundObject) {
+	return store.getOrCreate(boundObject);
     }
 
     @Override
     public boolean removeBinding(LowLevelBinding binding) {
-	return stores.removeEntry((DefaultLowLevelBinding) binding);
+	return store.removeEntry((DefaultLowLevelBinding) binding);
+    }
+
+    @Override
+    public int size() {
+	return store.size();
     }
 
     protected ReferenceQueue<Object> getReferenceQueue() {
@@ -85,7 +85,7 @@ public class DefaultBindingStore implements BindingStore {
     /**
      * Stores the bindings associated to a single parameter
      */
-    class SingleBindingStore extends MinimalMap<Object, DefaultLowLevelBinding> {
+    class Store extends MinimalMap<Object, DefaultLowLevelBinding> {
 
 	@Override
 	protected DefaultLowLevelBinding[] createTable(int size) {
