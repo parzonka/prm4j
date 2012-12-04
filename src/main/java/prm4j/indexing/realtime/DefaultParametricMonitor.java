@@ -63,11 +63,10 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     @Override
     public synchronized void processEvent(Event event) {
 
-	@Deprecated
-	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
-	final LowLevelBinding[] bindingsUncompressed = bindingStore.getBindingsNoCompression(event.getBoundObjects());
 	final BaseEvent baseEvent = event.getBaseEvent();
-	final int[] parameterMask = event.getBaseEvent().getParameterMask();
+	final int[] parameterMask = baseEvent.getParameterMask();
+	final LowLevelBinding[] bindingsUncompressed = bindingStore.getBindingsNoCompression(event.getBoundObjects());
+	final LowLevelBinding[] bindings = toCompressedBindings(bindingsUncompressed, parameterMask);
 	Node instanceNode = nodeStore.getNode(bindings);
 	BaseMonitor instanceMonitor = instanceNode.getMonitor();
 
