@@ -56,16 +56,6 @@ public class NullNode implements Node {
     }
 
     @Override
-    public Node getOrCreateNode(LowLevelBinding binding) {
-	return null;
-    }
-
-    @Override
-    public Node getNode(LowLevelBinding binding) {
-	return null;
-    }
-
-    @Override
     public void remove(LowLevelBinding binding) {
 	throw new UnsupportedOperationException();
     }
