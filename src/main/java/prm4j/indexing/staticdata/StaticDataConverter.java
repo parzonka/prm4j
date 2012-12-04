@@ -79,7 +79,7 @@ public class StaticDataConverter {
 		final int[] nodeMask = toParameterMask(Util.intersection(tuple.getLeft(), baseEvent.getParameters())); // 18
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight()); // 19
 		@Deprecated
-		final int[] extensionPatternNew = getExtensionPatternNew(baseEvent.getParameters(), tuple.getRight()); // 20
+		final int[] extensionPatternNew = getExtensionPattern(baseEvent.getParameters(), tuple.getRight()); // 20
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight()); // 21
 		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft())); // 22
 		joinData.put(baseEvent,
@@ -124,7 +124,7 @@ public class StaticDataConverter {
      *            new parameters from this set will join
      * @return
      */
-    protected static int[] getExtensionPatternNew(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
+    protected static int[] getExtensionPattern(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
 	final List<Integer> result = new ArrayList<Integer>();
 	final Set<Integer> baseParameterIndexSet = toParameterIndexSet(baseSet);
 	final int[] joinedArray = toParameterMask(Util.union(baseSet, joiningSet));

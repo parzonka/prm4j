@@ -56,7 +56,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p0, p2);
 	Set<Parameter<?>> ps2 = asSet(p2, p4);
 
-	int[] actual = StaticDataConverter.getExtensionPatternNew(ps1, ps2);
+	int[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
 
 	int[] expected = { 0, 2, -1 };
 
@@ -69,7 +69,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p2, p4);
 	Set<Parameter<?>> ps2 = asSet(p0, p2);
 
-	int[] actual = StaticDataConverter.getExtensionPatternNew(ps1, ps2);
+	int[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, 2, 4 };
 
@@ -82,7 +82,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p0);
 	Set<Parameter<?>> ps2 = asSet(p4);
 
-	int[] actual = StaticDataConverter.getExtensionPatternNew(ps1, ps2);
+	int[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
 
 	int[] expected = { 0, -1 };
 
@@ -95,7 +95,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p4);
 	Set<Parameter<?>> ps2 = asSet(p0);
 
-	int[] actual = StaticDataConverter.getExtensionPatternNew(ps1, ps2);
+	int[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, 4 };
 
@@ -108,7 +108,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p2, p4);
 	Set<Parameter<?>> ps2 = asSet(p0, p4);
 
-	int[] actual = StaticDataConverter.getExtensionPatternNew(ps1, ps2);
+	int[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, 2, 4 };
 
@@ -121,7 +121,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p2, p3, p4);
 	Set<Parameter<?>> ps2 = asSet(p0, p1, p4);
 
-	int[] actual = StaticDataConverter.getExtensionPatternNew(ps1, ps2);
+	int[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, -1, 2, 3, 4 };
 
@@ -134,7 +134,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p1, p3);
 	Set<Parameter<?>> ps2 = asSet(p0, p2, p4);
 
-	int[] actual = StaticDataConverter.getExtensionPatternNew(ps1, ps2);
+	int[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, 1, -1, 3, -1 };
 
@@ -147,7 +147,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p0, p1, p2, p3);
 	Set<Parameter<?>> ps2 = asSet(p1, p2, p3, p4);
 
-	int[] actual = StaticDataConverter.getExtensionPatternNew(ps1, ps2);
+	int[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
 
 	int[] expected = { 0, 1, 2, 3, -1 };
 
@@ -160,7 +160,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p2);
 	Set<Parameter<?>> ps2 = asSet(p0, p1, p2);
 
-	int[] actual = StaticDataConverter.getExtensionPatternNew(ps1, ps2);
+	int[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, -1, 2 };
 
@@ -178,7 +178,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(fsm.m, fsm.c);
 	Set<Parameter<?>> ps2 = asSet(fsm.c, fsm.i);
 
-	int[] actual = StaticDataConverter.getExtensionPatternNew(ps1, ps2);
+	int[] actual = StaticDataConverter.getExtensionPattern(ps1, ps2);
 
 	int[] expected = { 0, 1, -1 };
 
