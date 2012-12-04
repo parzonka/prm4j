@@ -24,10 +24,12 @@ import prm4j.spec.Spec;
 public class DefaultParametricMonitor implements ParametricMonitor {
 
     private final BaseMonitor monitorPrototype;
-    private final BindingStore bindingStore;
-    private final NodeStore nodeStore;
+    private BindingStore bindingStore;
+    private NodeStore nodeStore;
     private final EventContext eventContext;
     private long timestamp = 0L;
+    private MetaNode metaTree;
+    private Spec spec;
 
     /**
      * Creates a DefaultParametricMonitor using default {@link BindingStore} and {@link NodeStore} implementations (and
@@ -39,13 +41,16 @@ public class DefaultParametricMonitor implements ParametricMonitor {
      */
     public DefaultParametricMonitor(MetaNode metaTree, EventContext eventContext, Spec spec) {
 	this.eventContext = eventContext;
+	this.metaTree = metaTree;
+	this.spec = spec;
 	bindingStore = new DefaultBindingStore(spec.getFullParameterSet());
 	nodeStore = new DefaultNodeStore(metaTree);
 	monitorPrototype = spec.getInitialMonitor();
     }
 
     /**
-     * Creates a DefaultParametricMonitor which externally configurable BindingStore and NodeStore.
+     * Creates a DefaultParametricMonitor which externally configurable BindingStore and NodeStore. Please note, that a
+     * {@link DefaultParametricMonitor} created this way is currently not resettable.
      *
      * @param bindingStore
      * @param nodeStore
@@ -99,7 +104,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    }
 		    if (instanceNode == NullNode.instance) {
 			instanceNode = nodeStore.getOrCreateNode(bindings, parameterMask); // get real
-												       // instance node
+											   // instance node
 		    }
 		    // inlined DefineTo from 73
 		    instanceMonitor = maxMonitor.copy(toCompressedBindings(bindings, parameterMask)); // 102-105
@@ -123,12 +128,13 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    }
 
 		    // inlined DefineNew from 93
-		    instanceMonitor = monitorPrototype.copy(toCompressedBindings(bindings, parameterMask),
-			    timestamp); // 94 - 97
+		    instanceMonitor = monitorPrototype.copy(toCompressedBindings(bindings, parameterMask), timestamp); // 94
+														       // -
+														       // 97
 		    instanceMonitor.processEvent(event); // 95
 		    if (instanceNode == NullNode.instance) {
 			instanceNode = nodeStore.getOrCreateNode(bindings, parameterMask); // get real
-												       // instance node
+											   // instance node
 		    }
 		    instanceNode.setMonitor(instanceMonitor); // 98
 		    // inlined chain-method
@@ -216,7 +222,13 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
     @Override
     public void reset() {
-	// TODO Auto-generated method stub
+	if (metaTree == null || spec == null) {
+	    throw new UnsupportedOperationException(
+		    "ParametricMonitor can not be resetted when created from externally configured components.");
+	}
+	timestamp = 0L;
+	bindingStore = new DefaultBindingStore(spec.getFullParameterSet());
+	nodeStore = new DefaultNodeStore(metaTree);
     }
 
 }
