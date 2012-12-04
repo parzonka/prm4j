@@ -47,26 +47,6 @@ public class DefaultBindingStore implements BindingStore {
     }
 
     @Override
-    public LowLevelBinding[] getBindings(Object[] boundObjects) {
-	int objectsCount = 0;
-	for (int i = 0; i < boundObjects.length; i++) {
-	    if (boundObjects[i] != null) {
-		objectsCount++;
-	    }
-	}
-	LowLevelBinding[] result = new LowLevelBinding[objectsCount];
-	int j = 0;
-	for (int i = 0; i < boundObjects.length; i++) {
-	    final Object boundObject = boundObjects[i];
-	    if (boundObject != null) {
-		result[j++] = stores[i].getOrCreate(boundObject);
-	    }
-	}
-	cleaner.clean();
-	return result;
-    }
-
-    @Override
     public LowLevelBinding[] getBindingsNoCompression(Object[] boundObjects) {
 	LowLevelBinding[] result = new LowLevelBinding[boundObjects.length];
 	for (int i = 0; i < boundObjects.length; i++) {

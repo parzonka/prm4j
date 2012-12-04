@@ -20,8 +20,6 @@ public interface BindingStore {
      * @param boundObjects
      * @return the instance
      */
-    public LowLevelBinding[] getBindings(Object[] boundObjects);
-
     public LowLevelBinding[] getBindingsNoCompression(Object[] boundObjects);
 
     public LowLevelBinding getBinding(Parameter<?> parameter, Object boundObject);

@@ -30,14 +30,6 @@ public class AwareDefaultBindingStore extends DefaultBindingStore {
     }
 
     @Override
-    @Deprecated
-    public LowLevelBinding[] getBindings(Object[] boundObjects) {
-	LowLevelBinding[] bindings = super.getBindings(boundObjects);
-	getListOfBindings().add(new WeakReference<LowLevelBinding[]>(bindings));
-	return bindings;
-    }
-
-    @Override
     public LowLevelBinding[] getBindingsNoCompression(Object[] boundObjects) {
 	LowLevelBinding[] bindings = super.getBindingsNoCompression(boundObjects);
 	getListOfBindings().add(new WeakReference<LowLevelBinding[]>(bindings));

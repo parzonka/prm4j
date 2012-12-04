@@ -44,7 +44,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	assertEquals(0, bs.size());
 
 	// exercise
-	bs.getBindings(array(object));
+	bs.getBindingsNoCompression(array(object));
 
 	// verify
 	assertEquals(1, bs.size());
@@ -57,7 +57,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	Object object = new Object();
 
 	// exercise
-	LowLevelBinding[] bindings = bs.getBindings(array(object));
+	LowLevelBinding[] bindings = bs.getBindingsNoCompression(array(object));
 
 	// verify
 	assertArrayEquals(bindings, array(bs.getBinding(fsm.p1, object)));
@@ -70,7 +70,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	Object object = new Object();
 
 	// exercise
-	LowLevelBinding[] bindings = bs.getBindings(array(object));
+	LowLevelBinding[] bindings = bs.getBindingsNoCompression(array(object));
 	bs.removeBinding(bindings[0]);
 
 	// verify
@@ -84,7 +84,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bs.getBindings(array(object));
+	LowLevelBinding[] bindings = bs.getBindingsNoCompression(array(object));
 	object = null;
 
 	runGarbageCollectorAFewTimes();
@@ -100,7 +100,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bs.getBindings(array(object));
+	LowLevelBinding[] bindings = bs.getBindingsNoCompression(array(object));
 	object = null;
 
 	runGarbageCollectorAFewTimes();
@@ -116,7 +116,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	bs.getBindings(array(object));
+	bs.getBindingsNoCompression(array(object));
 
 	object = null;
 	runGarbageCollectorAFewTimes();
@@ -134,12 +134,12 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	bs.getBindings(array(object));
+	bs.getBindingsNoCompression(array(object));
 
 	runGarbageCollectorAFewTimes(); // this should do nothing
 
 	Object object2 = new Object();
-	bs.getBindings(array(object2)); // get another binding
+	bs.getBindingsNoCompression(array(object2)); // get another binding
 
 	// verify
 	assertEquals(2, bs.size());
@@ -152,14 +152,14 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	bs.getBindings(array(object));
+	bs.getBindingsNoCompression(array(object));
 
 	object = null;
 
 	runGarbageCollectorAFewTimes();
 
 	Object object2 = new Object();
-	bs.getBindings(array(object2)); // get another binding
+	bs.getBindingsNoCompression(array(object2)); // get another binding
 
 	// verify
 	assertEquals(1, bs.size()); // one got removed, one still persists
@@ -172,19 +172,19 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	bs.getBindings(array(object));
+	bs.getBindingsNoCompression(array(object));
 
 	Object object2 = new Object();
-	bs.getBindings(array(object2)); // get another binding
+	bs.getBindingsNoCompression(array(object2)); // get another binding
 
 	Object object3 = new Object();
-	bs.getBindings(array(object3)); // get another binding
+	bs.getBindingsNoCompression(array(object3)); // get another binding
 
 	object = null;
 	object2 = null;
 	runGarbageCollectorAFewTimes();
 
-	bs.getBindings(array(object3)); // get third binding
+	bs.getBindingsNoCompression(array(object3)); // get third binding
 
 	// verify
 	assertEquals(1, bs.size()); // object and object2 got removed, object3 still persists
@@ -196,27 +196,27 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	createBindingStore(fsm.fsm, 5); // cleaning interval 5
 
 	// exercise
-	bs.getBindings(array(new Object()));
+	bs.getBindingsNoCompression(array(new Object()));
 	assertEquals(1, bs.size());
 	runGarbageCollectorAFewTimes();
 
-	bs.getBindings(array(new Object()));
+	bs.getBindingsNoCompression(array(new Object()));
 	assertEquals(2, bs.size());
 	runGarbageCollectorAFewTimes();
 
-	bs.getBindings(array(new Object()));
+	bs.getBindingsNoCompression(array(new Object()));
 	assertEquals(3, bs.size());
 	runGarbageCollectorAFewTimes();
 
-	bs.getBindings(array(new Object()));
+	bs.getBindingsNoCompression(array(new Object()));
 	assertEquals(4, bs.size());
 	runGarbageCollectorAFewTimes();
 
-	bs.getBindings(array(new Object()));
+	bs.getBindingsNoCompression(array(new Object()));
 	assertEquals(5, bs.size());
 	runGarbageCollectorAFewTimes();
 
-	bs.getBindings(array(new Object()));
+	bs.getBindingsNoCompression(array(new Object()));
 
 	// verify
 	assertEquals(1, bs.size()); // first 5 objects got removed, last one still persists
@@ -230,7 +230,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// create bindings
 	Map map = map(tuple(1, "a"));
 	Collection coll = map.entrySet();
-	LowLevelBinding[] bindings = bs.getBindings(array(map, coll));
+	LowLevelBinding[] bindings = bs.getBindingsNoCompression(array(map, coll));
 
 	LowLevelBinding mBinding = bindings[0];
 	LowLevelBinding cBinding = bindings[1];
@@ -254,7 +254,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// create bindings
 	Map map = map(tuple(1, "a"));
 	Collection coll = map.entrySet();
-	LowLevelBinding[] bindings = bs.getBindings(array(map, coll));
+	LowLevelBinding[] bindings = bs.getBindingsNoCompression(array(map, coll));
 
 	LowLevelBinding mBinding = bindings[0];
 	LowLevelBinding cBinding = bindings[1];
