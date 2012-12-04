@@ -31,12 +31,23 @@ public class MetaNode {
     private final MetaNode[] successors;
     private Set<ChainData> chainDataSet;
     private Set<Parameter<?>> nodeParameterSet;
+    private List<Parameter<?>> nodeParameterList;
     private Set<Parameter<?>> fullParameterSet;
     private int monitorSetCount;
     private ChainData[] chainDataArray;
+    private final Parameter<?> lastParameter;
+    private final int lastParameterIndex;
 
     public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
 	super();
+	nodeParameterList = Util.asSortedList(nodeParameterSet);
+	if (!nodeParameterSet.isEmpty()) {
+	    lastParameter = nodeParameterList.get(nodeParameterList.size() - 1);
+	    lastParameterIndex = lastParameter.getIndex();
+	} else {
+	    lastParameter = null;
+	    lastParameterIndex = -1;
+	}
 	this.nodeParameterSet = nodeParameterSet;
 	this.fullParameterSet = fullParameterSet;
 	assert parameterIndexIsValid(fullParameterSet) : "Full parameter set must be valid.";
@@ -60,24 +71,24 @@ public class MetaNode {
 	return chainDataSet;
     }
 
-    public Node createNode(LowLevelBinding key, int hashCode) {
-	return new DefaultNode(this, key, hashCode);
+    public Node createNode(LowLevelBinding key) {
+	return new DefaultNode(this, lastParameterIndex, key);
     }
 
     public Node createRootNode() {
-	return createNode(null, 0);
+	return createNode(null);
     }
 
     /**
      * Creates a Node by a successor.
      *
-     * @param parameterId
+     * @param parameterIndex
      * @param key
      * @param hashCode
      * @return
      */
-    public Node createNode(int parameterId, LowLevelBinding key, int hashCode) {
-	return getSuccessors()[parameterId].createNode(key, hashCode);
+    public Node createNode(int parameterIndex, LowLevelBinding binding) {
+	return getSuccessors()[parameterIndex].createNode(binding);
     }
 
     void setChainData(Set<ChainData> chainDataSet) {
@@ -129,7 +140,7 @@ public class MetaNode {
      * @return parameters sorted by parameter id
      */
     public List<Parameter<?>> getNodeParameterList() {
-	return Util.asSortedList(nodeParameterSet);
+	return nodeParameterList;
     }
 
     /**
@@ -200,6 +211,10 @@ public class MetaNode {
 
     public MetaNode[] getSuccessors() {
 	return successors;
+    }
+
+    public int getLastParameterIndex() {
+	return lastParameterIndex;
     }
 
 }

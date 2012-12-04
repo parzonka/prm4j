@@ -24,10 +24,12 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     private long timestamp;
     private boolean disabled;
     private final int hashCode;
+    @Deprecated
     private final Parameter<?> parameter;
     private DefaultLowLevelBinding next;
     private List<WeakReference<Node>> nodeRefs;
 
+    @Deprecated
     public DefaultLowLevelBinding(Object boundObject, Parameter<?> parameter, int hashCode, ReferenceQueue<Object> q) {
 	super(boundObject, q);
 	this.hashCode = hashCode;
@@ -36,11 +38,21 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 	nodeRefs = new ArrayList<WeakReference<Node>>();
     }
 
+    public DefaultLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q) {
+	super(boundObject, q);
+	this.hashCode = hashCode;
+	parameter = null;
+	timestamp = Long.MAX_VALUE; // indicates the binding was just created
+	nodeRefs = new ArrayList<WeakReference<Node>>();
+    }
+
+    @Deprecated
     @Override
     public Parameter<?> getParameter() {
 	return parameter;
     }
 
+    @Deprecated
     @Override
     public int getParameterIndex() {
 	return parameter.getIndex();
@@ -114,6 +126,7 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     }
 
     @Override
+    @Deprecated
     public int compareTo(LowLevelBinding o) {
 	return this.getParameterIndex() - o.getParameterIndex();
     }

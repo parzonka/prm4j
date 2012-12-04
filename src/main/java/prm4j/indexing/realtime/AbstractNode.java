@@ -10,27 +10,27 @@
  */
 package prm4j.indexing.realtime;
 
-import prm4j.indexing.map.MinimalMap;
+import prm4j.indexing.map.NodeMap;
 
-public abstract class AbstractNode extends MinimalMap<LowLevelBinding, Node> implements Node {
+public abstract class AbstractNode extends NodeMap<Node> implements Node {
 
     private final LowLevelBinding key;
-    private final int hashCode;
     private Node nextNode;
 
     /**
      * @param metaNode
-     * @param key may be null, if node is root node
-     * @param hashCode hash code of the key
+     * @param key
+     *            may be null, if node is root node
+     * @param hashCode
+     *            hash code of the key
      */
-    public AbstractNode(LowLevelBinding key, int hashCode) {
+    public AbstractNode(LowLevelBinding key) {
 	this.key = key;
-	this.hashCode = hashCode;
     }
 
     @Override
     public int hashCode() {
-	return hashCode;
+	return key.hashCode();
     }
 
     @Override
@@ -54,8 +54,8 @@ public abstract class AbstractNode extends MinimalMap<LowLevelBinding, Node> imp
     }
 
     @Override
-    protected Node createEntry(LowLevelBinding key, int hashCode) {
-	return getMetaNode().createNode(key.getParameterIndex(), key, hashCode);
+    protected Node createEntry(int parameterIndex, LowLevelBinding key) {
+	return getMetaNode().createNode(parameterIndex, key);
     }
 
 }

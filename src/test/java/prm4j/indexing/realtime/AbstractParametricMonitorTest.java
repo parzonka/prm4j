@@ -46,8 +46,15 @@ public class AbstractParametricMonitorTest extends AbstractTest {
     }
 
     protected Node getNode(Object... boundObjects) {
-	return nodeStore.getNode(bindingStore.getBindings(boundObjects));
+	int[] parameterMask = toParameterMask(boundObjects);
+	return nodeStore.getNode(bindingStore.getBindingsNoCompression(boundObjects), parameterMask);
     }
+
+    protected Node getOrCreateNode(Object... boundObjects) {
+	int[] parameterMask = toParameterMask(boundObjects);
+	return nodeStore.getOrCreateNode(bindingStore.getBindingsNoCompression(boundObjects), parameterMask);
+    }
+
 
     protected void assertChaining(Object[] from, Object[] to) {
 	Node fromNode = getNode(from);
@@ -77,6 +84,23 @@ public class AbstractParametricMonitorTest extends AbstractTest {
 	    throw new NullPointerException("No monitor stored for node " + Arrays.toString(boundObjects));
 	assertEquals(Arrays.asList(symbols),
 		((AwareBaseMonitor) getNode(boundObjects).getMonitor()).getBaseEventTrace());
+    }
+
+    private static int[] toParameterMask(Object[] boundObjects) {
+	int objectsCount = 0;
+	for (int i = 0; i < boundObjects.length; i++) {
+	    if (boundObjects[i] != null) {
+		objectsCount++;
+	    }
+	}
+	int[] result = new int[objectsCount];
+	int j = 0;
+	for (int i = 0; i < boundObjects.length; i++) {
+	    if (boundObjects[i] != null) {
+		result[j++] = i;
+	    }
+	}
+	return result;
     }
 
     @After

@@ -433,9 +433,9 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 	pm.processEvent(fsm.e3.createEvent(b));
 
 	// verify
-	assertEquals(1, getNode(tuple(fsm.p1, a)).getMonitorSets().length);
-	assertEquals(1, getNode(tuple(fsm.p2, b)).getMonitorSets().length);
-	assertEquals(0, getNode(tuple(fsm.p1, a), tuple(fsm.p2, b)).getMonitorSets().length);
+	assertEquals(1, getNode(array(a,_)).getMonitorSets().length);
+	assertEquals(1, getNode(array(_,b)).getMonitorSets().length);
+	assertEquals(0, getNode(array(a,_), array(_,b)).getMonitorSets().length);
     }
 
     @Test

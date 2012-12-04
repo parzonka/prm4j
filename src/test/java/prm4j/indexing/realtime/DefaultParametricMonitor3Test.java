@@ -61,6 +61,28 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
     }
 
     @Test
+    public void firstEvent_ab_retrievesTwoNodes() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	popNextRetrievedNode();
+	popNextRetrievedNode();
+	assertNoMoreRetrievedNodes();
+    }
+
+    @Test
+    public void firstEvent_ab_nodesAreNotNullNodes() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	assertNotSame(NullNode.instance, popNextRetrievedNode());
+	assertNotSame(NullNode.instance, popNextRetrievedNode());
+    }
+
+
+    @Test
     public void firstEvent_ab_createsMonitorWithCreationTime0() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a, b));
@@ -97,6 +119,17 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
     }
 
     @Test
+    public void firstEvent_ab_nodesHaveDifferentMetaNodes() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a, b));
+
+	// verify
+	assertNotSame(getNode(a, null, null).getMetaNode(), getNode(null, b, null).getMetaNode());
+	assertNotSame(getNode(a, b, null).getMetaNode(), getNode(null, b, null).getMetaNode());
+	assertNotSame(getNode(a, b, null).getMetaNode(), getNode(a, null, null).getMetaNode());
+    }
+
+    @Test
     public void firstEvent_ab_chainingIsPerformedCorrectly() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a, b));
@@ -105,7 +138,6 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 	assertEquals(0, getNode(a, null, null).getMonitorSets().length);
 	assertEquals(1, getNode(null, b, null).getMonitorSets().length);
 	assertEquals(1, getNode(null, b, null).getMonitorSet(0).getSize());
-	getNode(null, b, null).getMonitorSet(0).contains(getNode(a, b, null).getMonitor());
     }
 
     // twoEvents ab and bc //////////////////////////////////////////////////////////////////

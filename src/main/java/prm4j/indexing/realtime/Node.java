@@ -13,10 +13,10 @@ package prm4j.indexing.realtime;
 import java.lang.ref.WeakReference;
 
 import prm4j.indexing.BaseMonitor;
-import prm4j.indexing.map.MinimalMapEntry;
+import prm4j.indexing.map.NodeMapEntry;
 import prm4j.indexing.staticdata.MetaNode;
 
-public interface Node extends MinimalMapEntry<LowLevelBinding, Node> {
+public interface Node extends NodeMapEntry<Node> {
 
     public MetaNode getMetaNode();
 

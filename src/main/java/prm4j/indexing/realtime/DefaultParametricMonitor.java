@@ -67,7 +67,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	final int[] parameterMask = baseEvent.getParameterMask();
 	final LowLevelBinding[] bindingsUncompressed = bindingStore.getBindingsNoCompression(event.getBoundObjects());
 	final LowLevelBinding[] bindings = toCompressedBindings(bindingsUncompressed, parameterMask);
-	Node instanceNode = nodeStore.getNode(bindings);
+	Node instanceNode = nodeStore.getNode(bindingsUncompressed, parameterMask);
 	BaseMonitor instanceMonitor = instanceNode.getMonitor();
 
 	if (eventContext.isDisablingEvent(baseEvent)) { // 2
@@ -110,6 +110,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    break findMaxPhase;
 		}
 	    }
+	    Node node = null;
 	    monitorCreation: if (instanceMonitor == null) {
 		if (eventContext.isCreationEvent(baseEvent)) { // 20
 		    for (int i = 0; i < parameterMask.length; i++) { // 21
@@ -127,8 +128,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    instanceNode.setMonitor(instanceMonitor); // 98
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
-			nodeStore.getOrCreateNode(bindingsUncompressed, chainData.getNodeMask())
-				.getMonitorSet(chainData.getMonitorSetId()).add(instanceMonitor); // 111
+			node = nodeStore.getOrCreateNode(bindingsUncompressed, chainData.getNodeMask());
+			node.getMonitorSet(chainData.getMonitorSetId()).add(instanceMonitor); // 111
 		    } // 99
 		}
 	    }

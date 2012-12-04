@@ -44,12 +44,26 @@ public class AwareDefaultBindingStore extends DefaultBindingStore {
 	return bindings;
     }
 
-
-
     public Deque<WeakReference<LowLevelBinding[]>> getListOfBindings() {
 	return retrievedBindings;
     }
 
-
+    private static LowLevelBinding[] toCompressedBindings(LowLevelBinding[] uncompressedBindings) {
+	int objectsCount = 0;
+	for (int i = 0; i < uncompressedBindings.length; i++) {
+	    if (uncompressedBindings[i] != null) {
+		objectsCount++;
+	    }
+	}
+	LowLevelBinding[] result = new LowLevelBinding[objectsCount];
+	int j = 0;
+	for (int i = 0; i < uncompressedBindings.length; i++) {
+	    final LowLevelBinding boundObject = uncompressedBindings[i];
+	    if (boundObject != null) {
+		result[j++] = boundObject;
+	    }
+	}
+	return result;
+    }
 
 }

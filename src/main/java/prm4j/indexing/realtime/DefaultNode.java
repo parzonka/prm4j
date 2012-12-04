@@ -35,8 +35,8 @@ public class DefaultNode extends AbstractNode {
      * @param hashCode
      *            hash code of the key
      */
-    public DefaultNode(MetaNode metaNode, LowLevelBinding key, int hashCode) {
-	super(key, hashCode);
+    public DefaultNode(MetaNode metaNode, int parameterIndex, LowLevelBinding key) {
+	super(key);
 	this.metaNode = metaNode;
 	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
 	nodeRef = new WeakReference<Node>(this);
@@ -53,19 +53,21 @@ public class DefaultNode extends AbstractNode {
     }
 
     @Override
+    @Deprecated
     public Node getOrCreateNode(LowLevelBinding binding) {
 	binding.registerNode(nodeRef);
 	if (cachedBinding != binding) {
 	    cachedBinding = binding;
-	    cachedNodeRef = getOrCreate(binding, binding.hashCode()).getNodeRef();
+	    cachedNodeRef = getOrCreate(binding.getParameterIndex(), binding).getNodeRef();
 	}
 	return cachedNodeRef.get();
     }
 
     @Override
+    @Deprecated
     public Node getNode(LowLevelBinding binding) {
 	if (cachedBinding != binding) {
-	    final Node node = get(binding, binding.hashCode());
+	    final Node node = get(binding.getParameterIndex(), binding);
 	    if (node != null) {
 		cachedBinding = binding;
 		cachedNodeRef = node.getNodeRef();
@@ -80,38 +82,17 @@ public class DefaultNode extends AbstractNode {
     @Override
     public Node getOrCreateNode(int parameterIndex, LowLevelBinding binding) {
 	binding.registerNode(nodeRef);
-	if (cachedParameterIndex != parameterIndex || cachedBinding != binding) {
-	    cachedParameterIndex = parameterIndex;
-	    cachedBinding = binding;
-	    cachedNodeRef = getOrCreate(binding, binding.hashCode()).getNodeRef();
-	}
-	return cachedNodeRef.get();
+	return getOrCreate(parameterIndex, binding);
     }
 
     @Override
     public Node getNode(int parameterIndex, LowLevelBinding binding) {
-	if (cachedParameterIndex != parameterIndex || cachedBinding != binding) {
-	    final Node node = get(binding, binding.hashCode());
-	    if (node != null) {
-		cachedParameterIndex = parameterIndex;
-		cachedBinding = binding;
-		cachedNodeRef = node.getNodeRef();
-		return node;
-	    } else {
-		return null;
-	    }
-	}
-	return cachedNodeRef.get();
+	return get(parameterIndex, binding);
     }
 
     @Override
     public void setMonitor(BaseMonitor monitor) {
 	this.monitor = monitor;
-    }
-
-    @Override
-    public void remove(LowLevelBinding binding) {
-	super.remove(binding, binding.hashCode());
     }
 
     @Override
@@ -157,6 +138,11 @@ public class DefaultNode extends AbstractNode {
     @Override
     public WeakReference<Node> getNodeRef() {
 	return nodeRef;
+    }
+
+    @Override
+    public int parameterIndex() {
+	return metaNode.getLastParameterIndex();
     }
 
 }

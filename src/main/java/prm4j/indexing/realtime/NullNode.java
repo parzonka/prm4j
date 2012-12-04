@@ -100,4 +100,9 @@ public class NullNode implements Node {
 	return null;
     }
 
+    @Override
+    public int parameterIndex() {
+	return 0;
+    }
+
 }
