@@ -30,17 +30,22 @@ import prm4j.indexing.realtime.Node;
 public class MetaNode {
 
     private final MetaNode[] successors;
-    private Set<ChainData> chainDataSet;
+
+    private Set<Parameter<?>> fullParameterSet;
     private Set<Parameter<?>> nodeParameterSet;
     private List<Parameter<?>> nodeParameterList;
-    private Set<Parameter<?>> fullParameterSet;
-    private int monitorSetCount;
+
+    private Set<ChainData> chainDataSet;
     private ChainData[] chainDataArray;
+
+    private int monitorSetCount;
     private final Parameter<?> lastParameter;
     private final int lastParameterIndex;
 
     public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
 	super();
+	assert parameterIndexIsValid(fullParameterSet) : "Full parameter set must be valid.";
+	assert Util.isSubsetEq(nodeParameterSet, fullParameterSet) : "Node parameters must be a subset of the full parameter set.";
 	nodeParameterList = Util.asSortedList(nodeParameterSet);
 	if (!nodeParameterSet.isEmpty()) {
 	    lastParameter = nodeParameterList.get(nodeParameterList.size() - 1);
@@ -51,17 +56,23 @@ public class MetaNode {
 	}
 	this.nodeParameterSet = nodeParameterSet;
 	this.fullParameterSet = fullParameterSet;
-	assert parameterIndexIsValid(fullParameterSet) : "Full parameter set must be valid.";
 	successors = new MetaNode[fullParameterSet.size()];
     }
 
-    private static boolean parameterIndexIsValid(Set<Parameter<?>> fullParameterSet) {
-	for (Parameter<?> parameter : fullParameterSet) {
-	    if (parameter.getIndex() >= fullParameterSet.size() || parameter.getIndex() < 0) {
+    /**
+     * Tests if the parameterIndex of all parameters is a sequence in [0, ..., parameterCount] without repetitions.
+     *
+     * @param parameterSet
+     * @return <code>true</code> if the parameter set is valid
+     */
+    private static boolean parameterIndexIsValid(Set<Parameter<?>> parameterSet) {
+	Set<Integer> usedIndices = new HashSet<Integer>();
+	for (Parameter<?> parameter : parameterSet) {
+	    if (parameter.getIndex() >= parameterSet.size() || parameter.getIndex() < 0) {
 		return false;
 	    }
 	}
-	return true;
+	return usedIndices.size() == parameterSet.size();
     }
 
     public ChainData[] getChainDataArray() {
@@ -81,12 +92,13 @@ public class MetaNode {
     }
 
     /**
-     * Creates a Node by a successor.
+     * Creates a node by a successor.
      *
      * @param parameterIndex
-     * @param key
-     * @param hashCode
-     * @return
+     *            selects the successor
+     * @param binding
+     *            the binding which will augment the binding set associated with the node
+     * @return the node
      */
     public Node createNode(int parameterIndex, LowLevelBinding binding) {
 	return getSuccessors()[parameterIndex].createNode(binding);
@@ -97,19 +109,32 @@ public class MetaNode {
 	this.chainDataSet = chainDataSet;
     }
 
+    /**
+     * Retrieves the MetaNode of the successor for the given parameter.
+     *
+     * @param parameter
+     *            the parameter which will augment the parameter set associated with the meta node
+     * @return the successor meta node
+     */
     public MetaNode getMetaNode(Parameter<?> parameter) {
-	MetaNode node = getSuccessors()[parameter.getIndex()];
-	if (node == null) {
-	    Set<Parameter<?>> nodeParameterSet = new HashSet<Parameter<?>>();
-	    nodeParameterSet.addAll(this.nodeParameterSet);
-	    assert !nodeParameterSet.contains(parameter) : "Parameter set could not have had contained new parameter.";
-	    nodeParameterSet.add(parameter);
-	    node = new MetaNode(nodeParameterSet, fullParameterSet);
-	    getSuccessors()[parameter.getIndex()] = node;
+	MetaNode metaNode = getSuccessors()[parameter.getIndex()];
+	if (metaNode == null) {
+	    Set<Parameter<?>> nextNodeParameterSet = new HashSet<Parameter<?>>(nodeParameterSet);
+	    assert !nextNodeParameterSet.contains(parameter) : "Parameter set could not have had contained new parameter.";
+	    nextNodeParameterSet.add(parameter);
+	    metaNode = new MetaNode(nextNodeParameterSet, fullParameterSet);
+	    getSuccessors()[parameter.getIndex()] = metaNode;
 	}
-	return node;
+	return metaNode;
     }
 
+    /**
+     * Retrieves the MetaNode traversing the successor sub-meta-tree.
+     *
+     * @param parameters
+     *            a sequence of parameters selecting the meta node
+     * @return a meta node
+     */
     public MetaNode getMetaNode(Parameter<?>... parameters) {
 	MetaNode node = this;
 	for (Parameter<?> parameter : parameters) {
@@ -118,6 +143,13 @@ public class MetaNode {
 	return node;
     }
 
+    /**
+     * Retrieves the MetaNode traversing the successor sub-meta-tree.
+     *
+     * @param parameters
+     *            a sequence of parameters selecting the meta node
+     * @return a meta node
+     */
     public MetaNode getMetaNode(List<Parameter<?>> parameterList) {
 	MetaNode node = this;
 	for (Parameter<?> parameter : parameterList) {
@@ -153,10 +185,20 @@ public class MetaNode {
 	return Util.toNodeMask(nodeParameterSet);
     }
 
+    /**
+     * Returns the number of monitor sets for this kind of node.
+     *
+     * @return
+     */
     public int getMonitorSetCount() {
 	return monitorSetCount;
     }
 
+    /**
+     * Sets the number of monitor sets for this kind of node.
+     *
+     * @param monitorSetCount
+     */
     public void setMonitorSetCount(int monitorSetCount) {
 	this.monitorSetCount = monitorSetCount;
     }
@@ -174,7 +216,6 @@ public class MetaNode {
 	    result[nodeParameterList.get(i).getIndex()] = compressedBindings[i];
 	}
 	return result;
-
     }
 
     @Override
