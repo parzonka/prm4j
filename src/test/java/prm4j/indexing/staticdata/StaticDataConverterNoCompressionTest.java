@@ -371,7 +371,7 @@ public class StaticDataConverterNoCompressionTest extends AbstractTest {
 	JoinData[] jd = new JoinData[1];
 	// u.createIter.getParameters() = { c, i }
 	// compatible node selected by { c }
-	jd[0] = new JoinData(array(1), 0, array(false, true, true), array(0, 0), array(2));
+	jd[0] = new JoinData(array(1), 0, array(-1, 1, 2), array(0, 0), array(2));
 	expected[u.createIter.getIndex()] = jd;
 
 	expected[u.useIter.getIndex()] = new JoinData[0];

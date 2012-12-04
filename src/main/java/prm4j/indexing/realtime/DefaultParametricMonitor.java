@@ -160,7 +160,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
 		// calculate once the bindings to be joined with the whole monitor set
 		final LowLevelBinding[] joinableBindings = createJoinableBindings(bindingsUncompressed,
-			joinData.getExtensionPatternNew()); // 56 - 61
+			joinData.getExtensionPattern()); // 56 - 61
 
 		// join is performed in monitor set
 		compatibleNode.getMonitorSet(joinData.getMonitorSetId()).join(nodeStore, bindings, event,

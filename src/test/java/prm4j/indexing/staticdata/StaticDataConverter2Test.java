@@ -69,7 +69,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 	EventContext ec = sdc.getEventContext();
 
-	assertJoinData(ec, fsm.e2, joinData(array(1), 0, array(false, true, true), array(0, 0), array(2)));
+	assertJoinData(ec, fsm.e2, joinData(array(1), 0, array(-1, 1, 2), array(0, 0), array(2)));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 	return new ChainData(nodeMask, monitorSetId);
     }
 
-    protected static JoinData joinData(int[] nodeMask, int monitorSetId, boolean[] extensionPattern, int[] copyPattern, int[] diffMask) {
+    protected static JoinData joinData(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern, int[] diffMask) {
 	return new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask);
     }
 
