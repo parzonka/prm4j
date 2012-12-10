@@ -131,12 +131,15 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    instanceMonitor = monitorPrototype.copy(toCompressedBindings(bindings, parameterMask), timestamp); // 94
 														       // -
 														       // 97
-		    instanceMonitor.processEvent(event); // 95
 		    if (instanceNode == NullNode.instance) {
 			instanceNode = nodeStore.getOrCreateNode(bindings, parameterMask); // get real
 											   // instance node
 		    }
 		    instanceNode.setMonitor(instanceMonitor); // 98
+		    // since we need some information in the meta node, we cannot process the event first before node
+		    // creation
+		    instanceMonitor.processEvent(event); // 95
+
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
 			node = nodeStore.getOrCreateNode(bindings, chainData.getNodeMask());

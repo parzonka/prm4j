@@ -81,9 +81,11 @@ public abstract class FSMDefinitions {
 
 	public final FSM fsm = new FSM(alphabet);
 
+	public final AwareMatchHandler0 matchHandler = AwareMatchHandler.create();
+
 	public final FSMState initial = fsm.createInitialState();
 	public final FSMState safe = fsm.createState();
-	public final FSMState error = fsm.createAcceptingState(MatchHandler.SYS_OUT);
+	public final FSMState error = fsm.createAcceptingState(matchHandler);
 
 	public FSM_HasNext() {
 	    initial.addTransition(hasNext, safe);
