@@ -68,6 +68,7 @@ public class MetaNode {
     private static boolean parameterIndexIsValid(Set<Parameter<?>> parameterSet) {
 	Set<Integer> usedIndices = new HashSet<Integer>();
 	for (Parameter<?> parameter : parameterSet) {
+	    usedIndices.add(parameter.getIndex());
 	    if (parameter.getIndex() >= parameterSet.size() || parameter.getIndex() < 0) {
 		return false;
 	    }
