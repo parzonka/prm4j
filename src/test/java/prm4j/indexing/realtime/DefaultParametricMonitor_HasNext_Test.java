@@ -103,4 +103,13 @@ public class DefaultParametricMonitor_HasNext_Test extends AbstractDefaultParame
 	assertTrue(!fsm.matchHandler.getHandledMatches().isEmpty());
     }
 
+    @Test
+    public void handleMatch_successiveMatchesOnErrorState() throws Exception {
+	// exercise
+	pm.processEvent(fsm.next.createEvent(i1));
+	assertTrue(!fsm.matchHandler.getHandledMatches().isEmpty());
+	pm.processEvent(fsm.next.createEvent(i1));
+	assertTrue(!fsm.matchHandler.getHandledMatches().isEmpty());
+    }
+
 }
