@@ -67,6 +67,35 @@ public abstract class FSMDefinitions {
     }
 
     /**
+     * Do not call the hasNext method before the next method of an iterator.
+     */
+    @SuppressWarnings("rawtypes")
+    public class FSM_HasNext {
+
+	public final Alphabet alphabet = new Alphabet();
+
+	public final Parameter<Iterator> i = alphabet.createParameter("i", Iterator.class);
+
+	public final Symbol1<Iterator> hasNext = alphabet.createSymbol1("hasNext", i);
+	public final Symbol1<Iterator> next = alphabet.createSymbol1("next", i);
+
+	public final FSM fsm = new FSM(alphabet);
+
+	public final FSMState initial = fsm.createInitialState();
+	public final FSMState safe = fsm.createState();
+	public final FSMState error = fsm.createAcceptingState(MatchHandler.SYS_OUT);
+
+	public FSM_HasNext() {
+	    initial.addTransition(hasNext, safe);
+	    initial.addTransition(next, error);
+	    safe.addTransition(hasNext, safe);
+	    safe.addTransition(next, initial);
+	    error.addTransition(next, error);
+	    error.addTransition(hasNext, safe);
+	}
+    }
+
+    /**
      * Twos <b>A</b>s trigger the error state, a <b>B</b> will end in a dead state.
      */
     public static abstract class AbstractFSM_2symbols3states {
