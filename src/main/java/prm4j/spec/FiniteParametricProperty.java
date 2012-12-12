@@ -78,7 +78,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	monitorSetData = HashMultimap.create();
 	calculateStaticData();
 
-	aliveParameterSets = new AlivenessCalculator().getState2aliveParameterSets();
+	aliveParameterSets = new AlivenessCalculator().aliveParameterSets;
     }
 
     /**
@@ -245,12 +245,12 @@ public class FiniteParametricProperty implements ParametricProperty {
 
 	private final SetMultimap<BaseMonitorState, BaseMonitorState> reversedFSM;
 	private final Set<BaseMonitorState> acceptingStates;
-	private final SetMultimap<BaseMonitorState, Set<Parameter<?>>> state2aliveParameterSets;
+	private final SetMultimap<BaseMonitorState, Set<Parameter<?>>> aliveParameterSets;
 
 	public AlivenessCalculator() {
 	    reversedFSM = HashMultimap.create();
 	    acceptingStates = new HashSet<BaseMonitorState>();
-	    state2aliveParameterSets = HashMultimap.create();
+	    aliveParameterSets = HashMultimap.create();
 	    reverseIter(finiteSpec.getInitialState(), new HashSet<BaseMonitorState>());
 	    for (BaseMonitorState acceptingState : acceptingStates) {
 		alivenessIter(acceptingState, new HashSet<Parameter<?>>(), new HashSet<BaseMonitorState>());
@@ -265,34 +265,36 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    }
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
 		BaseMonitorState successor = state.getSuccessor(baseEvent);
-		if (!visited.contains(successor)) {
+		if (successor != null && !visited.contains(successor)) {
 		    reversedFSM.put(successor, state);
-		    reverseIter(state, unmodifiableUnion(visited, set(successor)));
+		    reverseIter(successor, unmodifiableUnion(visited, set(successor)));
 		}
 	    }
 	}
 
 	public void alivenessIter(BaseMonitorState state, Set<Parameter<?>> parameterSet, Set<BaseMonitorState> visited) {
-	    state2aliveParameterSets.put(state, parameterSet);
+	    aliveParameterSets.put(state, parameterSet);
 	    if (state == finiteSpec.getInitialState()) {
 		return;
 	    }
 	    for (BaseMonitorState predessor : reversedFSM.get(state)) {
 		if (!visited.contains(predessor)) {
-		    alivenessIter(state,
-			    unmodifiableUnion(parameterSet, getBaseEvent(predessor, state).getParameters()),
-			    unmodifiableUnion(visited, set(predessor)));
+		    for (BaseEvent baseEvent : getBaseEvent(predessor, state)) {
+			alivenessIter(predessor, unmodifiableUnion(parameterSet, baseEvent.getParameters()),
+				unmodifiableUnion(visited, set(predessor)));
+		    }
 		}
 	    }
 	}
 
-	public BaseEvent getBaseEvent(BaseMonitorState from, BaseMonitorState to) {
+	public Set<BaseEvent> getBaseEvent(BaseMonitorState from, BaseMonitorState to) {
+	    Set<BaseEvent> result = new HashSet<BaseEvent>();
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
 		if (from.getSuccessor(baseEvent) == to) {
-		    return baseEvent;
+		    result.add(baseEvent);
 		}
 	    }
-	    throw new IllegalStateException();
+	    return result;
 	}
 
 	/**
@@ -301,8 +303,8 @@ public class FiniteParametricProperty implements ParametricProperty {
 	private void consolidateAliveParameterSets() {
 	    for (BaseMonitorState state : finiteSpec.getStates()) {
 		for (Set<Parameter<?>> parameterSet : new HashSet<Set<Parameter<?>>>(
-			state2aliveParameterSets.get(state))) {
-		    final Iterator<Set<Parameter<?>>> iter = state2aliveParameterSets.get(state).iterator();
+			aliveParameterSets.get(state))) {
+		    final Iterator<Set<Parameter<?>>> iter = aliveParameterSets.get(state).iterator();
 		    while (iter.hasNext()) {
 			if (Util.isSuperset(iter.next(), parameterSet)) {
 			    iter.remove();
@@ -310,10 +312,6 @@ public class FiniteParametricProperty implements ParametricProperty {
 		    }
 		}
 	    }
-	}
-
-	public SetMultimap<BaseMonitorState, Set<Parameter<?>>> getState2aliveParameterSets() {
-	    return state2aliveParameterSets;
 	}
 
     }

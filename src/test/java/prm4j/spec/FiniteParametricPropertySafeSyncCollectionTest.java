@@ -13,6 +13,7 @@ package prm4j.spec;
 import static org.junit.Assert.assertEquals;
 import static prm4j.Util.tuple;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.BaseMonitorState;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
@@ -76,6 +78,20 @@ public class FiniteParametricPropertySafeSyncCollectionTest extends AbstractTest
 	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = fpp.getJoinData();
 	// verify
 	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = ArrayListMultimap.create();
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAliveness() throws Exception {
+	SetMultimap<BaseMonitorState, Set<Parameter<?>>> actual = fpp.getAliveParameterSets();
+	// verify
+	SetMultimap<BaseMonitorState, Set<Parameter<?>>> expected = HashMultimap.create();
+
+	expected.put(fsm.initial, asSet(fsm.c, fsm.i));
+	expected.put(fsm.s1, asSet(fsm.c, fsm.i));
+	expected.put(fsm.s2, asSet(fsm.i));
+	expected.put(fsm.error, EMPTY_PARAMETER_SET);
+
 	assertEquals(expected, actual);
     }
 
