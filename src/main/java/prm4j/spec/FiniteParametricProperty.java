@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -50,13 +51,12 @@ public class FiniteParametricProperty implements ParametricProperty {
     private final SetMultimap<BaseEvent, Set<BaseEvent>> enablingEventSets;
     private final SetMultimap<BaseEvent, Set<Parameter<?>>> enablingParameterSets;
     private final Set<Set<Parameter<?>>> possibleParameterSets;
-    private final SetMultimap<BaseMonitorState, Set<BaseEvent>> coenablingEventSets; // TODO
-    private final SetMultimap<BaseMonitorState, Set<Parameter<?>>> coenablingParameterSets; // TODO
     private final ListMultimap<BaseEvent, Set<Parameter<?>>> maxData;
     private final ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinData;
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainData;
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> monitorSetData;
     private final Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates;
+    private final SetMultimap<BaseMonitorState, Set<Parameter<?>>> aliveParameterSets;
 
     private final static Set<Parameter<?>> EMPTY_PARAMETER_SET = new HashSet<Parameter<?>>();
 
@@ -78,10 +78,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	monitorSetData = HashMultimap.create();
 	calculateStaticData();
 
-	// TODO statePropertyCoEnableSets
-	coenablingEventSets = HashMultimap.create();
-	coenablingParameterSets = toMap2SetOfSetOfParameters(coenablingEventSets);
-	calculateAcceptingParameters();
+	aliveParameterSets = new AlivenessCalculator().getState2aliveParameterSets();
     }
 
     /**
@@ -244,12 +241,81 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return enableSetInReverseTopolicalOrdering;
     }
 
-    private void calculateAcceptingParameters() {
-	// TODO implement calculateAcceptingParameters
-	boolean[] acceptingParameters = new boolean[finiteSpec.getFullParameterSet().size()];
-	for (BaseMonitorState state : finiteSpec.getStates()) {
-	    state.setAcceptingParameters(acceptingParameters);
+    private class AlivenessCalculator {
+
+	private final SetMultimap<BaseMonitorState, BaseMonitorState> reversedFSM;
+	private final Set<BaseMonitorState> acceptingStates;
+	private final SetMultimap<BaseMonitorState, Set<Parameter<?>>> state2aliveParameterSets;
+
+	public AlivenessCalculator() {
+	    reversedFSM = HashMultimap.create();
+	    acceptingStates = new HashSet<BaseMonitorState>();
+	    state2aliveParameterSets = HashMultimap.create();
+	    reverseIter(finiteSpec.getInitialState(), new HashSet<BaseMonitorState>());
+	    for (BaseMonitorState acceptingState : acceptingStates) {
+		alivenessIter(acceptingState, new HashSet<Parameter<?>>(), new HashSet<BaseMonitorState>());
+	    }
+	    consolidateAliveParameterSets();
 	}
+
+	public void reverseIter(BaseMonitorState state, Set<BaseMonitorState> visited) {
+	    if (state.isAccepting()) {
+		acceptingStates.add(state);
+		return;
+	    }
+	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
+		BaseMonitorState successor = state.getSuccessor(baseEvent);
+		if (!visited.contains(successor)) {
+		    reversedFSM.put(successor, state);
+		    reverseIter(state, unmodifiableUnion(visited, set(successor)));
+		}
+	    }
+	}
+
+	public void alivenessIter(BaseMonitorState state, Set<Parameter<?>> parameterSet, Set<BaseMonitorState> visited) {
+	    state2aliveParameterSets.put(state, parameterSet);
+	    if (state == finiteSpec.getInitialState()) {
+		return;
+	    }
+	    for (BaseMonitorState predessor : reversedFSM.get(state)) {
+		if (!visited.contains(predessor)) {
+		    alivenessIter(state,
+			    unmodifiableUnion(parameterSet, getBaseEvent(predessor, state).getParameters()),
+			    unmodifiableUnion(visited, set(predessor)));
+		}
+	    }
+	}
+
+	public BaseEvent getBaseEvent(BaseMonitorState from, BaseMonitorState to) {
+	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
+		if (from.getSuccessor(baseEvent) == to) {
+		    return baseEvent;
+		}
+	    }
+	    throw new IllegalStateException();
+	}
+
+	/**
+	 * Remove all supersets of contained sets.
+	 */
+	private void consolidateAliveParameterSets() {
+	    for (BaseMonitorState state : finiteSpec.getStates()) {
+		for (Set<Parameter<?>> parameterSet : new HashSet<Set<Parameter<?>>>(
+			state2aliveParameterSets.get(state))) {
+		    final Iterator<Set<Parameter<?>>> iter = state2aliveParameterSets.get(state).iterator();
+		    while (iter.hasNext()) {
+			if (Util.isSuperset(iter.next(), parameterSet)) {
+			    iter.remove();
+			}
+		    }
+		}
+	    }
+	}
+
+	public SetMultimap<BaseMonitorState, Set<Parameter<?>>> getState2aliveParameterSets() {
+	    return state2aliveParameterSets;
+	}
+
     }
 
     /**
@@ -311,14 +377,6 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return enablingParameterSets;
     }
 
-    SetMultimap<BaseMonitorState, Set<BaseEvent>> getStatePropertyCoEnableSets() {
-	return coenablingEventSets;
-    }
-
-    SetMultimap<BaseMonitorState, Set<Parameter<?>>> getStateParameterCoEnableSets() {
-	return coenablingParameterSets;
-    }
-
     @Override
     public BaseMonitorState getInitialState() {
 	return finiteSpec.getInitialState();
@@ -336,6 +394,10 @@ public class FiniteParametricProperty implements ParametricProperty {
 
     public Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getUpdates() {
 	return updates;
+    }
+
+    public SetMultimap<BaseMonitorState, Set<Parameter<?>>> getAliveParameterSets() {
+	return aliveParameterSets;
     }
 
 }

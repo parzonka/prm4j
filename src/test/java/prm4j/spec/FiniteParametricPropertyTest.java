@@ -14,9 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static prm4j.Util.tuple;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
@@ -28,7 +26,6 @@ import prm4j.api.Parameter;
 import prm4j.api.Symbol;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.BaseMonitorState;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
@@ -222,28 +219,6 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	expected.add(u.m);
 	expected.add(u.i);
 
-	assertEquals(expected, actual);
-    }
-
-    // TODO @Test
-    public void getStatePropertyCoEnableSets_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
-	FSM fsm = u.fsm;
-	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
-
-	SetMultimap<BaseMonitorState, Set<BaseEvent>> actual = fs.getStatePropertyCoEnableSets();
-
-	Map<BaseMonitorState, Set<Set<Symbol>>> expected = new HashMap<BaseMonitorState, Set<Set<Symbol>>>();
-	for (BaseMonitorState state : u.fsm.getStates()) {
-	    expected.put(state, new HashSet<Set<Symbol>>());
-	}
-	expected.get(u.initial).add(asSet(u.createColl, u.createIter, u.updateMap, u.useIter));
-	expected.get(u.s1).add(asSet(u.createIter, u.useIter, u.updateMap));
-	expected.get(u.s2).add(asSet(u.useIter, u.updateMap));
-	expected.get(u.s3).add(asSet(u.useIter));
-	expected.get(u.error).add(Collections.<Symbol> emptySet());
-
-	// TODO failing test: implement functionality
 	assertEquals(expected, actual);
     }
 
