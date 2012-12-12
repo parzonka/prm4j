@@ -32,7 +32,7 @@ public class AwareParametricMonitor extends DefaultParametricMonitor {
 
     @Override
     public synchronized void processEvent(Event event) {
-//	super.processEvent(event);
+	super.processEvent(event);
 	if (timestamp % 100 == 0) {
 	    logger.log(Level.INFO, timestamp
 		    + " : "

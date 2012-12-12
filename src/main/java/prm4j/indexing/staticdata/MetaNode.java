@@ -19,6 +19,8 @@ import prm4j.Util;
 import prm4j.api.Binding;
 import prm4j.api.Parameter;
 import prm4j.indexing.realtime.DefaultNodeFactory;
+import prm4j.indexing.realtime.LeafNodeWithMonitorSetsFactory;
+import prm4j.indexing.realtime.LeafNodeFactory;
 import prm4j.indexing.realtime.LowLevelBinding;
 import prm4j.indexing.realtime.Node;
 
@@ -280,7 +282,21 @@ public class MetaNode {
      * Select and initialize node factory
      */
     public void initializeNodeFactory() {
-	nodeFactory = new DefaultNodeFactory();
+	boolean hasSuccessors = false;
+	for (MetaNode succ : successors) {
+	    if (succ != null) {
+		hasSuccessors = true;
+		break;
+	    }
+	}
+	if (hasSuccessors) {
+	    nodeFactory = new DefaultNodeFactory();
+	} else {
+	    if (monitorSetCount > 0) {
+		nodeFactory = new LeafNodeWithMonitorSetsFactory();
+	    } else {
+		nodeFactory = new LeafNodeFactory();
+	    }
+	}
     }
-
 }
