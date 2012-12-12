@@ -117,7 +117,7 @@ public class MetaNode {
      *            the parameter which will augment the parameter set associated with the meta node
      * @return the successor meta node
      */
-    public MetaNode getMetaNode(Parameter<?> parameter) {
+    public MetaNode createAndGetMetaNode(Parameter<?> parameter) {
 	MetaNode metaNode = getSuccessors()[parameter.getIndex()];
 	if (metaNode == null) {
 	    Set<Parameter<?>> nextNodeParameterSet = new HashSet<Parameter<?>>(nodeParameterSet);
@@ -139,7 +139,7 @@ public class MetaNode {
     public MetaNode getMetaNode(Parameter<?>... parameters) {
 	MetaNode node = this;
 	for (Parameter<?> parameter : parameters) {
-	    node = node.getMetaNode(parameter);
+	    node = node.createAndGetMetaNode(parameter);
 	}
 	return node;
     }
@@ -154,7 +154,7 @@ public class MetaNode {
     public MetaNode getMetaNode(List<Parameter<?>> parameterList) {
 	MetaNode node = this;
 	for (Parameter<?> parameter : parameterList) {
-	    node = node.getMetaNode(parameter);
+	    node = node.createAndGetMetaNode(parameter);
 	}
 	return node;
     }

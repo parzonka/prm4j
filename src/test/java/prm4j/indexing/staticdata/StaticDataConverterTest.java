@@ -420,14 +420,14 @@ public class StaticDataConverterTest extends AbstractTest {
 	MetaNode expected = new MetaNode(EMPTY_PARAMETER_SET, fpp.getParameters());
 
 	// depth 1
-	expected.getMetaNode(u.m).setChainData(emptyChainDataSet);
-	expected.getMetaNode(u.m).setMonitorSetCount(1);
+	expected.createAndGetMetaNode(u.m).setChainData(emptyChainDataSet);
+	expected.createAndGetMetaNode(u.m).setMonitorSetCount(1);
 
-	expected.getMetaNode(u.c).setChainData(emptyChainDataSet);
-	expected.getMetaNode(u.c).setMonitorSetCount(1);
+	expected.createAndGetMetaNode(u.c).setChainData(emptyChainDataSet);
+	expected.createAndGetMetaNode(u.c).setMonitorSetCount(1);
 
-	expected.getMetaNode(u.i).setChainData(emptyChainDataSet);
-	expected.getMetaNode(u.i).setMonitorSetCount(1);
+	expected.createAndGetMetaNode(u.i).setChainData(emptyChainDataSet);
+	expected.createAndGetMetaNode(u.i).setMonitorSetCount(1);
 
 	// depth 2
 	expected.getMetaNode(u.m, u.c).setChainData(

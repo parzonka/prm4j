@@ -94,8 +94,8 @@ public class StaticDataConverter2Test extends AbstractTest {
 	MetaNode metaTreeRoot = sdc.getMetaTree();
 
 	assertEquals(0, metaTreeRoot.getMonitorSetCount());
-	assertEquals(0, metaTreeRoot.getMetaNode(fsm.p1).getMonitorSetCount());
-	assertEquals(1, metaTreeRoot.getMetaNode(fsm.p2).getMonitorSetCount());
+	assertEquals(0, metaTreeRoot.createAndGetMetaNode(fsm.p1).getMonitorSetCount());
+	assertEquals(1, metaTreeRoot.createAndGetMetaNode(fsm.p2).getMonitorSetCount());
     }
 
     @Test

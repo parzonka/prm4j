@@ -194,7 +194,7 @@ public class StaticDataConverter {
 	for (Set<Parameter<?>> parameterSet : allParameterSets) {
 	    MetaNode node = metaTree;
 	    for (Parameter<?> parameter : Util.asSortedList(parameterSet)) {
-		node = node.getMetaNode(parameter);
+		node = node.createAndGetMetaNode(parameter);
 		node.setChainData(chainData.get(node.getNodeParameterSet()));
 		node.setMonitorSetCount(monitorSetIds.row(node.getNodeParameterSet()).size());
 	    }
