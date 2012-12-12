@@ -10,6 +10,8 @@
  */
 package prm4j.api;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public abstract class MatchHandler {
 
     /**
@@ -30,6 +32,27 @@ public abstract class MatchHandler {
 	    System.out.println("Match detected!");
 	}
     };
+
+    /**
+     * This {@link MatchHandler} prints on match to the standard output stream.
+     */
+    public final static MatchCounter MATCH_COUNTER = new MatchCounter() {
+
+    };
+
+    public static class MatchCounter extends MatchHandler0 {
+
+	public final AtomicInteger counter = new AtomicInteger();
+
+	@Override
+	public void handleMatch(Object auxiliaryData) {
+	    counter.incrementAndGet();
+	}
+
+	public final AtomicInteger getCounter() {
+	    return counter;
+	}
+    }
 
     /**
      * Retrieve bound objects with getBoundObject(...) TODO doc method.
