@@ -50,4 +50,6 @@ public interface BindingStore {
 
     public int size();
 
+    public void reset();
+
 }

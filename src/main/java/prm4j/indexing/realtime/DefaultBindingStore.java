@@ -25,9 +25,10 @@ public class DefaultBindingStore implements BindingStore {
     public static final int DEFAULT_CLEANING_INTERVAL = 1024;
 
     private final ReferenceQueue<Object> referenceQueue;
-    private final Store store;
     private final Cleaner cleaner = new Cleaner();
     private final int cleaningInterval;
+
+    private Store store;
 
     public DefaultBindingStore(Set<Parameter<?>> fullParameterSet, int cleaningInterval) {
 
@@ -117,6 +118,11 @@ public class DefaultBindingStore implements BindingStore {
 		binding = (DefaultLowLevelBinding) referenceQueue.poll();
 	    }
 	}
+    }
+
+    @Override
+    public void reset() {
+	store = new Store();
     }
 
 }
