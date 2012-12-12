@@ -70,7 +70,7 @@ public class FSM {
      * @return the created accepting state
      */
     public FSMState createAcceptingState(MatchHandler matchHandler) {
-	return createAcceptingState(matchHandler, generateFinalStateName());
+	return createAcceptingState(matchHandler, generateAcceptingStateName());
     }
 
     /**
@@ -89,15 +89,15 @@ public class FSM {
 	return "state " + stateCount;
     }
 
-    private String generateFinalStateName() {
-	return "state " + stateCount + " (final)";
+    private String generateAcceptingStateName() {
+	return "state " + stateCount + " (accepting)";
     }
 
-    private FSMState createState(boolean isFinal, MatchHandler eventHandler, String name) {
+    private FSMState createState(boolean isAccepting, MatchHandler eventHandler, String name) {
 	if (usedNames.contains(name))
 	    throw new IllegalArgumentException("The name [" + name + "] has already been used!");
 	usedNames.add(name);
-	FSMState state = new FSMState(alphabet, false, eventHandler, name);
+	FSMState state = new FSMState(alphabet, isAccepting, eventHandler, name);
 	states.add(state);
 	stateCount++;
 	return state;
