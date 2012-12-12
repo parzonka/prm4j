@@ -97,6 +97,38 @@ public abstract class FSMDefinitions {
 	}
     }
 
+    @SuppressWarnings("rawtypes")
+    public static class FSM_SafeSyncCollection {
+
+	public final Alphabet alphabet = new Alphabet();
+
+	public final Parameter<Collection> c = alphabet.createParameter("c", Collection.class);
+	public final Parameter<Iterator> i = alphabet.createParameter("i", Iterator.class);
+
+	public final Symbol1<Collection> sync = alphabet.createSymbol1("sync", c);
+	public final Symbol2<Collection, Iterator> asyncCreateIter = alphabet.createSymbol2("asyncCreateIter", c, i);
+	public final Symbol2<Collection, Iterator> syncCreateIter = alphabet.createSymbol2("syncCreateIter", c, i);
+	public final Symbol1<Iterator> accessIter = alphabet.createSymbol1("accessIter", i);
+
+	public final FSM fsm = new FSM(alphabet);
+
+	public final AwareMatchHandler0 matchHandler = AwareMatchHandler.create();
+
+	public final FSMState initial = fsm.createInitialState();
+	public final FSMState s1 = fsm.createState();
+	public final FSMState s2 = fsm.createState();
+	public final FSMState s3 = fsm.createState();
+	public final FSMState error = fsm.createAcceptingState(matchHandler);
+
+	public FSM_SafeSyncCollection() {
+	    initial.addTransition(sync, s1);
+	    s1.addTransition(asyncCreateIter, error);
+	    s1.addTransition(syncCreateIter, s2);
+	    s2.addTransition(accessIter, error);
+	}
+
+    }
+
     /**
      * Twos <b>A</b>s trigger the error state, a <b>B</b> will end in a dead state.
      */
