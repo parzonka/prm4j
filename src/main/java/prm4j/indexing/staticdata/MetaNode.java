@@ -18,7 +18,7 @@ import java.util.Set;
 import prm4j.Util;
 import prm4j.api.Binding;
 import prm4j.api.Parameter;
-import prm4j.indexing.realtime.DefaultNode;
+import prm4j.indexing.realtime.DefaultNodeFactory;
 import prm4j.indexing.realtime.LowLevelBinding;
 import prm4j.indexing.realtime.Node;
 
@@ -41,6 +41,8 @@ public class MetaNode {
     private int monitorSetCount;
     private final Parameter<?> lastParameter;
     private final int lastParameterIndex;
+
+    private NodeFactory nodeFactory;
 
     public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
 	super();
@@ -85,7 +87,7 @@ public class MetaNode {
     }
 
     public Node createNode(LowLevelBinding key) {
-	return new DefaultNode(this, lastParameterIndex, key);
+	return nodeFactory.createNode(this, lastParameterIndex, key);
     }
 
     public Node createRootNode() {
@@ -112,6 +114,16 @@ public class MetaNode {
 
     /**
      * Retrieves the MetaNode of the successor for the given parameter.
+     *
+     * @param parameter
+     * @return the successor meta node or <code>null</code>, if it does not exist
+     */
+    public MetaNode getMetaNode(Parameter<?> parameter) {
+	return getSuccessors()[parameter.getIndex()];
+    }
+
+    /**
+     * Retrieves the MetaNode of the successor for the given parameter, creating one, if it does not exist.
      *
      * @param parameter
      *            the parameter which will augment the parameter set associated with the meta node
@@ -220,18 +232,6 @@ public class MetaNode {
     }
 
     @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((chainDataSet == null) ? 0 : chainDataSet.hashCode());
-	result = prime * result + ((fullParameterSet == null) ? 0 : fullParameterSet.hashCode());
-	result = prime * result + monitorSetCount;
-	result = prime * result + ((nodeParameterSet == null) ? 0 : nodeParameterSet.hashCode());
-	result = prime * result + Arrays.hashCode(successors);
-	return result;
-    }
-
-    @Override
     public boolean equals(Object obj) {
 	if (this == obj)
 	    return true;
@@ -274,6 +274,13 @@ public class MetaNode {
 
     public int getLastParameterIndex() {
 	return lastParameterIndex;
+    }
+
+    /**
+     * Select and initialize node factory
+     */
+    public void initializeNodeFactory() {
+	nodeFactory = new DefaultNodeFactory();
     }
 
 }

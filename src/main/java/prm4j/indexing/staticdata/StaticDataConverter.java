@@ -82,8 +82,7 @@ public class StaticDataConverter {
 		final int[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight()); // 20
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight()); // 21
 		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft())); // 22
-		joinData.put(baseEvent,
-			new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask)); // 23
+		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask)); // 23
 	    } // 24
 	} // 25
 	for (Set<Parameter<?>> parameterSet : pp.getChainData().keys()) { // 26
@@ -188,16 +187,26 @@ public class StaticDataConverter {
      * Creates a tree of meta nodes
      */
     private void createMetaTree() {
-	Set<Set<Parameter<?>>> allParameterSets = new HashSet<Set<Parameter<?>>>();
+	final Set<MetaNode> metaNodes = new HashSet<MetaNode>();
+	metaNodes.add(metaTree);
+	final Set<Set<Parameter<?>>> allParameterSets = new HashSet<Set<Parameter<?>>>();
 	allParameterSets.addAll(pp.getMonitorSetData().keys());
 	allParameterSets.addAll(pp.getPossibleParameterSets());
 	for (Set<Parameter<?>> parameterSet : allParameterSets) {
 	    MetaNode node = metaTree;
 	    for (Parameter<?> parameter : Util.asSortedList(parameterSet)) {
-		node = node.createAndGetMetaNode(parameter);
-		node.setChainData(chainData.get(node.getNodeParameterSet()));
-		node.setMonitorSetCount(monitorSetIds.row(node.getNodeParameterSet()).size());
+		if (node.getMetaNode(parameter) != null) {
+		    node = node.getMetaNode(parameter);
+		} else {
+		    node = node.createAndGetMetaNode(parameter);
+		    node.setChainData(chainData.get(node.getNodeParameterSet()));
+		    node.setMonitorSetCount(monitorSetIds.row(node.getNodeParameterSet()).size());
+		}
+		metaNodes.add(node);
 	    }
+	}
+	for (MetaNode node : metaNodes) {
+	    node.initializeNodeFactory();
 	}
     }
 
