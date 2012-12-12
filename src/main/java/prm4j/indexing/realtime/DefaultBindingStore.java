@@ -32,6 +32,10 @@ public class DefaultBindingStore implements BindingStore {
 
     private Store store;
 
+    public DefaultBindingStore(Set<Parameter<?>> fullParameterSet) {
+	this(fullParameterSet, DEFAULT_CLEANING_INTERVAL);
+    }
+
     public DefaultBindingStore(Set<Parameter<?>> fullParameterSet, int cleaningInterval) {
 
 	referenceQueue = new ReferenceQueue<Object>();
@@ -40,11 +44,16 @@ public class DefaultBindingStore implements BindingStore {
 
 	store = new Store();
 
-	bindings = new LowLevelBinding[fullParameterSet.size()];
+	bindings = createInitialBindings();
     }
 
-    public DefaultBindingStore(Set<Parameter<?>> fullParameterSet) {
-	this(fullParameterSet, DEFAULT_CLEANING_INTERVAL);
+    private LowLevelBinding[] createInitialBindings() {
+	LowLevelBinding[] result = new LowLevelBinding[fullParameterCount];
+	for (int i = 0; i < result.length; i++) {
+	    // fill the bindings-array with pseudo-bindings
+	    result[i] = new DefaultLowLevelBinding(new Object(), 0, null);
+	}
+	return result;
     }
 
     @Override
@@ -52,7 +61,8 @@ public class DefaultBindingStore implements BindingStore {
 	assert boundObjects.length == fullParameterCount;
 	for (int i = 0; i < boundObjects.length; i++) {
 	    final Object boundObject = boundObjects[i];
-	    if (boundObject != null) {
+	    // the bindings-array serves as a very basic cache
+	    if (boundObject != null && boundObject != bindings[i].get()) {
 		bindings[i] = store.getOrCreate(boundObject);
 	    }
 	}
