@@ -20,4 +20,6 @@ public interface NodeStore {
 
     public Node getNode(LowLevelBinding[] bindings, int[] parameterMask);
 
+    public void reset();
+
 }
