@@ -10,6 +10,8 @@
  */
 package prm4j.api;
 
+import prm4j.Globals;
+import prm4j.indexing.realtime.AwareParametricMonitor;
 import prm4j.indexing.realtime.DefaultParametricMonitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
@@ -19,6 +21,10 @@ public class ParametricMonitorFactory {
 
     public static ParametricMonitor createParametricMonitor(FiniteSpec finiteSpec) {
 	StaticDataConverter converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
+	if (Globals.DEBUG) {
+	    System.out.println("[prm4j] Started in DEBUG mode");
+	    return new AwareParametricMonitor(converter.getMetaTree(), converter.getEventContext(), finiteSpec);
+	}
 	return new DefaultParametricMonitor(converter.getMetaTree(), converter.getEventContext(), finiteSpec);
     }
 
