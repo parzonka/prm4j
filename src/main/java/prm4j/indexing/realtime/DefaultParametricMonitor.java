@@ -28,8 +28,6 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     private NodeStore nodeStore;
     private final EventContext eventContext;
     private long timestamp = 0L;
-    private MetaNode metaTree;
-    private Spec spec;
 
     /**
      * Creates a DefaultParametricMonitor using default {@link BindingStore} and {@link NodeStore} implementations (and
@@ -41,16 +39,13 @@ public class DefaultParametricMonitor implements ParametricMonitor {
      */
     public DefaultParametricMonitor(MetaNode metaTree, EventContext eventContext, Spec spec) {
 	this.eventContext = eventContext;
-	this.metaTree = metaTree;
-	this.spec = spec;
 	bindingStore = new DefaultBindingStore(spec.getFullParameterSet());
 	nodeStore = new DefaultNodeStore(metaTree);
 	monitorPrototype = spec.getInitialMonitor();
     }
 
     /**
-     * Creates a DefaultParametricMonitor which externally configurable BindingStore and NodeStore. Please note, that a
-     * {@link DefaultParametricMonitor} created this way is currently not resettable.
+     * Creates a DefaultParametricMonitor which externally configurable BindingStore and NodeStore.
      *
      * @param bindingStore
      * @param nodeStore
@@ -225,13 +220,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
     @Override
     public void reset() {
-	if (metaTree == null || spec == null) {
-	    throw new UnsupportedOperationException(
-		    "ParametricMonitor can not be resetted when created from externally configured components.");
-	}
 	timestamp = 0L;
-	bindingStore = new DefaultBindingStore(spec.getFullParameterSet());
-	nodeStore = new DefaultNodeStore(metaTree);
+	bindingStore.reset();
+	nodeStore.reset();
     }
 
 }
