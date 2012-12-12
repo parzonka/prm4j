@@ -68,7 +68,7 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	pm.processEvent(instance1.createEvent(fsm.createColl));
 	pm.processEvent(instance2.createEvent(fsm.createColl));
 
-	assertCreatedNodes(array(m1, _, _), array(_, c1, _), array(_, c2), array(m1, c1, _), array(m1, c2, _));
+	assertCreatedNodes(array(m1, _, _), array(_, c1, _), array(_, c2, _), array(m1, c1, _), array(m1, c2, _));
 
     }
 

@@ -27,6 +27,8 @@ public class DefaultBindingStore implements BindingStore {
     private final ReferenceQueue<Object> referenceQueue;
     private final Cleaner cleaner = new Cleaner();
     private final int cleaningInterval;
+    private final int fullParameterCount;
+    private final LowLevelBinding[] bindings;
 
     private Store store;
 
@@ -34,8 +36,11 @@ public class DefaultBindingStore implements BindingStore {
 
 	referenceQueue = new ReferenceQueue<Object>();
 	this.cleaningInterval = cleaningInterval;
+	fullParameterCount = fullParameterSet.size();
 
 	store = new Store();
+
+	bindings = new LowLevelBinding[fullParameterSet.size()];
     }
 
     public DefaultBindingStore(Set<Parameter<?>> fullParameterSet) {
@@ -44,15 +49,15 @@ public class DefaultBindingStore implements BindingStore {
 
     @Override
     public LowLevelBinding[] getBindings(Object[] boundObjects) {
-	LowLevelBinding[] result = new LowLevelBinding[boundObjects.length];
+	assert boundObjects.length == fullParameterCount;
 	for (int i = 0; i < boundObjects.length; i++) {
 	    final Object boundObject = boundObjects[i];
 	    if (boundObject != null) {
-		result[i] = store.getOrCreate(boundObject);
+		bindings[i] = store.getOrCreate(boundObject);
 	    }
 	}
 	cleaner.clean();
-	return result;
+	return bindings;
     }
 
     @Override

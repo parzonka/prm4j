@@ -57,7 +57,7 @@ public class DefaultParametricMonitor4Test extends AbstractDefaultParametricMoni
 	pm.processEvent(fsm.e2.createEvent(b));
 
 	// verify
-	assertEquals(0, getNode().getMonitorSets().length);
+	assertEquals(0, getNode(null, null).getMonitorSets().length);
     }
 
     @Test

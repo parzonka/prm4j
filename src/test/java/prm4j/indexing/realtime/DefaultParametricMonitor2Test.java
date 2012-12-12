@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static prm4j.Util.tuple;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -336,13 +335,13 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
     // twoEvents_a_a associated to different base events ////////////////////////////////
 
     @Test
-    public void twoEvents_e1a_e3a_differentParamsBoundToTheSameObjectAreNotEqual() throws Exception {
+    public void twoEvents_e1a_e3a_differentParamsBoundToTheSameObjectAreEqual() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a));
 	pm.processEvent(fsm.e3.createEvent(a));
 
 	// verify
-	assertNotSame(popNextRetrievedBinding()[0], popNextRetrievedBinding()[0]);
+	assertEquals(popNextRetrievedBinding()[0], popNextRetrievedBinding()[0]);
     }
 
     // twoEvent_ab_a = ab followed by a (and some with b) ////////////////////////////////
@@ -458,7 +457,7 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 	pm.processEvent(fsm.e3.createEvent(b));
 
 	// verify
-	assertNull(getNode(tuple(fsm.p2, b)).getMonitor());
+	assertNull(getNode(null, b).getMonitor());
     }
 
     @Test
