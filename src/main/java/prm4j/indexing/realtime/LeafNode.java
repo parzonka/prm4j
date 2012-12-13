@@ -10,6 +10,8 @@
  */
 package prm4j.indexing.realtime;
 
+import java.lang.ref.ReferenceQueue;
+
 import prm4j.Util;
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseMonitor;
@@ -32,10 +34,10 @@ public class LeafNode implements Node {
      * @param hashCode
      *            hash code of the key
      */
-    public LeafNode(MetaNode metaNode, int parameterIndex, LowLevelBinding key) {
+    public LeafNode(MetaNode metaNode, int parameterIndex, LowLevelBinding key, ReferenceQueue<Node> refQueue) {
 	this.metaNode = metaNode;
 	this.key = key;
-	nodeRef = new NodeRef(this);
+	nodeRef = new NodeRef(this, refQueue);
     }
 
     @Override

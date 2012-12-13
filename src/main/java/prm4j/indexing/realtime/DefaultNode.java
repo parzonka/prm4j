@@ -10,6 +10,7 @@
  */
 package prm4j.indexing.realtime;
 
+import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
 import prm4j.Util;
@@ -21,7 +22,6 @@ public class DefaultNode extends AbstractNode {
 
     private final MetaNode metaNode;
     private final MonitorSet[] monitorSets;
-    private BaseMonitor monitor;
     private final NodeRef nodeRef;
 
     private WeakReference<Node> cachedNodeRef = null;
@@ -35,11 +35,11 @@ public class DefaultNode extends AbstractNode {
      * @param hashCode
      *            hash code of the key
      */
-    public DefaultNode(MetaNode metaNode, int parameterIndex, LowLevelBinding key) {
+    public DefaultNode(MetaNode metaNode, int parameterIndex, LowLevelBinding key, ReferenceQueue<Node> refQueue) {
 	super(key);
 	this.metaNode = metaNode;
 	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
-	nodeRef = new NodeRef(this);
+	nodeRef = new NodeRef(this, refQueue);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class DefaultNode extends AbstractNode {
 
     @Override
     public BaseMonitor getMonitor() {
-	return monitor;
+	return nodeRef.monitor;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class DefaultNode extends AbstractNode {
 
     @Override
     public void setMonitor(BaseMonitor monitor) {
-	this.monitor = monitor;
+	nodeRef.monitor = monitor;
 	monitor.setMetaNode(metaNode);
     }
 
@@ -103,9 +103,9 @@ public class DefaultNode extends AbstractNode {
 
     @Override
     public String toString() {
-	if (monitor != null) {
+	if (nodeRef.monitor != null) {
 	    // output e.g.: (p2=b, p3=c, p5=e)
-	    return Util.bindingsToString(monitor.getLowLevelBindings());
+	    return Util.bindingsToString(nodeRef.monitor.getLowLevelBindings());
 	} else {
 	    // output e.g.: (p2=?, p3=?, p5=e) because we only now the key and the node parameter set
 	    final StringBuilder sb = new StringBuilder();

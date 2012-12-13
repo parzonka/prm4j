@@ -10,11 +10,19 @@
  */
 package prm4j.indexing.staticdata;
 
+import java.lang.ref.ReferenceQueue;
+
 import prm4j.indexing.realtime.LowLevelBinding;
 import prm4j.indexing.realtime.Node;
 
-public interface NodeFactory {
+public abstract class NodeFactory {
 
-    public Node createNode(MetaNode metaNode, int parameterIndex, LowLevelBinding binding);
+    protected final ReferenceQueue<Node> refQueue;
+
+    public NodeFactory() {
+	refQueue = new ReferenceQueue<Node>();
+    }
+
+    public abstract Node createNode(MetaNode metaNode, int parameterIndex, LowLevelBinding binding);
 
 }

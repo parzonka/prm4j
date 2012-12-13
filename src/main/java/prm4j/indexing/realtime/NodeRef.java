@@ -10,12 +10,17 @@
  */
 package prm4j.indexing.realtime;
 
+import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+
+import prm4j.indexing.BaseMonitor;
 
 public class NodeRef extends WeakReference<Node> {
 
-    public NodeRef(Node node) {
-	super(node);
+    public BaseMonitor monitor;
+
+    public NodeRef(Node node, ReferenceQueue<Node> refQueue) {
+	super(node, refQueue);
     }
 
 }

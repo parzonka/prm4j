@@ -10,14 +10,16 @@
  */
 package prm4j.indexing.realtime;
 
+import java.lang.ref.ReferenceQueue;
+
 import prm4j.indexing.staticdata.MetaNode;
 
 public class LeafNodeWithMonitorSets extends LeafNode {
 
     private final MonitorSet[] monitorSets;
 
-    public LeafNodeWithMonitorSets(MetaNode metaNode, int parameterIndex, LowLevelBinding key) {
-	super(metaNode, parameterIndex, key);
+    public LeafNodeWithMonitorSets(MetaNode metaNode, int parameterIndex, LowLevelBinding key, ReferenceQueue<Node> refQueue) {
+	super(metaNode, parameterIndex, key, refQueue);
 	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
     }
     @Override

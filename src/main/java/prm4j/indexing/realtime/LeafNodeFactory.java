@@ -13,11 +13,11 @@ package prm4j.indexing.realtime;
 import prm4j.indexing.staticdata.MetaNode;
 import prm4j.indexing.staticdata.NodeFactory;
 
-public class LeafNodeFactory implements NodeFactory {
+public class LeafNodeFactory extends NodeFactory {
 
     @Override
     public Node createNode(MetaNode metaNode, int parameterIndex, LowLevelBinding binding) {
-	return new LeafNode(metaNode, parameterIndex, binding);
+	return new LeafNode(metaNode, parameterIndex, binding, refQueue);
     }
 
 }
