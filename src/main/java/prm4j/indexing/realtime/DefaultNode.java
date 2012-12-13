@@ -22,7 +22,7 @@ public class DefaultNode extends AbstractNode {
     private final MetaNode metaNode;
     private final MonitorSet[] monitorSets;
     private BaseMonitor monitor;
-    private final WeakReference<Node> nodeRef;
+    private final NodeRef nodeRef;
 
     private WeakReference<Node> cachedNodeRef = null;
     private LowLevelBinding cachedBinding = null;
@@ -39,7 +39,7 @@ public class DefaultNode extends AbstractNode {
 	super(key);
 	this.metaNode = metaNode;
 	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
-	nodeRef = new WeakReference<Node>(this);
+	nodeRef = new NodeRef(this);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class DefaultNode extends AbstractNode {
     }
 
     @Override
-    public WeakReference<Node> getNodeRef() {
+    public NodeRef getNodeRef() {
 	return nodeRef;
     }
 

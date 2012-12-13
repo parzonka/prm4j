@@ -10,8 +10,6 @@
  */
 package prm4j.indexing.realtime;
 
-import java.lang.ref.WeakReference;
-
 import prm4j.Util;
 import prm4j.api.Parameter;
 import prm4j.indexing.BaseMonitor;
@@ -21,7 +19,7 @@ public class LeafNode implements Node {
 
     private final static MonitorSet[] EMPTY_MONITOR_SET = new MonitorSet[0];
     private final MetaNode metaNode;
-    private final WeakReference<Node> nodeRef;
+    private final NodeRef nodeRef;
     private BaseMonitor monitor;
 
     private final LowLevelBinding key;
@@ -37,7 +35,7 @@ public class LeafNode implements Node {
     public LeafNode(MetaNode metaNode, int parameterIndex, LowLevelBinding key) {
 	this.metaNode = metaNode;
 	this.key = key;
-	nodeRef = new WeakReference<Node>(this);
+	nodeRef = new NodeRef(this);
     }
 
     @Override
@@ -101,7 +99,7 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public WeakReference<Node> getNodeRef() {
+    public NodeRef getNodeRef() {
 	return nodeRef;
     }
 
