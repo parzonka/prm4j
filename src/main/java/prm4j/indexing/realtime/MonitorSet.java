@@ -21,6 +21,10 @@ import prm4j.indexing.staticdata.ChainData;
  */
 public class MonitorSet {
 
+    private static int ID = 0;
+
+    public final int monitorSetId;
+
     /**
      * Initial capacity of the set.
      */
@@ -36,6 +40,7 @@ public class MonitorSet {
     private BaseMonitor[] monitorSet;
 
     public MonitorSet() {
+	monitorSetId = ID++;
 	monitorSet = new BaseMonitor[DEFAULT_CAPACITY];
     }
 
@@ -209,6 +214,11 @@ public class MonitorSet {
     @Override
     public String toString() {
 	return Arrays.toString(monitorSet);
+    }
+
+    @Override
+    public int hashCode() {
+        return monitorSetId;
     }
 
 }
