@@ -15,9 +15,15 @@ import prm4j.indexing.staticdata.NodeFactory;
 
 public class LeafNodeFactory extends NodeFactory {
 
+    private final NodeManager nodeManager;
+
+    public LeafNodeFactory(NodeManager nodeManager) {
+	this.nodeManager = nodeManager;
+    }
+
     @Override
     public Node createNode(MetaNode metaNode, int parameterIndex, LowLevelBinding binding) {
-	return new LeafNode(metaNode, parameterIndex, binding, refQueue);
+	return new LeafNode(metaNode, parameterIndex, binding, nodeManager.getReferenceQueue());
     }
 
 }

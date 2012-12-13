@@ -19,10 +19,11 @@ import prm4j.Util;
 import prm4j.api.Binding;
 import prm4j.api.Parameter;
 import prm4j.indexing.realtime.DefaultNodeFactory;
-import prm4j.indexing.realtime.LeafNodeWithMonitorSetsFactory;
 import prm4j.indexing.realtime.LeafNodeFactory;
+import prm4j.indexing.realtime.LeafNodeWithMonitorSetsFactory;
 import prm4j.indexing.realtime.LowLevelBinding;
 import prm4j.indexing.realtime.Node;
+import prm4j.indexing.realtime.NodeManager;
 
 /**
  * Every {@link Node} is equipped with a MetaNode, containing factory methods and providing statically computed
@@ -32,6 +33,7 @@ import prm4j.indexing.realtime.Node;
 public class MetaNode {
 
     private final MetaNode[] successors;
+    private final NodeManager nodeManager;
 
     private Set<Parameter<?>> fullParameterSet;
     private Set<Parameter<?>> nodeParameterSet;
@@ -47,6 +49,10 @@ public class MetaNode {
     private NodeFactory nodeFactory;
 
     public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
+	this(nodeParameterSet, fullParameterSet, null);
+    }
+
+    public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet, NodeManager nodeManager) {
 	super();
 	assert parameterIndexIsValid(fullParameterSet) : "Full parameter set must be valid.";
 	assert Util.isSubsetEq(nodeParameterSet, fullParameterSet) : "Node parameters must be a subset of the full parameter set.";
@@ -58,6 +64,7 @@ public class MetaNode {
 	    lastParameter = null;
 	    lastParameterIndex = -1;
 	}
+	this.nodeManager = nodeManager;
 	this.nodeParameterSet = nodeParameterSet;
 	this.fullParameterSet = fullParameterSet;
 	successors = new MetaNode[fullParameterSet.size()];
@@ -137,7 +144,7 @@ public class MetaNode {
 	    Set<Parameter<?>> nextNodeParameterSet = new HashSet<Parameter<?>>(nodeParameterSet);
 	    assert !nextNodeParameterSet.contains(parameter) : "Parameter set could not have had contained new parameter.";
 	    nextNodeParameterSet.add(parameter);
-	    metaNode = new MetaNode(nextNodeParameterSet, fullParameterSet);
+	    metaNode = new MetaNode(nextNodeParameterSet, fullParameterSet, getNodeManager());
 	    getSuccessors()[parameter.getIndex()] = metaNode;
 	}
 	return metaNode;
@@ -290,13 +297,17 @@ public class MetaNode {
 	    }
 	}
 	if (hasSuccessors) {
-	    nodeFactory = new DefaultNodeFactory();
+	    nodeFactory = new DefaultNodeFactory(getNodeManager());
 	} else {
 	    if (monitorSetCount > 0) {
-		nodeFactory = new LeafNodeWithMonitorSetsFactory();
+		nodeFactory = new LeafNodeWithMonitorSetsFactory(getNodeManager());
 	    } else {
-		nodeFactory = new LeafNodeFactory();
+		nodeFactory = new LeafNodeFactory(getNodeManager());
 	    }
 	}
+    }
+
+    public NodeManager getNodeManager() {
+	return nodeManager;
     }
 }

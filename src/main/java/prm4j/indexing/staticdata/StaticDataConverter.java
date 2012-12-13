@@ -23,6 +23,7 @@ import prm4j.Util;
 import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
+import prm4j.indexing.realtime.NodeManager;
 import prm4j.spec.ParametricProperty;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -54,7 +55,7 @@ public class StaticDataConverter {
 	chainData = HashMultimap.create();
 	monitorSetIds = HashBasedTable.create();
 	convertToLowLevelStaticData();
-	metaTree = new MetaNode(new HashSet<Parameter<?>>(), pp.getParameters());
+	metaTree = new MetaNode(new HashSet<Parameter<?>>(), pp.getParameters(), new NodeManager());
 	createMetaTree();
     }
 
