@@ -98,7 +98,7 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 
     @Override
     public String toString() {
-	return "" + get();
+	return "Binding(" + hashCode + ")=" + get();
     }
 
 }

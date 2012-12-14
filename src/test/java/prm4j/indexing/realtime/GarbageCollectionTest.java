@@ -115,7 +115,7 @@ public class GarbageCollectionTest extends AbstractTest {
     }
 
     @Test
-    public void expiredBinding_bindingIsRemovedFromNodeStore() throws Exception {
+    public void expiredBinding_nodeIsRemovedFromNodeStore() throws Exception {
 
 	FSM_obj_obj fsm = new FSM_obj_obj();
 	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 1);
@@ -135,7 +135,33 @@ public class GarbageCollectionTest extends AbstractTest {
     }
 
     @Test
-    public void fiveExpiredBindings_bindingsAreRemovedFromNodeStore() throws Exception {
+    public void expiredBinding_NodeManagerDetected() throws Exception {
+
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 1);
+
+	// precondition
+	assertEquals(0L, nodeManager.getCleanedCount()); // nothing cleared yet
+
+	// exercise
+	Object object = new Object();
+	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+	nodeStore.getOrCreateNode(bindings);
+	assertEquals(1, nodeStore.getRootNode().size()); // node is stored
+
+	object = null;
+	runGarbageCollectorAFewTimes();
+	bindingStore.getBindings(array(new Object())); // object is collected, second object is added
+
+	// verify
+	assertEquals(0, nodeStore.getRootNode().size()); // node was removed
+	runGarbageCollectorAFewTimes();
+	nodeManager.reallyClean(); // trigger cleaning
+	assertEquals(1L, nodeManager.getCleanedCount()); // node was cleaned
+    }
+
+    @Test
+    public void fiveExpiredBindings_nodesAreRemovedFromNodeStore() throws Exception {
 
 	FSM_obj_obj fsm = new FSM_obj_obj();
 	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 5);

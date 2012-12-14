@@ -31,7 +31,7 @@ public class AbstractParametricMonitorTest extends AbstractTest {
     public final static BoundObject _ = null;
     protected FiniteParametricProperty fpp;
     protected StaticDataConverter converter;
-    protected BindingStore bindingStore;
+    protected DefaultBindingStore bindingStore;
     protected NodeStore nodeStore;
     protected BaseMonitor prototypeMonitor;
     protected NodeManager nodeManager;

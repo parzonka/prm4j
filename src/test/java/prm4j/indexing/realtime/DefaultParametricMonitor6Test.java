@@ -125,4 +125,28 @@ public class DefaultParametricMonitor6Test extends AbstractParametricMonitorTest
 	}
     }
 
+    @Test
+    public void multipleAcceptingTraces_NodeManagerCleansAll3000Nodes() throws Exception {
+
+	for (int i = 0; i < 1000; i++) {
+	    final ParametricInstance instance = instance(m1, _, _);
+	    pm.processEvent(instance.createEvent(fsm.createColl));
+	    pm.processEvent(instance.createEvent(fsm.createIter));
+	    pm.processEvent(instance.createEvent(fsm.updateMap));
+	    pm.processEvent(instance.createEvent(fsm.useIter)); // reaching error states terminates monitor
+	    pm.processEvent(instance.createEvent(fsm.updateMap)); // terminated monitor got cleaned up
+	    pm.processEvent(instance.createEvent(fsm.createColl)); // does not create another monitor
+	    pm.processEvent(instance.createEvent(fsm.createIter)); // "
+	    pm.processEvent(instance.createEvent(fsm.updateMap)); // "
+	    pm.processEvent(instance.createEvent(fsm.useIter)); // "
+	    assertEquals(0, getNode(m1, _, _).getMonitorSet(0).getSize());
+	}
+	runGarbageCollectorAFewTimes();
+	bindingStore.removeExpiredBindingsNow();
+	runGarbageCollectorAFewTimes();
+    	nodeManager.reallyClean();
+	runGarbageCollectorAFewTimes();
+	assertEquals(3000L, nodeManager.getCleanedCount());
+    }
+
 }

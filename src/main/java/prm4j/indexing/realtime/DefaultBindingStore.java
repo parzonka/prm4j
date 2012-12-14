@@ -94,7 +94,7 @@ public class DefaultBindingStore implements BindingStore {
 	return referenceQueue;
     }
 
-    protected void removeExpiredBindingsNow() {
+    public void removeExpiredBindingsNow() {
 	cleaner.removeExpiredBindings();
     }
 

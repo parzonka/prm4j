@@ -44,7 +44,6 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	monitorPrototype = spec.getInitialMonitor();
 	nodeManager = new NodeManager();
 	nodeStore = new DefaultNodeStore(metaTree, nodeManager);
-	metaTree.setNodeManagerToTree(nodeManager);
     }
 
     /**
@@ -191,8 +190,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	for (int i = 0; i < parameterMask.length; i++) { // 37
 	    bindings[parameterMask[i]].setTimestamp(timestamp);
 	}
+	nodeManager.tryToClean(timestamp);
 	timestamp++; // 40
-	nodeManager.tryToClean();
     }
 
     private static LowLevelBinding[] toCompressedBindings(LowLevelBinding[] uncompressedBindings, int[] parameterMask) {

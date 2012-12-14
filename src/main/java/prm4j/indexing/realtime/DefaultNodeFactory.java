@@ -23,7 +23,9 @@ public class DefaultNodeFactory extends NodeFactory {
 
     @Override
     public Node createNode(MetaNode metaNode, int parameterIndex, LowLevelBinding binding) {
-	return new DefaultNode(metaNode, parameterIndex, binding, nodeManager.getReferenceQueue());
+	Node node = new DefaultNode(metaNode, parameterIndex, binding, nodeManager.getReferenceQueue());
+	nodeManager.createdNode(node);
+	return node;
     }
 
 }
