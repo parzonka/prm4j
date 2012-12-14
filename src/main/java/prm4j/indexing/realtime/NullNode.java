@@ -19,6 +19,12 @@ public class NullNode implements Node {
     private final static MonitorSet EMPTY_MONITOR_SET = new MonitorSet();
     private final static MonitorSet[] EMPTY_MONITOR_SETS = new MonitorSet[0];
 
+    private NodeRef nodeRef;
+
+    public NullNode() {
+	nodeRef = new NodeRef(this, null);
+    }
+
     @Override
     public LowLevelBinding getKey() {
 	return null;
@@ -75,7 +81,7 @@ public class NullNode implements Node {
 
     @Override
     public NodeRef getNodeRef() {
-	return null;
+	return nodeRef;
     }
 
     @Override
