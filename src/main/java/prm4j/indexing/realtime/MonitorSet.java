@@ -37,11 +37,11 @@ public class MonitorSet {
     /**
      * Stores the monitors
      */
-    private BaseMonitor[] monitorSet;
+    private NodeRef[] monitorSet;
 
     public MonitorSet() {
 	monitorSetId = ID++;
-	monitorSet = new BaseMonitor[DEFAULT_CAPACITY];
+	monitorSet = new NodeRef[DEFAULT_CAPACITY];
     }
 
     /**
@@ -49,7 +49,7 @@ public class MonitorSet {
      *
      * @param monitor
      */
-    public void add(BaseMonitor monitor) {
+    public void add(NodeRef monitor) {
 	monitorSet[size++] = monitor;
 	ensureCapacity();
     }
@@ -76,11 +76,12 @@ public class MonitorSet {
     public void processEvent(Event event) {
 	int aliveMonitors = 0;
 	for (int i = 0; i < size; i++) { // 63
-	    final BaseMonitor monitor = monitorSet[i];
+	    final NodeRef nodeRef = monitorSet[i];
+	    final BaseMonitor monitor = nodeRef.monitor;
 	    if (monitor.isTerminated()) {
 		continue;
 	    } else {
-		monitorSet[aliveMonitors++] = monitor;
+		monitorSet[aliveMonitors++] = nodeRef;
 	    }
 	    monitor.processEvent(event);
 	}
@@ -122,7 +123,8 @@ public class MonitorSet {
 	for (int i = 0; i < size; i++) { // 63
 
 	    // this monitor holds some bindings we would like to copy to our joined bindings
-	    final BaseMonitor compatibleMonitor = monitorSet[i];
+	    final NodeRef compatibleNodeRef = monitorSet[i];
+	    final BaseMonitor compatibleMonitor = compatibleNodeRef.monitor;
 
 	    // test if some of the bindings had been used already after the compatible monitor was created.
 	    if (someBindingsAreKnown && compatibleMonitor.getCreationTime() < tmax) { // 64
@@ -147,14 +149,14 @@ public class MonitorSet {
 		// process and test if monitor is still alive
 		if (monitor.processEvent(event)) { // 103
 		    // this monitor is alive, so copy it to the alive partition
-		    monitorSet[aliveMonitors++] = compatibleMonitor;
+		    monitorSet[aliveMonitors++] = compatibleNodeRef;
 		}
 		lastNode.setMonitor(monitor); // 106
 		// normal chain phase: connect necessary less informative instances so the joined binding will gets some
 		// updates (or be used in join phase itself as compatible monitor)
 		for (ChainData chainData : lastNode.getMetaNode().getChainDataArray()) {
 		    nodeStore.getOrCreateNode(joinable, chainData.getNodeMask())
-			    .getMonitorSet(chainData.getMonitorSetId()).add(monitor);
+			    .getMonitorSet(chainData.getMonitorSetId()).add(lastNode.getNodeRef());
 		} // 99
 		  // copy got used => clone again
 		joinable = joinableBindings.clone(); // 74
@@ -192,7 +194,7 @@ public class MonitorSet {
      */
     public boolean contains(BaseMonitor monitor) {
 	for (int i = 0; i < size; i++) {
-	    if (monitorSet[i] == monitor) {
+	    if (monitorSet[i].monitor == monitor) {
 		return true;
 	    }
 	}
