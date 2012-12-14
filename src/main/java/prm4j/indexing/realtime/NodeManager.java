@@ -22,8 +22,7 @@ public class NodeManager {
     }
 
     public ReferenceQueue<Node> getReferenceQueue() {
-
-	return null;
+	return referenceQueue;
     }
 
     public void tryToClean() {
@@ -31,7 +30,6 @@ public class NodeManager {
     }
 
     private void reallyClean() {
-	System.out.println("Really clean");
 	NodeRef nodeRef = (NodeRef) referenceQueue.poll();
 	while (nodeRef != null) {
 	    nodeRef.monitor.getLowLevelBindings();

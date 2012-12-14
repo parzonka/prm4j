@@ -10,6 +10,7 @@
  */
 package prm4j.indexing.staticdata;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -33,7 +34,7 @@ import prm4j.indexing.realtime.NodeManager;
 public class MetaNode {
 
     private final MetaNode[] successors;
-    private final NodeManager nodeManager;
+    private NodeManager nodeManager;
 
     private Set<Parameter<?>> fullParameterSet;
     private Set<Parameter<?>> nodeParameterSet;
@@ -49,10 +50,6 @@ public class MetaNode {
     private NodeFactory nodeFactory;
 
     public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
-	this(nodeParameterSet, fullParameterSet, null);
-    }
-
-    public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet, NodeManager nodeManager) {
 	super();
 	assert parameterIndexIsValid(fullParameterSet) : "Full parameter set must be valid.";
 	assert Util.isSubsetEq(nodeParameterSet, fullParameterSet) : "Node parameters must be a subset of the full parameter set.";
@@ -64,7 +61,6 @@ public class MetaNode {
 	    lastParameter = null;
 	    lastParameterIndex = -1;
 	}
-	this.nodeManager = nodeManager;
 	this.nodeParameterSet = nodeParameterSet;
 	this.fullParameterSet = fullParameterSet;
 	successors = new MetaNode[fullParameterSet.size()];
@@ -113,7 +109,7 @@ public class MetaNode {
      * @return the node
      */
     public Node createNode(int parameterIndex, LowLevelBinding binding) {
-	return getSuccessors()[parameterIndex].createNode(binding);
+	return successors[parameterIndex].createNode(binding);
     }
 
     void setChainData(Set<ChainData> chainDataSet) {
@@ -128,7 +124,7 @@ public class MetaNode {
      * @return the successor meta node or <code>null</code>, if it does not exist
      */
     public MetaNode getMetaNode(Parameter<?> parameter) {
-	return getSuccessors()[parameter.getIndex()];
+	return successors[parameter.getIndex()];
     }
 
     /**
@@ -139,13 +135,13 @@ public class MetaNode {
      * @return the successor meta node
      */
     public MetaNode createAndGetMetaNode(Parameter<?> parameter) {
-	MetaNode metaNode = getSuccessors()[parameter.getIndex()];
+	MetaNode metaNode = successors[parameter.getIndex()];
 	if (metaNode == null) {
 	    Set<Parameter<?>> nextNodeParameterSet = new HashSet<Parameter<?>>(nodeParameterSet);
 	    assert !nextNodeParameterSet.contains(parameter) : "Parameter set could not have had contained new parameter.";
 	    nextNodeParameterSet.add(parameter);
-	    metaNode = new MetaNode(nextNodeParameterSet, fullParameterSet, getNodeManager());
-	    getSuccessors()[parameter.getIndex()] = metaNode;
+	    metaNode = new MetaNode(nextNodeParameterSet, fullParameterSet);
+	    successors[parameter.getIndex()] = metaNode;
 	}
 	return metaNode;
     }
@@ -277,18 +273,63 @@ public class MetaNode {
 		+ ", nodeParameterSet=" + nodeParameterSet + ", monitorSetCount=" + monitorSetCount + "]";
     }
 
-    public MetaNode[] getSuccessors() {
-	return successors;
+    public Set<MetaNode> getSuccessors() {
+	final Set<MetaNode> result = new HashSet<MetaNode>();
+	for (int i = 0; i < successors.length; i++) {
+	    final MetaNode successor = successors[i];
+	    if (successor != null) {
+		result.add(successor);
+	    }
+	}
+	return result;
+    }
+
+    /**
+     * Return a list of all meta nodes in this tree including this node.
+     *
+     * @return all meta nodes in this tree
+     */
+    public List<MetaNode> getAllNodesInSubtree() {
+	final List<MetaNode> result = new ArrayList<MetaNode>();
+	result.add(this);
+	for (int i = 0; i < result.size(); i++) {
+	    Set<MetaNode> nodes = result.get(i).getSuccessors();
+	    for (MetaNode metaNode : nodes) {
+		result.add(metaNode);
+	    }
+	}
+	return result;
+    }
+
+    /**
+     * Sets the nodeManager to all meta nodes in this tree including this node.
+     *
+     * @param nodeManager
+     *            the node manager
+     */
+    public void setNodeManagerToTree(NodeManager nodeManager) {
+	for (MetaNode metaNode : getAllNodesInSubtree()) {
+	    metaNode.setNodeManager(nodeManager);
+	}
     }
 
     public int getLastParameterIndex() {
 	return lastParameterIndex;
     }
 
+    public NodeManager getNodeManager() {
+	return nodeManager;
+    }
+
+    public void setNodeManager(NodeManager nodeManager) {
+	this.nodeManager = nodeManager;
+	initializeNodeFactory();
+    }
+
     /**
      * Select and initialize node factory
      */
-    public void initializeNodeFactory() {
+    private void initializeNodeFactory() {
 	boolean hasSuccessors = false;
 	for (MetaNode succ : successors) {
 	    if (succ != null) {
@@ -297,17 +338,14 @@ public class MetaNode {
 	    }
 	}
 	if (hasSuccessors) {
-	    nodeFactory = new DefaultNodeFactory(getNodeManager());
+	    nodeFactory = new DefaultNodeFactory(nodeManager);
 	} else {
 	    if (monitorSetCount > 0) {
-		nodeFactory = new LeafNodeWithMonitorSetsFactory(getNodeManager());
+		nodeFactory = new LeafNodeWithMonitorSetsFactory(nodeManager);
 	    } else {
-		nodeFactory = new LeafNodeFactory(getNodeManager());
+		nodeFactory = new LeafNodeFactory(nodeManager);
 	    }
 	}
     }
 
-    public NodeManager getNodeManager() {
-	return nodeManager;
-    }
 }

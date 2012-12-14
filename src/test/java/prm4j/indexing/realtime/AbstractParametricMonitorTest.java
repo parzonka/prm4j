@@ -34,15 +34,17 @@ public class AbstractParametricMonitorTest extends AbstractTest {
     protected BindingStore bindingStore;
     protected NodeStore nodeStore;
     protected BaseMonitor prototypeMonitor;
+    protected NodeManager nodeManager;
     protected ParametricMonitor pm;
 
     public void createDefaultParametricMonitor(FiniteSpec finiteSpec) {
 	fpp = new FiniteParametricProperty(finiteSpec);
 	converter = new StaticDataConverter(fpp);
 	bindingStore = new DefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
-	nodeStore = new DefaultNodeStore(converter.getMetaTree());
+	nodeManager = new NodeManager();
+	nodeStore = new DefaultNodeStore(converter.getMetaTree(), nodeManager);
 	prototypeMonitor = new StatefulMonitor(fpp.getInitialState());
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext());
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(), nodeManager);
     }
 
     protected Node getNode(Object... boundObjects) {

@@ -53,11 +53,9 @@ public class Visualizer {
 	}
 	for (MetaNode successor : metaNode.getSuccessors()) {
 	    GvNode dotNode = graph.getNode(Arrays.toString(metaNode.getNodeMask()));
-	    if (successor != null) {
-		GvNode succNode = graph.getNode(Arrays.toString(successor.getNodeMask()));
-		graph.addEdge(dotNode, succNode);
-		visualizeMetaNode(successor, graph);
-	    }
+	    GvNode succNode = graph.getNode(Arrays.toString(successor.getNodeMask()));
+	    graph.addEdge(dotNode, succNode);
+	    visualizeMetaNode(successor, graph);
 	}
     }
 

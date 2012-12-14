@@ -54,9 +54,10 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
     public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
 	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
 	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
-	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree());
 	prototypeMonitor = new AwareBaseMonitor(finiteSpec.getInitialState());
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext());
+	nodeManager = new NodeManager();
+	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(), nodeManager);
     }
 
     @Test

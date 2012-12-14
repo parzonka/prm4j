@@ -23,7 +23,6 @@ import prm4j.Util;
 import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.realtime.NodeManager;
 import prm4j.spec.ParametricProperty;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -55,7 +54,7 @@ public class StaticDataConverter {
 	chainData = HashMultimap.create();
 	monitorSetIds = HashBasedTable.create();
 	convertToLowLevelStaticData();
-	metaTree = new MetaNode(new HashSet<Parameter<?>>(), pp.getParameters(), new NodeManager());
+	metaTree = new MetaNode(new HashSet<Parameter<?>>(), pp.getParameters());
 	createMetaTree();
     }
 
@@ -79,7 +78,6 @@ public class StaticDataConverter {
 		// we have to select the compatible parameters from the parameters in the base event
 		final int[] nodeMask = toParameterMask(Util.intersection(tuple.getLeft(), baseEvent.getParameters())); // 18
 		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight()); // 19
-		@Deprecated
 		final int[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight()); // 20
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight()); // 21
 		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft())); // 22
@@ -205,9 +203,6 @@ public class StaticDataConverter {
 		}
 		metaNodes.add(node);
 	    }
-	}
-	for (MetaNode node : metaNodes) {
-	    node.initializeNodeFactory();
 	}
     }
 

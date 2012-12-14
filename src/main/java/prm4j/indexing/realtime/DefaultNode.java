@@ -42,6 +42,20 @@ public class DefaultNode extends AbstractNode {
 	nodeRef = new NodeRef(this, refQueue);
     }
 
+    /**
+     * Creates a node without a reference queue. Call this to create a root node that will never garbage collected.
+     *
+     * @param metaNode
+     * @param parameterIndex
+     * @param key
+     */
+    public DefaultNode(MetaNode metaNode, int parameterIndex, LowLevelBinding key) {
+	super(key);
+	this.metaNode = metaNode;
+	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
+	nodeRef = new NodeRef(this, null);
+    }
+
     @Override
     public MetaNode getMetaNode() {
 	return metaNode;

@@ -35,6 +35,7 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     protected AwareDefaultBindingStore bindingStore;
     protected AwareDefaultNodeStore nodeStore;
     protected AwareBaseMonitor prototypeMonitor;
+    protected NodeManager nodeManager;
     protected DefaultParametricMonitor pm;
 
     protected AwareBaseMonitor monitor; // working variable
@@ -43,9 +44,10 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	fpp = new FiniteParametricProperty(finiteSpec);
 	converter = new StaticDataConverter(fpp);
 	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
-	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree());
+	nodeManager = new NodeManager();
+	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
 	prototypeMonitor = new AwareBaseMonitor(finiteSpec.getInitialState());
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext());
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(), nodeManager);
     }
 
     protected AwareBaseMonitor popNextUpdatedMonitor() {

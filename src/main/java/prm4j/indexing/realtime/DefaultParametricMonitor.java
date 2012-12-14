@@ -28,6 +28,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     protected NodeStore nodeStore;
     protected final EventContext eventContext;
     protected long timestamp = 0L;
+    protected final NodeManager nodeManager;
 
     /**
      * Creates a DefaultParametricMonitor using default {@link BindingStore} and {@link NodeStore} implementations (and
@@ -40,8 +41,10 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     public DefaultParametricMonitor(MetaNode metaTree, EventContext eventContext, Spec spec) {
 	this.eventContext = eventContext;
 	bindingStore = new DefaultBindingStore(spec.getFullParameterSet());
-	nodeStore = new DefaultNodeStore(metaTree);
 	monitorPrototype = spec.getInitialMonitor();
+	nodeManager = new NodeManager();
+	nodeStore = new DefaultNodeStore(metaTree, nodeManager);
+	metaTree.setNodeManagerToTree(nodeManager);
     }
 
     /**
@@ -53,11 +56,12 @@ public class DefaultParametricMonitor implements ParametricMonitor {
      * @param eventContext
      */
     public DefaultParametricMonitor(BindingStore bindingStore, NodeStore nodeStore, BaseMonitor monitorPrototype,
-	    EventContext eventContext) {
+	    EventContext eventContext, NodeManager nodeManager) {
 	this.bindingStore = bindingStore;
 	this.nodeStore = nodeStore;
 	this.monitorPrototype = monitorPrototype;
 	this.eventContext = eventContext;
+	this.nodeManager = nodeManager;
     }
 
     @Override
@@ -188,6 +192,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    bindings[parameterMask[i]].setTimestamp(timestamp);
 	}
 	timestamp++; // 40
+	nodeManager.tryToClean();
     }
 
     private static LowLevelBinding[] toCompressedBindings(LowLevelBinding[] uncompressedBindings, int[] parameterMask) {

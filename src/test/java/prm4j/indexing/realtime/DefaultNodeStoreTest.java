@@ -35,7 +35,7 @@ public class DefaultNodeStoreTest extends AbstractTest {
 	fsm = new FSM_a_a_a();
 	finiteSpec = new FSMSpec(fsm.fsm);
 	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
-	nodeStore = new DefaultNodeStore(converter.getMetaTree());
+	nodeStore = new DefaultNodeStore(converter.getMetaTree(), new NodeManager());
 	bindings = new LowLevelBinding[1];
 	bindings[0] = new DefaultLowLevelBinding("a", 42, null);
     }

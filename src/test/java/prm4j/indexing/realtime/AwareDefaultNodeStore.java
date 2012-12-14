@@ -27,8 +27,8 @@ public class AwareDefaultNodeStore extends DefaultNodeStore {
     private final Deque<WeakReference<Node>> retrievedNodes;
     private final Set<Node> createdNodes; // weak set
 
-    public AwareDefaultNodeStore(MetaNode metaTree) {
-	super(metaTree);
+    public AwareDefaultNodeStore(MetaNode metaTree, NodeManager nodeManager) {
+	super(metaTree, nodeManager);
 	retrievedNodes = new ArrayDeque<WeakReference<Node>>();
 	createdNodes = Collections.newSetFromMap(new WeakHashMap<Node, Boolean>());
     }

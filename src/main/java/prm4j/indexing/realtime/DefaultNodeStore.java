@@ -18,8 +18,9 @@ public class DefaultNodeStore implements NodeStore {
 
     private Node rootNode;
 
-    public DefaultNodeStore(MetaNode metaTree) {
+    public DefaultNodeStore(MetaNode metaTree, NodeManager nodeManager) {
 	this.metaTree = metaTree;
+	metaTree.setNodeManagerToTree(nodeManager);
 	rootNode = metaTree.createRootNode();
     }
 
