@@ -97,6 +97,29 @@ public class NodeMapTest {
     }
 
     @Test
+    public void remove_nodeWasRemoved() throws Exception {
+	MockMap map = new MockMap();
+	int parameterIndex = 42;
+	map.getOrCreate(parameterIndex, b0);
+	map.remove(b0);
+	// verify
+	assertNull(map.get(parameterIndex, b0));
+    }
+
+    @Test
+    public void remove_multipleNodesWithTheSameBindingAreRemoved() throws Exception {
+	MockMap map = new MockMap();
+	int parameterIndex = 42;
+	int parameterIndex2 = 42;
+	map.getOrCreate(parameterIndex, b0);
+	map.getOrCreate(parameterIndex2, b0);
+	map.remove(b0);
+	// verify
+	assertNull(map.get(parameterIndex, b0));
+	assertNull(map.get(parameterIndex2, b0));
+    }
+
+    @Test
     public void remove_sizeDecrementsUponRemoval() throws Exception {
 	MockMap map = new MockMap();
 	map.getOrCreate(0, b0);
