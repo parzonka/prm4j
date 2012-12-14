@@ -22,7 +22,6 @@ public class LeafNode implements Node {
     private final static MonitorSet[] EMPTY_MONITOR_SET = new MonitorSet[0];
     private final MetaNode metaNode;
     private final NodeRef nodeRef;
-    private BaseMonitor monitor;
 
     private final LowLevelBinding key;
     private Node nextNode;
@@ -47,7 +46,7 @@ public class LeafNode implements Node {
 
     @Override
     public BaseMonitor getMonitor() {
-	return monitor;
+	return nodeRef.monitor;
     }
 
     @Override
@@ -62,7 +61,7 @@ public class LeafNode implements Node {
 
     @Override
     public void setMonitor(BaseMonitor monitor) {
-	this.monitor = monitor;
+	nodeRef.monitor = monitor;
 	monitor.setMetaNode(metaNode);
     }
 
@@ -78,9 +77,9 @@ public class LeafNode implements Node {
 
     @Override
     public String toString() {
-	if (monitor != null) {
+	if (nodeRef.monitor != null) {
 	    // output e.g.: (p2=b, p3=c, p5=e)
-	    return Util.bindingsToString(monitor.getLowLevelBindings());
+	    return Util.bindingsToString(nodeRef.monitor.getLowLevelBindings());
 	} else {
 	    // output e.g.: (p2=?, p3=?, p5=e) because we only now the key and the node parameter set
 	    final StringBuilder sb = new StringBuilder();
