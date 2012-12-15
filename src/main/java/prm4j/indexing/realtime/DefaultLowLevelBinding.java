@@ -12,26 +12,22 @@ package prm4j.indexing.realtime;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
-import prm4j.indexing.map.MinimalMapEntry;
-
-public class DefaultLowLevelBinding extends WeakReference<Object> implements LowLevelBinding,
-	MinimalMapEntry<Object, DefaultLowLevelBinding> {
+public class DefaultLowLevelBinding extends WeakReference<Object> implements LowLevelBinding {
 
     private long timestamp;
     private boolean disabled;
     private final int hashCode;
-    @Deprecated
-    private DefaultLowLevelBinding next;
-    private List<WeakReference<Node>> nodeRefs;
+    private LowLevelBinding next;
+    private Object[] nodeRefs;
+    private int nodeRefsSize;
 
-    public DefaultLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q) {
+    public DefaultLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q, int initialNodeRefsSize) {
 	super(boundObject, q);
 	this.hashCode = hashCode;
 	timestamp = Long.MAX_VALUE; // indicates the binding was just created
-	nodeRefs = new ArrayList<WeakReference<Node>>();
+	nodeRefs = new Object[initialNodeRefsSize];
     }
 
     /**
@@ -46,28 +42,34 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 
     @Override
     public int hashCode() {
-        return hashCode;
+	return hashCode;
     }
 
     @Override
-    public DefaultLowLevelBinding next() {
+    public LowLevelBinding next() {
 	return next;
     }
 
     @Override
-    public void setNext(DefaultLowLevelBinding next) {
+    public void setNext(LowLevelBinding next) {
 	this.next = next;
     }
 
     @Override
     public void registerNode(WeakReference<Node> nodeReference) {
-	nodeRefs.add(nodeReference);
+	// ensure capacity
+	if (nodeRefsSize >= nodeRefs.length) {
+	    final int capacity = (nodeRefs.length * 3) / 2 + 1;
+	    nodeRefs = Arrays.copyOf(nodeRefs, capacity);
+	}
+	nodeRefs[nodeRefsSize++] = nodeReference;
     }
 
     @Override
     public void release() {
-	for (WeakReference<Node> ref : nodeRefs) {
-	    final Node node = ref.get();
+	for (int i = 0; i < nodeRefsSize; i++) {
+	    @SuppressWarnings("unchecked")
+	    final Node node = ((WeakReference<Node>) nodeRefs[i]).get();
 	    if (node != null) {
 		node.remove(this);
 	    }
