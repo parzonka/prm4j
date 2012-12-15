@@ -73,11 +73,15 @@ public class MonitorSet {
 	for (int i = 0; i < size; i++) { // 63
 	    final NodeRef nodeRef = monitorSet[i];
 	    final BaseMonitor monitor = nodeRef.monitor;
-	    if (monitor.isTerminated()) {
+	    // check if the monitor was already gc'ed by the NodeManager
+	    if (nodeRef.monitor == null) {
 		continue;
-	    } else {
-		monitorSet[aliveMonitors++] = nodeRef;
 	    }
+	    if (nodeRef.monitor.isTerminated()) {
+		nodeRef.monitor = null;
+		continue;
+	    }
+	    monitorSet[aliveMonitors++] = nodeRef;
 	    monitor.processEvent(event);
 	}
 	for (int i = aliveMonitors; i < size; i++) {

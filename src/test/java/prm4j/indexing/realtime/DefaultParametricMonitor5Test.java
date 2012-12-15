@@ -12,6 +12,7 @@ package prm4j.indexing.realtime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -159,7 +160,8 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	pm.processEvent(instance2.createEvent(fsm.updateMap));
 	pm.processEvent(instance2.createEvent(fsm.useIter));
 
-	assertTrace(instance1.getBoundObjects(), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
+	// this monitor gets nullified during the second createColl event because it is terminated
+	assertNull(getNode((Object[]) instance1.getBoundObjects()).getMonitor());
 	assertTrace(instance2.getBoundObjects(), fsm.createColl, fsm.createIter, fsm.updateMap, fsm.useIter);
 	assertEquals(list(0, 1), fsm.matchHandler.getHandledMatches());
     }
