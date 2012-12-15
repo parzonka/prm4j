@@ -37,7 +37,7 @@ public class DefaultNodeStoreTest extends AbstractTest {
 	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
 	nodeStore = new DefaultNodeStore(converter.getMetaTree(), new NodeManager());
 	bindings = new LowLevelBinding[1];
-	bindings[0] = new DefaultLowLevelBinding("a", 42, null);
+	bindings[0] = new DefaultLowLevelBinding("a", 42, null, 2);
     }
 
     @Test
