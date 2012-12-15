@@ -26,7 +26,8 @@ public class FSMState extends BaseMonitorState {
     private final Alphabet alphabet;
     private final MatchHandler matchHandler;
 
-    public FSMState(Alphabet alphabet, boolean isAccepting, MatchHandler matchHandler, String label) {
+    public FSMState(int index, Alphabet alphabet, boolean isAccepting, MatchHandler matchHandler, String label) {
+	super(index);
 	this.isAccepting = isAccepting;
 	isFinal = true; // a state is final if it has no successor
 	this.label = label;

@@ -97,9 +97,8 @@ public class FSM {
 	if (usedNames.contains(name))
 	    throw new IllegalArgumentException("The name [" + name + "] has already been used!");
 	usedNames.add(name);
-	FSMState state = new FSMState(alphabet, isAccepting, eventHandler, name);
+	FSMState state = new FSMState(stateCount++, alphabet, isAccepting, eventHandler, name);
 	states.add(state);
-	stateCount++;
 	return state;
     }
 

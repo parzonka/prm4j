@@ -12,24 +12,13 @@ package prm4j.indexing;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.MatchHandler;
-import prm4j.indexing.realtime.LowLevelBinding;
 
 public abstract class BaseMonitorState {
 
-    @SuppressWarnings("unused") // FIXME
-    private boolean[] acceptingParameters;
+    private final int index;
 
-    /**
-     * Tests, if a accepting state can be reached by some event in the future. Checks interally, if all bindings are
-     * still alive, needed to reach a accepting state.
-     *
-     * @param bindings
-     *            bindings to be checked
-     * @return true, if accepting state can be reached
-     */
-    public boolean isAcceptingStateReachable(LowLevelBinding[] bindings) {
-	// TODO isAcceptingStateReachable
-	return true;
+    public BaseMonitorState(int index) {
+	this.index = index;
     }
 
     public abstract BaseMonitorState getSuccessor(BaseEvent baseEvent);
@@ -43,10 +32,6 @@ public abstract class BaseMonitorState {
 
     public abstract MatchHandler getMatchHandler();
 
-    public void setAcceptingParameters(boolean[] acceptingParameters) {
-	this.acceptingParameters = acceptingParameters;
-    }
-
     /**
      * Tests, if all successor states are dead states. (A dead state is a non-accepting state, where all successors are
      * dead states. Because final state <i>may</i> be an accepting state, it is not always a dead state.)
@@ -54,5 +39,9 @@ public abstract class BaseMonitorState {
      * @return <code>true</code> if all successor states are dead states
      */
     public abstract boolean isFinal();
+
+    public int getIndex() {
+	return index;
+    }
 
 }
