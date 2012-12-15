@@ -30,7 +30,7 @@ public class DefaultBindingStore implements BindingStore {
     private final int fullParameterCount;
     private final LowLevelBinding[] bindings;
 
-    private Store store;
+    private MinimalMap<Object, LowLevelBinding> store;
 
     public DefaultBindingStore(Set<Parameter<?>> fullParameterSet) {
 	this(fullParameterSet, DEFAULT_CLEANING_INTERVAL);
@@ -42,7 +42,11 @@ public class DefaultBindingStore implements BindingStore {
 	this.cleaningInterval = cleaningInterval;
 	fullParameterCount = fullParameterSet.size();
 
-	store = new Store();
+	if (fullParameterCount == 1) {
+	    store = new UnaryStore();
+	} else {
+	    store = new DefaultStore();
+	}
 
 	bindings = createInitialBindings();
     }
@@ -51,7 +55,7 @@ public class DefaultBindingStore implements BindingStore {
 	LowLevelBinding[] result = new LowLevelBinding[fullParameterCount];
 	for (int i = 0; i < result.length; i++) {
 	    // fill the bindings-array with pseudo-bindings
-	    result[i] = new DefaultLowLevelBinding(new Object(), 0, null);
+	    result[i] = new DefaultLowLevelBinding(new Object(), 0, null, 0);
 	}
 	return result;
     }
@@ -82,7 +86,7 @@ public class DefaultBindingStore implements BindingStore {
 
     @Override
     public boolean removeBinding(LowLevelBinding binding) {
-	return store.removeEntry((DefaultLowLevelBinding) binding);
+	return store.removeEntry(binding);
     }
 
     @Override
@@ -99,18 +103,34 @@ public class DefaultBindingStore implements BindingStore {
     }
 
     /**
-     * Stores the bindings associated to a single parameter
+     * Stores bindings associated to a single parameter
      */
-    class Store extends MinimalMap<Object, DefaultLowLevelBinding> {
+    class DefaultStore extends MinimalMap<Object, LowLevelBinding> {
 
 	@Override
-	protected DefaultLowLevelBinding[] createTable(int size) {
+	protected LowLevelBinding[] createTable(int size) {
 	    return new DefaultLowLevelBinding[size];
 	}
 
 	@Override
-	protected DefaultLowLevelBinding createEntry(Object key, int hashCode) {
-	    return new DefaultLowLevelBinding(key, hashCode, referenceQueue);
+	protected LowLevelBinding createEntry(Object key, int hashCode) {
+	    return new DefaultLowLevelBinding(key, hashCode, referenceQueue, fullParameterCount);
+	}
+    }
+
+    /**
+     * Stores bindings associated to a single parameter
+     */
+    class UnaryStore extends MinimalMap<Object, LowLevelBinding> {
+
+	@Override
+	protected LowLevelBinding[] createTable(int size) {
+	    return new UnaryLowLevelBinding[size];
+	}
+
+	@Override
+	protected LowLevelBinding createEntry(Object key, int hashCode) {
+	    return new UnaryLowLevelBinding(key, hashCode, referenceQueue);
 	}
     }
 
@@ -126,18 +146,22 @@ public class DefaultBindingStore implements BindingStore {
 	}
 
 	private void removeExpiredBindings() {
-	    DefaultLowLevelBinding binding = (DefaultLowLevelBinding) referenceQueue.poll();
+	    LowLevelBinding binding = (LowLevelBinding) referenceQueue.poll();
 	    while (binding != null) {
 		removeBinding(binding);
 		binding.release();
-		binding = (DefaultLowLevelBinding) referenceQueue.poll();
+		binding = (LowLevelBinding) referenceQueue.poll();
 	    }
 	}
     }
 
     @Override
     public void reset() {
-	store = new Store();
+	if (fullParameterCount == 1) {
+	    store = new UnaryStore();
+	} else {
+	    store = new DefaultStore();
+	}
     }
 
 }
