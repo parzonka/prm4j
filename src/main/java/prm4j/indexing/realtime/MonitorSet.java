@@ -166,6 +166,7 @@ public class MonitorSet {
 	for (int i = aliveMonitors; i < size; i++) {
 	    monitorSet[i] = null;
 	}
+	size = aliveMonitors;
     }
 
     /**
