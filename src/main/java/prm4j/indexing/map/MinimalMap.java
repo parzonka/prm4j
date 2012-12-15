@@ -56,7 +56,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
     int threshold;
 
     public MinimalMap() {
-	table = createTable(8);
+	table = createTable(DEFAULT_INITIAL_CAPACITY);
 	threshold = (int) (table.length * DEFAULT_LOAD_FACTOR);
     }
 
@@ -247,6 +247,12 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
     public int size() {
 	return size;
+    }
+
+    public void reset() {
+	table = createTable(DEFAULT_INITIAL_CAPACITY);
+	threshold = (int) (table.length * DEFAULT_LOAD_FACTOR);
+	size = 0;
     }
 
 }
