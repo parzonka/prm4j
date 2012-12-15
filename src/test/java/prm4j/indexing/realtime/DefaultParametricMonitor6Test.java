@@ -146,7 +146,9 @@ public class DefaultParametricMonitor6Test extends AbstractParametricMonitorTest
 	runGarbageCollectorAFewTimes();
     	nodeManager.reallyClean();
 	runGarbageCollectorAFewTimes();
-	assertEquals(3000L, nodeManager.getCleanedCount());
+	// (almost) nothing to clean, because the monitors get removed with their nodes
+	// (if we would store the nodeRefs, we would have to clean 3000 monitors)
+	assertEquals(1L, nodeManager.getCleanedCount());
     }
 
 }
