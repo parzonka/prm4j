@@ -117,7 +117,6 @@ public abstract class FSMDefinitions {
 	public final FSMState initial = fsm.createInitialState();
 	public final FSMState s1 = fsm.createState();
 	public final FSMState s2 = fsm.createState();
-	public final FSMState s3 = fsm.createState();
 	public final FSMState error = fsm.createAcceptingState(matchHandler);
 
 	public FSM_SafeSyncCollection() {
