@@ -22,6 +22,7 @@ import java.util.Set;
 import org.junit.After;
 
 import prm4j.AbstractTest;
+import prm4j.api.ParametricMonitor;
 import prm4j.api.Symbol;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
@@ -36,14 +37,14 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     protected AwareDefaultNodeStore nodeStore;
     protected AwareBaseMonitor prototypeMonitor;
     protected NodeManager nodeManager;
-    protected DefaultParametricMonitor pm;
+    protected ParametricMonitor pm;
 
     protected AwareBaseMonitor monitor; // working variable
 
     public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
 	fpp = new FiniteParametricProperty(finiteSpec);
 	converter = new StaticDataConverter(fpp);
-	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
+	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1, true);
 	nodeManager = new NodeManager();
 	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
 	prototypeMonitor = new AwareBaseMonitor(finiteSpec.getInitialState());

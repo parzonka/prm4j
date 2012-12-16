@@ -33,16 +33,24 @@ public class DefaultBindingStore implements BindingStore {
     private MinimalMap<Object, LowLevelBinding> store;
 
     public DefaultBindingStore(Set<Parameter<?>> fullParameterSet) {
-	this(fullParameterSet, DEFAULT_CLEANING_INTERVAL);
+   	this(fullParameterSet, DEFAULT_CLEANING_INTERVAL, false);
+       }
+
+    public DefaultBindingStore(Set<Parameter<?>> fullParameterSet, boolean forceInternalDefaultStore) {
+	this(fullParameterSet, DEFAULT_CLEANING_INTERVAL, forceInternalDefaultStore);
     }
 
     public DefaultBindingStore(Set<Parameter<?>> fullParameterSet, int cleaningInterval) {
+	this(fullParameterSet, cleaningInterval, false);
+    }
+
+    public DefaultBindingStore(Set<Parameter<?>> fullParameterSet, int cleaningInterval, boolean forceInternalDefaultStore) {
 
 	referenceQueue = new ReferenceQueue<Object>();
 	this.cleaningInterval = cleaningInterval;
 	fullParameterCount = fullParameterSet.size();
 
-	if (fullParameterCount == 1) {
+	if (!forceInternalDefaultStore && fullParameterCount == 1) {
 	    store = new UnaryStore();
 	} else {
 	    store = new DefaultStore();

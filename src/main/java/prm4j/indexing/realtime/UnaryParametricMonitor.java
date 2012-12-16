@@ -23,7 +23,7 @@ public class UnaryParametricMonitor implements ParametricMonitor {
 
     protected final BaseMonitor monitorPrototype;
     protected final BindingStore bindingStore;
-    protected final MonitorMap monitorMap;
+    private final MonitorMap monitorMap;
     protected long timestamp = 0L;
 
     /**
@@ -48,8 +48,7 @@ public class UnaryParametricMonitor implements ParametricMonitor {
      * @param monitorPrototype
      * @param eventContext
      */
-    public UnaryParametricMonitor(BindingStore bindingStore, NodeStore nodeStore, BaseMonitor monitorPrototype,
-	    EventContext eventContext, NodeManager nodeManager) {
+    public UnaryParametricMonitor(BindingStore bindingStore, BaseMonitor monitorPrototype) {
 	this.bindingStore = bindingStore;
 	this.monitorPrototype = monitorPrototype;
 	monitorMap = new MonitorMap();
@@ -61,13 +60,13 @@ public class UnaryParametricMonitor implements ParametricMonitor {
 	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
 	final LowLevelBinding binding = bindings[0];
 
-	MonitorMapEntry entry = monitorMap.get(binding);
+	MonitorMapEntry entry = getMonitorMap().get(binding);
 
 	if (entry == null) { // 7
-	    entry = monitorMap.getOrCreate(binding);
-	    entry.monitor = monitorPrototype.copy(bindings);
+	    entry = getMonitorMap().getOrCreate(binding);
+	    entry.monitor = monitorPrototype.copy(bindings.clone());
 	}
-	if (!entry.monitor.processEvent(event)) {
+	if (entry.getMonitor() != null && !entry.getMonitor().processEvent(event)) {
 	    // nullify dead monitors
 	    entry.monitor = null;
 	}
@@ -78,10 +77,14 @@ public class UnaryParametricMonitor implements ParametricMonitor {
     public void reset() {
 	timestamp = 0L;
 	bindingStore.reset();
-	monitorMap.reset();
+	getMonitorMap().reset();
     }
 
-    private class MonitorMap extends MinimalMap<LowLevelBinding, MonitorMapEntry> {
+    protected MonitorMap getMonitorMap() {
+	return monitorMap;
+    }
+
+    class MonitorMap extends MinimalMap<LowLevelBinding, MonitorMapEntry> {
 
 	@Override
 	protected MonitorMapEntry[] createTable(int size) {
@@ -95,7 +98,7 @@ public class UnaryParametricMonitor implements ParametricMonitor {
 
     }
 
-    private class MonitorMapEntry implements MinimalMapEntry<LowLevelBinding, MonitorMapEntry> {
+    class MonitorMapEntry implements MinimalMapEntry<LowLevelBinding, MonitorMapEntry> {
 
 	private final LowLevelBinding binding;
 	private MonitorMapEntry next;
@@ -119,6 +122,10 @@ public class UnaryParametricMonitor implements ParametricMonitor {
 	@Override
 	public void setNext(MonitorMapEntry nextEntry) {
 	    next = nextEntry;
+	}
+
+	public BaseMonitor getMonitor() {
+	    return monitor;
 	}
 
     }

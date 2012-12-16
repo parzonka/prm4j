@@ -17,4 +17,9 @@ public abstract class NodeFactory {
 
     public abstract Node createNode(MetaNode metaNode, int parameterIndex, LowLevelBinding binding);
 
+    @Override
+    public String toString() {
+	return this.getClass().getCanonicalName();
+    }
+
 }

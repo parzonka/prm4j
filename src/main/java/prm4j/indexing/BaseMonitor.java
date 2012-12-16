@@ -54,13 +54,27 @@ public abstract class BaseMonitor {
 	return copy;
     }
 
+    /**
+     * Returns a compressed representation of low level bindings
+     *
+     * @return
+     */
     public final LowLevelBinding[] getLowLevelBindings() {
 	return bindings;
     }
 
+    /**
+     * Returns a uncompressed representation of high-level bindings.
+     *
+     * @return
+     */
     protected final prm4j.api.Binding[] getBindings() {
+	if (metaNode == null) {
+	    // upcast
+	    return bindings;
+	}
 	// upcast
-	return bindings;
+	return metaNode.uncompressBindings(bindings);
     }
 
     /**
