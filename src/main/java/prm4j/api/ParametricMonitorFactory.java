@@ -28,7 +28,7 @@ public class ParametricMonitorFactory {
 	}
 	int fullParameterCount = finiteSpec.getFullParameterSet().size();
 	if (fullParameterCount == 1) {
-	    return new UnaryParametricMonitor(converter.getMetaTree(), converter.getEventContext(), finiteSpec);
+	    return new UnaryParametricMonitor(finiteSpec);
 	}
 	return new DefaultParametricMonitor(converter.getMetaTree(), converter.getEventContext(), finiteSpec);
     }

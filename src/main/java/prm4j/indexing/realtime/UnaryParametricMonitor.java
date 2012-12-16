@@ -15,38 +15,50 @@ import prm4j.api.ParametricMonitor;
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.map.MinimalMap;
 import prm4j.indexing.map.MinimalMapEntry;
-import prm4j.indexing.staticdata.EventContext;
-import prm4j.indexing.staticdata.MetaNode;
 import prm4j.spec.Spec;
 
+/**
+ * Optimized {@link ParametricMonitor} for parametric properties with exactly one parameter.
+ */
 public class UnaryParametricMonitor implements ParametricMonitor {
 
-    protected final BaseMonitor monitorPrototype;
+    /**
+     * Reusable parameter-to-object bindings serving as keys in the monitor map.
+     */
     protected final BindingStore bindingStore;
-    private final MonitorMap monitorMap;
+
+    /**
+     * Will be cloned when a new monitor gets created.
+     */
+    protected final BaseMonitor monitorPrototype;
+
+    /**
+     * Associates bindings with monitors.
+     */
+    protected final MonitorMap monitorMap;
+
+    /**
+     * Has no real purpose here, but may be used for diagnostic purposes in sub-classes.
+     */
     protected long timestamp = 0L;
 
     /**
-     * Creates a DefaultParametricMonitor using default {@link BindingStore} and {@link NodeStore} implementations (and
-     * configurations).
+     * Creates a {@link UnaryParametricMonitor} for a given specification using default {@link BindingStore}
+     * implementation and configuration.
      *
-     * @param metaTree
-     * @param eventContext
      * @param spec
      */
-    public UnaryParametricMonitor(MetaNode metaTree, EventContext eventContext, Spec spec) {
+    public UnaryParametricMonitor(Spec spec) {
 	bindingStore = new DefaultBindingStore(spec.getFullParameterSet());
 	monitorPrototype = spec.getInitialMonitor();
 	monitorMap = new MonitorMap();
     }
 
     /**
-     * Creates a DefaultParametricMonitor which externally configurable BindingStore and NodeStore.
+     * Creates a {@link UnaryParametricMonitor} with externally configurable {@link BindingStore}.
      *
      * @param bindingStore
-     * @param nodeStore
      * @param monitorPrototype
-     * @param eventContext
      */
     public UnaryParametricMonitor(BindingStore bindingStore, BaseMonitor monitorPrototype) {
 	this.bindingStore = bindingStore;
@@ -57,19 +69,26 @@ public class UnaryParametricMonitor implements ParametricMonitor {
     @Override
     public synchronized void processEvent(Event event) {
 
+	/*
+	 * The parametric property can be specified using a single parameter, so each binding is associated only with a
+	 * single monitor and the monitoring structure consist of a single associative array.
+	 */
+
 	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
 	final LowLevelBinding binding = bindings[0];
 
 	MonitorMapEntry entry = getMonitorMap().get(binding);
 
-	if (entry == null) { // 7
+	if (entry == null) {
 	    entry = getMonitorMap().getOrCreate(binding);
+	    // a simple clone is enough, since the compressed representation equals the uncompressed representation
 	    entry.monitor = monitorPrototype.copy(bindings.clone());
 	}
 	if (entry.getMonitor() != null && !entry.getMonitor().processEvent(event)) {
 	    // nullify dead monitors
 	    entry.monitor = null;
 	}
+	// has no real purpose here, but may be used for diagnostic purposes in sub-classes
 	timestamp++;
     }
 
@@ -80,6 +99,11 @@ public class UnaryParametricMonitor implements ParametricMonitor {
 	getMonitorMap().reset();
     }
 
+    /**
+     * DIAGNOSTIC: Returns the mapping of bindings to monitors.
+     *
+     * @return the monitor map
+     */
     protected MonitorMap getMonitorMap() {
 	return monitorMap;
     }
