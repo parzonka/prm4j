@@ -19,6 +19,7 @@ import java.util.Set;
 import prm4j.Util;
 import prm4j.api.Binding;
 import prm4j.api.Parameter;
+import prm4j.indexing.BaseMonitorState;
 import prm4j.indexing.realtime.DefaultNodeFactory;
 import prm4j.indexing.realtime.LeafNodeFactory;
 import prm4j.indexing.realtime.LeafNodeWithMonitorSetsFactory;
@@ -48,6 +49,11 @@ public class MetaNode {
     private final int lastParameterIndex;
 
     private NodeFactory nodeFactory;
+
+    /**
+     * stateIndex * parameterMasksCount * parameterMask
+     */
+    private int[][][] aliveParameterMasks;
 
     public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
 	super();
@@ -346,6 +352,30 @@ public class MetaNode {
 		nodeFactory = new LeafNodeFactory(nodeManager);
 	    }
 	}
+    }
+
+    public void setAliveParameterMasks(int[][][] aliveParameterMasks) {
+	this.aliveParameterMasks = aliveParameterMasks;
+    }
+
+    public int[][][] getAliveParameterMasks() {
+	return aliveParameterMasks;
+    }
+
+    public boolean isAcceptingStateReachable(BaseMonitorState state, LowLevelBinding[] compressedBindings) {
+	final Binding[] bindings = uncompressBindings(compressedBindings);
+	final int[][] parameterMasks = aliveParameterMasks[state.getIndex()];
+	int[] parameterMask;
+	outer: for (int i = 0; i < parameterMasks.length; i++) {
+	    parameterMask = parameterMasks[i];
+	    for (int j = 0; j < parameterMask.length; j++) {
+		if (bindings[parameterMask[j]].get() == null) {
+		    continue outer;
+		}
+	    }
+	    return true;
+	}
+	return false;
     }
 
 }

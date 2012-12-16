@@ -23,6 +23,7 @@ import prm4j.Util;
 import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
+import prm4j.indexing.BaseMonitorState;
 import prm4j.spec.ParametricProperty;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -45,6 +46,7 @@ public class StaticDataConverter {
     private final ListMultimap<BaseEvent, JoinData> joinData;
     private final SetMultimap<Set<Parameter<?>>, ChainData> chainData;
     private final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
+    private final int[][][] aliveParameterMasks;
     private final MetaNode metaTree;
 
     public StaticDataConverter(ParametricProperty pp) {
@@ -55,6 +57,7 @@ public class StaticDataConverter {
 	monitorSetIds = HashBasedTable.create();
 	convertToLowLevelStaticData();
 	metaTree = new MetaNode(new HashSet<Parameter<?>>(), pp.getParameters());
+	aliveParameterMasks = calculateAliveParameterMasks();
 	createMetaTree();
     }
 
@@ -183,11 +186,28 @@ public class StaticDataConverter {
     }
 
     /**
+     * stateIndex * parameterMasksCount * parameterMask
+     */
+    private int[][][] calculateAliveParameterMasks() {
+	int[][][] result = new int[pp.getStateCount()][][];
+	for (BaseMonitorState state : pp.getAliveParameterSets().keySet()) {
+	    int[][] setOfParameterMasks = new int[pp.getAliveParameterSets().get(state).size()][];
+	    int i = 0;
+	    for (Set<Parameter<?>> parameterSet : pp.getAliveParameterSets().get(state)) {
+		setOfParameterMasks[i++] = toParameterMask(parameterSet);
+	    }
+	    result[state.getIndex()] = setOfParameterMasks;
+	}
+	return result;
+    }
+
+    /**
      * Creates a tree of meta nodes
      */
     private void createMetaTree() {
 	final Set<MetaNode> metaNodes = new HashSet<MetaNode>();
 	metaNodes.add(metaTree);
+	metaTree.setAliveParameterMasks(aliveParameterMasks);
 	final Set<Set<Parameter<?>>> allParameterSets = new HashSet<Set<Parameter<?>>>();
 	allParameterSets.addAll(pp.getMonitorSetData().keys());
 	allParameterSets.addAll(pp.getPossibleParameterSets());
@@ -200,6 +220,7 @@ public class StaticDataConverter {
 		    node = node.createAndGetMetaNode(parameter);
 		    node.setChainData(chainData.get(node.getNodeParameterSet()));
 		    node.setMonitorSetCount(monitorSetIds.row(node.getNodeParameterSet()).size());
+		    node.setAliveParameterMasks(aliveParameterMasks);
 		}
 		metaNodes.add(node);
 	    }
