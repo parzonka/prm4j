@@ -26,11 +26,11 @@ public interface LowLevelBinding extends prm4j.api.Binding, MinimalMapEntry<Obje
     void release();
 
     /**
-     * Register a map where this binding is used.
+     * Register a map which uses this binding as key.
      *
-     * @param mapReference
+     * @param nodeRef
      */
-    void registerNode(WeakReference<Node> nodeReference); // TODO resource registration
+    void registerNode(WeakReference<Node> nodeRef);
 
     boolean isDisabled();
 
