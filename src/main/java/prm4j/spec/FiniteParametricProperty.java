@@ -81,6 +81,16 @@ public class FiniteParametricProperty implements ParametricProperty {
 	aliveParameterSets = new AlivenessCalculator().aliveParameterSets;
     }
 
+    @Override
+    public boolean isFinite() {
+	return true;
+    }
+
+    @Override
+    public int getStateCount() {
+	return finiteSpec.getStates().size();
+    }
+
     /**
      * Creation events are events for which the successor of the initial state is:
      * <ul>
@@ -255,7 +265,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    for (BaseMonitorState acceptingState : acceptingStates) {
 		alivenessIter(acceptingState, new HashSet<Parameter<?>>(), new HashSet<BaseMonitorState>());
 	    }
-	    consolidateAliveParameterSets();
+	    minimizeAliveParameterSets();
 	}
 
 	public void reverseIter(BaseMonitorState state, Set<BaseMonitorState> visited) {
@@ -272,13 +282,24 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    }
 	}
 
+	/**
+	 *
+	 * @param state
+	 *            the current state for this recursion
+	 * @param parameterSet
+	 *            contains all parameters which had alive bindings when the accepting state was reached
+	 * @param visited
+	 *            aggregate visited states so that the recursion will terminate
+	 */
 	public void alivenessIter(BaseMonitorState state, Set<Parameter<?>> parameterSet, Set<BaseMonitorState> visited) {
 	    aliveParameterSets.put(state, parameterSet);
 	    if (state == finiteSpec.getInitialState()) {
 		return;
 	    }
+	    // 'predessor' means a preceding state in the *unreversed* FSM!
 	    for (BaseMonitorState predessor : reversedFSM.get(state)) {
 		if (!visited.contains(predessor)) {
+		    // iterate through all edges which lead from the the predessor to the current state
 		    for (BaseEvent baseEvent : getBaseEvent(predessor, state)) {
 			alivenessIter(predessor, unmodifiableUnion(parameterSet, baseEvent.getParameters()),
 				unmodifiableUnion(visited, set(predessor)));
@@ -300,10 +321,9 @@ public class FiniteParametricProperty implements ParametricProperty {
 	/**
 	 * Remove all supersets of contained sets.
 	 */
-	private void consolidateAliveParameterSets() {
+	private void minimizeAliveParameterSets() {
 	    for (BaseMonitorState state : finiteSpec.getStates()) {
-		for (Set<Parameter<?>> parameterSet : new HashSet<Set<Parameter<?>>>(
-			aliveParameterSets.get(state))) {
+		for (Set<Parameter<?>> parameterSet : new HashSet<Set<Parameter<?>>>(aliveParameterSets.get(state))) {
 		    final Iterator<Set<Parameter<?>>> iter = aliveParameterSets.get(state).iterator();
 		    while (iter.hasNext()) {
 			if (Util.isSuperset(iter.next(), parameterSet)) {
@@ -394,6 +414,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	return updates;
     }
 
+    @Override
     public SetMultimap<BaseMonitorState, Set<Parameter<?>>> getAliveParameterSets() {
 	return aliveParameterSets;
     }

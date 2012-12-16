@@ -25,6 +25,10 @@ import com.google.common.collect.SetMultimap;
  */
 public interface ParametricProperty {
 
+    public boolean isFinite();
+
+    public int getStateCount();
+
     public Set<BaseEvent> getBaseEvents();
 
     public Set<Parameter<?>> getParameters();
@@ -60,5 +64,7 @@ public interface ParametricProperty {
      * @return mapping from instances to sets of instances representing sets of monitors
      */
     public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> getMonitorSetData();
+
+    public SetMultimap<BaseMonitorState, Set<Parameter<?>>> getAliveParameterSets();
 
 }
