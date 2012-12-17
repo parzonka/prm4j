@@ -16,7 +16,6 @@ import prm4j.api.MatchHandler;
 
 /**
  * A base monitor holding a {@link BaseMonitorState} which is updated when processing {@link BaseEvent}s.
- *
  */
 public class StatefulMonitor extends BaseMonitor {
 
@@ -55,10 +54,20 @@ public class StatefulMonitor extends BaseMonitor {
 	return new StatefulMonitor(state);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The {@link StatefulMonitor} checks for two conditions and return <code>true</code> if one of the following is
+     * reached:
+     * <ol>
+     * <li>The monitor is not terminated.</li>
+     * <li>Its state is no final state (a state where only dead states may be reached).</li>
+     * <li>A subset of its bindings is alive that is necessary to reach an accepting state.</li>
+     * </ol>
+     */
     @Override
     public boolean isAcceptingStateReachable() {
-	// TODO co-enable set calculation or similar
-	return state != null && !state.isFinal();
+	return !isTerminated() && state != null && !state.isFinal() && getMetaNode().isAcceptingStateReachable(state, getLowLevelBindings());
     }
 
     @Override

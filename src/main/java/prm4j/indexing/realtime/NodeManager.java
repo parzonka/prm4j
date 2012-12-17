@@ -70,7 +70,7 @@ public class NodeManager {
 	NodeRef nodeRef = (NodeRef) referenceQueue.poll();
 	while (nodeRef != null) {
 	    orphanedMonitors++;
-	    if (!nodeRef.monitor.isAcceptingStateReachable()) {
+	    if (nodeRef.monitor != null && !nodeRef.monitor.isAcceptingStateReachable()) {
 		nodeRef.monitor = null;
 		collectedMonitors++;
 	    }
@@ -115,7 +115,7 @@ public class NodeManager {
      *
      * @return the number of garbage collected monitors
      */
-    public long getCollectedMonitors() {
+    public long getCollectedMonitorsCount() {
 	return collectedMonitors;
     }
 

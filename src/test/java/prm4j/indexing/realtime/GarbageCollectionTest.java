@@ -48,7 +48,8 @@ public class GarbageCollectionTest extends AbstractTest {
 	nodeManager = new NodeManager();
 	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
 	converter.getMetaTree().setNodeManagerToTree(nodeManager);
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(), nodeManager);
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(),
+		nodeManager);
     }
 
     @Test
@@ -135,18 +136,19 @@ public class GarbageCollectionTest extends AbstractTest {
     }
 
     @Test
-    public void expiredBinding_NodeManagerDetected() throws Exception {
+    public void expiredBinding_NodeManagerGCsMonitorsWhichAreInADeadState() throws Exception {
 
 	FSM_obj_obj fsm = new FSM_obj_obj();
 	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 1);
 
 	// precondition
-	assertEquals(0L, nodeManager.getCleanedCount()); // nothing cleared yet
+	assertEquals(0L, nodeManager.getOrphanedMonitorsCount()); // no orphans seen yet
 
 	// exercise
 	Object object = new Object();
 	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
-	nodeStore.getOrCreateNode(bindings);
+	// set the node to a node which will never reach an accepting state.
+	nodeStore.getOrCreateNode(bindings).getNodeRef().monitor = new StatefulMonitor(null);
 	assertEquals(1, nodeStore.getRootNode().size()); // node is stored
 
 	object = null;
@@ -157,7 +159,46 @@ public class GarbageCollectionTest extends AbstractTest {
 	assertEquals(0, nodeStore.getRootNode().size()); // node was removed
 	runGarbageCollectorAFewTimes();
 	nodeManager.reallyClean(); // trigger cleaning
-	assertEquals(1L, nodeManager.getCleanedCount()); // node was cleaned
+	assertEquals(1L, nodeManager.getOrphanedMonitorsCount()); // monitor was consider an orphan
+	assertEquals(1L, nodeManager.getCollectedMonitorsCount()); // monitor was gc'ed
+    }
+
+    @Test
+    public void expiredBinding_NodeManagerWillNoGCmonitorsThatMayReachAnAcceptingState() throws Exception {
+
+	FSM_obj_obj fsm = new FSM_obj_obj();
+	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 1);
+
+	// precondition
+	assertEquals(0L, nodeManager.getOrphanedMonitorsCount()); // no orphans seen yet
+	Object object = new Object();
+	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+
+	// we will hold the nodeRef to simulate a reference from a monitor set
+	final NodeRef nodeRef = nodeStore.getOrCreateNode(bindings).getNodeRef();
+	assertEquals(1, nodeStore.getRootNode().size()); // verify: node is stored
+
+	object = null; // nullification of node will allow node removal creating an orphaned monitor
+	runGarbageCollectorAFewTimes();
+	bindingStore.getBindings(array(new Object())); // object is collected, second object is added
+	assertEquals(0, nodeStore.getRootNode().size()); // verify: node was removed
+
+	// we have to fake the NodeManager, that we still have a stored binding, although the original object was
+	// collected already. We therefor create fakeBindings with a fakeObject.
+	final Object fakeObject = new Object();
+	final LowLevelBinding[] fakeBindings = new LowLevelBinding[1];
+	fakeBindings[0] = new DefaultLowLevelBinding(fakeObject, 42, null, 1);
+	nodeRef.monitor = prototypeMonitor.copy(fakeBindings);
+	// we also need a correct metanode, so that the accepting-state-test is performed correctly
+	nodeRef.monitor.setMetaNode(nodeStore.getRootNode().getMetaNode().getMetaNode(fsm.p1));
+
+	// verify
+	runGarbageCollectorAFewTimes();
+	nodeManager.reallyClean(); // trigger cleaning
+	assertEquals(1L, nodeManager.getOrphanedMonitorsCount()); // monitor was considered an orphan
+	assertEquals(0L, nodeManager.getCollectedMonitorsCount()); // monitor was *not* gc'ed, since the monitor thinks
+								   // it still can reach an accepting state (due to the
+								   // fakeBindings).
     }
 
     @Test
