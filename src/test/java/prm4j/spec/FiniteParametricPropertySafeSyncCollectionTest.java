@@ -14,7 +14,6 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static prm4j.Util.tuple;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
