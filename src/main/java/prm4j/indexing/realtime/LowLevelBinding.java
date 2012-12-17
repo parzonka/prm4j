@@ -30,7 +30,7 @@ public interface LowLevelBinding extends prm4j.api.Binding, MinimalMapEntry<Obje
      *
      * @param nodeRef
      */
-    void registerNode(WeakReference<Node> nodeRef);
+    void registerNode(Object nodeRef);
 
     boolean isDisabled();
 

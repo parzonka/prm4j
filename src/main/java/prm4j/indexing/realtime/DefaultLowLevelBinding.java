@@ -56,7 +56,7 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     }
 
     @Override
-    public void registerNode(WeakReference<Node> nodeReference) {
+    public void registerNode(Object nodeReference) {
 	// ensure capacity
 	if (nodeRefsSize >= nodeRefs.length) {
 	    final int capacity = (nodeRefs.length * 3) / 2 + 1;

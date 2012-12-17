@@ -250,8 +250,8 @@ public class UnaryParametricMonitor1Test extends AbstractDefaultParametricMonito
 	pm.processEvent(fsm.e1.createEvent(b));
 
 	// verify
-	assertNotSame(pm.getMonitorMap().get(bindingStore.getBinding(a)).getMonitor(),
-		pm.getMonitorMap().get(bindingStore.getBinding(b)).getMonitor());
+	assertNotSame(pm.getMonitorMap().get(bindingStore.getBinding(a), bindingStore.getBinding(a).hashCode()).getMonitor(),
+		pm.getMonitorMap().get(bindingStore.getBinding(b), bindingStore.getBinding(b).hashCode()).getMonitor());
     }
 
     @Test

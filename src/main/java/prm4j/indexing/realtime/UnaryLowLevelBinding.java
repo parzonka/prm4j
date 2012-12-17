@@ -13,6 +13,9 @@ package prm4j.indexing.realtime;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
+import prm4j.indexing.map.MinimalMap;
+import prm4j.indexing.realtime.UnaryParametricMonitor.MonitorMapEntry;
+
 /**
  * Memory-efficient {@link LowLevelBinding} implementation, only usable in 1-parameter patterns (e.g. HasNext).
  */
@@ -20,7 +23,7 @@ public class UnaryLowLevelBinding extends WeakReference<Object> implements LowLe
 
     private final int hashCode;
     private LowLevelBinding next;
-    private WeakReference<Node> nodeRef;
+    private Object nodeRef;
 
     public UnaryLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> referenceQueue) {
 	super(boundObject, referenceQueue);
@@ -48,18 +51,16 @@ public class UnaryLowLevelBinding extends WeakReference<Object> implements LowLe
     }
 
     @Override
-    public void registerNode(WeakReference<Node> nodeReference) {
+    public void registerNode(Object nodeReference) {
 	nodeRef = nodeReference;
     }
 
     @Override
     public void release() {
-	if (nodeRef != null) {
-	    Node node = nodeRef.get();
-	    if (node != null) {
-		node.remove(this);
-	    }
-	    nodeRef = null;
+	@SuppressWarnings("unchecked")
+	MinimalMap<LowLevelBinding, MonitorMapEntry> map = (MinimalMap<LowLevelBinding, MonitorMapEntry>) nodeRef;
+	if (map != null) {
+	    map.remove(this);
 	}
     }
 

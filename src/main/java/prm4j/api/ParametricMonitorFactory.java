@@ -12,6 +12,7 @@ package prm4j.api;
 
 import prm4j.Globals;
 import prm4j.indexing.realtime.AwareParametricMonitor;
+import prm4j.indexing.realtime.AwareUnaryParametricMonitor;
 import prm4j.indexing.realtime.DefaultParametricMonitor;
 import prm4j.indexing.realtime.UnaryParametricMonitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
@@ -22,12 +23,16 @@ public class ParametricMonitorFactory {
 
     public static ParametricMonitor createParametricMonitor(FiniteSpec finiteSpec) {
 	StaticDataConverter converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
+	int fullParameterCount = finiteSpec.getFullParameterSet().size();
+	if (Globals.DEBUG && fullParameterCount == 1) {
+	    return new AwareUnaryParametricMonitor(finiteSpec);
+	}
 	if (Globals.DEBUG) {
 	    System.out.println("[prm4j] Started in DEBUG mode");
 	    return new AwareParametricMonitor(converter.getMetaTree(), converter.getEventContext(), finiteSpec);
 	}
-	int fullParameterCount = finiteSpec.getFullParameterSet().size();
-	if (fullParameterCount == 1) {
+
+	if (Globals.DEBUG && fullParameterCount == 1) {
 	    return new UnaryParametricMonitor(finiteSpec);
 	}
 	return new DefaultParametricMonitor(converter.getMetaTree(), converter.getEventContext(), finiteSpec);

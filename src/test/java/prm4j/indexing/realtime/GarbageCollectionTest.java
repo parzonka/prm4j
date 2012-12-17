@@ -43,7 +43,7 @@ public class GarbageCollectionTest extends AbstractTest {
     public void createDefaultParametricMonitorWithAwareComponents(FSM fsm, int cleaningInterval) {
 	FiniteSpec finiteSpec = new FSMSpec(fsm);
 	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
-	bindingStore = new DefaultBindingStore(finiteSpec.getFullParameterSet(), cleaningInterval);
+	bindingStore = new DefaultBindingStore(finiteSpec.getFullParameterSet(), cleaningInterval, true);
 	prototypeMonitor = new StatefulMonitor(finiteSpec.getInitialState());
 	nodeManager = new NodeManager();
 	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
