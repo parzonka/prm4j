@@ -52,4 +52,18 @@ public interface BindingStore {
 
     public void reset();
 
+    /**
+     * DIAGNOSTIC
+     *
+     * @return the number of created bindings
+     */
+    public long getCreatedBindingsCount();
+
+    /**
+     * DIAGNOSTIC
+     *
+     * @return the number garbage collected bindings
+     */
+    public long getCollectedBindingsCount();
+
 }

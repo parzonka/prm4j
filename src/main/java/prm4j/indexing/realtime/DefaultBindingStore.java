@@ -30,6 +30,9 @@ public class DefaultBindingStore implements BindingStore {
     private final int fullParameterCount;
     private final LowLevelBinding[] bindings;
 
+    private long createdBindingsCount;
+    private long collectedBindingsCount;
+
     private MinimalMap<Object, LowLevelBinding> store;
 
     public DefaultBindingStore(Set<Parameter<?>> fullParameterSet) {
@@ -122,6 +125,7 @@ public class DefaultBindingStore implements BindingStore {
 
 	@Override
 	protected LowLevelBinding createEntry(Object key, int hashCode) {
+	    createdBindingsCount++;
 	    return new DefaultLowLevelBinding(key, hashCode, referenceQueue, fullParameterCount);
 	}
     }
@@ -138,6 +142,7 @@ public class DefaultBindingStore implements BindingStore {
 
 	@Override
 	protected LowLevelBinding createEntry(Object key, int hashCode) {
+	    createdBindingsCount++;
 	    return new UnaryLowLevelBinding(key, hashCode, referenceQueue);
 	}
     }
@@ -158,6 +163,7 @@ public class DefaultBindingStore implements BindingStore {
 	    while (binding != null) {
 		removeBinding(binding);
 		binding.release();
+		collectedBindingsCount++;
 		binding = (LowLevelBinding) referenceQueue.poll();
 	    }
 	}
@@ -170,6 +176,16 @@ public class DefaultBindingStore implements BindingStore {
 	} else {
 	    store = new DefaultStore();
 	}
+    }
+
+    @Override
+    public long getCreatedBindingsCount() {
+	return createdBindingsCount;
+    }
+
+    @Override
+    public long getCollectedBindingsCount() {
+	return collectedBindingsCount;
     }
 
 }
