@@ -25,6 +25,7 @@ import prm4j.spec.Spec;
 public class AwareParametricMonitor extends DefaultParametricMonitor {
 
     private final Logger logger = getFileLogger("logs/memory.log");
+    private final Logger stats = getFileLogger("logs/stats.log");
 
     public AwareParametricMonitor(MetaNode metaTree, EventContext eventContext, Spec spec) {
 	super(metaTree, eventContext, spec);
@@ -64,6 +65,17 @@ public class AwareParametricMonitor extends DefaultParametricMonitor {
 	    throw new RuntimeException(e);
 	}
 	return logger;
+    }
+
+    @Override
+    public void reset() {
+	stats.log(Level.INFO, "Created nodes: " + nodeManager.getCreatedCount());
+	stats.log(Level.INFO, "Orphaned monitors: " + nodeManager.getOrphanedMonitorsCount());
+	stats.log(Level.INFO, "Collected monitors: " + nodeManager.getCollectedMonitorsCount());
+	stats.log(Level.INFO, "Created bindings: " + bindingStore.getCreatedBindingsCount());
+	stats.log(Level.INFO, "Collected bindings: " + bindingStore.getCollectedBindingsCount());
+	stats.log(Level.INFO, "Stored bindings: " + bindingStore.size());
+	super.reset();
     }
 
 }
