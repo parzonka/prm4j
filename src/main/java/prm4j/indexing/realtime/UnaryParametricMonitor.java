@@ -77,12 +77,13 @@ public class UnaryParametricMonitor implements ParametricMonitor {
 	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
 	final LowLevelBinding binding = bindings[0];
 
-	MonitorMapEntry entry = getMonitorMap().get(binding);
+	MonitorMapEntry entry = getMonitorMap().get(binding, binding.hashCode());
 
 	if (entry == null) {
-	    entry = getMonitorMap().getOrCreate(binding);
+	    entry = monitorMap.getOrCreate(binding, binding.hashCode());
 	    // a simple clone is enough, since the compressed representation equals the uncompressed representation
 	    entry.monitor = monitorPrototype.copy(bindings.clone());
+	    binding.registerNode(monitorMap);
 	}
 	if (entry.getMonitor() != null && !entry.getMonitor().processEvent(event)) {
 	    // nullify dead monitors
@@ -93,7 +94,7 @@ public class UnaryParametricMonitor implements ParametricMonitor {
     }
 
     @Override
-    public void reset() {
+    public synchronized void reset() {
 	timestamp = 0L;
 	bindingStore.reset();
 	getMonitorMap().reset();
@@ -150,6 +151,11 @@ public class UnaryParametricMonitor implements ParametricMonitor {
 
 	public BaseMonitor getMonitor() {
 	    return monitor;
+	}
+
+	@Override
+	public int hashCode() {
+	    return binding.hashCode();
 	}
 
     }
