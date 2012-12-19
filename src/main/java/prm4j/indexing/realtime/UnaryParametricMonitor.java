@@ -49,7 +49,7 @@ public class UnaryParametricMonitor implements ParametricMonitor {
      * @param spec
      */
     public UnaryParametricMonitor(Spec spec) {
-	bindingStore = new DefaultBindingStore(spec.getFullParameterSet());
+	bindingStore = new DefaultBindingStore(new UnaryBindingFactory(), spec.getFullParameterSet());
 	monitorPrototype = spec.getInitialMonitor();
 	monitorMap = new MonitorMap();
     }

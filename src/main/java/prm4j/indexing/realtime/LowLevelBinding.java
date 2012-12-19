@@ -10,8 +10,6 @@
  */
 package prm4j.indexing.realtime;
 
-import java.lang.ref.WeakReference;
-
 import prm4j.indexing.map.MinimalMapEntry;
 
 /**

@@ -43,7 +43,7 @@ public class UnaryParametricMonitor1Test extends AbstractDefaultParametricMonito
 	fpp = new FiniteParametricProperty(finiteSpec);
 	converter = new StaticDataConverter(fpp);
 	// without the override we get an DefaultBindingStore with UnaryBindings
-	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
+	bindingStore = new AwareDefaultBindingStore(new UnaryBindingFactory(), finiteSpec.getFullParameterSet(), 1);
 	nodeManager = new NodeManager();
 	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
 	prototypeMonitor = new AwareBaseMonitor(finiteSpec.getInitialState());

@@ -29,36 +29,23 @@ public class DefaultBindingStore implements BindingStore {
     private final int cleaningInterval;
     private final int fullParameterCount;
     private final LowLevelBinding[] bindings;
+    private final BindingFactory bindingFactory;
 
     private long createdBindingsCount;
     private long collectedBindingsCount;
 
     private MinimalMap<Object, LowLevelBinding> store;
 
-    public DefaultBindingStore(Set<Parameter<?>> fullParameterSet) {
-   	this(fullParameterSet, DEFAULT_CLEANING_INTERVAL, false);
-       }
-
-    public DefaultBindingStore(Set<Parameter<?>> fullParameterSet, boolean forceInternalDefaultStore) {
-	this(fullParameterSet, DEFAULT_CLEANING_INTERVAL, forceInternalDefaultStore);
+    public DefaultBindingStore(BindingFactory bindingFactory, Set<Parameter<?>> fullParameterSet) {
+	this(bindingFactory, fullParameterSet, DEFAULT_CLEANING_INTERVAL);
     }
 
-    public DefaultBindingStore(Set<Parameter<?>> fullParameterSet, int cleaningInterval) {
-	this(fullParameterSet, cleaningInterval, false);
-    }
-
-    public DefaultBindingStore(Set<Parameter<?>> fullParameterSet, int cleaningInterval, boolean forceInternalDefaultStore) {
-
-	referenceQueue = new ReferenceQueue<Object>();
-	this.cleaningInterval = cleaningInterval;
+    public DefaultBindingStore(BindingFactory bindingFactory, Set<Parameter<?>> fullParameterSet, int cleaningInterval) {
+	this.bindingFactory = bindingFactory;
 	fullParameterCount = fullParameterSet.size();
-
-	if (!forceInternalDefaultStore && fullParameterCount == 1) {
-	    store = new UnaryStore();
-	} else {
-	    store = new DefaultStore();
-	}
-
+	this.cleaningInterval = cleaningInterval;
+	referenceQueue = new ReferenceQueue<Object>();
+	store = new DefaultStore();
 	bindings = createInitialBindings();
     }
 
@@ -120,13 +107,13 @@ public class DefaultBindingStore implements BindingStore {
 
 	@Override
 	protected LowLevelBinding[] createTable(int size) {
-	    return new DefaultLowLevelBinding[size];
+	    return bindingFactory.createTable(size);
 	}
 
 	@Override
 	protected LowLevelBinding createEntry(Object key, int hashCode) {
 	    createdBindingsCount++;
-	    return new DefaultLowLevelBinding(key, hashCode, referenceQueue, fullParameterCount);
+	    return bindingFactory.createBinding(key, hashCode, referenceQueue, fullParameterCount);
 	}
     }
 
