@@ -34,21 +34,20 @@ import prm4j.indexing.realtime.NodeManager;
  */
 public class MetaNode {
 
+    private final Set<Parameter<?>> fullParameterSet;
+    private final Set<Parameter<?>> nodeParameterSet;
+    private final List<Parameter<?>> nodeParameterList;
+    private final int[] compressedIndex;
+    private final Parameter<?> lastParameter;
+    private final int lastParameterIndex;
     private final MetaNode[] successors;
-    private NodeManager nodeManager;
 
-    private Set<Parameter<?>> fullParameterSet;
-    private Set<Parameter<?>> nodeParameterSet;
-    private List<Parameter<?>> nodeParameterList;
+    private NodeManager nodeManager;
+    private NodeFactory nodeFactory;
 
     private Set<ChainData> chainDataSet;
     private ChainData[] chainDataArray;
-
     private int monitorSetCount;
-    private final Parameter<?> lastParameter;
-    private final int lastParameterIndex;
-
-    private NodeFactory nodeFactory;
 
     /**
      * stateIndex * parameterMasksCount * parameterMask
@@ -59,6 +58,9 @@ public class MetaNode {
 	super();
 	assert parameterIndexIsValid(fullParameterSet) : "Full parameter set must be valid.";
 	assert Util.isSubsetEq(nodeParameterSet, fullParameterSet) : "Node parameters must be a subset of the full parameter set.";
+	this.nodeParameterSet = nodeParameterSet;
+	this.fullParameterSet = fullParameterSet;
+	compressedIndex = getCompressedIndex();
 	nodeParameterList = Util.asSortedList(nodeParameterSet);
 	if (!nodeParameterSet.isEmpty()) {
 	    lastParameter = nodeParameterList.get(nodeParameterList.size() - 1);
@@ -67,9 +69,20 @@ public class MetaNode {
 	    lastParameter = null;
 	    lastParameterIndex = -1;
 	}
-	this.nodeParameterSet = nodeParameterSet;
-	this.fullParameterSet = fullParameterSet;
 	successors = new MetaNode[fullParameterSet.size()];
+    }
+
+    /**
+     * Calculate a lookup table for mapping parameter indices to compressed binding indices.
+     * @return
+     */
+    private int[] getCompressedIndex() {
+	int[] result = new int[fullParameterSet.size()];
+	int i = 0;
+	for (Parameter<?> parameter : nodeParameterSet) {
+	    result[parameter.getIndex()] = i++;
+	}
+	return result;
     }
 
     /**
@@ -89,16 +102,28 @@ public class MetaNode {
 	return usedIndices.size() == parameterSet.size();
     }
 
+    /**
+     * @return the array representation of the chain data.
+     */
     public ChainData[] getChainDataArray() {
 	return chainDataArray;
     }
 
+    /**
+     * @return the set representation of the chain data.
+     */
     public Set<ChainData> getChainDataSet() {
 	return chainDataSet;
     }
 
-    public Node createNode(LowLevelBinding key) {
-	return nodeFactory.createNode(this, lastParameterIndex, key);
+    /**
+     * Creates a node for the given binding.
+     *
+     * @param binding
+     * @return the node
+     */
+    public Node createNode(LowLevelBinding binding) {
+	return nodeFactory.createNode(this, lastParameterIndex, binding);
     }
 
     public Node createRootNode() {
@@ -279,6 +304,9 @@ public class MetaNode {
 		+ ", nodeParameterSet=" + nodeParameterSet + ", monitorSetCount=" + monitorSetCount + "]";
     }
 
+    /**
+     * @return a set representation of the successors of this {@link MetaNode}.
+     */
     public Set<MetaNode> getSuccessors() {
 	final Set<MetaNode> result = new HashSet<MetaNode>();
 	for (int i = 0; i < successors.length; i++) {
@@ -291,9 +319,7 @@ public class MetaNode {
     }
 
     /**
-     * Return a list of all meta nodes in this tree including this node.
-     *
-     * @return all meta nodes in this tree
+     * @return a list of all meta nodes in this tree including this node.
      */
     public List<MetaNode> getAllNodesInSubtree() {
 	final List<MetaNode> result = new ArrayList<MetaNode>();
@@ -319,6 +345,12 @@ public class MetaNode {
 	}
     }
 
+    /**
+     * Returns the index of the parameter, which finally instantiated this instance, i.e. when this instance matches
+     * <code>p1,...,pn</code>, it is <code>pn</code>.
+     *
+     * @return
+     */
     public int getLastParameterIndex() {
 	return lastParameterIndex;
     }
@@ -354,6 +386,12 @@ public class MetaNode {
 	}
     }
 
+    /**
+     * Sets the information necessary to calculate if an accepting state can be reached from the given state and the
+     * given bindings
+     *
+     * @param aliveParameterMasks
+     */
     public void setAliveParameterMasks(int[][][] aliveParameterMasks) {
 	this.aliveParameterMasks = aliveParameterMasks;
     }
@@ -362,6 +400,14 @@ public class MetaNode {
 	return aliveParameterMasks;
     }
 
+    /**
+     * Tests, if an accepting state can be reached from the given state and the given bindings.
+     *
+     * @param state
+     * @param compressedBindings
+     *            A number of these bindings is checked for aliveness.
+     * @return <code>true</code> if an accepting state is reachable
+     */
     public boolean isAcceptingStateReachable(BaseMonitorState state, LowLevelBinding[] compressedBindings) {
 	final Binding[] bindings = uncompressBindings(compressedBindings);
 	final int[][] parameterMasks = aliveParameterMasks[state.getIndex()];
@@ -376,6 +422,17 @@ public class MetaNode {
 	    return true;
 	}
 	return false;
+    }
+
+    /**
+     * Retrieves the parameter value for the given parameter and given compressed bindings.
+     * @param parameter
+     * @param compressedBindings
+     * @return the parameter value
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getParameterValue(Parameter<T> parameter, LowLevelBinding[] compressedBindings) {
+	return (T) compressedBindings[compressedIndex[parameter.getIndex()]].get();
     }
 
 }
