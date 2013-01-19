@@ -10,7 +10,6 @@
  */
 package prm4j.indexing.realtime;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -65,6 +64,14 @@ public class DefaultParametricMonitor_SafeSyncCollection_Test extends AbstractDe
 	i1 = c1.iterator();
     }
 
+    void assertMatch() {
+	assertTrue(!fsm.matchHandler.getHandledMatches().isEmpty());
+    }
+
+    void assertNoMatch() {
+	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+    }
+
     /**
      * This is the condition which actually specifies the behavior of the SafeSyncCollection pattern.
      */
@@ -72,13 +79,13 @@ public class DefaultParametricMonitor_SafeSyncCollection_Test extends AbstractDe
     public void asyncAccessIterWithoutHoldLockCondition_match() throws Exception {
 	// exercise
 	pm.processEvent(fsm.sync.createEvent(c1));
-	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertNoMatch();
 	pm.processEvent(fsm.syncCreateIter.createEvent(c1, i1));
-	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertNoMatch();
 	pm.processEvent(fsm.accessIter.createConditionalEvent(i1, threadDoesNotHoldLockOnCollection));
 
 	// verify
-	assertFalse(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertMatch();
     }
 
     /**
@@ -88,13 +95,13 @@ public class DefaultParametricMonitor_SafeSyncCollection_Test extends AbstractDe
     public void asyncAccessIterWithHoldLockCondition_noMatch() throws Exception {
 	// exercise
 	pm.processEvent(fsm.sync.createEvent(c1));
-	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertNoMatch();
 	pm.processEvent(fsm.syncCreateIter.createEvent(c1, i1));
-	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertNoMatch();
 	pm.processEvent(fsm.accessIter.createConditionalEvent(i1, threadHoldsLockOnCollection));
 
 	// verify
-	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertNoMatch();
     }
 
     /**
@@ -104,14 +111,14 @@ public class DefaultParametricMonitor_SafeSyncCollection_Test extends AbstractDe
     public void syncAccessIterWithHoldLockCondition_match() throws Exception {
 	// exercise
 	pm.processEvent(fsm.sync.createEvent(c1));
-	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertNoMatch();
 	pm.processEvent(fsm.syncCreateIter.createEvent(c1, i1));
-	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertNoMatch();
 	synchronized (c1) {
 	    pm.processEvent(fsm.accessIter.createConditionalEvent(i1, threadHoldsLockOnCollection));
 	}
 	// verify
-	assertTrue(!fsm.matchHandler.getHandledMatches().isEmpty());
+	assertMatch();
     }
 
     /**
@@ -121,15 +128,29 @@ public class DefaultParametricMonitor_SafeSyncCollection_Test extends AbstractDe
     public void syncAccessIterWithoutHoldLockCondition_noMatch() throws Exception {
 	// exercise
 	pm.processEvent(fsm.sync.createEvent(c1));
-	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertNoMatch();
 	pm.processEvent(fsm.syncCreateIter.createEvent(c1, i1));
-	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertNoMatch();
 	synchronized (c1) {
 	    pm.processEvent(fsm.accessIter.createConditionalEvent(i1, threadDoesNotHoldLockOnCollection));
 	}
 
 	// verify
-	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertNoMatch();
+    }
+
+    /**
+     * The other matching case
+     */
+    @Test
+    public void syncCreateIter_match() throws Exception {
+	// exercise
+	pm.processEvent(fsm.sync.createEvent(c1));
+	assertNoMatch();
+	pm.processEvent(fsm.asyncCreateIter.createEvent(c1, i1));
+
+	// verify
+	assertMatch();
     }
 
 }
