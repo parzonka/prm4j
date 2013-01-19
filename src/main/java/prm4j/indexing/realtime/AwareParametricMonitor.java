@@ -34,7 +34,7 @@ public class AwareParametricMonitor extends DefaultParametricMonitor {
     @Override
     public synchronized void processEvent(Event event) {
 	super.processEvent(event);
-	if (timestamp % 100 == 0) {
+	if (timestamp % 10000 == 0) {
 	    logger.log(Level.INFO, timestamp
 		    + " : "
 		    + (((double) (Runtime.getRuntime().totalMemory() / 1024) / 1024) - ((double) (Runtime.getRuntime()
@@ -67,14 +67,23 @@ public class AwareParametricMonitor extends DefaultParametricMonitor {
 	return logger;
     }
 
+    public Logger getLogger() {
+	return stats;
+    }
+
     @Override
     public void reset() {
-	stats.log(Level.INFO, "Created nodes: " + nodeManager.getCreatedCount());
-	stats.log(Level.INFO, "Orphaned monitors: " + nodeManager.getOrphanedMonitorsCount());
-	stats.log(Level.INFO, "Collected monitors: " + nodeManager.getCollectedMonitorsCount());
-	stats.log(Level.INFO, "Created bindings: " + bindingStore.getCreatedBindingsCount());
-	stats.log(Level.INFO, "Collected bindings: " + bindingStore.getCollectedBindingsCount());
-	stats.log(Level.INFO, "Stored bindings: " + bindingStore.size());
+	stats.log(Level.INFO, "EVENTS: totalCount=" + timestamp);
+	stats.log(
+		Level.INFO,
+		String.format("BINDINGS: created=%d / collected=%d / stored(still)=%d",
+			nodeManager.getOrphanedMonitorsCount(), nodeManager.getCollectedMonitorsCount(),
+			bindingStore.size()));
+	stats.log(Level.INFO, String.format("NODES: created=%d", nodeManager.getCreatedCount()));
+	stats.log(
+		Level.INFO,
+		String.format("MONITORS: orphaned=%d / collected=%d", nodeManager.getOrphanedMonitorsCount(),
+			nodeManager.getCollectedMonitorsCount()));
 	super.reset();
     }
 
