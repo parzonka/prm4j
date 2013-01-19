@@ -39,7 +39,7 @@ public class Event {
 	if (condition == null) {
 	    return baseEvent;
 	}
-	return condition.eval() ? baseEvent : null;
+	return condition.eval(baseMonitor) ? baseEvent : null;
     }
 
     public BaseEvent getBaseEvent() {
