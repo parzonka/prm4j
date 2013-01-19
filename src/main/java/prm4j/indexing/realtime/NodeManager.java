@@ -119,4 +119,13 @@ public class NodeManager {
 	return collectedMonitors;
     }
 
+    /**
+     * Resets all internal diagnostic counters.
+     */
+    public void reset() {
+	createdNodeCount = 0L;
+	createdNodeCount = 0L;
+	collectedMonitors = 0L;
+    }
+
 }
