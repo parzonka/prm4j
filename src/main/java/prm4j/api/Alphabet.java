@@ -42,7 +42,8 @@ public class Alphabet {
     }
 
     /**
-     * Creates a parameter of given object type.
+     * Creates a parameter of given type. To create parameters with complex types, use the
+     * {@link #addParameter(Parameter) addParameter} method.
      *
      * @param parameterObjectType
      * @return the parameter
@@ -51,6 +52,13 @@ public class Alphabet {
 	return createParameter("p" + parameterCount, parameterObjectType);
     }
 
+    /**
+     * Creates a parameter of given type and optional name. To create parameters with complex types, use the
+     * {@link #addParameter(Parameter) addParameter} method.
+     *
+     * @param parameterObjectType
+     * @return the parameter
+     */
     public <P> Parameter<P> createParameter(String optionalName, Class<P> parameterObjectType) {
 	Parameter<P> parameter = new Parameter<P>(optionalName);
 	parameters.add(parameter);
