@@ -37,14 +37,14 @@ public class Symbol2<P1, P2> extends Symbol {
    	return new Event(this, boundObjects, null, auxiliaryData);
        }
 
-    public Event createEventWithCondition(P1 obj1, P2 obj2, Condition condition) {
+    public Event createConditionalEvent(P1 obj1, P2 obj2, Condition condition) {
 	Object[] boundObjects = createObjectArray();
 	bindObject(this.param1, obj1, boundObjects);
 	bindObject(this.param2, obj2, boundObjects);
 	return new Event(this, boundObjects, condition, null);
     }
 
-    public Event createEventWithCondition(P1 obj1, P2 obj2, Condition condition, Object auxiliaryData) {
+    public Event createConditionalEvent(P1 obj1, P2 obj2, Condition condition, Object auxiliaryData) {
 	Object[] boundObjects = createObjectArray();
 	bindObject(this.param1, obj1, boundObjects);
 	bindObject(this.param2, obj2, boundObjects);

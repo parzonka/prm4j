@@ -34,7 +34,7 @@ public class Symbol3<P1, P2, P3> extends Symbol {
 	return new Event(this, boundObjects);
     }
 
-    public Event createEventWithCondition(P1 obj1, P2 obj2, P3 obj3, Condition condition) {
+    public Event createConditionalEvent(P1 obj1, P2 obj2, P3 obj3, Condition condition) {
 	Object[] boundObjects = createObjectArray();
 	bindObject(this.param1, obj1, boundObjects);
 	bindObject(this.param2, obj2, boundObjects);
@@ -42,7 +42,7 @@ public class Symbol3<P1, P2, P3> extends Symbol {
 	return new Event(this, boundObjects, condition, null);
     }
 
-    public Event createEventWithCondition(P1 obj1, P2 obj2, P3 obj3, Condition condition, Object auxiliaryData) {
+    public Event createConditionalEvent(P1 obj1, P2 obj2, P3 obj3, Condition condition, Object auxiliaryData) {
 	Object[] boundObjects = createObjectArray();
 	bindObject(this.param1, obj1, boundObjects);
 	bindObject(this.param2, obj2, boundObjects);

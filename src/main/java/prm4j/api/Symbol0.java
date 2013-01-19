@@ -31,12 +31,12 @@ public class Symbol0 extends Symbol {
 	return new Event(this, boundObjects, condition, null);
     }
 
-    public Event createEventWithCondition(Object auxiliaryData) {
+    public Event createConditionalEvent(Object auxiliaryData) {
 	Object[] boundObjects = createObjectArray();
 	return new Event(this, boundObjects, null, auxiliaryData);
     }
 
-    public Event createEventWithCondition(Condition condition, Object auxiliaryData) {
+    public Event createConditionalEvent(Condition condition, Object auxiliaryData) {
 	Object[] boundObjects = createObjectArray();
 	return new Event(this, boundObjects, condition, auxiliaryData);
     }
