@@ -23,6 +23,9 @@ public abstract class BaseMonitor {
 
     private final static LowLevelBinding[] EMPTY_BINDINGS = new LowLevelBinding[0];
 
+    private static long createdMonitorsCount = 0L;
+    private static long updatedMonitorsCount = 0L;
+
     private MetaNode metaNode;
     // low level access
     private LowLevelBinding[] bindings;
@@ -125,6 +128,32 @@ public abstract class BaseMonitor {
 
     public void setMetaNode(MetaNode metaNode) {
 	this.metaNode = metaNode;
+    }
+
+    /**
+     * DIAGNOSTIC
+     *
+     * @return the number of created monitors
+     */
+    public static long getCreatedMonitorsCount() {
+	return createdMonitorsCount;
+    }
+
+    /**
+     * DIAGNOSTIC
+     *
+     * @return the number of updated monitors
+     */
+    public static long getUpdateddMonitorsCount() {
+	return updatedMonitorsCount;
+    }
+
+    /**
+     * Resets internal created monitors and updated monitors counter.
+     */
+    public static void reset() {
+	createdMonitorsCount = 0L;
+	updatedMonitorsCount = 0L;
     }
 
 }
