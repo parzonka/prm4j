@@ -31,7 +31,11 @@ public class StatefulMonitor extends BaseMonitor {
 	    terminate();
 	    return false;
 	}
-	state = state.getSuccessor(event.getEvaluatedBaseEvent(this));
+	final BaseEvent baseEvent = event.getEvaluatedBaseEvent(this);
+	if (baseEvent == null) {
+	    return true;
+	}
+	state = state.getSuccessor(baseEvent);
 	if (state == null) {
 	    terminate();
 	    return false;
