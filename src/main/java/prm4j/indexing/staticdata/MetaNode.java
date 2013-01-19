@@ -60,8 +60,8 @@ public class MetaNode {
 	assert Util.isSubsetEq(nodeParameterSet, fullParameterSet) : "Node parameters must be a subset of the full parameter set.";
 	this.nodeParameterSet = nodeParameterSet;
 	this.fullParameterSet = fullParameterSet;
-	compressedIndex = getCompressedIndex();
 	nodeParameterList = Util.asSortedList(nodeParameterSet);
+	compressedIndex = getCompressedIndex();
 	if (!nodeParameterSet.isEmpty()) {
 	    lastParameter = nodeParameterList.get(nodeParameterList.size() - 1);
 	    lastParameterIndex = lastParameter.getIndex();
@@ -79,7 +79,7 @@ public class MetaNode {
     private int[] getCompressedIndex() {
 	int[] result = new int[fullParameterSet.size()];
 	int i = 0;
-	for (Parameter<?> parameter : nodeParameterSet) {
+	for (Parameter<?> parameter : nodeParameterList) {
 	    result[parameter.getIndex()] = i++;
 	}
 	return result;
