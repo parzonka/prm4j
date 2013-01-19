@@ -12,6 +12,8 @@ package prm4j.api;
 
 import java.util.Arrays;
 
+import prm4j.indexing.BaseMonitor;
+
 /**
  * An event contains a generic base event and a number of {@link Binding}s.
  */
@@ -20,15 +22,24 @@ public class Event {
     private final BaseEvent baseEvent;
     private final Object[] boundObjects;
     private final Object auxiliaryData;
+    private final Condition condition;
 
     public Event(BaseEvent baseEvent, Object[] parameterValues) {
-	this(baseEvent, parameterValues, null);
+	this(baseEvent, parameterValues, null, null);
     }
 
-    public Event(BaseEvent baseEvent, Object[] parameterValues, Object auxiliaryData) {
+    public Event(BaseEvent baseEvent, Object[] parameterValues, Condition condition, Object auxiliaryData) {
 	this.baseEvent = baseEvent;
 	boundObjects = parameterValues;
 	this.auxiliaryData = auxiliaryData;
+	this.condition = condition;
+    }
+
+    public BaseEvent getEvaluatedBaseEvent(BaseMonitor baseMonitor) {
+	if (condition == null) {
+	    return baseEvent;
+	}
+	return condition.eval() ? baseEvent : null;
     }
 
     public BaseEvent getBaseEvent() {
@@ -49,7 +60,7 @@ public class Event {
 
     @Override
     public String toString() {
-        return baseEvent.toString() + Arrays.toString(boundObjects);
+	return baseEvent.toString() + Arrays.toString(boundObjects);
     }
 
 }

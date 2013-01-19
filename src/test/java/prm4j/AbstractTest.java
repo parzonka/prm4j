@@ -160,7 +160,7 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	    for (Parameter<?> parameter : baseEvent.getParameters()) {
 		obj[parameter.getIndex()] = getBoundObjects()[parameter.getIndex()];
 	    }
-	    return new Event(baseEvent, obj, instanceId);
+	    return new Event(baseEvent, obj, null, instanceId);
 	}
 
 	public List<Event> createEvents(BaseEvent... baseEvents) {
@@ -170,7 +170,7 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 		for (Parameter<?> parameter : baseEvent.getParameters()) {
 		    objects[parameter.getIndex()] = getBoundObjects()[parameter.getIndex()];
 		}
-		result.add(new Event(baseEvent, objects, instanceId));
+		result.add(new Event(baseEvent, objects, null, instanceId));
 	    }
 	    return result;
 	}

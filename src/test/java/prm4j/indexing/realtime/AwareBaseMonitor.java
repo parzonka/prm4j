@@ -51,7 +51,7 @@ public class AwareBaseMonitor extends StatefulMonitor {
     @Override
     public boolean processEvent(Event event) {
 	updatedMonitors.add(this);
-	baseEventTrace.add(event.getBaseEvent());
+	baseEventTrace.add(event.getEvaluatedBaseEvent(this));
 	return super.processEvent(event);
     }
 

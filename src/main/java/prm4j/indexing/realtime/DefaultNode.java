@@ -30,10 +30,9 @@ public class DefaultNode extends AbstractNode {
 
     /**
      * @param metaNode
+     * @param parameterIndex
      * @param key
-     *            may be null, if node is root node
-     * @param hashCode
-     *            hash code of the key
+     * @param refQueue
      */
     public DefaultNode(MetaNode metaNode, int parameterIndex, LowLevelBinding key, ReferenceQueue<Node> refQueue) {
 	super(key);

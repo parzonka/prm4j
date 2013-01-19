@@ -10,6 +10,7 @@
  */
 package prm4j.api;
 
+
 public class Symbol1<P1> extends Symbol {
 
     private final Parameter<P1> param1;
@@ -29,7 +30,19 @@ public class Symbol1<P1> extends Symbol {
     public Event createEvent(P1 obj1, Object auxiliaryData) {
 	Object[] boundObjects = createObjectArray();
 	bindObject(this.param1, obj1, boundObjects);
-	return new Event(this, boundObjects, auxiliaryData);
+	return new Event(this, boundObjects, null, auxiliaryData);
+    }
+
+    public Event createEventWithCondition(P1 obj1, Condition condition) {
+	Object[] boundObjects = createObjectArray();
+	bindObject(this.param1, obj1, boundObjects);
+	return new Event(this, boundObjects, condition, null);
+    }
+
+    public Event createEvent(P1 obj1, Condition condition, Object auxiliaryData) {
+	Object[] boundObjects = createObjectArray();
+	bindObject(this.param1, obj1, boundObjects);
+	return new Event(this, boundObjects, condition, auxiliaryData);
     }
 
 }

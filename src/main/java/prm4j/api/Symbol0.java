@@ -10,6 +10,7 @@
  */
 package prm4j.api;
 
+
 /**
  * Parameterless symbol.
  */
@@ -25,9 +26,19 @@ public class Symbol0 extends Symbol {
 	return new Event(this, boundObjects);
     }
 
-    public Event createEvent(Object auxiliaryData) {
+    public Event createEvent(Condition condition) {
 	Object[] boundObjects = createObjectArray();
-	return new Event(this, boundObjects, auxiliaryData);
+	return new Event(this, boundObjects, condition, null);
+    }
+
+    public Event createEventWithCondition(Object auxiliaryData) {
+	Object[] boundObjects = createObjectArray();
+	return new Event(this, boundObjects, null, auxiliaryData);
+    }
+
+    public Event createEventWithCondition(Condition condition, Object auxiliaryData) {
+	Object[] boundObjects = createObjectArray();
+	return new Event(this, boundObjects, condition, auxiliaryData);
     }
 
 }
