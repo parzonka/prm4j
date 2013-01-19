@@ -10,7 +10,6 @@
  */
 package prm4j.api;
 
-
 public class Symbol3<P1, P2, P3> extends Symbol {
 
     private final Parameter<P1> param1;
@@ -40,6 +39,14 @@ public class Symbol3<P1, P2, P3> extends Symbol {
 	bindObject(this.param2, obj2, boundObjects);
 	bindObject(this.param3, obj3, boundObjects);
 	return new Event(this, boundObjects, condition, null);
+    }
+
+    public Event createConditionalEvent(P1 obj1, P2 obj2, P3 obj3, Object auxiliaryData) {
+	Object[] boundObjects = createObjectArray();
+	bindObject(this.param1, obj1, boundObjects);
+	bindObject(this.param2, obj2, boundObjects);
+	bindObject(this.param3, obj3, boundObjects);
+	return new Event(this, boundObjects, null, auxiliaryData);
     }
 
     public Event createConditionalEvent(P1 obj1, P2 obj2, P3 obj3, Condition condition, Object auxiliaryData) {
