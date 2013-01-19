@@ -128,6 +128,37 @@ public abstract class FSMDefinitions {
 
     }
 
+    public static class FSM_SafeSyncCollection_NotRaw {
+
+   	public final Alphabet alphabet = new Alphabet();
+
+
+   	public final Parameter<Collection<Object>> c = alphabet.addParameter(new Parameter<Collection<Object>>("c"));
+   	public final Parameter<Iterator<Object>> i = alphabet.addParameter(new Parameter<Iterator<Object>>("i"));
+
+   	public final Symbol1<Collection<Object>> sync = alphabet.createSymbol1("sync", c);
+   	public final Symbol2<Collection<Object>, Iterator<Object>> asyncCreateIter = alphabet.createSymbol2("asyncCreateIter", c, i);
+   	public final Symbol2<Collection<Object>, Iterator<Object>> syncCreateIter = alphabet.createSymbol2("syncCreateIter", c, i);
+   	public final Symbol1<Iterator<Object>> accessIter = alphabet.createSymbol1("accessIter", i);
+
+   	public final FSM fsm = new FSM(alphabet);
+
+   	public final AwareMatchHandler0 matchHandler = AwareMatchHandler.create();
+
+   	public final FSMState initial = fsm.createInitialState();
+   	public final FSMState s1 = fsm.createState();
+   	public final FSMState s2 = fsm.createState();
+   	public final FSMState error = fsm.createAcceptingState(matchHandler);
+
+   	public FSM_SafeSyncCollection_NotRaw() {
+   	    initial.addTransition(sync, s1);
+   	    s1.addTransition(asyncCreateIter, error);
+   	    s1.addTransition(syncCreateIter, s2);
+   	    s2.addTransition(accessIter, error);
+   	}
+
+       }
+
     /**
      * Twos <b>A</b>s trigger the error state, a <b>B</b> will end in a dead state.
      */
