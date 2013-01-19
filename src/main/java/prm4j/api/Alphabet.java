@@ -60,6 +60,22 @@ public class Alphabet {
     }
 
     /**
+     * Adds an existing parameter to the alphabet. Use this for fully type-safe specifications.
+     *
+     * @param parameter
+     * @return
+     */
+    public <P> Parameter<P> addParameter(Parameter<P> parameter) {
+	if (parameter.getIndex() != -1) {
+	    throw new IllegalArgumentException("This parameter was already added to some alphabet!");
+	}
+	parameters.add(parameter);
+	// we index parameters in order of appearance, this may be not optimal
+	parameter.setIndex(parameterCount++);
+	return parameter;
+    }
+
+    /**
      * Creates a symbol without any parameters.
      *
      * @return the symbol
