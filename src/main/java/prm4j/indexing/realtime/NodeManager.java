@@ -126,6 +126,7 @@ public class NodeManager {
 	createdNodeCount = 0L;
 	createdNodeCount = 0L;
 	collectedMonitors = 0L;
+	orphanedMonitors = 0L;
     }
 
 }
