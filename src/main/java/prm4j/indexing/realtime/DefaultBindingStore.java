@@ -117,23 +117,6 @@ public class DefaultBindingStore implements BindingStore {
 	}
     }
 
-    /**
-     * Stores bindings associated to a single parameter
-     */
-    class UnaryStore extends MinimalMap<Object, LowLevelBinding> {
-
-	@Override
-	protected LowLevelBinding[] createTable(int size) {
-	    return new UnaryLowLevelBinding[size];
-	}
-
-	@Override
-	protected LowLevelBinding createEntry(Object key, int hashCode) {
-	    createdBindingsCount++;
-	    return new UnaryLowLevelBinding(key, hashCode, referenceQueue);
-	}
-    }
-
     class Cleaner {
 
 	private int attempts = 0;
@@ -158,11 +141,9 @@ public class DefaultBindingStore implements BindingStore {
 
     @Override
     public void reset() {
-	if (fullParameterCount == 1) {
-	    store = new UnaryStore();
-	} else {
-	    store = new DefaultStore();
-	}
+	store = new DefaultStore();
+	createdBindingsCount = 0L;
+	collectedBindingsCount = 0L;
     }
 
     @Override
