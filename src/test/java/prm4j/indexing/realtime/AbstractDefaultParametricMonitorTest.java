@@ -24,6 +24,7 @@ import org.junit.After;
 import prm4j.AbstractTest;
 import prm4j.api.ParametricMonitor;
 import prm4j.api.Symbol;
+import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
@@ -172,6 +173,7 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	prototypeMonitor = null;
 	pm = null;
 	monitor = null;
+	BaseMonitor.reset();
     }
 
 }
