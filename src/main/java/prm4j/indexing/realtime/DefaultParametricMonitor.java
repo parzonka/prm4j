@@ -106,7 +106,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    }
 		    // inlined DefineTo from 73
 		    instanceMonitor = maxMonitor.copy(toCompressedBindings(bindings, parameterMask)); // 102-105
-		    instanceMonitor.processEvent(event); // 103
+		    instanceMonitor.process(event); // 103
 		    instanceNode.setMonitor(instanceMonitor); // 106
 
 		    // inlined chain-method
@@ -136,7 +136,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    instanceNode.setMonitor(instanceMonitor); // 98
 		    // since we need some information in the meta node, we cannot process the event first before node
 		    // creation
-		    instanceMonitor.processEvent(event); // 95
+		    instanceMonitor.process(event); // 95
 
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
@@ -180,7 +180,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    }
 	} else {
 	    // update phase
-	    instanceMonitor.processEvent(event); // 30
+	    instanceMonitor.process(event); // 30
 	    for (MonitorSet monitorSet : instanceNode.getMonitorSets()) { // 30 - 32
 		if (monitorSet != null) {
 		    monitorSet.processEvent(event);
@@ -227,6 +227,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	timestamp = 0L;
 	bindingStore.reset();
 	nodeStore.reset();
+	nodeManager.reset();
+	BaseMonitor.reset();
     }
 
 }

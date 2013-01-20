@@ -82,7 +82,7 @@ public class MonitorSet {
 		continue;
 	    }
 	    monitorSet[aliveMonitors++] = nodeRef;
-	    monitor.processEvent(event);
+	    monitor.process(event);
 	}
 	for (int i = aliveMonitors; i < size; i++) {
 	    monitorSet[i] = null;
@@ -146,7 +146,7 @@ public class MonitorSet {
 		// inlined 'DefineTo' // 73
 		final BaseMonitor monitor = compatibleMonitor.copy(joinable); // 102-105
 		// process and test if monitor is still alive
-		if (monitor.processEvent(event)) { // 103
+		if (monitor.process(event)) { // 103
 		    // this monitor is alive, so copy it to the alive partition
 		    monitorSet[aliveMonitors++] = compatibleNodeRef;
 		}

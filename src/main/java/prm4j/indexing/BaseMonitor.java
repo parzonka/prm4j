@@ -33,6 +33,7 @@ public abstract class BaseMonitor {
     private long timestamp;
 
     public BaseMonitor() {
+	createdMonitorsCount++;
 	bindings = EMPTY_BINDINGS;
 	timestamp = 0L;
     }
@@ -99,6 +100,17 @@ public abstract class BaseMonitor {
 
     public final long getCreationTime() {
 	return timestamp;
+    }
+
+    /**
+     * Updates the base monitors internal state by consuming an event. After processing the event, the monitor is either
+     * alive or dead. A dead monitor will no longer process events.
+     *
+     * @return <code>true</code> if a the monitor is still alive
+     */
+    public final boolean process(Event event) {
+	updatedMonitorsCount++;
+	return processEvent(event);
     }
 
     /**

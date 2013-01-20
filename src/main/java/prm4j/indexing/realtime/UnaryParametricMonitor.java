@@ -85,7 +85,7 @@ public class UnaryParametricMonitor implements ParametricMonitor {
 	    entry.monitor = monitorPrototype.copy(bindings.clone());
 	    binding.registerNode(monitorMap);
 	}
-	if (entry.getMonitor() != null && !entry.getMonitor().processEvent(event)) {
+	if (entry.getMonitor() != null && !entry.getMonitor().process(event)) {
 	    // nullify dead monitors
 	    entry.monitor = null;
 	}
