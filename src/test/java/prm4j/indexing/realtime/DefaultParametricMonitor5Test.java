@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
@@ -58,7 +59,67 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	prototypeMonitor = new AwareBaseMonitor(finiteSpec.getInitialState());
 	nodeManager = new NodeManager();
 	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(), nodeManager);
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(),
+		nodeManager);
+    }
+
+    @Test
+    public void m1c1i1_createCorrectNodes() throws Exception {
+
+	final ParametricInstance instance1 = instance(m1, c1, i1);
+
+	pm.processEvent(instance1.createEvent(fsm.createColl));
+
+	assertEquals(4L, nodeManager.getCreatedCount()); // root + m1, c1, m1c1
+	assertCreatedNodes(array(m1, _, _), array(_, c1, _), array(m1, c1, _));
+    }
+
+    @Test
+    public void m1c1i1_createCorrectNodesWithCorrectUpdateCount() throws Exception {
+
+	final ParametricInstance instance1 = instance(m1, c1, i1);
+
+	pm.processEvent(instance1.createEvent(fsm.createColl));
+	pm.processEvent(instance1.createEvent(fsm.createIter));
+
+	assertEquals(7L, nodeManager.getCreatedCount()); // root + ...
+	assertCreatedNodes(array(m1, _, _), array(_, c1, _), array(m1, c1, _), array(_, c1, i1), array(m1, c1, i1),
+		array(_, _, i1));
+	assertEquals(3, BaseMonitor.getCreatedMonitorsCount()); // m1, m1c1, m1c1i1
+	assertEquals(2, BaseMonitor.getUpdateddMonitorsCount()); // m1c1, m1c1i1
+    }
+
+    @Test
+    public void m1c1i1_correctUpdateCount3() throws Exception {
+
+	final ParametricInstance instance1 = instance(m1, c1, i1);
+
+	pm.processEvent(instance1.createEvent(fsm.createColl)); // 1
+	pm.processEvent(instance1.createEvent(fsm.createIter)); // 2
+	pm.processEvent(instance1.createEvent(fsm.updateMap)); // 3
+
+	// m1 is not updated at all, it never gets a monitor.
+	// This is correct, because at (1) only the monitor for mi is created.
+	// at (3) the monitor is created, but not updated. Only mci is updated, because the transition m->mc is not in
+	// the chainSet, because it is not stagechanging!
+	assertEquals(3, BaseMonitor.getUpdateddMonitorsCount()); // m1c1, m1c1i1, m1c1i1
+    }
+
+    @Test
+    public void m1c1i1_correctUpdateCount4() throws Exception {
+
+	final ParametricInstance instance1 = instance(m1, c1, i1);
+
+	pm.processEvent(instance1.createEvent(fsm.createColl)); // 1
+	pm.processEvent(instance1.createEvent(fsm.createIter)); // 2
+	pm.processEvent(instance1.createEvent(fsm.updateMap)); // 3
+	pm.processEvent(instance1.createEvent(fsm.updateMap)); // 4
+
+	// at (3) the monitor is created, but not updated.Only mci is updated, because the transition m->mc is not in
+	// the chainSet, because it is not stagechanging!
+	// at (4) m1 is not updated, because it will never have a monitor! m1c1 not (not stagechanging), and m1c1i1 is
+	// the only valid target.
+	assertEquals(4, BaseMonitor.getUpdateddMonitorsCount()); // m1c1, m1c1i1, m1c1i1. (4:) m1c1i1
     }
 
     @Test
@@ -210,7 +271,7 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	    pm.processEvent(instance.createEvent(fsm.createIter));
 	    pm.processEvent(instance.createEvent(fsm.updateMap));
 	    pm.processEvent(instance.createEvent(fsm.useIter));
-	    assertEquals(1, getNode(m1, _,_).getMonitorSet(0).getSize());
+	    assertEquals(1, getNode(m1, _, _).getMonitorSet(0).getSize());
 	}
     }
 
@@ -222,7 +283,7 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	    pm.processEvent(instance.createEvent(fsm.createColl));
 	    pm.processEvent(instance.createEvent(fsm.createIter));
 	    pm.processEvent(instance.createEvent(fsm.updateMap));
-	    assertEquals(i+1, getNode(m1, _,_).getMonitorSet(0).getSize());
+	    assertEquals(i + 1, getNode(m1, _, _).getMonitorSet(0).getSize());
 	}
     }
 
