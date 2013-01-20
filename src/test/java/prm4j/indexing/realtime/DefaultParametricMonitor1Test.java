@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.BaseMonitor;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor1Test extends AbstractDefaultParametricMonitorTest {
@@ -60,6 +61,7 @@ public class DefaultParametricMonitor1Test extends AbstractDefaultParametricMoni
 
 	// verify
 	popNextUpdatedMonitor();
+	assertEquals(1, BaseMonitor.getUpdateddMonitorsCount());
 	assertNoMoreUpdatedMonitors();
     }
 
@@ -128,6 +130,17 @@ public class DefaultParametricMonitor1Test extends AbstractDefaultParametricMoni
     }
 
     // recurringEvent = same event as first event again ////////////////////////////////
+
+
+    @Test
+    public void recurringEvent_updatesOneMonitorTwice() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(a));
+
+	// verify
+	assertEquals(2, BaseMonitor.getUpdateddMonitorsCount());
+    }
 
     @Test
     public void recurringEvent_doesNotCreateNewMonitor() throws Exception {
