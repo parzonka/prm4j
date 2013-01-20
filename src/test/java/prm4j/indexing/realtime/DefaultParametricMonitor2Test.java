@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.BaseMonitor;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMonitorTest {
@@ -210,6 +211,17 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
     }
 
     @Test
+    public void twoEvents_a_b_updateCountIsCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e1.createEvent(b));
+	pm.processEvent(fsm.e1.createEvent(a));
+
+	// verify
+	assertEquals(3, BaseMonitor.getUpdateddMonitorsCount()); // a, b, a
+    }
+
+    @Test
     public void twoEvents_a_b_bothTracesAreCorrect() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a));
@@ -275,6 +287,17 @@ public class DefaultParametricMonitor2Test extends AbstractDefaultParametricMoni
 	// verify
 	assertNotSame(popNextUpdatedMonitor(), popNextUpdatedMonitor());
 	assertNoMoreUpdatedMonitors();
+    }
+
+    @Test
+    public void twoEventsWithUpdate_a_ab_updateCountIsCorrect() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a));
+
+	// verify
+	assertEquals(4, BaseMonitor.getUpdateddMonitorsCount()); // a, ab, a, ab
     }
 
     @Test
