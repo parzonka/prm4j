@@ -112,6 +112,7 @@ public class AbstractParametricMonitorTest extends AbstractTest {
 	nodeStore = null;
 	prototypeMonitor = null;
 	pm = null;
+	BaseMonitor.reset();
     }
 
 }

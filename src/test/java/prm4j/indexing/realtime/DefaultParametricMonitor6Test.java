@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.BaseMonitor;
 
 public class DefaultParametricMonitor6Test extends AbstractParametricMonitorTest {
 
@@ -41,6 +42,37 @@ public class DefaultParametricMonitor6Test extends AbstractParametricMonitorTest
 	i1 = new BoundObject("i1");
 	i2 = new BoundObject("i2");
 	i3 = new BoundObject("i3");
+    }
+
+    @Test
+    public void singleTree_correctCounts() throws Exception {
+
+	for (int i = 0; i < 1000; i++) {
+	    final ParametricInstance instance = instance(m1, _, _);
+	    pm.processEvent(instance.createEvent(fsm.createColl));
+	    pm.processEvent(instance.createEvent(fsm.createIter));
+	}
+
+	assertEquals(5002, nodeManager.getCreatedCount()); // root + m + 1000*c, 1000*i, 1000*mc + 1000*ci + 1000*mci
+	assertEquals(2001, BaseMonitor.getCreatedMonitorsCount()); // m + 1000*mc + 1000*mci
+	assertEquals(2000, BaseMonitor.getUpdateddMonitorsCount()); // 1000*mc + 1000*mci
+    }
+
+    @Test
+    public void singleTree_correctCounts2() throws Exception {
+
+	for (int i = 0; i < 1000; i++) {
+	    final ParametricInstance instance = instance(m1, _, _);
+	    pm.processEvent(instance.createEvent(fsm.createColl));
+	    pm.processEvent(instance.createEvent(fsm.createIter));
+	}
+	final ParametricInstance instance = instance(m1, _, _);
+	pm.processEvent(instance.createEvent(fsm.updateMap)); // this update does not reach mc since it is not statechanging
+
+	assertEquals(5002, nodeManager.getCreatedCount()); // root + m + 1000*c, 1000*i, 1000*mc + 1000*ci + 1000*mci
+	assertEquals(2001, BaseMonitor.getCreatedMonitorsCount()); // m + 1000*mc + 1000*mci
+	assertEquals(3000, BaseMonitor.getUpdateddMonitorsCount()); // (1000*mc + 1000*mci) + 1000*mci
+	//
     }
 
     @Test
@@ -144,7 +176,7 @@ public class DefaultParametricMonitor6Test extends AbstractParametricMonitorTest
 	runGarbageCollectorAFewTimes();
 	bindingStore.removeExpiredBindingsNow();
 	runGarbageCollectorAFewTimes();
-    	nodeManager.reallyClean();
+	nodeManager.reallyClean();
 	runGarbageCollectorAFewTimes();
 	// (almost) nothing to clean, because the monitors get removed with their nodes
 	// (if we would store the nodeRefs, we would have to clean 3000 monitors)
