@@ -17,28 +17,43 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+
 import prm4j.api.Event;
+import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.EventContext;
 import prm4j.indexing.staticdata.MetaNode;
 import prm4j.spec.Spec;
 
 public class AwareParametricMonitor extends DefaultParametricMonitor {
 
-    private final Logger logger = getFileLogger("logs/memory.log");
-    private final Logger stats = getFileLogger("logs/stats.log");
+    private final Logger logger = getFileLogger("logs/stats.log");
+
+    private SummaryStatistics memStats;
+    // Trying to track down NaNs which appeared in mean and max.
+    private String experimentName = getSystemProperty("prm4j.experimentName", "");
 
     public AwareParametricMonitor(MetaNode metaTree, EventContext eventContext, Spec spec) {
 	super(metaTree, eventContext, spec);
+	memStats = new SummaryStatistics();
+	logMemoryConsumption();
     }
 
     @Override
     public synchronized void processEvent(Event event) {
 	super.processEvent(event);
-	if (timestamp % 10000 == 0) {
-	    logger.log(Level.INFO, timestamp
-		    + " : "
-		    + (((double) (Runtime.getRuntime().totalMemory() / 1024) / 1024) - ((double) (Runtime.getRuntime()
-			    .freeMemory() / 1024) / 1024)));
+	if (timestamp % 100 == 0) {
+	    logMemoryConsumption();
+	}
+
+    }
+
+    private void logMemoryConsumption() {
+	double memoryConsumption = (((double) (Runtime.getRuntime().totalMemory() / 1024) / 1024) - ((double) (Runtime
+		.getRuntime().freeMemory() / 1024) / 1024));
+	// filter NaNs
+	if (memoryConsumption != Double.NaN) {
+	    memStats.addValue(memoryConsumption);
 	}
     }
 
@@ -68,23 +83,33 @@ public class AwareParametricMonitor extends DefaultParametricMonitor {
     }
 
     public Logger getLogger() {
-	return stats;
+	return logger;
     }
 
     @Override
     public void reset() {
-	stats.log(Level.INFO, "EVENTS: totalCount=" + timestamp);
-	stats.log(
+	logMemoryConsumption();
+	logger.log(Level.INFO, String.format("%s EVENTS (totalCount) %d", experimentName, timestamp));
+	logger.log(Level.INFO,
+		String.format("%s MEMORY (mean/max) %f %f", experimentName, memStats.getMean(), memStats.getMax()));
+	logger.log(
 		Level.INFO,
-		String.format("BINDINGS: created=%d / collected=%d / stored(still)=%d",
-			nodeManager.getOrphanedMonitorsCount(), nodeManager.getCollectedMonitorsCount(),
+		String.format("%s BINDINGS (created/collected/stored) %d %d %d", experimentName,
+			bindingStore.getCreatedBindingsCount(), bindingStore.getCollectedBindingsCount(),
 			bindingStore.size()));
-	stats.log(Level.INFO, String.format("NODES: created=%d", nodeManager.getCreatedCount()));
-	stats.log(
+	logger.log(Level.INFO, String.format("%s NODES (created) %d", experimentName, nodeManager.getCreatedCount()));
+	logger.log(
 		Level.INFO,
-		String.format("MONITORS: orphaned=%d / collected=%d", nodeManager.getOrphanedMonitorsCount(),
-			nodeManager.getCollectedMonitorsCount()));
+		String.format("%s MONITORS (created/updated/orphaned/collected) %d %d %d %d", experimentName,
+			BaseMonitor.getCreatedMonitorsCount(), BaseMonitor.getUpdateddMonitorsCount(),
+			nodeManager.getOrphanedMonitorsCount(), nodeManager.getCollectedMonitorsCount()));
+	memStats.clear();
 	super.reset();
+    }
+
+    static String getSystemProperty(String key, String defaultValue) {
+	final String value = System.getProperty(key);
+	return value != null ? value : defaultValue;
     }
 
 }
