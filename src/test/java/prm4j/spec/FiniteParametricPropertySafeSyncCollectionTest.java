@@ -101,6 +101,8 @@ public class FiniteParametricPropertySafeSyncCollectionTest extends AbstractTest
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 	int[][][] state2ParameterMasks = sdc.getMetaTree().getAliveParameterMasks();
 
+	assertEquals(4, state2ParameterMasks.length);
+
 	// verify that we have the correct number of parameterMasks
 	assertEquals(1, state2ParameterMasks[fsm.initial.getIndex()].length);
 	assertEquals(1, state2ParameterMasks[fsm.s1.getIndex()].length);
