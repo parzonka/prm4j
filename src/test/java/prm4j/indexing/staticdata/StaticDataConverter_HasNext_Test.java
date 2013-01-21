@@ -52,11 +52,17 @@ public class StaticDataConverter_HasNext_Test extends AbstractStaticDataConverte
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 	int[][][] state2ParameterMasks = sdc.getMetaTree().getAliveParameterMasks();
 
+	assertEquals(3, state2ParameterMasks.length);
+
 	// verify that we have the correct number of parameterMasks
 	assertEquals(1, state2ParameterMasks[fsm.initial.getIndex()].length);
+	assertEquals(1, state2ParameterMasks[fsm.safe.getIndex()].length);
+	assertEquals(1, state2ParameterMasks[fsm.error.getIndex()].length);
 
 	// verify parameterMasks
 	assertArrayEquals(array(0), state2ParameterMasks[fsm.initial.getIndex()][0]);
+	assertArrayEquals(array(0), state2ParameterMasks[fsm.safe.getIndex()][0]);
+	assertArrayEquals(new int[0], state2ParameterMasks[fsm.error.getIndex()][0]);
     }
 
 }
