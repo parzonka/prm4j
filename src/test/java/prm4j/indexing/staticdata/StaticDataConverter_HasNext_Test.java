@@ -13,6 +13,8 @@ package prm4j.indexing.staticdata;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,6 +45,18 @@ public class StaticDataConverter_HasNext_Test extends AbstractStaticDataConverte
 	assertEquals(2, sdc.getMaxData().length);
 	assertArrayEquals(EMPTY_MAXDATA_ARRAY, sdc.getMaxData()[fsm.next.getIndex()]);
 	assertArrayEquals(EMPTY_MAXDATA_ARRAY, sdc.getMaxData()[fsm.hasNext.getIndex()]);
+    }
+
+    @Test
+    public void getAliveParameterMasks() throws Exception {
+	StaticDataConverter sdc = new StaticDataConverter(fpp);
+	int[][][] state2ParameterMasks = sdc.getMetaTree().getAliveParameterMasks();
+
+	// verify that we have the correct number of parameterMasks
+	assertEquals(1, state2ParameterMasks[fsm.initial.getIndex()].length);
+
+	// verify parameterMasks
+	assertArrayEquals(array(0), state2ParameterMasks[fsm.initial.getIndex()][0]);
     }
 
 }
