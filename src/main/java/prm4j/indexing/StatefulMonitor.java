@@ -42,7 +42,7 @@ public class StatefulMonitor extends BaseMonitor {
 	}
 	MatchHandler matchHandler = state.getMatchHandler();
 	if (matchHandler != null) {
-	    matchHandler.handleMatch(getBindings(), event.getAuxiliaryData());
+	    matchHandler.handleAndCountMatch(getBindings(), event.getAuxiliaryData());
 	    // when a state is a accepting state, it is still possible we will reach another accepting state (or loop on
 	    // an accepting state), so we don't return false here
 	    if (state.isFinal()) {
