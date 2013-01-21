@@ -10,8 +10,10 @@
  */
 package prm4j.indexing.realtime;
 
+import prm4j.Globals;
 import prm4j.api.BaseEvent;
 import prm4j.api.Event;
+import prm4j.api.MatchHandler;
 import prm4j.api.ParametricMonitor;
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.ChainData;
@@ -30,6 +32,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     protected long timestamp = 0L;
     protected final NodeManager nodeManager;
 
+    protected final ParametricMonitorLogger logger;
+
     /**
      * Creates a DefaultParametricMonitor using default {@link BindingStore} and {@link NodeStore} implementations (and
      * configurations).
@@ -44,6 +48,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	monitorPrototype = spec.getInitialMonitor();
 	nodeManager = new NodeManager();
 	nodeStore = new DefaultNodeStore(metaTree, nodeManager);
+	logger = Globals.DEBUG ? new ParametricMonitorLogger(bindingStore, nodeStore, nodeManager) : null;
     }
 
     /**
@@ -61,6 +66,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	this.monitorPrototype = monitorPrototype;
 	this.eventContext = eventContext;
 	this.nodeManager = nodeManager;
+	logger = Globals.DEBUG ? new ParametricMonitorLogger(bindingStore, nodeStore, nodeManager) : null;
     }
 
     @Override
@@ -117,12 +123,14 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    break findMaxPhase;
 		}
 	    }
+
 	    Node node = null;
 	    monitorCreation: if (instanceMonitor == null) {
 		if (eventContext.isCreationEvent(baseEvent)) { // 20
 		    for (int i = 0; i < parameterMask.length; i++) { // 21
-			if (bindings[i].isDisabled()) // 22
+			if (bindings[i].isDisabled()) {// 22
 			    break monitorCreation; // 23
+			}
 		    }
 
 		    // inlined DefineNew from 93
@@ -178,6 +186,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		compatibleNode.getMonitorSet(joinData.getMonitorSetId()).join(nodeStore, event, joinableBindings,
 			someBindingsAreKnown, tmax, joinData.getCopyPattern());
 	    }
+
 	} else {
 	    // update phase
 	    instanceMonitor.process(event); // 30
@@ -191,6 +200,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    bindings[parameterMask[i]].setTimestamp(timestamp);
 	}
 	nodeManager.tryToClean(timestamp);
+	if (logger != null) {
+	    logger.log(timestamp, event);
+	}
 	timestamp++; // 40
     }
 
@@ -225,10 +237,14 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     @Override
     public void reset() {
 	timestamp = 0L;
+	if (logger != null) {
+	    logger.reset();
+	}
 	bindingStore.reset();
 	nodeStore.reset();
 	nodeManager.reset();
 	BaseMonitor.reset();
+	MatchHandler.reset();
     }
 
 }
