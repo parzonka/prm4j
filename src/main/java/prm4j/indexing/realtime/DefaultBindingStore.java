@@ -142,6 +142,9 @@ public class DefaultBindingStore implements BindingStore {
     @Override
     public void reset() {
 	store = new DefaultStore();
+	System.gc();
+	removeExpiredBindingsNow();
+	System.gc();
 	createdBindingsCount = 0L;
 	collectedBindingsCount = 0L;
     }
