@@ -66,7 +66,7 @@ public class ParametricMonitorLogger {
     public void reset() {
 	logMemoryConsumption();
 	logger.log(Level.INFO, String.format(
-		"%s EVENTS (totalCount) %d %d %d %d %d %d",
+		"%s EVENTS (totalCount) %d",
 		experimentName, timestamp));
 	logger.log(Level.INFO, String.format(
 		"%s MATCHES (totalCount) %d",
