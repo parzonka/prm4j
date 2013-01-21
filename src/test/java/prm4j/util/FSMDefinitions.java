@@ -84,16 +84,14 @@ public abstract class FSMDefinitions {
 	public final AwareMatchHandler0 matchHandler = AwareMatchHandler.create();
 
 	public final FSMState initial = fsm.createInitialState();
-	public final FSMState safe = fsm.createState();
-	public final FSMState error = fsm.createAcceptingState(matchHandler);
+	public final FSMState safe = fsm.createState("safe");
+	public final FSMState error = fsm.createAcceptingState(matchHandler, "error");
 
 	public FSM_HasNext() {
 	    initial.addTransition(hasNext, safe);
 	    initial.addTransition(next, error);
 	    safe.addTransition(hasNext, safe);
 	    safe.addTransition(next, initial);
-	    error.addTransition(next, error);
-	    error.addTransition(hasNext, safe);
 	}
     }
 
