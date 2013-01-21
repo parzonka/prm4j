@@ -23,8 +23,20 @@ public abstract class BaseMonitor {
 
     private final static LowLevelBinding[] EMPTY_BINDINGS = new LowLevelBinding[0];
 
+    /**
+     * Sum of derived and underived monitors.
+     */
     private static long createdMonitorsCount = 0L;
+
+    /**
+     * Sum of all update events which got processed by all monitors.
+     */
     private static long updatedMonitorsCount = 0L;
+
+    /**
+     * Created by deriving from the max monitor or during a join
+     */
+    private static long derivedMonitorsCount = 0L;
 
     private MetaNode metaNode;
     // low level access
@@ -161,11 +173,21 @@ public abstract class BaseMonitor {
     }
 
     /**
-     * Resets internal created monitors and updated monitors counter.
+     * DIAGNOSTIC
+     *
+     * @return the number of derived monitors
+     */
+    public static long getDerivedMonitorsCount() {
+	return derivedMonitorsCount;
+    }
+
+    /**
+     * DIAGNOSTIC Resets internal created monitors and updated monitors counter.
      */
     public static void reset() {
 	createdMonitorsCount = 0L;
 	updatedMonitorsCount = 0L;
+	derivedMonitorsCount = 0L;
     }
 
 }
