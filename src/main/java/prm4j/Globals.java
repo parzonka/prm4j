@@ -14,6 +14,9 @@ public class Globals {
 
     public final static boolean DEBUG = isSystemProperty("prm4j.debug", "true");
 
+    public static final int MONITOR_CLEANING_INTERVAL = Integer.parseInt(getSystemProperty(
+	    "prm4j.monitorCleaningInterval", "2000"));
+
     /**
      * Compare the value of a system property.
      *
@@ -28,4 +31,12 @@ public class Globals {
 	}
 	return value.equals(expectedValue);
     }
+
+    static String getSystemProperty(String key, String defaultValue) {
+	final String value = System.getProperty(key);
+	String result = value != null ? value : defaultValue;
+	System.out.println(key + "=" + result);
+	return result;
+    }
+
 }

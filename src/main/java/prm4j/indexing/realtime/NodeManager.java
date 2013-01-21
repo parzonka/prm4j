@@ -12,6 +12,7 @@ package prm4j.indexing.realtime;
 
 import java.lang.ref.ReferenceQueue;
 
+import prm4j.Globals;
 import prm4j.api.ParametricMonitor;
 import prm4j.indexing.staticdata.NodeFactory;
 
@@ -27,7 +28,7 @@ public class NodeManager {
      * numbers (e.g. 100000) have proven sufficient, since {@link NodeRef}s containing the orphaned monitors usually get
      * garbage collected themselves quite quickly.
      */
-    private final static int CLEANING_INTERVAL = 100000;
+    private final static int CLEANING_INTERVAL = Globals.MONITOR_CLEANING_INTERVAL;
 
     /**
      * The number of created nodes by each {@link NodeFactory}.
@@ -123,10 +124,12 @@ public class NodeManager {
      * Resets all internal diagnostic counters.
      */
     public void reset() {
+	reallyClean();
 	createdNodeCount = 0L;
 	createdNodeCount = 0L;
 	collectedMonitors = 0L;
 	orphanedMonitors = 0L;
+	reallyClean();
     }
 
 }
