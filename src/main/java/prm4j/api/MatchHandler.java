@@ -10,9 +10,10 @@
  */
 package prm4j.api;
 
-import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class MatchHandler {
+
+    private static long matchCounter = 0L;
 
     /**
      * This {@link MatchHandler} does nothing.
@@ -34,31 +35,15 @@ public abstract class MatchHandler {
     };
 
     /**
-     * This {@link MatchHandler} prints on match to the standard output stream.
-     */
-    public final static MatchCounter MATCH_COUNTER = new MatchCounter() {
-
-    };
-
-    public static class MatchCounter extends MatchHandler0 {
-
-	public final AtomicInteger counter = new AtomicInteger();
-
-	@Override
-	public void handleMatch(Object auxiliaryData) {
-	    counter.incrementAndGet();
-	}
-
-	public final AtomicInteger getCounter() {
-	    return counter;
-	}
-    }
-
-    /**
      * Retrieve bound objects with getBoundObject(...) TODO doc method.
      *
      * @param bindings
      */
+    public void handleAndCountMatch(Binding[] bindings, Object auxiliaryData) {
+	matchCounter++;
+	handleMatch(bindings, auxiliaryData);
+    }
+
     public abstract void handleMatch(Binding[] bindings, Object auxiliaryData);
 
     /**
@@ -75,5 +60,13 @@ public abstract class MatchHandler {
     @SuppressWarnings("unchecked")
     protected <P> P getBoundObject(Parameter<P> param, Binding[] bindings) {
 	return (P) bindings[param.getIndex()];
+    }
+
+    public static long getMatchCount() {
+	return matchCounter;
+    }
+
+    public static void reset() {
+	MatchHandler.matchCounter = 0L;
     }
 }
