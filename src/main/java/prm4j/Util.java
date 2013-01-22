@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -245,7 +246,12 @@ public class Util {
 	public String toString() {
 	    return "(" + left + ", " + right + ")";
 	}
+    }
 
+    public static void checkNull(Object checkedObject, String messageFormatString, Object... messageObjects) {
+	if (checkedObject == null) {
+	    throw new NullPointerException(String.format(Locale.US, messageFormatString, messageObjects));
+	}
     }
 
 }
