@@ -16,7 +16,7 @@ public class DefaultNodeStore implements NodeStore {
 
     private final MetaNode metaTree;
 
-    private Node rootNode;
+    private volatile Node rootNode;
 
     public DefaultNodeStore(MetaNode metaTree, NodeManager nodeManager) {
 	this.metaTree = metaTree;
@@ -80,6 +80,8 @@ public class DefaultNodeStore implements NodeStore {
     @Override
     public void reset() {
 	rootNode = metaTree.createRootNode();
+	System.gc();
+	System.gc();
     }
 
 }
