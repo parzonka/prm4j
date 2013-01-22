@@ -293,9 +293,6 @@ public class FiniteParametricProperty implements ParametricProperty {
 	 */
 	public void alivenessIter(BaseMonitorState state, Set<Parameter<?>> parameterSet, Set<BaseMonitorState> visited) {
 	    aliveParameterSets.put(state, parameterSet);
-	    if (state == finiteSpec.getInitialState()) {
-		return;
-	    }
 	    // 'predessor' means a preceding state in the *unreversed* FSM!
 	    for (BaseMonitorState predessor : reversedFSM.get(state)) {
 		if (!visited.contains(predessor)) {
