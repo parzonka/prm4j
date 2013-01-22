@@ -26,15 +26,13 @@ import prm4j.indexing.BaseMonitor;
 public class ParametricMonitorLogger {
 
     protected final BindingStore bindingStore;
-    protected final NodeStore nodeStore;
     protected final NodeManager nodeManager;
 
     private long timestamp;
 
-    public ParametricMonitorLogger(BindingStore bindingStore, NodeStore nodeStore, NodeManager nodeManager) {
+    public ParametricMonitorLogger(BindingStore bindingStore, NodeManager nodeManager) {
 	super();
 	this.bindingStore = bindingStore;
-	this.nodeStore = nodeStore;
 	this.nodeManager = nodeManager;
 	memStats = new SummaryStatistics();
 	logMemoryConsumption();

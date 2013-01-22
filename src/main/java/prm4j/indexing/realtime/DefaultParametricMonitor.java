@@ -48,7 +48,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	monitorPrototype = spec.getInitialMonitor();
 	nodeManager = new NodeManager();
 	nodeStore = new DefaultNodeStore(metaTree, nodeManager);
-	logger = Globals.DEBUG ? new ParametricMonitorLogger(bindingStore, nodeStore, nodeManager) : null;
+	logger = Globals.DEBUG ? new ParametricMonitorLogger(bindingStore, nodeManager) : null;
     }
 
     /**
@@ -66,7 +66,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	this.monitorPrototype = monitorPrototype;
 	this.eventContext = eventContext;
 	this.nodeManager = nodeManager;
-	logger = Globals.DEBUG ? new ParametricMonitorLogger(bindingStore, nodeStore, nodeManager) : null;
+	logger = Globals.DEBUG ? new ParametricMonitorLogger(bindingStore, nodeManager) : null;
     }
 
     @Override
