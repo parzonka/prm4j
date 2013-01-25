@@ -92,6 +92,8 @@ public abstract class FSMDefinitions {
 	    initial.addTransition(next, error);
 	    safe.addTransition(hasNext, safe);
 	    safe.addTransition(next, initial);
+	    error.addTransition(hasNext, safe);
+	    error.addTransition(next, error);
 	}
     }
 
