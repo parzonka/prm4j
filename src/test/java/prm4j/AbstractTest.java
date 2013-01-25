@@ -100,6 +100,15 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
      * @param actual
      */
     public static void assertBooleanArrayEquals(boolean[] expected, boolean[] actual) {
+	if (expected == null && actual == null) {
+	    return;
+	}
+	if (expected == null) {
+	    fail("Actual array was not null!");
+	}
+	if (actual == null) {
+	    fail("Actual array was null!");
+	}
 	if (expected.length != actual.length)
 	    fail("Expected:<" + Arrays.toString(expected) + "> but was: <" + Arrays.toString(actual) + ">");
 	for (int i = 0; i < expected.length; i++) {
