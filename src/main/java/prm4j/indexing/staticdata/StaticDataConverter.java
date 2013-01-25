@@ -46,7 +46,6 @@ public class StaticDataConverter {
     private final ListMultimap<BaseEvent, JoinData> joinData;
     private final SetMultimap<Set<Parameter<?>>, ChainData> chainData;
     private final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
-    private final int[][][] aliveParameterMasks;
     private final MetaNode metaTree;
 
     public StaticDataConverter(ParametricProperty pp) {
@@ -57,7 +56,6 @@ public class StaticDataConverter {
 	monitorSetIds = HashBasedTable.create();
 	convertToLowLevelStaticData();
 	metaTree = new MetaNode(new HashSet<Parameter<?>>(), pp.getParameters());
-	aliveParameterMasks = calculateAliveParameterMasks();
 	createMetaTree();
     }
 
@@ -188,13 +186,14 @@ public class StaticDataConverter {
     /**
      * stateIndex * parameterMasksCount * parameterMask
      */
-    private int[][][] calculateAliveParameterMasks() {
-	int[][][] result = new int[pp.getStateCount()][][];
+    private boolean[][][] calculateAliveParameterMasksBoolean(Set<Parameter<?>> nodeParameterSet) {
+	boolean[][][] result = new boolean[pp.getStateCount()][][];
 	for (BaseMonitorState state : pp.getAliveParameterSets().keySet()) {
-	    int[][] setOfParameterMasks = new int[pp.getAliveParameterSets().get(state).size()][];
+	    boolean[][] setOfParameterMasks = new boolean[pp.getAliveParameterSets().get(state).size()][];
 	    int i = 0;
 	    for (Set<Parameter<?>> parameterSet : pp.getAliveParameterSets().get(state)) {
-		setOfParameterMasks[i++] = toParameterMask(parameterSet);
+		// the alive parameter mask is a subset of the node parameter set
+		setOfParameterMasks[i++] = toParameterSubsetMaskBoolean(parameterSet, nodeParameterSet);
 	    }
 	    result[state.getIndex()] = setOfParameterMasks;
 	}
@@ -207,7 +206,7 @@ public class StaticDataConverter {
     private void createMetaTree() {
 	final Set<MetaNode> metaNodes = new HashSet<MetaNode>();
 	metaNodes.add(metaTree);
-	metaTree.setAliveParameterMasks(aliveParameterMasks);
+	metaTree.setAliveParameterMasks(calculateAliveParameterMasksBoolean(new HashSet<Parameter<?>>()));
 	final Set<Set<Parameter<?>>> allParameterSets = new HashSet<Set<Parameter<?>>>();
 	allParameterSets.addAll(pp.getMonitorSetData().keys());
 	allParameterSets.addAll(pp.getPossibleParameterSets());
@@ -220,7 +219,7 @@ public class StaticDataConverter {
 		    node = node.createAndGetMetaNode(parameter);
 		    node.setChainData(chainData.get(node.getNodeParameterSet()));
 		    node.setMonitorSetCount(monitorSetIds.row(node.getNodeParameterSet()).size());
-		    node.setAliveParameterMasks(aliveParameterMasks);
+		    node.setAliveParameterMasks(calculateAliveParameterMasksBoolean(node.getNodeParameterSet()));
 		}
 		metaNodes.add(node);
 	    }
@@ -259,6 +258,29 @@ public class StaticDataConverter {
 		result[i++] = j;
 	    }
 	    j++;
+	}
+	return result;
+    }
+
+    /**
+     * Returns a parameterMask which selects all parameters in the subset from the parameter set. Works with compressed
+     * and uncompressed array representations.
+     *
+     * @param subset
+     * @param parameterSet
+     *            if this is the full parameter set, the result is a mask for the uncompressed array representation. Use
+     *            for compressed representation in any other cases.
+     * @return boolean array, with the length of the parameter set. All parameter positions which are in the subset are
+     *         <code>true</code>.
+     */
+    protected static boolean[] toParameterSubsetMaskBoolean(Set<Parameter<?>> subset, Set<Parameter<?>> parameterSet) {
+	final boolean[] result = new boolean[parameterSet.size()];
+	int i = 0;
+	for (Parameter<?> parameter : Util.asSortedList(parameterSet)) {
+	    if (subset.contains(parameter)) {
+		result[i] = true;
+	    }
+	    i++;
 	}
 	return result;
     }

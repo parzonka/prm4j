@@ -10,8 +10,8 @@
  */
 package prm4j.spec;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static prm4j.Util.tuple;
 
 import java.util.HashSet;
@@ -26,6 +26,7 @@ import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.BaseMonitorState;
+import prm4j.indexing.staticdata.MetaNode;
 import prm4j.indexing.staticdata.StaticDataConverter;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -91,7 +92,7 @@ public class FiniteParametricPropertySafeSyncCollectionTest extends AbstractTest
 	expected.put(fsm.initial, asSet(fsm.c, fsm.i));
 	expected.put(fsm.s1, asSet(fsm.c, fsm.i));
 	expected.put(fsm.s2, asSet(fsm.i));
-	expected.put(fsm.error, EMPTY_PARAMETER_SET);
+	// fsm.error is not defined, it is a dead state
 
 	assertEquals(expected, actual);
     }
@@ -99,7 +100,7 @@ public class FiniteParametricPropertySafeSyncCollectionTest extends AbstractTest
     @Test
     public void getAliveParameterMasks() throws Exception {
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
-	int[][][] state2ParameterMasks = sdc.getMetaTree().getAliveParameterMasks();
+	boolean[][][] state2ParameterMasks = sdc.getMetaTree().getAliveParameterMasks();
 
 	assertEquals(4, state2ParameterMasks.length);
 
@@ -107,13 +108,24 @@ public class FiniteParametricPropertySafeSyncCollectionTest extends AbstractTest
 	assertEquals(1, state2ParameterMasks[fsm.initial.getIndex()].length);
 	assertEquals(1, state2ParameterMasks[fsm.s1.getIndex()].length);
 	assertEquals(1, state2ParameterMasks[fsm.s2.getIndex()].length);
-	assertEquals(1, state2ParameterMasks[fsm.error.getIndex()].length);
+	assertNull(state2ParameterMasks[fsm.error.getIndex()]);
+	MetaNode c = sdc.getMetaTree().getMetaNode(fsm.c);
+	MetaNode i = sdc.getMetaTree().getMetaNode(fsm.i);
+	MetaNode ci = sdc.getMetaTree().getMetaNode(fsm.c, fsm.i);
 
 	// verify parameterMasks
-	assertArrayEquals(array(0,1), state2ParameterMasks[fsm.initial.getIndex()][0]);
-	assertArrayEquals(array(0,1), state2ParameterMasks[fsm.s1.getIndex()][0]);
-	assertArrayEquals(array(1), state2ParameterMasks[fsm.s2.getIndex()][0]);
-	assertArrayEquals(new int[0], state2ParameterMasks[fsm.error.getIndex()][0]);
+	assertBooleanArrayEquals(array(true), c.getAliveParameterMasks()[fsm.initial.getIndex()][0]);
+	assertBooleanArrayEquals(array(true), c.getAliveParameterMasks()[fsm.s1.getIndex()][0]);
+	assertBooleanArrayEquals(array(false), c.getAliveParameterMasks()[fsm.s2.getIndex()][0]);
+
+	// verify parameterMasks
+	assertBooleanArrayEquals(array(true), i.getAliveParameterMasks()[fsm.initial.getIndex()][0]);
+	assertBooleanArrayEquals(array(true), i.getAliveParameterMasks()[fsm.s1.getIndex()][0]);
+	assertBooleanArrayEquals(array(true), i.getAliveParameterMasks()[fsm.s2.getIndex()][0]);
+
+	assertBooleanArrayEquals(array(true, true), ci.getAliveParameterMasks()[fsm.initial.getIndex()][0]);
+	assertBooleanArrayEquals(array(true, true), ci.getAliveParameterMasks()[fsm.s1.getIndex()][0]);
+	assertBooleanArrayEquals(array(false, true), ci.getAliveParameterMasks()[fsm.s2.getIndex()][0]);
     }
 
 

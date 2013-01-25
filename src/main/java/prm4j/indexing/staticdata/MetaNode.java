@@ -52,7 +52,7 @@ public class MetaNode {
     /**
      * stateIndex * parameterMasksCount * parameterMask
      */
-    private int[][][] aliveParameterMasks;
+    private boolean[][][] aliveParameterMasks;
 
     public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
 	super();
@@ -74,6 +74,7 @@ public class MetaNode {
 
     /**
      * Calculate a lookup table for mapping parameter indices to compressed binding indices.
+     *
      * @return
      */
     private int[] getCompressedIndex() {
@@ -392,12 +393,27 @@ public class MetaNode {
      *
      * @param aliveParameterMasks
      */
-    public void setAliveParameterMasks(int[][][] aliveParameterMasks) {
+    public void setAliveParameterMasks(boolean[][][] aliveParameterMasks) {
 	this.aliveParameterMasks = aliveParameterMasks;
     }
 
-    public int[][][] getAliveParameterMasks() {
+    public boolean[][][] getAliveParameterMasks() {
 	return aliveParameterMasks;
+    }
+
+
+    public boolean[] toCompressedParameterMask(int[] uncompressedParameterMask) {
+	final boolean[] result = new boolean[nodeParameterList.size()];
+	int i = 0;
+	for (Parameter<?> param : nodeParameterList) {
+	    for (int m : uncompressedParameterMask) {
+		if (param.getIndex() == m) {
+		    result[i] = true;
+		}
+	    }
+
+	}
+	return result;
     }
 
     /**
@@ -409,13 +425,12 @@ public class MetaNode {
      * @return <code>true</code> if an accepting state is reachable
      */
     public boolean isAcceptingStateReachable(BaseMonitorState state, LowLevelBinding[] compressedBindings) {
-	final Binding[] bindings = uncompressBindings(compressedBindings);
-	final int[][] parameterMasks = aliveParameterMasks[state.getIndex()];
-	int[] parameterMask;
+	final boolean[][] parameterMasks = aliveParameterMasks[state.getIndex()];
+	boolean[] parameterMask;
 	outer: for (int i = 0; i < parameterMasks.length; i++) {
 	    parameterMask = parameterMasks[i];
 	    for (int j = 0; j < parameterMask.length; j++) {
-		if (bindings[parameterMask[j]].get() == null) {
+		if (parameterMask[j] && compressedBindings[j].get() == null) {
 		    continue outer;
 		}
 	    }
@@ -426,6 +441,7 @@ public class MetaNode {
 
     /**
      * Retrieves the parameter value for the given parameter and given compressed bindings.
+     *
      * @param parameter
      * @param compressedBindings
      * @return the parameter value

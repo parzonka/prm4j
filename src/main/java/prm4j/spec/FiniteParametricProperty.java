@@ -271,7 +271,6 @@ public class FiniteParametricProperty implements ParametricProperty {
 	public void reverseIter(BaseMonitorState state, Set<BaseMonitorState> visited) {
 	    if (state.isAccepting()) {
 		acceptingStates.add(state);
-		return;
 	    }
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
 		BaseMonitorState successor = state.getSuccessor(baseEvent);
@@ -292,12 +291,12 @@ public class FiniteParametricProperty implements ParametricProperty {
 	 *            aggregate visited states so that the recursion will terminate
 	 */
 	public void alivenessIter(BaseMonitorState state, Set<Parameter<?>> parameterSet, Set<BaseMonitorState> visited) {
-	    aliveParameterSets.put(state, parameterSet);
 	    // 'predessor' means a preceding state in the *unreversed* FSM!
 	    for (BaseMonitorState predessor : reversedFSM.get(state)) {
 		if (!visited.contains(predessor)) {
-		    // iterate through all edges which lead from the the predessor to the current state
+		    // iterate through all edges which lead from the predessor to the current state
 		    for (BaseEvent baseEvent : getBaseEvent(predessor, state)) {
+			aliveParameterSets.put(predessor, unmodifiableUnion(parameterSet, baseEvent.getParameters()));
 			alivenessIter(predessor, unmodifiableUnion(parameterSet, baseEvent.getParameters()),
 				unmodifiableUnion(visited, set(predessor)));
 		    }
