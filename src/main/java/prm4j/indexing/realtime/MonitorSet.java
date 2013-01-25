@@ -69,7 +69,7 @@ public class MonitorSet {
      *            the current event
      */
     public void processEvent(Event event) {
-	int aliveMonitors = 0;
+	int deadPartitionStart = 0;
 	for (int i = 0; i < size; i++) { // 63
 	    final NodeRef nodeRef = monitorSet[i];
 	    final BaseMonitor monitor = nodeRef.monitor;
@@ -77,17 +77,21 @@ public class MonitorSet {
 	    if (nodeRef.monitor == null) {
 		continue;
 	    }
+	    // check if the monitor was terminated by some other operation
 	    if (nodeRef.monitor.isTerminated()) {
 		nodeRef.monitor = null;
 		continue;
 	    }
-	    monitorSet[aliveMonitors++] = nodeRef;
-	    monitor.process(event);
+	    // if the monitor is still alive after processing, its reference is copied into the alive partition
+	    if (monitor.process(event)) {
+		monitorSet[deadPartitionStart++] = nodeRef;
+	    }
 	}
-	for (int i = aliveMonitors; i < size; i++) {
+	// nullify the dead partition
+	for (int i = deadPartitionStart; i < size; i++) {
 	    monitorSet[i] = null;
 	}
-	size = aliveMonitors;
+	size = deadPartitionStart;
     }
 
     /**
@@ -116,8 +120,8 @@ public class MonitorSet {
 	// create initial copy of the joinable; will gets cloned again if this one is used in a monitor
 	LowLevelBinding[] joinable = joinableBindings.clone(); // 62
 
-	// post-loop invariant: all monitors up to monitorSet[aliveMonitors] are not dead
-	int aliveMonitors = 0;
+	// post-loop invariant: all monitors up to monitorSet[deadPartitionStart] are not dead
+	int deadPartitionStart = 0;
 	// iterate over all compatible nodes
 	for (int i = 0; i < size; i++) { // 63
 
@@ -129,13 +133,13 @@ public class MonitorSet {
 	    if (someBindingsAreKnown && compatibleMonitor.getCreationTime() < tmax) { // 64
 		// => the binding was not yet enabled => current event is not part of an accepting trace continued from
 		// this monitor => the joined monitor would never reach accepting state
-		aliveMonitors++; // this monitor may be still alive, we just avoid joining with it
+		deadPartitionStart++; // this monitor may be still alive, we just avoid joining with it
 		continue; // 65
 	    }
 	    final LowLevelBinding[] compatibleBindings = compatibleMonitor.getLowLevelBindings();
 	    // test if lifetime of monitor is already over
 	    if (compatibleBindings == null) {
-		continue; // don't increment 'aliveMonitors' counter => this monitor will be removed from the set
+		continue; // don't increment the deadPartitionStart => this monitor will be removed from the set
 	    }
 	    // copy some compatible bindings to our joinable
 	    createJoin(joinable, compatibleBindings, copyPattern); // 67 - 71
@@ -147,8 +151,8 @@ public class MonitorSet {
 		final BaseMonitor monitor = compatibleMonitor.copy(joinable); // 102-105
 		// process and test if monitor is still alive
 		if (monitor.process(event)) { // 103
-		    // this monitor is alive, so copy it to the alive partition
-		    monitorSet[aliveMonitors++] = compatibleNodeRef;
+		    // this monitor is alive, so copy its reference to the alive partition
+		    monitorSet[deadPartitionStart++] = compatibleNodeRef;
 		}
 		lastNode.setMonitor(monitor); // 106
 		// normal chain phase: connect necessary less informative instances so the joined binding will gets some
@@ -162,10 +166,10 @@ public class MonitorSet {
 	    }
 	}
 	// remove all dead monitors from the monitor set by nullifying the 'dead partition'
-	for (int i = aliveMonitors; i < size; i++) {
+	for (int i = deadPartitionStart; i < size; i++) {
 	    monitorSet[i] = null;
 	}
-	size = aliveMonitors;
+	size = deadPartitionStart;
     }
 
     /**
