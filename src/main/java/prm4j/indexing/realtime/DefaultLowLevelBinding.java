@@ -27,7 +27,8 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 	super(boundObject, q);
 	this.hashCode = hashCode;
 	timestamp = Long.MAX_VALUE; // indicates the binding was just created
-	nodeRefs = new Object[initialNodeRefsSize];
+	// hijack the field to store the initial capacity needed for lazy creation of the nodeRefs array
+	nodeRefsSize = initialNodeRefsSize;
     }
 
     /**
@@ -57,24 +58,33 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 
     @Override
     public void registerNode(Object nodeReference) {
-	// ensure capacity
-	if (nodeRefsSize >= nodeRefs.length) {
-	    final int capacity = (nodeRefs.length * 3) / 2 + 1;
-	    nodeRefs = Arrays.copyOf(nodeRefs, capacity);
+	// create nodeRefs lazily
+	if (nodeRefs == null) {
+	    // we had hijacked the nodeRefsSize field to store the initial nodeRefs capacity
+	    nodeRefs = new Object[nodeRefsSize];
+	    nodeRefsSize = 0; // reset the actual size
+	} else {
+	    // ensure capacity
+	    if (nodeRefsSize >= nodeRefs.length) {
+		final int capacity = (nodeRefs.length * 3) / 2 + 1;
+		nodeRefs = Arrays.copyOf(nodeRefs, capacity);
+	    }
 	}
 	nodeRefs[nodeRefsSize++] = nodeReference;
     }
 
     @Override
     public void release() {
-	for (int i = 0; i < nodeRefsSize; i++) {
-	    @SuppressWarnings("unchecked")
-	    final Node node = ((WeakReference<Node>) nodeRefs[i]).get();
-	    if (node != null) {
-		node.remove(this);
+	if (nodeRefs != null) {
+	    for (int i = 0; i < nodeRefsSize; i++) {
+		@SuppressWarnings("unchecked")
+		final Node node = ((WeakReference<Node>) nodeRefs[i]).get();
+		if (node != null) {
+		    node.remove(this);
+		}
 	    }
+	    nodeRefs = null;
 	}
-	nodeRefs = null;
     }
 
     @Override
