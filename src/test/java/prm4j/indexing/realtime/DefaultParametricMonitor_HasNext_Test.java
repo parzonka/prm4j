@@ -10,6 +10,7 @@
  */
 package prm4j.indexing.realtime;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
@@ -89,8 +90,9 @@ public class DefaultParametricMonitor_HasNext_Test extends AbstractDefaultParame
     public void handleMatch_trace1() throws Exception {
 	// exercise
 	pm.processEvent(fsm.hasNext.createEvent(i1));
-	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
+	assertMatchesCount(0);
 	pm.processEvent(fsm.next.createEvent(i1));
+	assertMatchesCount(0);
 	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
 	pm.processEvent(fsm.next.createEvent(i1));
 	assertTrue(!fsm.matchHandler.getHandledMatches().isEmpty());
@@ -100,16 +102,22 @@ public class DefaultParametricMonitor_HasNext_Test extends AbstractDefaultParame
     public void handleMatch_firstEventLeadsToErrorState() throws Exception {
 	// exercise
 	pm.processEvent(fsm.next.createEvent(i1));
-	assertTrue(!fsm.matchHandler.getHandledMatches().isEmpty());
+	// verify
+	assertMatchesCount(1);
     }
 
     @Test
     public void handleMatch_successiveMatchesOnErrorState() throws Exception {
-	// exercise
 	pm.processEvent(fsm.next.createEvent(i1));
-	assertTrue(!fsm.matchHandler.getHandledMatches().isEmpty());
+	assertMatchesCount(1);
 	pm.processEvent(fsm.next.createEvent(i1));
-	assertTrue(!fsm.matchHandler.getHandledMatches().isEmpty());
+	assertMatchesCount(2);
+	pm.processEvent(fsm.next.createEvent(i2));
+	assertMatchesCount(3);
+    }
+
+    private void assertMatchesCount(int count) {
+	assertEquals(count, fsm.matchHandler.getHandledMatches().size());
     }
 
 }
