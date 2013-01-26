@@ -23,7 +23,6 @@ import prm4j.Util;
 import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.BaseMonitorState;
 import prm4j.spec.ParametricProperty;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -184,19 +183,15 @@ public class StaticDataConverter {
     }
 
     /**
-     * stateIndex * parameterMasksCount * parameterMask
+     * parameterMasksCount * parameterMask
      */
-    private boolean[][][] calculateAliveParameterMasksBoolean(Set<Parameter<?>> nodeParameterSet) {
-	boolean[][][] result = new boolean[pp.getStateCount()][][];
-	for (BaseMonitorState state : pp.getAliveParameterSets().keySet()) {
-	    boolean[][] setOfParameterMasks = new boolean[pp.getAliveParameterSets().get(state).size()][];
+    private boolean[][] calculateAliveParameterMasksBoolean(Set<Parameter<?>> nodeParameterSet) {
+	    boolean[][] result = new boolean[pp.getAliveParameterSets().size()][];
 	    int i = 0;
-	    for (Set<Parameter<?>> parameterSet : pp.getAliveParameterSets().get(state)) {
+	    for (Set<Parameter<?>> parameterSet : pp.getAliveParameterSets()) {
 		// the alive parameter mask is a subset of the node parameter set
-		setOfParameterMasks[i++] = toParameterSubsetMaskBoolean(parameterSet, nodeParameterSet);
+		result[i++] = toParameterSubsetMaskBoolean(parameterSet, nodeParameterSet);
 	    }
-	    result[state.getIndex()] = setOfParameterMasks;
-	}
 	return result;
     }
 

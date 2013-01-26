@@ -56,7 +56,7 @@ public class FiniteParametricProperty implements ParametricProperty {
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainData;
     private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> monitorSetData;
     private final Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates;
-    private final SetMultimap<BaseMonitorState, Set<Parameter<?>>> aliveParameterSets;
+    private final Set<Set<Parameter<?>>> aliveParameterSets;
 
     private final static Set<Parameter<?>> EMPTY_PARAMETER_SET = new HashSet<Parameter<?>>();
 
@@ -255,12 +255,12 @@ public class FiniteParametricProperty implements ParametricProperty {
 
 	private final SetMultimap<BaseMonitorState, BaseMonitorState> reversedFSM;
 	private final Set<BaseMonitorState> acceptingStates;
-	private final SetMultimap<BaseMonitorState, Set<Parameter<?>>> aliveParameterSets;
+	private final Set<Set<Parameter<?>>> aliveParameterSets;
 
 	public AlivenessCalculator() {
 	    reversedFSM = HashMultimap.create();
 	    acceptingStates = new HashSet<BaseMonitorState>();
-	    aliveParameterSets = HashMultimap.create();
+	    aliveParameterSets = new HashSet<Set<Parameter<?>>>();
 	    reverseIter(finiteSpec.getInitialState(), new HashSet<BaseMonitorState>());
 	    for (BaseMonitorState acceptingState : acceptingStates) {
 		alivenessIter(acceptingState, new HashSet<Parameter<?>>(), new HashSet<BaseMonitorState>());
@@ -296,7 +296,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 		if (!visited.contains(predessor)) {
 		    // iterate through all edges which lead from the predessor to the current state
 		    for (BaseEvent baseEvent : getBaseEvent(predessor, state)) {
-			aliveParameterSets.put(predessor, unmodifiableUnion(parameterSet, baseEvent.getParameters()));
+			aliveParameterSets.add(unmodifiableUnion(parameterSet, baseEvent.getParameters()));
 			alivenessIter(predessor, unmodifiableUnion(parameterSet, baseEvent.getParameters()),
 				unmodifiableUnion(visited, set(predessor)));
 		    }
@@ -318,13 +318,11 @@ public class FiniteParametricProperty implements ParametricProperty {
 	 * Remove all supersets of contained sets.
 	 */
 	private void minimizeAliveParameterSets() {
-	    for (BaseMonitorState state : finiteSpec.getStates()) {
-		for (Set<Parameter<?>> parameterSet : new HashSet<Set<Parameter<?>>>(aliveParameterSets.get(state))) {
-		    final Iterator<Set<Parameter<?>>> iter = aliveParameterSets.get(state).iterator();
-		    while (iter.hasNext()) {
-			if (Util.isSuperset(iter.next(), parameterSet)) {
-			    iter.remove();
-			}
+	    for (Set<Parameter<?>> parameterSet : new HashSet<Set<Parameter<?>>>(aliveParameterSets)) {
+		final Iterator<Set<Parameter<?>>> iter = aliveParameterSets.iterator();
+		while (iter.hasNext()) {
+		    if (Util.isSuperset(iter.next(), parameterSet)) {
+			iter.remove();
 		    }
 		}
 	    }
@@ -411,7 +409,7 @@ public class FiniteParametricProperty implements ParametricProperty {
     }
 
     @Override
-    public SetMultimap<BaseMonitorState, Set<Parameter<?>>> getAliveParameterSets() {
+    public Set<Set<Parameter<?>>> getAliveParameterSets() {
 	return aliveParameterSets;
     }
 

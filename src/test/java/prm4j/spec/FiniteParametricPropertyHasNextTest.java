@@ -12,18 +12,15 @@ package prm4j.spec;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
-
 import prm4j.AbstractTest;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.BaseMonitorState;
 import prm4j.indexing.realtime.NodeManager;
 import prm4j.indexing.staticdata.StaticDataConverter;
 
@@ -46,13 +43,11 @@ public class FiniteParametricPropertyHasNextTest extends AbstractTest {
 
     @Test
     public void getAliveParameterSets() throws Exception {
-	SetMultimap<BaseMonitorState, Set<Parameter<?>>> actual = fpp.getAliveParameterSets();
+	Set<Set<Parameter<?>>> actual = fpp.getAliveParameterSets();
 	// verify
-	SetMultimap<BaseMonitorState, Set<Parameter<?>>> expected = HashMultimap.create();
+	Set<Set<Parameter<?>>> expected = new HashSet<Set<Parameter<?>>>();
 
-	expected.put(fsm.initial, asSet(fsm.i));
-	expected.put(fsm.safe, asSet(fsm.i));
-	expected.put(fsm.error, asSet(fsm.i));
+	expected.add(asSet(fsm.i));
 
 	assertEquals(expected, actual);
     }

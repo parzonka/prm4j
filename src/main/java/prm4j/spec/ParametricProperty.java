@@ -65,6 +65,6 @@ public interface ParametricProperty {
      */
     public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> getMonitorSetData();
 
-    public SetMultimap<BaseMonitorState, Set<Parameter<?>>> getAliveParameterSets();
+    public Set<Set<Parameter<?>>> getAliveParameterSets();
 
 }

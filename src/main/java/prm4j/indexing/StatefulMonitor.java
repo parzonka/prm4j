@@ -71,7 +71,7 @@ public class StatefulMonitor extends BaseMonitor {
      */
     @Override
     public boolean isAcceptingStateReachable() {
-	return !isTerminated() && state != null && !state.isFinal() && getMetaNode().isAcceptingStateReachable(state, getLowLevelBindings());
+	return !isTerminated() && state != null && !state.isFinal() && getMetaNode().isAcceptingStateReachable(getLowLevelBindings());
     }
 
     @Override

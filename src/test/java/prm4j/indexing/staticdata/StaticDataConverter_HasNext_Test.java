@@ -13,9 +13,6 @@ package prm4j.indexing.staticdata;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,23 +48,11 @@ public class StaticDataConverter_HasNext_Test extends AbstractStaticDataConverte
     @Test
     public void getAliveParameterMasks() throws Exception {
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
-	boolean[][][] state2ParameterMasks = sdc.getMetaTree().getAliveParameterMasks();
+	MetaNode metaNode = sdc.getMetaTree().getMetaNode(fsm.i);
 
-	assertEquals(3, state2ParameterMasks.length);
-
-	// verify that we have the correct number of parameterMasks
-	assertEquals(1, state2ParameterMasks[fsm.initial.getIndex()].length);
-	assertEquals(1, state2ParameterMasks[fsm.safe.getIndex()].length);
-	assertEquals(1, state2ParameterMasks[fsm.error.getIndex()].length);
-
-	Set<MetaNode> metaNodeSet = sdc.getMetaTree().getSuccessors();
-	assertEquals(1, metaNodeSet.size());
-	MetaNode metaNode = metaNodeSet.iterator().next();
-
-	// verify parameterMasks
-	assertBooleanArrayEquals(array(true), metaNode.getAliveParameterMasks()[fsm.initial.getIndex()][0]);
-	assertBooleanArrayEquals(array(true), metaNode.getAliveParameterMasks()[fsm.safe.getIndex()][0]);
-	assertBooleanArrayEquals(array(true), metaNode.getAliveParameterMasks()[fsm.error.getIndex()][0]);
+	// verify
+	assertEquals(1, metaNode.getAliveParameterMasks().length);
+	assertBooleanArrayEquals(array(true), metaNode.getAliveParameterMasks()[0]);
     }
 
 }

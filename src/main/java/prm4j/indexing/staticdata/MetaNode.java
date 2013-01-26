@@ -19,7 +19,6 @@ import java.util.Set;
 import prm4j.Util;
 import prm4j.api.Binding;
 import prm4j.api.Parameter;
-import prm4j.indexing.BaseMonitorState;
 import prm4j.indexing.realtime.DefaultNodeFactory;
 import prm4j.indexing.realtime.LeafNodeFactory;
 import prm4j.indexing.realtime.LeafNodeWithMonitorSetsFactory;
@@ -52,7 +51,7 @@ public class MetaNode {
     /**
      * stateIndex * parameterMasksCount * parameterMask
      */
-    private boolean[][][] aliveParameterMasks;
+    private boolean[][] aliveParameterMasks;
 
     public MetaNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
 	super();
@@ -393,11 +392,11 @@ public class MetaNode {
      *
      * @param aliveParameterMasks
      */
-    public void setAliveParameterMasks(boolean[][][] aliveParameterMasks) {
+    public void setAliveParameterMasks(boolean[][] aliveParameterMasks) {
 	this.aliveParameterMasks = aliveParameterMasks;
     }
 
-    public boolean[][][] getAliveParameterMasks() {
+    public boolean[][] getAliveParameterMasks() {
 	return aliveParameterMasks;
     }
 
@@ -419,16 +418,14 @@ public class MetaNode {
     /**
      * Tests, if an accepting state can be reached from the given state and the given bindings.
      *
-     * @param state
      * @param compressedBindings
      *            A number of these bindings is checked for aliveness.
      * @return <code>true</code> if an accepting state is reachable
      */
-    public boolean isAcceptingStateReachable(BaseMonitorState state, LowLevelBinding[] compressedBindings) {
-	final boolean[][] parameterMasks = aliveParameterMasks[state.getIndex()];
+    public boolean isAcceptingStateReachable(LowLevelBinding[] compressedBindings) {
 	boolean[] parameterMask;
-	outer: for (int i = 0; i < parameterMasks.length; i++) {
-	    parameterMask = parameterMasks[i];
+	outer: for (int i = 0; i < aliveParameterMasks.length; i++) {
+	    parameterMask = aliveParameterMasks[i];
 	    for (int j = 0; j < parameterMask.length; j++) {
 		if (parameterMask[j] && compressedBindings[j].get() == null) {
 		    continue outer;
