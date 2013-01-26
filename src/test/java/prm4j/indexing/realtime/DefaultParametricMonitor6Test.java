@@ -12,9 +12,13 @@ package prm4j.indexing.realtime;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import prm4j.api.Event;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.BaseMonitor;
 
@@ -67,7 +71,8 @@ public class DefaultParametricMonitor6Test extends AbstractParametricMonitorTest
 	    pm.processEvent(instance.createEvent(fsm.createIter));
 	}
 	final ParametricInstance instance = instance(m1, _, _);
-	pm.processEvent(instance.createEvent(fsm.updateMap)); // this update does not reach mc since it is not statechanging
+	pm.processEvent(instance.createEvent(fsm.updateMap)); // this update does not reach mc since it is not
+							      // statechanging
 
 	assertEquals(5002, nodeManager.getCreatedCount()); // root + m + 1000*c, 1000*i, 1000*mc + 1000*ci + 1000*mci
 	assertEquals(2001, BaseMonitor.getCreatedMonitorsCount()); // m + 1000*mc + 1000*mci
@@ -137,8 +142,11 @@ public class DefaultParametricMonitor6Test extends AbstractParametricMonitorTest
     @Test
     public void multipleAcceptingAndOpenTraces_monitorSetGrowsAsExpected() throws Exception {
 
+	// stores all events until evaluation: sometimes the monitors where collected very early, so we have to make
+	// sure the objects persist for some time.
+	Set<Event> storage = new HashSet<Event>();
 	for (int i = 0; i < 1000; i++) {
-	    final ParametricInstance instance = instance(m1, _, _);
+	    final ParametricInstance instance = persistentParametricInstance(storage, m1, _, _);
 	    pm.processEvent(instance.createEvent(fsm.updateMap));
 	    pm.processEvent(instance.createEvent(fsm.updateMap));
 	    pm.processEvent(instance.createEvent(fsm.updateMap));
