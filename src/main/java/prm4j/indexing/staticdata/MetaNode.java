@@ -400,7 +400,6 @@ public class MetaNode {
 	return aliveParameterMasks;
     }
 
-
     public boolean[] toCompressedParameterMask(int[] uncompressedParameterMask) {
 	final boolean[] result = new boolean[nodeParameterList.size()];
 	int i = 0;
@@ -416,7 +415,7 @@ public class MetaNode {
     }
 
     /**
-     * Tests, if an accepting state can be reached from the given state and the given bindings.
+     * Tests, if an accepting state can be reached from the given bindings.
      *
      * @param compressedBindings
      *            A number of these bindings is checked for aliveness.

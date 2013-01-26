@@ -33,6 +33,7 @@ public class StatefulMonitor extends BaseMonitor {
 	}
 	final BaseEvent baseEvent = event.getEvaluatedBaseEvent(this);
 	if (baseEvent == null) {
+	    // the condition evaluated to false, no transition is taken, monitor was alive => stays alive
 	    return true;
 	}
 	state = state.getSuccessor(baseEvent);
@@ -44,11 +45,11 @@ public class StatefulMonitor extends BaseMonitor {
 	if (matchHandler != null) {
 	    matchHandler.handleAndCountMatch(getBindings(), event.getAuxiliaryData());
 	    // when a state is a accepting state, it is still possible we will reach another accepting state (or loop on
-	    // an accepting state), so we don't return false here
-	    if (state.isFinal()) {
-		terminate();
-		return false;
-	    }
+	    // an accepting state)
+	}
+	if (state.isFinal() || !getMetaNode().isAcceptingStateReachable(getLowLevelBindings())) {
+	    terminate();
+	    return false;
 	}
 	return true;
     }
@@ -61,17 +62,17 @@ public class StatefulMonitor extends BaseMonitor {
     /**
      * {@inheritDoc}
      * <p>
-     * The {@link StatefulMonitor} checks for two conditions and return <code>true</code> if one of the following is
-     * reached:
+     * The {@link StatefulMonitor} returns <code>true</code> if each of the following is true:
      * <ol>
      * <li>The monitor is not terminated.</li>
-     * <li>Its state is no final state (a state where only dead states may be reached).</li>
+     * <li>Its state is not dead or a final state (a state where only dead states may be reached).</li>
      * <li>A subset of its bindings is alive that is necessary to reach an accepting state.</li>
      * </ol>
      */
     @Override
     public boolean isAcceptingStateReachable() {
-	return !isTerminated() && state != null && !state.isFinal() && getMetaNode().isAcceptingStateReachable(getLowLevelBindings());
+	return !isTerminated() && state != null && !state.isFinal()
+		&& getMetaNode().isAcceptingStateReachable(getLowLevelBindings());
     }
 
     @Override
