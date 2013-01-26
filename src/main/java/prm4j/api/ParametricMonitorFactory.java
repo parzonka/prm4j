@@ -12,7 +12,6 @@ package prm4j.api;
 
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.realtime.DefaultParametricMonitor;
-import prm4j.indexing.realtime.UnaryParametricMonitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
@@ -22,11 +21,6 @@ public class ParametricMonitorFactory {
     public static ParametricMonitor createParametricMonitor(FiniteSpec finiteSpec) {
 	StaticDataConverter converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
 	BaseMonitor.reset();
-	// TODO Unary-Optimization deactivated for the moment
-//	int fullParameterCount = finiteSpec.getFullParameterSet().size();
-//    	if (fullParameterCount == 1) {
-//    	    return new UnaryParametricMonitor(finiteSpec);
-//    	}
 	return new DefaultParametricMonitor(converter.getMetaTree(), converter.getEventContext(), finiteSpec);
     }
 
