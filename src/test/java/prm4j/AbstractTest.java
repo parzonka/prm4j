@@ -147,7 +147,7 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
     /**
      * Create parametric instances conveniently.
      */
-    public class ParametricInstance {
+    public static class ParametricInstance {
 
 	final int instanceId;
 	private final BoundObject[] boundObjects;
@@ -196,11 +196,11 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
      * Creates parametric instances conveniently and keeps them in memory for as long as the external storage is not
      * cleared.
      */
-    public class PermanentParametricInstance extends ParametricInstance {
+    public static class PersistantParametricInstance extends ParametricInstance {
 
 	final private Set<Event> storage;
 
-	public PermanentParametricInstance(Set<Event> storage, BoundObject[] boundObjects) {
+	public PersistantParametricInstance(Set<Event> storage, BoundObject[] boundObjects) {
 	    super(boundObjects);
 	    this.storage = storage;
 	}
@@ -225,11 +225,11 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	return new ParametricInstance(boundObjects);
     }
 
-    public ParametricInstance permanentInstance(Set<Event> storage, BoundObject... boundObjects) {
-	return new PermanentParametricInstance(storage, boundObjects);
+    public static ParametricInstance persistentParametricInstance(Set<Event> storage, BoundObject... boundObjects) {
+	return new PersistantParametricInstance(storage, boundObjects);
     }
 
-    public class BoundObject {
+    public static class BoundObject {
 
 	public final String id;
 
