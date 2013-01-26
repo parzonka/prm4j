@@ -149,12 +149,12 @@ public class MonitorSet {
 	    if (lastNode.getMonitor() == null) { // 72
 		// inlined 'DefineTo' // 73
 		final BaseMonitor monitor = compatibleMonitor.copy(joinable); // 102-105
+		lastNode.setMonitor(monitor); // 106
 		// process and test if monitor is still alive
 		if (monitor.process(event)) { // 103
 		    // this monitor is alive, so copy its reference to the alive partition
 		    monitorSet[deadPartitionStart++] = compatibleNodeRef;
 		}
-		lastNode.setMonitor(monitor); // 106
 		// normal chain phase: connect necessary less informative instances so the joined binding will gets some
 		// updates (or be used in join phase itself as compatible monitor)
 		for (ChainData chainData : lastNode.getMetaNode().getChainDataArray()) {

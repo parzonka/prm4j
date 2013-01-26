@@ -112,8 +112,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    }
 		    // inlined DefineTo from 73
 		    instanceMonitor = maxMonitor.copy(toCompressedBindings(bindings, parameterMask)); // 102-105
-		    instanceMonitor.process(event); // 103
 		    instanceNode.setMonitor(instanceMonitor); // 106
+		    instanceMonitor.process(event); // 103
 
 		    // inlined chain-method
 		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
