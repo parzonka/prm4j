@@ -22,6 +22,7 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     private LowLevelBinding next;
     private Object[] nodeRefs;
     private int nodeRefsSize;
+    private Node node;
 
     public DefaultLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q, int initialNodeRefsSize) {
 	super(boundObject, q);
@@ -33,7 +34,7 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * The key used in the {@link BindingStore} is the object.
      */
     @Override
@@ -111,6 +112,16 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     @Override
     public String toString() {
 	return "Binding(" + hashCode + ")=" + get();
+    }
+
+    @Override
+    public Node getNode() {
+	return node;
+    }
+
+    @Override
+    public void setNode(Node node) {
+	this.node = node;
     }
 
 }
