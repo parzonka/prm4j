@@ -29,7 +29,7 @@ import prm4j.indexing.realtime.NodeManager;
 /**
  * Every {@link Node} is equipped with a MetaNode, containing factory methods and providing statically computed
  * algorithm logic.
- *
+ * 
  */
 public class MetaNode {
 
@@ -73,7 +73,7 @@ public class MetaNode {
 
     /**
      * Calculate a lookup table for mapping parameter indices to compressed binding indices.
-     *
+     * 
      * @return
      */
     private int[] getCompressedIndex() {
@@ -87,7 +87,7 @@ public class MetaNode {
 
     /**
      * Tests if the parameterIndex of all parameters is a sequence in [0, ..., parameterCount] without repetitions.
-     *
+     * 
      * @param parameterSet
      * @return <code>true</code> if the parameter set is valid
      */
@@ -118,7 +118,7 @@ public class MetaNode {
 
     /**
      * Creates a node for the given binding.
-     *
+     * 
      * @param binding
      * @return the node
      */
@@ -132,7 +132,7 @@ public class MetaNode {
 
     /**
      * Creates a node by a successor.
-     *
+     * 
      * @param parameterIndex
      *            selects the successor
      * @param binding
@@ -150,7 +150,7 @@ public class MetaNode {
 
     /**
      * Retrieves the MetaNode of the successor for the given parameter.
-     *
+     * 
      * @param parameter
      * @return the successor meta node or <code>null</code>, if it does not exist
      */
@@ -159,8 +159,18 @@ public class MetaNode {
     }
 
     /**
+     * Retrieves the MetaNode of the successor for the given parameter index.
+     * 
+     * @param parameterIndex
+     * @return the successor meta node or <code>null</code>, if it does not exist
+     */
+    public MetaNode getMetaNode(int parameterIndex) {
+	return successors[parameterIndex];
+    }
+
+    /**
      * Retrieves the MetaNode of the successor for the given parameter, creating one, if it does not exist.
-     *
+     * 
      * @param parameter
      *            the parameter which will augment the parameter set associated with the meta node
      * @return the successor meta node
@@ -179,7 +189,7 @@ public class MetaNode {
 
     /**
      * Retrieves the MetaNode traversing the successor sub-meta-tree.
-     *
+     * 
      * @param parameters
      *            a sequence of parameters selecting the meta node
      * @return a meta node
@@ -194,7 +204,7 @@ public class MetaNode {
 
     /**
      * Retrieves the MetaNode traversing the successor sub-meta-tree.
-     *
+     * 
      * @param parameters
      *            a sequence of parameters selecting the meta node
      * @return a meta node
@@ -209,7 +219,7 @@ public class MetaNode {
 
     /**
      * Returns the parameter set which uniquely identifies this meta node.
-     *
+     * 
      * @return the node parameter set
      */
     public Set<Parameter<?>> getNodeParameterSet() {
@@ -218,7 +228,7 @@ public class MetaNode {
 
     /**
      * Returns the parameters, which uniquely identify this meta node, sorted by parameter id.
-     *
+     * 
      * @return parameters sorted by parameter id
      */
     public List<Parameter<?>> getNodeParameterList() {
@@ -227,7 +237,7 @@ public class MetaNode {
 
     /**
      * Returns the parameter ids, which uniquely identify this meta node, sorted by parameter id.
-     *
+     * 
      * @return parameters sorted by parameter id
      */
     public int[] getNodeMask() {
@@ -236,7 +246,7 @@ public class MetaNode {
 
     /**
      * Returns the number of monitor sets for this kind of node.
-     *
+     * 
      * @return
      */
     public int getMonitorSetCount() {
@@ -245,7 +255,7 @@ public class MetaNode {
 
     /**
      * Sets the number of monitor sets for this kind of node.
-     *
+     * 
      * @param monitorSetCount
      */
     public void setMonitorSetCount(int monitorSetCount) {
@@ -254,7 +264,7 @@ public class MetaNode {
 
     /**
      * Transforms bindings from the compressed representation to the uncompressed representation.
-     *
+     * 
      * @param compressedBindings
      * @return uncompressed bindings
      */
@@ -269,32 +279,43 @@ public class MetaNode {
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
+	if (this == obj) {
 	    return true;
-	if (obj == null)
+	}
+	if (obj == null) {
 	    return false;
-	if (getClass() != obj.getClass())
+	}
+	if (getClass() != obj.getClass()) {
 	    return false;
+	}
 	MetaNode other = (MetaNode) obj;
 	if (chainDataSet == null) {
-	    if (other.chainDataSet != null)
+	    if (other.chainDataSet != null) {
 		return false;
-	} else if (!chainDataSet.equals(other.chainDataSet))
+	    }
+	} else if (!chainDataSet.equals(other.chainDataSet)) {
 	    return false;
+	}
 	if (fullParameterSet == null) {
-	    if (other.fullParameterSet != null)
+	    if (other.fullParameterSet != null) {
 		return false;
-	} else if (!fullParameterSet.equals(other.fullParameterSet))
+	    }
+	} else if (!fullParameterSet.equals(other.fullParameterSet)) {
 	    return false;
-	if (monitorSetCount != other.monitorSetCount)
+	}
+	if (monitorSetCount != other.monitorSetCount) {
 	    return false;
+	}
 	if (nodeParameterSet == null) {
-	    if (other.nodeParameterSet != null)
+	    if (other.nodeParameterSet != null) {
 		return false;
-	} else if (!nodeParameterSet.equals(other.nodeParameterSet))
+	    }
+	} else if (!nodeParameterSet.equals(other.nodeParameterSet)) {
 	    return false;
-	if (!Arrays.equals(successors, other.successors))
+	}
+	if (!Arrays.equals(successors, other.successors)) {
 	    return false;
+	}
 	return true;
     }
 
@@ -335,7 +356,7 @@ public class MetaNode {
 
     /**
      * Sets the nodeManager to all meta nodes in this tree including this node.
-     *
+     * 
      * @param nodeManager
      *            the node manager
      */
@@ -348,7 +369,7 @@ public class MetaNode {
     /**
      * Returns the index of the parameter, which finally instantiated this instance, i.e. when this instance matches
      * <code>p1,...,pn</code>, it is <code>pn</code>.
-     *
+     * 
      * @return
      */
     public int getLastParameterIndex() {
@@ -389,7 +410,7 @@ public class MetaNode {
     /**
      * Sets the information necessary to calculate if an accepting state can be reached from the given state and the
      * given bindings
-     *
+     * 
      * @param aliveParameterMasks
      */
     public void setAliveParameterMasks(boolean[][] aliveParameterMasks) {
@@ -416,7 +437,7 @@ public class MetaNode {
 
     /**
      * Tests, if an accepting state can be reached from the given bindings.
-     *
+     * 
      * @param compressedBindings
      *            A number of these bindings is checked for aliveness.
      * @return <code>true</code> if an accepting state is reachable
@@ -437,7 +458,7 @@ public class MetaNode {
 
     /**
      * Retrieves the parameter value for the given parameter and given compressed bindings.
-     *
+     * 
      * @param parameter
      * @param compressedBindings
      * @return the parameter value
