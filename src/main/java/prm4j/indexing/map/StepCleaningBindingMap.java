@@ -31,7 +31,10 @@ public abstract class StepCleaningBindingMap extends MinimalMap<Object, LowLevel
     protected void clean() {
 	LowLevelBinding entry = null;
 	while (entry == null) {
-	    cleaningIndex = cleaningIndex >= table.length ? 0 : cleaningIndex + 1;
+	    if (++cleaningIndex >= table.length) {
+		cleaningIndex = 0;
+		break;
+	    }
 	    entry = table[cleaningIndex];
 	}
 	LowLevelBinding lastEntry = null;
@@ -83,6 +86,7 @@ public abstract class StepCleaningBindingMap extends MinimalMap<Object, LowLevel
 	    }
 	    table = newTable;
 	    threshold = (int) (newCapacity * DEFAULT_LOAD_FACTOR);
+	    cleaningIndex = 0;
 	}
     }
 
