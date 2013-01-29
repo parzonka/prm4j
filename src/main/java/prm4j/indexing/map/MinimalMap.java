@@ -16,7 +16,7 @@ package prm4j.indexing.map;
  * Values have to implement {@link MinimalMapEntry}-interface to be used as entries.
  * <p>
  * The map transparently creates entries which are not found in the map, omitting a 'put' method.
- *
+ * 
  * @param <E>
  *            the type of the value which is also used as map entry
  */
@@ -50,7 +50,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
     /**
      * The next size value at which to resize (capacity * load factor).
-     *
+     * 
      * @serial
      */
     int threshold;
@@ -64,7 +64,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
     /**
      * Retrieves the entry associated with this key using hash code variant implemented in this class.
-     *
+     * 
      * @param key
      * @return the entry
      */
@@ -75,7 +75,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
     /**
      * Retrieves the entry associated with this key and the provided hash code or creates a and stores new entry based
      * on the key and hash code.
-     *
+     * 
      * @param key
      * @param hashcode
      *            should be consistently calculated with the provided method of this class (or a subtype)
@@ -107,7 +107,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
     /**
      * Retrieves the entry associated with this key or returns null.
-     *
+     * 
      * @param key
      * @return the entry or null, if entry is not stored in the map
      */
@@ -117,7 +117,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
     /**
      * Retrieves the entry associated with this key and the provided hash code or returns null.
-     *
+     * 
      * @param key
      * @param hashcode
      *            should be consistently calculated with the provided method of this class (or a subtype)
@@ -137,7 +137,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 	return null;
     }
 
-    private void ensureCapacity() {
+    protected void ensureCapacity() {
 
 	if (table.length == MAXIMUM_CAPACITY) {
 	    return;
@@ -153,8 +153,8 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 		if (entry != null) {
 		    oldTable[i] = null; // help gc
 		    do {
-			E nextEntry = entry.next();
-			int newIndex = hashIndex(entry.hashCode(), newCapacity);
+			final E nextEntry = entry.next();
+			final int newIndex = hashIndex(entry.hashCode(), newCapacity);
 			entry.setNext(newTable[newIndex]);
 			newTable[newIndex] = entry;
 			entry = nextEntry;
@@ -169,7 +169,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
     /**
      * Creates a new entry based on the key and hash code.
-     *
+     * 
      * @param key
      * @param hashCode
      * @return the entry
@@ -187,7 +187,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
 	E lastEntry = null;
 	while (entry != null) {
-	    E nextEntry = entry.next();
+	    final E nextEntry = entry.next();
 	    if (key == entry.getKey()) {
 		if (lastEntry == null) {
 		    table[hashIndex] = nextEntry;
@@ -209,7 +209,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
 
 	E lastEntry = null;
 	while (entry != null) {
-	    E nextEntry = entry.next();
+	    final E nextEntry = entry.next();
 	    if (entryToRemove == entry) {
 		if (lastEntry == null) {
 		    table[hashIndex] = nextEntry;
@@ -228,7 +228,7 @@ public abstract class MinimalMap<K, E extends MinimalMapEntry<K, E>> {
     /**
      * Calculates the hashcode for the given key, which defaults to a variant of its object identity. Subclasses may
      * implement their own hash code.
-     *
+     * 
      * @param key
      * @return the hash code
      */
