@@ -32,12 +32,14 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     protected long timestamp = 0L;
     protected final NodeManager nodeManager;
 
+    protected boolean monitorActivated = false;
+
     protected final ParametricMonitorLogger logger;
 
     /**
      * Creates a DefaultParametricMonitor using default {@link BindingStore} and {@link NodeStore} implementations (and
      * configurations).
-     *
+     * 
      * @param metaTree
      * @param eventContext
      * @param spec
@@ -53,19 +55,22 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
     /**
      * Creates a DefaultParametricMonitor which externally configurable BindingStore and NodeStore.
-     *
+     * 
      * @param bindingStore
      * @param nodeStore
      * @param monitorPrototype
      * @param eventContext
+     * @param nodeManager
+     * @param activated
      */
     public DefaultParametricMonitor(BindingStore bindingStore, NodeStore nodeStore, BaseMonitor monitorPrototype,
-	    EventContext eventContext, NodeManager nodeManager) {
+	    EventContext eventContext, NodeManager nodeManager, boolean activated) {
 	this.bindingStore = bindingStore;
 	this.nodeStore = nodeStore;
 	this.monitorPrototype = monitorPrototype;
 	this.eventContext = eventContext;
 	this.nodeManager = nodeManager;
+	monitorActivated = activated;
 	logger = Globals.DEBUG ? new ParametricMonitorLogger(bindingStore, nodeManager) : null;
     }
 
@@ -73,6 +78,16 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     public synchronized void processEvent(Event event) {
 
 	final BaseEvent baseEvent = event.getBaseEvent();
+
+	// wait for a creation event to activate monitoring
+	if (!monitorActivated) {
+	    if (eventContext.isCreationEvent(baseEvent)) {
+		monitorActivated = true;
+	    } else {
+		return;
+	    }
+	}
+
 	// selects all bindings from 'bindings' which are not null
 	final int[] parameterMask = baseEvent.getParameterMask();
 	// uncompressed representation of bindings
@@ -217,7 +232,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
     /**
      * Returns an array of bindings containing "gaps" enabling efficient joins by filling these gaps.
-     *
+     * 
      * @param bindings
      * @param extensionPattern
      *            allows transformation of the bindings to joinable bindings
@@ -236,6 +251,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 
     @Override
     public void reset() {
+	monitorActivated = false;
 	timestamp = 0L;
 	if (logger != null) {
 	    logger.reset();

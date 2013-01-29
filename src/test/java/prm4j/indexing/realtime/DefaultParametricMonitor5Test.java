@@ -60,7 +60,7 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 	nodeManager = new NodeManager();
 	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
 	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(),
-		nodeManager);
+		nodeManager, true);
     }
 
     @Test

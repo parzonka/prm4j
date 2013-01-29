@@ -44,7 +44,8 @@ public class AbstractParametricMonitorTest extends AbstractTest {
 	nodeManager = new NodeManager();
 	nodeStore = new DefaultNodeStore(converter.getMetaTree(), nodeManager);
 	prototypeMonitor = new StatefulMonitor(fpp.getInitialState());
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(), nodeManager);
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(),
+		nodeManager, true);
     }
 
     protected Node getNode(Object... boundObjects) {
@@ -56,7 +57,6 @@ public class AbstractParametricMonitorTest extends AbstractTest {
 	int[] parameterMask = toParameterMask(boundObjects);
 	return nodeStore.getOrCreateNode(bindingStore.getBindings(boundObjects), parameterMask);
     }
-
 
     protected void assertChaining(Object[] from, Object[] to) {
 	Node fromNode = getNode(from);
@@ -80,10 +80,12 @@ public class AbstractParametricMonitorTest extends AbstractTest {
     }
 
     protected void assertTrace(Object[] boundObjects, Symbol... symbols) {
-	if (getNode(boundObjects) == null)
+	if (getNode(boundObjects) == null) {
 	    throw new NullPointerException("Node could not be found for " + Arrays.toString(boundObjects));
-	if (getNode(boundObjects).getMonitor() == null)
+	}
+	if (getNode(boundObjects).getMonitor() == null) {
 	    throw new NullPointerException("No monitor stored for node " + Arrays.toString(boundObjects));
+	}
 	assertEquals(Arrays.asList(symbols),
 		((AwareBaseMonitor) getNode(boundObjects).getMonitor()).getBaseEventTrace());
     }

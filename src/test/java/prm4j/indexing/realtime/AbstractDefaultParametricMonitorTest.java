@@ -49,30 +49,35 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	nodeManager = new NodeManager();
 	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
 	prototypeMonitor = new AwareBaseMonitor(finiteSpec.getInitialState());
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(), nodeManager);
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(),
+		nodeManager, true);
     }
 
     protected AwareBaseMonitor popNextUpdatedMonitor() {
-	if (prototypeMonitor.getUpdatedMonitors().isEmpty())
+	if (prototypeMonitor.getUpdatedMonitors().isEmpty()) {
 	    fail("There were no more updated monitors!");
+	}
 	return prototypeMonitor.getUpdatedMonitors().pop();
     }
 
     protected AwareBaseMonitor popNextCreatedMonitor() {
-	if (prototypeMonitor.getCreatedMonitors().isEmpty())
+	if (prototypeMonitor.getCreatedMonitors().isEmpty()) {
 	    fail("There were no more created monitors!");
+	}
 	return prototypeMonitor.getCreatedMonitors().pop();
     }
 
     protected Node popNextRetrievedNode() {
-	if (nodeStore.getRetrievedNodes().isEmpty())
+	if (nodeStore.getRetrievedNodes().isEmpty()) {
 	    fail("There were no more retrieved nodes!");
+	}
 	return nodeStore.getRetrievedNodes().pop().get();
     }
 
     protected LowLevelBinding[] popNextRetrievedBinding() {
-	if (bindingStore.getListOfBindings().isEmpty())
+	if (bindingStore.getListOfBindings().isEmpty()) {
 	    fail("There were no more retrieved bindings!");
+	}
 	return bindingStore.getListOfBindings().pop().get();
     }
 
@@ -141,11 +146,14 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     }
 
     protected void assertTrace(Object[] boundObjects, Symbol... symbols) {
-	if (getNode(boundObjects) == null)
+	if (getNode(boundObjects) == null) {
 	    throw new NullPointerException("Node could not be found for " + Arrays.toString(boundObjects));
-	if (getNode(boundObjects).getMonitor() == null)
+	}
+	if (getNode(boundObjects).getMonitor() == null) {
 	    throw new NullPointerException("No monitor stored for node " + Arrays.toString(boundObjects));
-	assertEquals(Arrays.asList(symbols), ((AwareBaseMonitor) getNode(boundObjects).getMonitor()).getBaseEventTrace());
+	}
+	assertEquals(Arrays.asList(symbols),
+		((AwareBaseMonitor) getNode(boundObjects).getMonitor()).getBaseEventTrace());
     }
 
     private static int[] toParameterMask(Object[] boundObjects) {

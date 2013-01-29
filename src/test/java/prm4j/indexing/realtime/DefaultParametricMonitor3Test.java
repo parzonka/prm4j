@@ -78,7 +78,6 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 	assertNotSame(NullNode.instance, popNextRetrievedNode());
     }
 
-
     @Test
     public void firstEvent_ab_createsMonitorWithCreationTime0() throws Exception {
 	// exercise
@@ -299,6 +298,7 @@ public class DefaultParametricMonitor3Test extends AbstractDefaultParametricMoni
 
     @Test
     public void disabling_bc_ab_noMonitorsAreCreated() throws Exception {
+
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(b, c));
 	pm.processEvent(fsm.e1.createEvent(a, b));
