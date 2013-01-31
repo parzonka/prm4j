@@ -46,6 +46,7 @@ public class DefaultParametricMonitor_HasNext_Test extends AbstractDefaultParame
 
 	    @Override
 	    public void remove() {
+		// do nothing
 	    }
 	};
 
@@ -62,6 +63,7 @@ public class DefaultParametricMonitor_HasNext_Test extends AbstractDefaultParame
 
 	    @Override
 	    public void remove() {
+		// do nothing
 	    }
 	};
     }

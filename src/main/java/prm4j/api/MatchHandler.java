@@ -10,7 +10,6 @@
  */
 package prm4j.api;
 
-
 public abstract class MatchHandler {
 
     private static long matchCounter = 0L;
@@ -21,6 +20,7 @@ public abstract class MatchHandler {
     public final static MatchHandler NO_OP = new MatchHandler0() {
 	@Override
 	public void handleMatch(Object auxiliaryData) {
+	    // do nothing
 	}
     };
 
@@ -36,7 +36,7 @@ public abstract class MatchHandler {
 
     /**
      * Retrieve bound objects with getBoundObject(...) TODO doc method.
-     *
+     * 
      * @param bindings
      */
     public void handleAndCountMatch(Binding[] bindings, Object auxiliaryData) {
@@ -49,7 +49,7 @@ public abstract class MatchHandler {
     /**
      * Retrieves the object which was stored in the monitor bindings. The object may be <code>null</code> if selected
      * object was already garbage collected in the monitored application.
-     *
+     * 
      * @param param
      *            selects the object from the bindings
      * @param bindings

@@ -19,7 +19,7 @@ public abstract class Condition {
     /**
      * Evaluate this condition based on the state of the base monitor and its attached parametric instance with
      * bindings.
-     *
+     * 
      * @param baseMonitor
      * @return
      */
@@ -30,6 +30,7 @@ public abstract class Condition {
 	try {
 	    result = eval();
 	} finally {
+	    // do nothing
 	}
 	this.baseMonitor = null;
 	return result;
