@@ -22,7 +22,6 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     private LowLevelBinding next;
     private Object[] nodeRefs;
     private int nodeRefsSize;
-    private Node node;
 
     public DefaultLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q, int initialNodeRefsSize) {
 	super(boundObject, q);
@@ -116,12 +115,13 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 
     @Override
     public Node getNode() {
-	return node;
+	// TODO remove if DirectNodeStore proves to be more effective
+	throw new UnsupportedOperationException("This class should not need to use this operation!");
     }
 
     @Override
     public void setNode(Node node) {
-	this.node = node;
+	// TODO remove if DirectNodeStore proves to be more effective
+	throw new UnsupportedOperationException("This class should not need to use this operation!");
     }
-
 }
