@@ -10,6 +10,7 @@
  */
 package prm4j.indexing.realtime;
 
+import java.io.File;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -39,7 +40,7 @@ public class ParametricMonitorLogger {
 	logMemoryConsumption();
     }
 
-    private final Logger logger = getFileLogger("logs/prm4j-stats.log");
+    private final Logger logger = getFileLogger(Util.getSystemProperty("prm4j.outputfile", "logs/prm4j-stats.log"));
 
     private SummaryStatistics memStats;
 
@@ -88,6 +89,8 @@ public class ParametricMonitorLogger {
      * @return the logger
      */
     private static Logger getFileLogger(String fileName) {
+	// make sure parent directories exist
+	new File(fileName).getParentFile().mkdirs();
 	final Logger logger = Logger.getLogger(fileName);
 	try {
 	    logger.setUseParentHandlers(false);
