@@ -20,7 +20,7 @@ public class FSMTest extends AbstractTest {
 
     @Test
     public void isAccepting() throws Exception {
-	FSM_unsafeMapIterator fsm = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
 	assertTrue(fsm.error.isAccepting());
     }
 

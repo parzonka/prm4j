@@ -39,7 +39,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void accessors_unsafeMapIterator() throws Exception {
-	FSM fsm = new FSM_unsafeMapIterator().fsm;
+	FSM fsm = new FSM_SafeMapIterator().fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
 	assertEquals(fs.getInitialState(), fsm.getInitialState());
@@ -48,7 +48,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void getCreationEvents_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty pp = new FiniteParametricProperty(new FSMSpec(fsm));
 
@@ -62,7 +62,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void getDisablingEvents_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty pp = new FiniteParametricProperty(new FSMSpec(fsm));
 
@@ -77,7 +77,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void getEnablingEventSets_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
@@ -101,7 +101,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void getEnablingParameterSets_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
@@ -121,7 +121,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void getMaxData_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
@@ -134,7 +134,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void getJoinData_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
@@ -148,7 +148,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void getChainData_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
@@ -173,7 +173,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void getMonitorSetData_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
@@ -191,7 +191,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void getPossibleParameterSets_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
@@ -207,7 +207,7 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 
     @Test
     public void getParameters_unsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 

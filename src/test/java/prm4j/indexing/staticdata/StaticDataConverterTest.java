@@ -170,7 +170,7 @@ public class StaticDataConverterTest extends AbstractTest {
     @Test
     public void getExtensionPatternNew_unsafeMapIterator() {
 
-	FSM_unsafeMapIterator fsm = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
 	fsm.m.setIndex(0);
 	fsm.c.setIndex(1);
 	fsm.i.setIndex(2);
@@ -330,7 +330,7 @@ public class StaticDataConverterTest extends AbstractTest {
     @Test
     public void getMaxData_unsafeMapIterator() {
 
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	u.m.setIndex(0);
 	u.c.setIndex(1);
@@ -352,7 +352,7 @@ public class StaticDataConverterTest extends AbstractTest {
     @Test
     public void getJoinData_unsafeMapIterator() {
 
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	u.m.setIndex(0);
 	u.c.setIndex(1);
@@ -381,7 +381,7 @@ public class StaticDataConverterTest extends AbstractTest {
     @Test
     public void getChainData_unsafeMapIterator() {
 
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	u.m.setIndex(0);
 	u.c.setIndex(1);
@@ -408,7 +408,7 @@ public class StaticDataConverterTest extends AbstractTest {
 
 	final Set<ChainData> emptyChainDataSet = new HashSet<ChainData>();
 
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	u.m.setIndex(0);
 	u.c.setIndex(1);

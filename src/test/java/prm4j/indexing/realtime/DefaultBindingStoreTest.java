@@ -225,7 +225,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
     @Test
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void getBindings_unsafeMapIterator() throws Exception {
-	createBindingStore(new FSM_unsafeMapIterator().fsm, 1);
+	createBindingStore(new FSM_SafeMapIterator().fsm, 1);
 
 	// create bindings
 	Map map = map(tuple(1, "a"));
@@ -246,7 +246,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
     @Test
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void removeExpiredBindingsNow_unsafeMapIterator() throws Exception {
-	createBindingStore(new FSM_unsafeMapIterator().fsm, 1);
+	createBindingStore(new FSM_SafeMapIterator().fsm, 1);
 
 	// create bindings
 	Map map = map(tuple(1, "a"));
@@ -284,7 +284,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
     @Test
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void getBindingsNoCompression_unsafeMapIterator() throws Exception {
-	createBindingStore(new FSM_unsafeMapIterator().fsm, 1);
+	createBindingStore(new FSM_SafeMapIterator().fsm, 1);
 
 	// create bindings
 	Map map = map(tuple(1, "a"));
@@ -305,7 +305,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
     @Test
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void getBindingsNoCompression_unsafeMapIterator2() throws Exception {
-	createBindingStore(new FSM_unsafeMapIterator().fsm, 1);
+	createBindingStore(new FSM_SafeMapIterator().fsm, 1);
 
 	// create bindings
 	Map map = map(tuple(1, "a"));

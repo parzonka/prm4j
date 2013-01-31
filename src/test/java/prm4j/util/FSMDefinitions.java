@@ -30,7 +30,7 @@ import prm4j.indexing.realtime.AwareMatchHandler.AwareMatchHandler2;
 public abstract class FSMDefinitions {
 
     @SuppressWarnings("rawtypes")
-    public static class FSM_unsafeMapIterator {
+    public static class FSM_SafeMapIterator {
 
 	public final Alphabet alphabet = new Alphabet();
 
@@ -53,7 +53,7 @@ public abstract class FSMDefinitions {
 	public final FSMState s3 = fsm.createState();
 	public final FSMState error = fsm.createAcceptingState(matchHandler);
 
-	public FSM_unsafeMapIterator() {
+	public FSM_SafeMapIterator() {
 	    initial.addTransition(createColl, s1);
 	    initial.addTransition(updateMap, initial);
 	    s1.addTransition(updateMap, s1);

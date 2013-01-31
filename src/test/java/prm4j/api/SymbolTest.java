@@ -20,7 +20,7 @@ public class SymbolTest extends AbstractTest {
 
     @Test
     public void getParameterIndices_UnsafeMapIterator() throws Exception {
-	FSM_unsafeMapIterator fsm = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
 
 	assertArrayEquals(array(0), fsm.updateMap.getParameterMask());
 	assertArrayEquals(array(0, 1), fsm.createColl.getParameterMask());

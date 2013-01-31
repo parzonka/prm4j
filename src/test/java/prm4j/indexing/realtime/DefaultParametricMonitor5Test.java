@@ -29,7 +29,7 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 
     public final static BoundObject _ = null;
 
-    FSM_unsafeMapIterator fsm;
+    FSM_SafeMapIterator fsm;
 
     BoundObject m1;
     BoundObject c1;
@@ -41,7 +41,7 @@ public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMoni
 
     @Before
     public void init() {
-	fsm = new FSM_unsafeMapIterator();
+	fsm = new FSM_SafeMapIterator();
 	createDefaultParametricMonitorWithAwareComponents(new FSMSpec(fsm.fsm));
 	m1 = new BoundObject("m1");
 	c1 = new BoundObject("c1");

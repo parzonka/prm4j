@@ -24,7 +24,7 @@ import prm4j.indexing.BaseMonitor;
 
 public class DefaultParametricMonitor6Test extends AbstractParametricMonitorTest {
 
-    FSM_unsafeMapIterator fsm;
+    FSM_SafeMapIterator fsm;
 
     BoundObject m1;
     BoundObject c1;
@@ -36,7 +36,7 @@ public class DefaultParametricMonitor6Test extends AbstractParametricMonitorTest
 
     @Before
     public void init() {
-	fsm = new FSM_unsafeMapIterator();
+	fsm = new FSM_SafeMapIterator();
 	createDefaultParametricMonitor(new FSMSpec(fsm.fsm));
 
 	m1 = new BoundObject("m1");

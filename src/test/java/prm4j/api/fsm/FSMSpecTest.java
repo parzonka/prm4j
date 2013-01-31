@@ -22,13 +22,13 @@ import prm4j.api.Parameter;
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.BaseMonitorState;
 import prm4j.indexing.StatefulMonitor;
-import prm4j.util.FSMDefinitions.FSM_unsafeMapIterator;
+import prm4j.util.FSMDefinitions.FSM_SafeMapIterator;
 
 public class FSMSpecTest {
 
     @Test
     public void getBaseEvents_unsafeMapIterator() {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FSMSpec fs = new FSMSpec(fsm);
 
@@ -45,7 +45,7 @@ public class FSMSpecTest {
 
     @Test
     public void getParameters_unsafeMapIterator() {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FSMSpec fs = new FSMSpec(fsm);
 
@@ -61,7 +61,7 @@ public class FSMSpecTest {
 
     @Test
     public void getStates_unsafeMapIterator() {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FSMSpec fs = new FSMSpec(fsm);
 
@@ -79,7 +79,7 @@ public class FSMSpecTest {
 
     @Test
     public void getInitialState_unsafeMapIterator() {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FSMSpec fs = new FSMSpec(fsm);
 
@@ -92,7 +92,7 @@ public class FSMSpecTest {
 
     @Test
     public void getInitialMonitor_unsafeMapIterator() {
-	FSM_unsafeMapIterator u = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
 	FSMSpec fs = new FSMSpec(fsm);
 

@@ -236,7 +236,7 @@ public class GarbageCollectionTest extends AbstractTest {
     @SuppressWarnings("rawtypes")
     public void twoEvents_expiredBindings_unsafeMapIterator_allCleaned() throws Exception {
 
-	FSM_unsafeMapIterator fsm = new FSM_unsafeMapIterator();
+	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
 	createDefaultParametricMonitorWithAwareComponents(fsm.fsm, 1);
 
 	Map map = mock(Map.class);
