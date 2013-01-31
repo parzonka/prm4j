@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
+import prm4j.Util;
 import prm4j.api.Event;
 import prm4j.api.MatchHandler;
 import prm4j.indexing.BaseMonitor;
@@ -38,12 +39,11 @@ public class ParametricMonitorLogger {
 	logMemoryConsumption();
     }
 
-
     private final Logger logger = getFileLogger("logs/prm4j-stats.log");
 
     private SummaryStatistics memStats;
 
-    private String experimentName = getSystemProperty("prm4j.experimentName", "");
+    private String experimentName = Util.getSystemProperty("prm4j.experimentName", "");
 
     public void log(long timestamp, Event event) {
 	this.timestamp = timestamp;
@@ -63,12 +63,9 @@ public class ParametricMonitorLogger {
 
     public void reset() {
 	logMemoryConsumption();
-	logger.log(Level.INFO, String.format(
-		"%s EVENTS (totalCount) %d",
-		experimentName, timestamp));
-	logger.log(Level.INFO, String.format(
-		"%s MATCHES (totalCount) %d",
-		experimentName, MatchHandler.getMatchCount()));
+	logger.log(Level.INFO, String.format("%s EVENTS (totalCount) %d", experimentName, timestamp));
+	logger.log(Level.INFO,
+		String.format("%s MATCHES (totalCount) %d", experimentName, MatchHandler.getMatchCount()));
 	logger.log(Level.INFO,
 		String.format("%s MEMORY (mean/max) %f %f", experimentName, memStats.getMean(), memStats.getMax()));
 	logger.log(
@@ -83,14 +80,9 @@ public class ParametricMonitorLogger {
 	memStats.clear();
     }
 
-    private static String getSystemProperty(String key, String defaultValue) {
-	final String value = System.getProperty(key);
-	return value != null ? value : defaultValue;
-    }
-
     /**
      * A simple file logger which outputs only the message.
-     *
+     * 
      * @param fileName
      *            path to the output file
      * @return the logger

@@ -50,9 +50,11 @@ public class Util {
 
     public static <T> Set<T> intersection(Set<T> set1, Set<T> set2) {
 	Set<T> result = new HashSet<T>();
-	for (T e : set1)
-	    if (set2.contains(e))
+	for (T e : set1) {
+	    if (set2.contains(e)) {
 		result.add(e);
+	    }
+	}
 	return result;
     }
 
@@ -64,7 +66,7 @@ public class Util {
 
     /**
      * Tests if set1 is a real subset of set2.
-     *
+     * 
      * @param set1
      * @param set2
      * @return <code>true</code>, if set1 is a real subset of set2.
@@ -75,7 +77,7 @@ public class Util {
 
     /**
      * Tests if set1 is a subset or equal to set2.
-     *
+     * 
      * @param set1
      * @param set2
      * @return <code>true</code>, if set1 is a subset or equal to set2.
@@ -86,7 +88,7 @@ public class Util {
 
     /**
      * Tests if set1 is a real superset of set2.
-     *
+     * 
      * @param set1
      * @param set2
      * @return <code>true</code>, if set1 is a real superset of set2.
@@ -162,18 +164,21 @@ public class Util {
     public static String bindingsToString(Binding[] bindings) {
 	// implementation copied from Arrays.toString
 	// substituting brackets for parantheses
-	if (bindings == null)
+	if (bindings == null) {
 	    return "null";
+	}
 	int iMax = bindings.length - 1;
-	if (iMax == -1)
+	if (iMax == -1) {
 	    return "[]";
+	}
 
 	StringBuilder b = new StringBuilder();
 	b.append('(');
 	for (int i = 0;; i++) {
 	    b.append(String.valueOf(bindings[i]));
-	    if (i == iMax)
+	    if (i == iMax) {
 		return b.append(')').toString();
+	    }
 	    b.append(", ");
 	}
     }
@@ -222,23 +227,30 @@ public class Util {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean equals(Object obj) {
-	    if (this == obj)
+	    if (this == obj) {
 		return true;
-	    if (obj == null)
+	    }
+	    if (obj == null) {
 		return false;
-	    if (getClass() != obj.getClass())
+	    }
+	    if (getClass() != obj.getClass()) {
 		return false;
+	    }
 	    Tuple other = (Tuple) obj;
 	    if (left == null) {
-		if (other.left != null)
+		if (other.left != null) {
 		    return false;
-	    } else if (!left.equals(other.left))
+		}
+	    } else if (!left.equals(other.left)) {
 		return false;
+	    }
 	    if (right == null) {
-		if (other.right != null)
+		if (other.right != null) {
 		    return false;
-	    } else if (!right.equals(other.right))
+		}
+	    } else if (!right.equals(other.right)) {
 		return false;
+	    }
 	    return true;
 	}
 
@@ -252,6 +264,11 @@ public class Util {
 	if (checkedObject == null) {
 	    throw new NullPointerException(String.format(Locale.US, messageFormatString, messageObjects));
 	}
+    }
+
+    public static String getSystemProperty(String key, String defaultValue) {
+	final String value = System.getProperty(key);
+	return value != null ? value : defaultValue;
     }
 
 }
