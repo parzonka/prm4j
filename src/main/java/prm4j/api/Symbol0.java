@@ -10,14 +10,13 @@
  */
 package prm4j.api;
 
-
 /**
  * Parameterless symbol.
  */
 public class Symbol0 extends Symbol {
 
     Symbol0(Alphabet alphabet, int uniqueId, String uniqueName) {
-	super(alphabet, uniqueId, uniqueName, 0);
+	super(alphabet, uniqueId, uniqueName);
 	setParameters();
     }
 

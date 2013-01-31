@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import prm4j.Util;
-import prm4j.api.Event;
 import prm4j.api.MatchHandler;
 import prm4j.indexing.BaseMonitor;
 
@@ -46,7 +45,7 @@ public class ParametricMonitorLogger {
 
     private String experimentName = Util.getSystemProperty("prm4j.experimentName", "");
 
-    public void log(long timestamp, Event event) {
+    public void log(long timestamp) {
 	this.timestamp = timestamp;
 	if (timestamp % 100 == 0) {
 	    logMemoryConsumption();

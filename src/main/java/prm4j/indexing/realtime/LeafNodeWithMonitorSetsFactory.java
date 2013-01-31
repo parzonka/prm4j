@@ -23,7 +23,7 @@ public class LeafNodeWithMonitorSetsFactory extends NodeFactory {
 
     @Override
     public Node createNode(MetaNode metaNode, int parameterIndex, LowLevelBinding binding) {
-	Node node = new LeafNodeWithMonitorSets(metaNode, parameterIndex, binding, nodeManager.getReferenceQueue());
+	Node node = new LeafNodeWithMonitorSets(metaNode, binding, nodeManager.getReferenceQueue());
 	nodeManager.createdNode(node);
 	return node;
     }

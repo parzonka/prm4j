@@ -33,7 +33,7 @@ public class LeafNode implements Node {
      * @param hashCode
      *            hash code of the key
      */
-    public LeafNode(MetaNode metaNode, int parameterIndex, LowLevelBinding key, ReferenceQueue<Node> refQueue) {
+    public LeafNode(MetaNode metaNode, LowLevelBinding key, ReferenceQueue<Node> refQueue) {
 	this.metaNode = metaNode;
 	this.key = key;
 	nodeRef = new NodeRef(this, refQueue);

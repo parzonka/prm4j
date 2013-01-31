@@ -18,7 +18,7 @@ public class Symbol3<P1, P2, P3> extends Symbol {
 
     public Symbol3(Alphabet alphabet, int uniqueId, String uniqueName, Parameter<P1> param1, Parameter<P2> param2,
 	    Parameter<P3> param3) {
-	super(alphabet, uniqueId, uniqueName, 3);
+	super(alphabet, uniqueId, uniqueName);
 	this.param1 = param1;
 	this.param2 = param2;
 	this.param3 = param3;

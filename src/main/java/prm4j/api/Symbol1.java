@@ -10,13 +10,12 @@
  */
 package prm4j.api;
 
-
 public class Symbol1<P1> extends Symbol {
 
     private final Parameter<P1> param1;
 
     Symbol1(Alphabet alphabet, int uniqueId, String uniqueName, Parameter<P1> param1) {
-	super(alphabet, uniqueId, uniqueName, 1);
+	super(alphabet, uniqueId, uniqueName);
 	this.param1 = param1;
 	setParameters(param1);
     }

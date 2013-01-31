@@ -216,7 +216,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	}
 	nodeManager.tryToClean(timestamp);
 	if (logger != null) {
-	    logger.log(timestamp, event);
+	    logger.log(timestamp);
 	}
 	timestamp++; // 40
     }

@@ -27,7 +27,7 @@ public abstract class Symbol implements BaseEvent {
     private Set<Parameter<?>> parameterSet;
     private int[] parameterMask;
 
-    protected Symbol(Alphabet alphabet, int index, String uniqueName, int parameterCount) {
+    protected Symbol(Alphabet alphabet, int index, String uniqueName) {
 	super();
 	this.alphabet = alphabet;
 	this.index = index;
@@ -42,7 +42,7 @@ public abstract class Symbol implements BaseEvent {
 
     /**
      * Sets the set representation and the parameter mask representation of the parameters associated with this symbol.
-     *
+     * 
      * @param parameters
      */
     protected void setParameters(Parameter<?>... parameters) {
@@ -68,7 +68,7 @@ public abstract class Symbol implements BaseEvent {
 
     /**
      * Assigns the object to its position in boundObject identified by the index of the given parameter.
-     *
+     * 
      * @param parameter
      * @param object
      * @param boundObjects
@@ -90,7 +90,7 @@ public abstract class Symbol implements BaseEvent {
 
     /**
      * Returns an array of objects, where the position in the array equals the index of the bound parameter.
-     *
+     * 
      * @return the array of bound objects
      */
     protected Object[] createObjectArray() {

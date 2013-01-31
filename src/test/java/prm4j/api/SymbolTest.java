@@ -26,6 +26,6 @@ public class SymbolTest extends AbstractTest {
 	assertArrayEquals(array(0, 1), fsm.createColl.getParameterMask());
 	assertArrayEquals(array(1, 2), fsm.createIter.getParameterMask());
 	assertArrayEquals(array(2), fsm.useIter.getParameterMask());
-    };
+    }
 
 }
