@@ -49,7 +49,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	bindingStore = new DefaultBindingStore(new DefaultBindingFactory(), spec.getFullParameterSet());
 	monitorPrototype = spec.getInitialMonitor();
 	nodeManager = new NodeManager();
-	nodeStore = new DefaultNodeStore(metaTree, nodeManager);
+	nodeStore = new DirectNodeStore(metaTree, nodeManager);
 	logger = Globals.DEBUG ? new ParametricMonitorLogger(bindingStore, nodeManager) : null;
     }
 
