@@ -18,8 +18,15 @@ public class Globals {
 	    "prm4j.monitorCleaningInterval", "2000"));
 
     /**
+     * Specifies the number of retrieve-operations after which the store will try to clean expired bindings. It will
+     * poll the a reference queue and remove the bindings from the store, triggering their resource removal.
+     */
+    public final static int BINDING_CLEANING_INTERVAL = Integer.parseInt(getSystemProperty(
+	    "prm4j.bindingCleaningInterval", "10000"));
+
+    /**
      * Compare the value of a system property.
-     *
+     * 
      * @param key
      * @param expectedValue
      * @return <code>true</code> if property value is expected value
@@ -35,7 +42,7 @@ public class Globals {
     static String getSystemProperty(String key, String defaultValue) {
 	final String value = System.getProperty(key);
 	String result = value != null ? value : defaultValue;
-	System.out.println(key + "=" + result);
+	System.out.println("[prm4j] " + key + "=" + result);
 	return result;
     }
 

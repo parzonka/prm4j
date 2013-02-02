@@ -13,18 +13,11 @@ package prm4j.indexing.realtime;
 import java.lang.ref.ReferenceQueue;
 import java.util.Set;
 
-import prm4j.Util;
+import prm4j.Globals;
 import prm4j.api.Parameter;
 import prm4j.indexing.map.MinimalMap;
 
 public class DefaultBindingStore implements BindingStore {
-
-    /**
-     * Specifies the number of retrieve-operations after which the store will try to clean expired bindings. It will
-     * poll the a reference queue and remove the bindings from the store, triggering their resource removal.
-     */
-    public static final int BINDING_CLEANING_INTERVAL = Integer.parseInt(Util.getSystemProperty(
-	    "prm4j.bindingCleaningInterval", "1024"));
 
     private final ReferenceQueue<Object> referenceQueue;
     private final Cleaner cleaner = new Cleaner();
@@ -39,14 +32,13 @@ public class DefaultBindingStore implements BindingStore {
     private MinimalMap<Object, LowLevelBinding> store;
 
     public DefaultBindingStore(BindingFactory bindingFactory, Set<Parameter<?>> fullParameterSet) {
-	this(bindingFactory, fullParameterSet, BINDING_CLEANING_INTERVAL);
+	this(bindingFactory, fullParameterSet, Globals.BINDING_CLEANING_INTERVAL);
     }
 
     public DefaultBindingStore(BindingFactory bindingFactory, Set<Parameter<?>> fullParameterSet, int cleaningInterval) {
 	this.bindingFactory = bindingFactory;
 	fullParameterCount = fullParameterSet.size();
 	this.cleaningInterval = cleaningInterval;
-	System.out.println("prm4j.bindingCleaningInterval=" + BINDING_CLEANING_INTERVAL);
 	referenceQueue = new ReferenceQueue<Object>();
 	store = new DefaultStore();
 	bindings = createInitialBindings();
