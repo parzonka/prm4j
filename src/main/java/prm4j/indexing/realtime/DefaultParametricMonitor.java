@@ -46,7 +46,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
      */
     public DefaultParametricMonitor(MetaNode metaTree, EventContext eventContext, Spec spec) {
 	this.eventContext = eventContext;
-	bindingStore = new DefaultBindingStore(new DefaultBindingFactory(), spec.getFullParameterSet());
+	bindingStore = new StepCleaningBindingStore(new DefaultBindingFactory(), spec.getFullParameterSet());
 	monitorPrototype = spec.getInitialMonitor();
 	nodeManager = new NodeManager();
 	nodeStore = new DefaultNodeStore(metaTree, nodeManager);

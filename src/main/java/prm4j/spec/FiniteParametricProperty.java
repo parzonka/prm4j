@@ -49,6 +49,7 @@ public class FiniteParametricProperty implements ParametricProperty {
     private final Set<BaseEvent> creationEvents;
     private final Set<BaseEvent> disablingEvents;
     private final SetMultimap<BaseEvent, Set<BaseEvent>> enablingEventSets;
+    // enablingParameterSets are currenty unused, we do all the calculation using the enablingEventSets
     private final SetMultimap<BaseEvent, Set<Parameter<?>>> enablingParameterSets;
     private final Set<Set<Parameter<?>>> possibleParameterSets;
     private final ListMultimap<BaseEvent, Set<Parameter<?>>> maxData;
@@ -97,7 +98,7 @@ public class FiniteParametricProperty implements ParametricProperty {
      * <li>not a dead state</li>
      * <li>not the initial state itself (self-loop)</li>
      * </ul>
-     *
+     * 
      * @return the creation events
      */
     private Set<BaseEvent> calculateCreationEvents() {
@@ -114,7 +115,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 
     /**
      * Disabling events are events for which the successor of the initial state is a dead state.
-     *
+     * 
      * @return the disabling events
      */
     private Set<BaseEvent> calculateDisablingEvents() {
@@ -168,7 +169,12 @@ public class FiniteParametricProperty implements ParametricProperty {
 		if (state != nextState && !baseEvent.getParameters().equals(nextParameterSet)) {
 		    updates.add(tuple(baseEvent.getParameters(), nextParameterSet));
 		}
-		if (nextState != null) { // 9 TODO path to accepting state
+		/*
+		 * (TODO) instead of just checking if nextState is null, we should also check if next state lies on a
+		 * path to an accepting state. If the property is defined properly this should be always the case
+		 * though.
+		 */
+		if (nextState != null) {
 		    // we remove the current base event because an event does not need to enable itself
 		    final Set<BaseEvent> seenBaseEventsWithoutCurrentBaseEvent = unmodifiableDifference(seenBaseEvents,
 			    set(baseEvent)); // 10
@@ -282,7 +288,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param state
 	 *            the current state for this recursion
 	 * @param parameterSet
@@ -336,7 +342,7 @@ public class FiniteParametricProperty implements ParametricProperty {
      * <li>not a dead state</li>
      * <li>not the initial state itself (self-loop)</li>
      * </ul>
-     *
+     * 
      * @return the creation events
      */
     @Override
@@ -346,7 +352,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 
     /**
      * Disabling events are events for which the successor of the initial state is a dead state.
-     *
+     * 
      * @return the disabling events
      */
     @Override
