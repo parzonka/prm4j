@@ -84,8 +84,8 @@ public class Globals {
      * @return defined system property or default
      */
     static boolean getBooleanSystemProperty(String key, boolean expectedValue) {
-	final Boolean value = Boolean.parseBoolean(System.getProperty(key));
-	final boolean result = value != null ? value : expectedValue;
+	final String value = System.getProperty(key);
+	final boolean result = value != null ? Boolean.parseBoolean(value) : expectedValue;
 	if (PRINT_CONFIGURATION) {
 	    System.out.println("[prm4j.config] " + key + "=" + result);
 	}
