@@ -36,8 +36,8 @@ public class ParametricMonitorFactory {
 	final StaticDataConverter converter = new StaticDataConverter(parametricProperty);
 
 	// build object graph
-	final BindingFactory bindingFactory = Globals.LINKEDLIST_STORED_BACKLINKS ? new DefaultBindingFactory()
-		: new LinkedListBindingFactory();
+	final BindingFactory bindingFactory = Globals.LINKEDLIST_STORED_BACKLINKS ? new LinkedListBindingFactory()
+		: new DefaultBindingFactory();
 	final BindingStore bindingStore = new DefaultBindingStore(bindingFactory, finiteSpec.getFullParameterSet());
 	final NodeManager nodeManager = new NodeManager();
 	final NodeStore nodeStore = new DefaultNodeStore(converter.getMetaTree(), nodeManager);

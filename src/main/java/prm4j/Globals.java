@@ -42,7 +42,7 @@ public class Globals {
      * linked-link based storage, <code>false</code> for array based.
      */
     public final static boolean LINKEDLIST_STORED_BACKLINKS = getBooleanSystemProperty(
-	    "prm4j.linkedListStoredBacklinks", false);
+	    "prm4j.linkedListStoredBacklinks", true);
 
     /**
      * Compare the value of a system property.
