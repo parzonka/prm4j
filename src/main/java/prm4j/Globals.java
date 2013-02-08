@@ -71,7 +71,7 @@ public class Globals {
 	final String value = System.getProperty(key);
 	final String result = value != null ? value : defaultValue;
 	if (PRINT_CONFIGURATION) {
-	    System.out.println("[prm4j] " + key + "=" + result);
+	    System.out.println("[prm4j.config] " + key + "=" + result);
 	}
 	return result;
     }
@@ -87,7 +87,7 @@ public class Globals {
 	final Boolean value = Boolean.parseBoolean(System.getProperty(key));
 	final boolean result = value != null ? value : expectedValue;
 	if (PRINT_CONFIGURATION) {
-	    System.out.println("[prm4j] " + key + "=" + result);
+	    System.out.println("[prm4j.config] " + key + "=" + result);
 	}
 	return result;
     }
