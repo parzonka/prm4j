@@ -10,18 +10,40 @@
  */
 package prm4j.api;
 
+import prm4j.Globals;
 import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.realtime.BindingFactory;
+import prm4j.indexing.realtime.BindingStore;
+import prm4j.indexing.realtime.DefaultBindingFactory;
+import prm4j.indexing.realtime.DefaultBindingStore;
+import prm4j.indexing.realtime.DefaultNodeStore;
 import prm4j.indexing.realtime.DefaultParametricMonitor;
+import prm4j.indexing.realtime.LinkedListBindingFactory;
+import prm4j.indexing.realtime.NodeManager;
+import prm4j.indexing.realtime.NodeStore;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
+import prm4j.spec.ParametricProperty;
 
 public class ParametricMonitorFactory {
 
     public static ParametricMonitor createParametricMonitor(FiniteSpec finiteSpec) {
-	StaticDataConverter converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
-	BaseMonitor.reset();
-	return new DefaultParametricMonitor(converter.getMetaTree(), converter.getEventContext(), finiteSpec);
-    }
 
+	BaseMonitor.reset(); // Diagnostic
+
+	final ParametricProperty parametricProperty = new FiniteParametricProperty(finiteSpec);
+	final StaticDataConverter converter = new StaticDataConverter(parametricProperty);
+
+	// build object graph
+	final BindingFactory bindingFactory = Globals.LINKEDLIST_STORED_BACKLINKS ? new DefaultBindingFactory()
+		: new LinkedListBindingFactory();
+	final BindingStore bindingStore = new DefaultBindingStore(bindingFactory, finiteSpec.getFullParameterSet());
+	final NodeManager nodeManager = new NodeManager();
+	final NodeStore nodeStore = new DefaultNodeStore(converter.getMetaTree(), nodeManager);
+	final BaseMonitor prototypeMonitor = finiteSpec.getInitialMonitor();
+
+	return new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(),
+		nodeManager, false);
+    }
 }
