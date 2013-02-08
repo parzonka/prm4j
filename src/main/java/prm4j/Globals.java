@@ -10,7 +10,15 @@
  */
 package prm4j;
 
+/**
+ * Encapsulates configuration via Java System Properties.
+ */
 public class Globals {
+
+    /**
+     * Controls configuration printing on application start.
+     */
+    public static final boolean PRINT_CONFIGURATION = true;
 
     public final static boolean DEBUG = isSystemProperty("prm4j.debug", "true");
 
@@ -24,6 +32,9 @@ public class Globals {
     public final static int BINDING_CLEANING_INTERVAL = Integer.parseInt(getSystemProperty(
 	    "prm4j.bindingCleaningInterval", "10000"));
 
+    public final static boolean CHECK_MONITOR_VALIDITY_ON_EACH_UPDATE = getBooleanSystemProperty(
+	    "prm4j.checkMonitorValidityOnEachUpdate", true);
+
     /**
      * Compare the value of a system property.
      * 
@@ -33,16 +44,42 @@ public class Globals {
      */
     static boolean isSystemProperty(String key, String expectedValue) {
 	final String value = System.getProperty(key);
-	if (value == null) {
-	    return false;
+	final boolean result = value != null ? expectedValue.equals(value) : false;
+	if (PRINT_CONFIGURATION) {
+	    System.out.println("[prm4j] " + key + "=" + result);
 	}
-	return value.equals(expectedValue);
+	return result;
     }
 
+    /**
+     * Return the value of a system property or a default value if undefined.
+     * 
+     * @param key
+     * @param defaultValue
+     * @return defined system property or default
+     */
     static String getSystemProperty(String key, String defaultValue) {
 	final String value = System.getProperty(key);
-	String result = value != null ? value : defaultValue;
-	System.out.println("[prm4j] " + key + "=" + result);
+	final String result = value != null ? value : defaultValue;
+	if (PRINT_CONFIGURATION) {
+	    System.out.println("[prm4j] " + key + "=" + result);
+	}
+	return result;
+    }
+
+    /**
+     * Return the value of a system property or a default value if undefined.
+     * 
+     * @param key
+     * @param defaultValue
+     * @return defined system property or default
+     */
+    static boolean getBooleanSystemProperty(String key, boolean expectedValue) {
+	final Boolean value = Boolean.parseBoolean(System.getProperty(key));
+	final boolean result = value != null ? value : expectedValue;
+	if (PRINT_CONFIGURATION) {
+	    System.out.println("[prm4j] " + key + "=" + result);
+	}
 	return result;
     }
 
