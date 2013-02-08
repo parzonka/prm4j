@@ -10,6 +10,7 @@
  */
 package prm4j.indexing;
 
+import prm4j.Globals;
 import prm4j.api.BaseEvent;
 import prm4j.api.Event;
 import prm4j.api.MatchHandler;
@@ -47,7 +48,9 @@ public class StatefulMonitor extends BaseMonitor {
 	    // when a state is a accepting state, it is still possible we will reach another accepting state (or loop on
 	    // an accepting state)
 	}
-	if (state.isFinal() || !getMetaNode().isAcceptingStateReachable(getLowLevelBindings())) {
+	if (state.isFinal()
+		|| (Globals.CHECK_MONITOR_VALIDITY_ON_EACH_UPDATE && !getMetaNode().isAcceptingStateReachable(
+			getLowLevelBindings()))) {
 	    terminate();
 	    return false;
 	}
@@ -85,18 +88,23 @@ public class StatefulMonitor extends BaseMonitor {
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
+	if (this == obj) {
 	    return true;
-	if (obj == null)
+	}
+	if (obj == null) {
 	    return false;
-	if (getClass() != obj.getClass())
+	}
+	if (getClass() != obj.getClass()) {
 	    return false;
+	}
 	StatefulMonitor other = (StatefulMonitor) obj;
 	if (state == null) {
-	    if (other.state != null)
+	    if (other.state != null) {
 		return false;
-	} else if (!state.equals(other.state))
+	    }
+	} else if (!state.equals(other.state)) {
 	    return false;
+	}
 	return true;
     }
 
