@@ -24,7 +24,7 @@ public class LinkedListLowLevelBinding extends WeakReference<Object> implements 
     private LowLevelBinding next;
     private Link link;
 
-    public LinkedListLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q, int initialNodeRefsSize) {
+    public LinkedListLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q) {
 	super(boundObject, q);
 	this.hashCode = hashCode;
 	timestamp = Long.MAX_VALUE; // indicates the binding was just created

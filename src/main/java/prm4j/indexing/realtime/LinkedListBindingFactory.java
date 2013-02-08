@@ -16,13 +16,13 @@ public class LinkedListBindingFactory implements BindingFactory {
 
     @Override
     public LowLevelBinding[] createTable(int size) {
-	return new DefaultLowLevelBinding[size];
+	return new LinkedListLowLevelBinding[size];
     }
 
     @Override
     public LowLevelBinding createBinding(Object boundObject, int hashCode, ReferenceQueue<Object> referenceQueue,
 	    int fullParameterCount) {
-	return new DefaultLowLevelBinding(boundObject, hashCode, referenceQueue, fullParameterCount);
+	return new LinkedListLowLevelBinding(boundObject, hashCode, referenceQueue);
     }
 
 }
