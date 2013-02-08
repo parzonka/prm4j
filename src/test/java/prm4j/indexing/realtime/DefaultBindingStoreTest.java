@@ -19,7 +19,6 @@ import static org.mockito.Mockito.verify;
 import static prm4j.Util.map;
 import static prm4j.Util.tuple;
 
-import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -259,8 +258,8 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// register node mocks
 	Node mNode = mock(Node.class);
 	Node cNode = mock(Node.class);
-	mBinding.registerNode(new WeakReference<Node>(mNode));
-	cBinding.registerNode(new WeakReference<Node>(cNode));
+	mBinding.registerHolder(new NodeRef(mNode, null));
+	cBinding.registerHolder(new NodeRef(cNode, null));
 
 	// nullify references
 	map = null;

@@ -56,18 +56,15 @@ public class LinkedListLowLevelBinding extends WeakReference<Object> implements 
     }
 
     @Override
-    public void registerNode(Object nodeReference) {
+    public void registerHolder(Holder<LowLevelBinding> bindingHolder) {
 	// prepend to the linked list
-	link = new Link(nodeReference, link);
+	link = new Link(bindingHolder, link);
     }
 
     @Override
     public void release() {
 	while (link != null) {
-	    final Node node = link.nodeRef.get();
-	    if (node != null) {
-		node.remove(this);
-	    }
+	    link.bindingHolder.release(this);
 	    link = link.next;
 	}
     }
@@ -113,11 +110,10 @@ public class LinkedListLowLevelBinding extends WeakReference<Object> implements 
     class Link {
 
 	final Link next;
-	final WeakReference<Node> nodeRef;
+	final Holder<LowLevelBinding> bindingHolder;
 
-	@SuppressWarnings("unchecked")
-	Link(Object nodeRef, Link next) {
-	    this.nodeRef = (WeakReference<Node>) nodeRef;
+	Link(Holder<LowLevelBinding> bindingHolder, Link next) {
+	    this.bindingHolder = bindingHolder;
 	    this.next = next;
 	}
     }

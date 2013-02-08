@@ -28,7 +28,7 @@ public interface LowLevelBinding extends prm4j.api.Binding, MinimalMapEntry<Obje
      * 
      * @param nodeRef
      */
-    void registerNode(Object nodeRef);
+    void registerHolder(Holder<LowLevelBinding> bindingHolder);
 
     boolean isDisabled();
 

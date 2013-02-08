@@ -15,12 +15,20 @@ import java.lang.ref.WeakReference;
 
 import prm4j.indexing.BaseMonitor;
 
-public class NodeRef extends WeakReference<Node> {
+public class NodeRef extends WeakReference<Node> implements Holder<LowLevelBinding> {
 
     public BaseMonitor monitor;
 
     public NodeRef(Node node, ReferenceQueue<Node> refQueue) {
 	super(node, refQueue);
+    }
+
+    @Override
+    public void release(LowLevelBinding binding) {
+	final Node node = get();
+	if (node != null) {
+	    node.remove(binding);
+	}
     }
 
 }

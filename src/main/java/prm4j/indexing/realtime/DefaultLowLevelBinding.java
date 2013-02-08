@@ -20,15 +20,15 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
     private boolean disabled;
     private final int hashCode;
     private LowLevelBinding next;
-    private Object[] nodeRefs;
-    private int nodeRefsSize;
+    private Holder<LowLevelBinding>[] bindingHolders;
+    private int bindingHoldersSize;
 
-    public DefaultLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q, int initialNodeRefsSize) {
+    public DefaultLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q, int initialHoldersSize) {
 	super(boundObject, q);
 	this.hashCode = hashCode;
 	timestamp = Long.MAX_VALUE; // indicates the binding was just created
 	// hijack the field to store the initial capacity needed for lazy creation of the nodeRefs array
-	nodeRefsSize = initialNodeRefsSize;
+	bindingHoldersSize = initialHoldersSize;
     }
 
     /**
@@ -56,34 +56,31 @@ public class DefaultLowLevelBinding extends WeakReference<Object> implements Low
 	this.next = next;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void registerNode(Object nodeReference) {
-	// create nodeRefs lazily
-	if (nodeRefs == null) {
-	    // we had hijacked the nodeRefsSize field to store the initial nodeRefs capacity
-	    nodeRefs = new Object[nodeRefsSize];
-	    nodeRefsSize = 0; // reset the actual size
+    public void registerHolder(Holder<LowLevelBinding> bindingHolder) {
+	// create bindingHoldersSize lazily
+	if (bindingHolders == null) {
+	    // we had hijacked the bindingHoldersSize field to store the initial bindingHolders capacity
+	    bindingHolders = new Holder[bindingHoldersSize];
+	    bindingHoldersSize = 0; // reset the actual size
 	} else {
 	    // ensure capacity
-	    if (nodeRefsSize >= nodeRefs.length) {
-		final int capacity = (nodeRefs.length * 3) / 2 + 1;
-		nodeRefs = Arrays.copyOf(nodeRefs, capacity);
+	    if (bindingHoldersSize >= bindingHolders.length) {
+		final int capacity = (bindingHolders.length * 3) / 2 + 1;
+		bindingHolders = Arrays.copyOf(bindingHolders, capacity);
 	    }
 	}
-	nodeRefs[nodeRefsSize++] = nodeReference;
+	bindingHolders[bindingHoldersSize++] = bindingHolder;
     }
 
     @Override
     public void release() {
-	if (nodeRefs != null) {
-	    for (int i = 0; i < nodeRefsSize; i++) {
-		@SuppressWarnings("unchecked")
-		final Node node = ((WeakReference<Node>) nodeRefs[i]).get();
-		if (node != null) {
-		    node.remove(this);
-		}
+	if (bindingHolders != null) {
+	    for (int i = 0; i < bindingHoldersSize; i++) {
+		bindingHolders[i].release(this);
 	    }
-	    nodeRefs = null;
+	    bindingHolders = null;
 	}
     }
 

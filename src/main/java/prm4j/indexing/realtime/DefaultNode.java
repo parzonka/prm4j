@@ -67,7 +67,7 @@ public class DefaultNode extends AbstractNode {
 
     @Override
     public Node getOrCreateNode(int parameterIndex, LowLevelBinding binding) {
-	binding.registerNode(nodeRef);
+	binding.registerHolder(nodeRef);
 	if (cachedParameterIndex != parameterIndex || cachedBinding != binding) {
 	    cachedParameterIndex = parameterIndex;
 	    cachedBinding = binding;
