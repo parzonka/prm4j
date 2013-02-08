@@ -96,7 +96,7 @@ public class StaticDataConverter {
     /**
      * Return a ordered list of tuples. The ordering is not neccessary for correctness. It is just useful for display
      * purposes so that the empty set (as left component) will get associated with the id 0.
-     *
+     * 
      * @param parameterSet
      * @return a list of tuples (Set, Boolean) ordered by size of the set.
      */
@@ -115,7 +115,7 @@ public class StaticDataConverter {
 
     /**
      * Creates a int pattern needed for the join operation.
-     *
+     * 
      * @param baseSet
      *            all parameters of this set will be kept
      * @param joiningSet
@@ -147,7 +147,7 @@ public class StaticDataConverter {
     /**
      * Returns a pattern { s1, t1, ..., sN, tN } which represents a instruction to copy a binding from sourceBinding[s1]
      * to targetBinding[t1] to perform a join.
-     *
+     * 
      * @param ps1
      *            parameter set which masks the target binding
      * @param ps2
@@ -186,12 +186,12 @@ public class StaticDataConverter {
      * parameterMasksCount * parameterMask
      */
     private boolean[][] calculateAliveParameterMasksBoolean(Set<Parameter<?>> nodeParameterSet) {
-	    boolean[][] result = new boolean[pp.getAliveParameterSets().size()][];
-	    int i = 0;
-	    for (Set<Parameter<?>> parameterSet : pp.getAliveParameterSets()) {
-		// the alive parameter mask is a subset of the node parameter set
-		result[i++] = toParameterSubsetMaskBoolean(parameterSet, nodeParameterSet);
-	    }
+	boolean[][] result = new boolean[pp.getAliveParameterSets().size()][];
+	int i = 0;
+	for (Set<Parameter<?>> parameterSet : pp.getAliveParameterSets()) {
+	    // the alive parameter mask is a subset of the node parameter set
+	    result[i++] = toParameterSubsetMaskBoolean(parameterSet, nodeParameterSet);
+	}
 	return result;
     }
 
@@ -223,7 +223,7 @@ public class StaticDataConverter {
 
     /**
      * Returns a parameter mask which selects all parameters in the given set from a full parameter set
-     *
+     * 
      * @param parameterSet
      * @return
      */
@@ -239,7 +239,7 @@ public class StaticDataConverter {
 
     /**
      * Returns a parameterMask which selects all parameters in the subset from the parameter set.
-     *
+     * 
      * @param subset
      * @param parameterSet
      * @return
@@ -260,7 +260,7 @@ public class StaticDataConverter {
     /**
      * Returns a parameterMask which selects all parameters in the subset from the parameter set. Works with compressed
      * and uncompressed array representations.
-     *
+     * 
      * @param subset
      * @param parameterSet
      *            if this is the full parameter set, the result is a mask for the uncompressed array representation. Use
