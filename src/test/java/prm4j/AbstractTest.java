@@ -33,8 +33,8 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 
     public final static Set<Parameter<?>> EMPTY_PARAMETER_SET = new HashSet<Parameter<?>>();
 
-    private static int boundObjectCounter = 0;
-    private static int instanceCounter = 0;
+    private int boundObjectCounter = 0;
+    private int instanceCounter = 0;
 
     @Before
     public void resetCounters() {
@@ -44,7 +44,7 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 
     /**
      * Downcast SymbolN to Symbol.
-     *
+     * 
      * @param values
      * @return
      */
@@ -75,8 +75,9 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 
     public static <T> List<T> list(T... objects) {
 	List<T> result = new ArrayList<T>();
-	for (T t : objects)
+	for (T t : objects) {
 	    result.add(t);
+	}
 	return result;
     }
 
@@ -95,7 +96,7 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
     /**
      * assertArrayEquals(boolean[] a1, boolean[] a2) not implemented in jUnit for some reason, see
      * https://github.com/KentBeck/junit/issues/86
-     *
+     * 
      * @param expected
      * @param actual
      */
@@ -109,21 +110,25 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	if (actual == null) {
 	    fail("Actual array was null!");
 	}
-	if (expected.length != actual.length)
+	if (expected.length != actual.length) {
 	    fail("Expected:<" + Arrays.toString(expected) + "> but was: <" + Arrays.toString(actual) + ">");
+	}
 	for (int i = 0; i < expected.length; i++) {
-	    if (expected[i] != actual[i])
+	    if (expected[i] != actual[i]) {
 		fail();
+	    }
 	}
     }
 
     public static void assert2DimArrayEquals(Object[][] expected, Object[][] actual) {
-	if (expected.length != actual.length)
+	if (expected.length != actual.length) {
 	    fail("Expected:<" + Arrays.toString(expected) + "> but was: <" + Arrays.toString(actual) + ">");
+	}
 	for (int i = 0; i < expected.length; i++) {
-	    if (expected[i].length != actual[i].length)
+	    if (expected[i].length != actual[i].length) {
 		fail("2-dim array differs in row " + i + ". Expected:<" + Arrays.toString(expected[i]) + "> but was: <"
 			+ Arrays.toString(actual[i]) + ">");
+	    }
 	    for (int j = 0; j < expected[i].length; j++) {
 		if (!expected[i][j].equals(actual[i][j])) {
 		    fail("2-dim array differs in at [" + i + "][" + j + "]. Expected:<" + expected[i][j].toString()
@@ -147,7 +152,7 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
     /**
      * Create parametric instances conveniently.
      */
-    public static class ParametricInstance {
+    public class ParametricInstance {
 
 	final int instanceId;
 	private final BoundObject[] boundObjects;
@@ -196,7 +201,7 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
      * Creates parametric instances conveniently and keeps them in memory for as long as the external storage is not
      * cleared.
      */
-    public static class PersistantParametricInstance extends ParametricInstance {
+    public class PersistantParametricInstance extends ParametricInstance {
 
 	final private Set<Event> storage;
 
@@ -225,11 +230,11 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	return new ParametricInstance(boundObjects);
     }
 
-    public static ParametricInstance persistentParametricInstance(Set<Event> storage, BoundObject... boundObjects) {
+    public ParametricInstance persistentParametricInstance(Set<Event> storage, BoundObject... boundObjects) {
 	return new PersistantParametricInstance(storage, boundObjects);
     }
 
-    public static class BoundObject {
+    public class BoundObject {
 
 	public final String id;
 
