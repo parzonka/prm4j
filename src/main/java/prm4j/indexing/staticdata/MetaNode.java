@@ -468,4 +468,9 @@ public class MetaNode {
 	return (T) compressedBindings[compressedIndex[parameter.getIndex()]].get();
     }
 
+    @Override
+    public int hashCode() {
+	return nodeParameterSet.hashCode();
+    }
+
 }
