@@ -56,7 +56,7 @@ public class ParametricMonitorLogger {
 	double memoryConsumption = (((double) (Runtime.getRuntime().totalMemory() / 1024) / 1024) - ((double) (Runtime
 		.getRuntime().freeMemory() / 1024) / 1024));
 	// filter NaNs
-	if (memoryConsumption != Double.NaN) {
+	if (!Double.isNaN(memoryConsumption)) {
 	    memStats.addValue(memoryConsumption);
 	}
     }
