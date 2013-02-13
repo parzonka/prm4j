@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.spec.FiniteSpec;
 
-public class DefaultParametricMonitor4Test extends AbstractDefaultParametricMonitorTest {
+public class DefaultParametricMonitor_ab_b_with_initial_b_loop_Test extends AbstractDefaultParametricMonitorTest {
 
     FSM_ab_b_with_initial_b_loop fsm;
     final String a = "a";

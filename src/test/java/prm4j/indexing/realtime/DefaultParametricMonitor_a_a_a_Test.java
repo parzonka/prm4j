@@ -21,7 +21,7 @@ import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.BaseMonitor;
 import prm4j.spec.FiniteSpec;
 
-public class DefaultParametricMonitor1Test extends AbstractDefaultParametricMonitorTest {
+public class DefaultParametricMonitor_a_a_a_Test extends AbstractDefaultParametricMonitorTest {
 
     FSM_a_a_a fsm;
     final String a = "a";

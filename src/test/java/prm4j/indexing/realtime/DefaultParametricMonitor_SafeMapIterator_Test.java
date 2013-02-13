@@ -25,7 +25,7 @@ import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
 
-public class DefaultParametricMonitor5Test extends AbstractDefaultParametricMonitorTest {
+public class DefaultParametricMonitor_SafeMapIterator_Test extends AbstractDefaultParametricMonitorTest {
 
     public final static BoundObject _ = null;
 

@@ -31,7 +31,7 @@ import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
 
-public class GarbageCollectionTest extends AbstractTest {
+public class DefaultParametricMonitor_obj_obj_GarbaceCollectionTest extends AbstractTest {
 
     protected StaticDataConverter converter;
     protected DefaultBindingStore bindingStore;
