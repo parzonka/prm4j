@@ -102,15 +102,15 @@ public class FiniteParametricProperty implements ParametricProperty {
      * @return the creation events
      */
     private Set<BaseEvent> calculateCreationEvents() {
-	Set<BaseEvent> disablingEvents = new HashSet<BaseEvent>();
+	Set<BaseEvent> creationEvents = new HashSet<BaseEvent>();
 	BaseMonitorState initialState = finiteSpec.getInitialState();
 	for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
 	    BaseMonitorState successor = initialState.getSuccessor(symbol);
 	    if (successor != null && !successor.equals(initialState)) {
-		disablingEvents.add(symbol);
+		creationEvents.add(symbol);
 	    }
 	}
-	return disablingEvents;
+	return creationEvents;
     }
 
     /**
