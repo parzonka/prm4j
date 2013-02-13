@@ -14,7 +14,7 @@ import prm4j.Globals;
 import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.realtime.BindingFactory;
 import prm4j.indexing.realtime.BindingStore;
-import prm4j.indexing.realtime.DefaultBindingFactory;
+import prm4j.indexing.realtime.ArrayBasedBindingFactory;
 import prm4j.indexing.realtime.DefaultBindingStore;
 import prm4j.indexing.realtime.DefaultNodeStore;
 import prm4j.indexing.realtime.DefaultParametricMonitor;
@@ -37,7 +37,7 @@ public class ParametricMonitorFactory {
 
 	// build object graph
 	final BindingFactory bindingFactory = Globals.LINKEDLIST_STORED_BACKLINKS ? new LinkedListBindingFactory()
-		: new DefaultBindingFactory();
+		: new ArrayBasedBindingFactory();
 	final BindingStore bindingStore = new DefaultBindingStore(bindingFactory, finiteSpec.getFullParameterSet());
 	final NodeManager nodeManager = new NodeManager();
 	final NodeStore nodeStore = new DefaultNodeStore(converter.getMetaTree(), nodeManager);

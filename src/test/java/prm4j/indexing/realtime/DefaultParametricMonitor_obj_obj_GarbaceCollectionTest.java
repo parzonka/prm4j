@@ -43,7 +43,7 @@ public class DefaultParametricMonitor_obj_obj_GarbaceCollectionTest extends Abst
     public void createDefaultParametricMonitorWithAwareComponents(FSM fsm, int cleaningInterval) {
 	FiniteSpec finiteSpec = new FSMSpec(fsm);
 	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
-	bindingStore = new DefaultBindingStore(new DefaultBindingFactory(), finiteSpec.getFullParameterSet(),
+	bindingStore = new DefaultBindingStore(new ArrayBasedBindingFactory(), finiteSpec.getFullParameterSet(),
 		cleaningInterval);
 	prototypeMonitor = new StatefulMonitor(finiteSpec.getInitialState());
 	nodeManager = new NodeManager();
@@ -188,7 +188,7 @@ public class DefaultParametricMonitor_obj_obj_GarbaceCollectionTest extends Abst
 	// collected already. We therefor create fakeBindings with a fakeObject.
 	final Object fakeObject = new Object();
 	final LowLevelBinding[] fakeBindings = new LowLevelBinding[1];
-	fakeBindings[0] = new DefaultLowLevelBinding(fakeObject, 42, null, 1);
+	fakeBindings[0] = new ArrayBasedBinding(fakeObject, 42, null, 1);
 	nodeRef.monitor = prototypeMonitor.copy(fakeBindings);
 	// we also need a correct metanode, so that the accepting-state-test is performed correctly
 	nodeRef.monitor.setMetaNode(nodeStore.getRootNode().getMetaNode().getMetaNode(fsm.p1));

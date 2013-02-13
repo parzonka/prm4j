@@ -17,16 +17,16 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import prm4j.indexing.realtime.DefaultLowLevelBinding;
+import prm4j.indexing.realtime.ArrayBasedBinding;
 import prm4j.indexing.realtime.LowLevelBinding;
 
 public class NodeMapTest {
 
-    private final static LowLevelBinding b0 = new DefaultLowLevelBinding(null, 0, null, 2);
-    private final static LowLevelBinding b1 = new DefaultLowLevelBinding(null, 1, null, 2);
-    private final static LowLevelBinding b2 = new DefaultLowLevelBinding(null, 2, null, 2);
-    private final static LowLevelBinding b3 = new DefaultLowLevelBinding(null, 3, null, 2);
-    private final static LowLevelBinding b4 = new DefaultLowLevelBinding(null, 4, null, 2);
+    private final static LowLevelBinding b0 = new ArrayBasedBinding(null, 0, null, 2);
+    private final static LowLevelBinding b1 = new ArrayBasedBinding(null, 1, null, 2);
+    private final static LowLevelBinding b2 = new ArrayBasedBinding(null, 2, null, 2);
+    private final static LowLevelBinding b3 = new ArrayBasedBinding(null, 3, null, 2);
+    private final static LowLevelBinding b4 = new ArrayBasedBinding(null, 4, null, 2);
 
     @Test
     public void size_sizeGrowsWithAddedEntries() throws Exception {
@@ -132,7 +132,7 @@ public class NodeMapTest {
     public void remove_getOrCreate_collision() throws Exception {
 	MockMap map = new MockMap();
 	map.getOrCreate(0, b0);
-	DefaultLowLevelBinding b0x = new DefaultLowLevelBinding(null, 0, null, 2);
+	ArrayBasedBinding b0x = new ArrayBasedBinding(null, 0, null, 2);
 	MockEntry aEntry = map.getOrCreate(1, b0x);
 	assertEquals(2, map.size());
 	map.remove(b0);

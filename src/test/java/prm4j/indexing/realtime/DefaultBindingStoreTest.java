@@ -277,7 +277,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
     private void createBindingStore(FSM fsm, int cleaningInterval) {
 	FiniteSpec finiteSpec = new FSMSpec(fsm);
-	bs = new DefaultBindingStore(new DefaultBindingFactory(), finiteSpec.getFullParameterSet(), cleaningInterval);
+	bs = new DefaultBindingStore(new ArrayBasedBindingFactory(), finiteSpec.getFullParameterSet(), cleaningInterval);
     }
 
     @Test

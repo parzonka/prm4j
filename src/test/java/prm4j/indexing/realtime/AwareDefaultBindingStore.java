@@ -25,7 +25,7 @@ public class AwareDefaultBindingStore extends DefaultBindingStore {
     private final Deque<WeakReference<LowLevelBinding[]>> retrievedBindings;
 
     public AwareDefaultBindingStore(Set<Parameter<?>> fullParameterSet, int cleaningInterval) {
-	super(new DefaultBindingFactory(), fullParameterSet, cleaningInterval);
+	super(new ArrayBasedBindingFactory(), fullParameterSet, cleaningInterval);
 	retrievedBindings = new ArrayDeque<WeakReference<LowLevelBinding[]>>();
     }
 

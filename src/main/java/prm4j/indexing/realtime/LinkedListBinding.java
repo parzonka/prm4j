@@ -15,11 +15,11 @@ import java.lang.ref.ReferenceQueue;
 /**
  * Implementation of LowLevelBinding using a linked list as a back reference to its associated hash maps.
  */
-public class LinkedListLowLevelBinding extends AbstractLowLevelBinding {
+public class LinkedListBinding extends AbstractLowLevelBinding {
 
     private Link link;
 
-    public LinkedListLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q) {
+    public LinkedListBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q) {
 	super(boundObject, hashCode, q);
     }
 

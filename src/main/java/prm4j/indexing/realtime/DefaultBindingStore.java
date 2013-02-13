@@ -48,7 +48,7 @@ public class DefaultBindingStore implements BindingStore {
 	LowLevelBinding[] result = new LowLevelBinding[fullParameterCount];
 	for (int i = 0; i < result.length; i++) {
 	    // fill the bindings-array with pseudo-bindings
-	    result[i] = new DefaultLowLevelBinding(new Object(), 0, null, 0);
+	    result[i] = new ArrayBasedBinding(new Object(), 0, null, 0);
 	}
 	return result;
     }

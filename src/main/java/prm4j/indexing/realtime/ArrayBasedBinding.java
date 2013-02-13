@@ -13,12 +13,12 @@ package prm4j.indexing.realtime;
 import java.lang.ref.ReferenceQueue;
 import java.util.Arrays;
 
-public class DefaultLowLevelBinding extends AbstractLowLevelBinding {
+public class ArrayBasedBinding extends AbstractLowLevelBinding {
 
     private Holder<LowLevelBinding>[] bindingHolders;
     private int bindingHoldersSize;
 
-    public DefaultLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q, int initialHoldersSize) {
+    public ArrayBasedBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q, int initialHoldersSize) {
 	super(boundObject, hashCode, q);
 	// hijack the field to store the initial capacity needed for lazy creation of the nodeRefs array
 	bindingHoldersSize = initialHoldersSize;
