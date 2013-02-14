@@ -73,6 +73,14 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	return prototypeMonitor.getCreatedMonitors().pop();
     }
 
+    protected int assertNumberOfCreatedMonitors(int expectedNumber) {
+	return prototypeMonitor.getCreatedMonitors().size();
+    }
+
+    protected int assertNumberOfCreatedNodes(int expectedNumber) {
+	return nodeStore.getCreatedNodes().size();
+    }
+
     protected Node popNextRetrievedNode() {
 	if (nodeStore.getRetrievedNodes().isEmpty()) {
 	    fail("There were no more retrieved nodes!");
@@ -87,9 +95,31 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	return bindingStore.getListOfBindings().pop().get();
     }
 
+    /**
+     * Retrieves the node from the {@link BindingStore}
+     * 
+     * @param boundObjects
+     *            an array of parameter values (bound objects) [o1, ... on], where oi denotes the object bound to
+     *            parameter i. You have to use (null, obj) to access (p2=obj).
+     * @return the node, if it exists, else the null node
+     */
     protected Node getNode(Object... boundObjects) {
 	int[] parameterMask = toParameterMask(boundObjects);
 	return nodeStore.getNode(bindingStore.getBindings(boundObjects), parameterMask);
+    }
+
+    protected void assertNodeExists(Node node) {
+	if (node == NullNode.instance) {
+	    fail("Node is the NullNode!");
+	}
+	if (node == null) {
+	    throw new NullPointerException("Node was null!");
+	}
+    }
+
+    protected AwareBaseMonitor getMonitor(Object... boundObjects) {
+	int[] parameterMask = toParameterMask(boundObjects);
+	return (AwareBaseMonitor) nodeStore.getNode(bindingStore.getBindings(boundObjects), parameterMask).getMonitor();
     }
 
     protected Node getOrCreateNode(Object... boundObjects) {

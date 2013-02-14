@@ -35,7 +35,7 @@ public class DefaultParametricMonitor_a_ab_with_initial_ab_loop_Test extends Abs
 	public final Parameter<String> p2 = alphabet.createParameter("p2", String.class);
 
 	public final Symbol1<String> e1 = alphabet.createSymbol1("e1", p1);
-	public final Symbol2<String, String> e2 = alphabet.createSymbol2("e1", p1, p2);
+	public final Symbol2<String, String> e2 = alphabet.createSymbol2("e2", p1, p2);
 
 	public final AwareMatchHandler1<String> matchHandler = AwareMatchHandler.create(p1);
 
@@ -64,6 +64,13 @@ public class DefaultParametricMonitor_a_ab_with_initial_ab_loop_Test extends Abs
 	fsm = new FSM_ab_a();
 	FiniteSpec finiteSpec = new FSMSpec(fsm.fsm);
 	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
+    }
+
+    @Test
+    public void ab_a_model() throws Exception {
+	// verify
+	assertEquals(asSet(fsm.e1), fpp.getCreationEvents());
+
     }
 
     @Test

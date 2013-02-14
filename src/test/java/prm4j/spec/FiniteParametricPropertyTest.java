@@ -69,8 +69,6 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	Set<BaseEvent> actual = pp.getDisablingEvents();
 
 	Set<BaseEvent> expected = new HashSet<BaseEvent>();
-	expected.add(u.createIter);
-	expected.add(u.useIter);
 
 	assertEquals(expected, actual);
     }
@@ -86,14 +84,18 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	SetMultimap<Symbol, Set<Symbol>> expected = HashMultimap.create();
 
 	expected.put(u.createColl, Collections.<Symbol> emptySet());
+
+	// expected.put(u.createIter, Collections.<Symbol> emptySet());
 	expected.put(u.createIter, asSet(u.createColl));
-	// expected.put(u.createIter, asSet(u.createColl, u.updateMap)); // omitted by filtering loops on states
+	expected.put(u.createIter, asSet(u.createColl, u.updateMap)); // omitted by filtering loops on states
+	// expected.put(u.useIter, Collections.<Symbol> emptySet());
 	expected.put(u.useIter, asSet(u.createColl, u.createIter));
 	expected.put(u.useIter, asSet(u.createColl, u.createIter, u.updateMap));
-	expected.put(u.updateMap, Collections.<Symbol> emptySet());
+
+	// expected.put(u.updateMap, Collections.<Symbol> emptySet());
 	expected.put(u.updateMap, asSet(u.createColl));
 	expected.put(u.updateMap, asSet(u.createColl, u.createIter));
-	// expected.put(u.updateMap, asSet(u.createColl, u.createIter, u.useIter)); // omitted by filtering loops on
+	expected.put(u.updateMap, asSet(u.createColl, u.createIter, u.useIter)); // omitted by filtering loops on
 	// states
 
 	assertEquals(expected, actual);
@@ -112,7 +114,6 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	expected.put(u.createColl, Collections.<Parameter<?>> emptySet());
 	expected.put(u.createIter, asSet(u.m, u.c));
 	expected.put(u.useIter, asSet(u.m, u.c, u.i));
-	expected.put(u.updateMap, EMPTY_PARAMETER_SET);
 	expected.put(u.updateMap, asSet(u.m, u.c));
 	expected.put(u.updateMap, asSet(u.m, u.c, u.i));
 
@@ -242,7 +243,6 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	SetMultimap<BaseEvent, Set<BaseEvent>> expected = HashMultimap.create();
 
 	expected.put(fsm.e1, Collections.<BaseEvent> emptySet());
-	expected.put(fsm.e2, Collections.<BaseEvent> emptySet());
 	expected.put(fsm.e2, asSet((BaseEvent) fsm.e1));
 
 	assertEquals(expected, actual);

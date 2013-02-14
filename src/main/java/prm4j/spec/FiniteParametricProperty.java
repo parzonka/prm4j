@@ -93,11 +93,8 @@ public class FiniteParametricProperty implements ParametricProperty {
     }
 
     /**
-     * Creation events are events for which the successor of the initial state is:
-     * <ul>
-     * <li>not a dead state</li>
-     * <li>not the initial state itself (self-loop)</li>
-     * </ul>
+     * Creation events are events for which the successor of the initial state is a non-initial state (including the a
+     * dead state).
      * 
      * @return the creation events
      */
@@ -106,7 +103,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	BaseMonitorState initialState = finiteSpec.getInitialState();
 	for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
 	    BaseMonitorState successor = initialState.getSuccessor(symbol);
-	    if (successor != null && !successor.equals(initialState)) {
+	    if (successor != initialState) {
 		creationEvents.add(symbol);
 	    }
 	}
@@ -159,11 +156,11 @@ public class FiniteParametricProperty implements ParametricProperty {
 
 	private void computeRelations(BaseMonitorState state, Set<BaseEvent> seenBaseEvents,
 		Set<Parameter<?>> parameterSet) { // 5
-	    stateToSeenBaseEvents.put(state, seenBaseEvents); // 6
+
 	    possibleParameterSets.add(parameterSet); // 7
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 8
 		final BaseMonitorState nextState = state.getSuccessor(baseEvent);
-		final Set<BaseEvent> nextSeenBaseEvents = unmodifiableUnion(seenBaseEvents, set(baseEvent)); // 11
+
 		final Set<Parameter<?>> nextParameterSet = unmodifiableUnion(parameterSet, baseEvent.getParameters()); // 12
 		// add to updates only if the base event does change state and it is no self-update:
 		if (state != nextState && !baseEvent.getParameters().equals(nextParameterSet)) {
@@ -174,15 +171,21 @@ public class FiniteParametricProperty implements ParametricProperty {
 		 * path to an accepting state. If the property is defined properly this should be always the case
 		 * though.
 		 */
-		if (nextState != null) {
+		/*
+		 * We behave, as would self-loops be in fact edges to the dead state.
+		 */
+		if (nextState != null && !(state == getInitialState() && nextState == getInitialState())) {
 		    // we remove the current base event because an event does not need to enable itself
 		    final Set<BaseEvent> seenBaseEventsWithoutCurrentBaseEvent = unmodifiableDifference(seenBaseEvents,
 			    set(baseEvent)); // 10
+
 		    enablingEventSets.put(baseEvent, seenBaseEventsWithoutCurrentBaseEvent); // 10
 
 		    // compute from next different state if state was not visited before carrying the same
 		    // nextSeenBaseEvents
-		    if (nextState != state && !stateToSeenBaseEvents.containsEntry(state, nextSeenBaseEvents)) { // 11
+		    final Set<BaseEvent> nextSeenBaseEvents = unmodifiableUnion(seenBaseEvents, set(baseEvent)); // 11
+		    if (!stateToSeenBaseEvents.containsEntry(state, nextSeenBaseEvents)) { // 11
+			stateToSeenBaseEvents.put(state, nextSeenBaseEvents); // 6
 			computeRelations(state.getSuccessor(baseEvent), nextSeenBaseEvents, nextParameterSet); // 12
 		    } // 13
 		} // 14
@@ -223,6 +226,11 @@ public class FiniteParametricProperty implements ParametricProperty {
 	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
 	    final Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
 	    for (Set<Parameter<?>> enablingParameterSet : getEnablingParameterSetsInReverseTopologicalOrdering(baseEvent)) { // 5
+		/*
+		 * the empty parameter set {} can be filtered. No parameter set can contain less elements, so there can
+		 * be no maxData = (X -> {}). And a joindata = (e -> ( {} -> {} )) makes no sense either. The same with
+		 * chaining from {} to {} and updates.
+		 */
 		if (!enablingParameterSet.equals(EMPTY_PARAMETER_SET)
 			&& !isSubsetEq(parameterSet, enablingParameterSet)) { // 6
 		    if (isSuperset(parameterSet, enablingParameterSet)) { // 7

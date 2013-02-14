@@ -12,6 +12,7 @@ package prm4j.indexing.realtime;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
@@ -36,6 +37,13 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	fsm = new FSM_a_ab_a_b();
 	FiniteSpec finiteSpec = new FSMSpec(fsm.fsm);
 	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
+    }
+
+    @Test
+    public void setup() throws Exception {
+	// exercise
+	assertEquals(asSet(fsm.e1, fsm.e2, fsm.e3), fpp.getCreationEvents());
+	assertEquals(asSet(fsm.e2, fsm.e3), fpp.getDisablingEvents());
     }
 
     // firstEvent_a //////////////////////////////////////////////////////////////////
@@ -156,14 +164,19 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
     }
 
     @Test
-    public void firstEvent_ab_bothBindingsAreDisabled() throws Exception {
+    public void firstEvent_ab_bothBindingsAreNotDisabled() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(a, b));
 
 	// verify
 	LowLevelBinding[] binding = popNextRetrievedBinding();
-	assertTrue(binding[0].isDisabled());
-	assertTrue(binding[1].isDisabled());
+	if (ALGORITHM_D_FIXED) {
+	    assertFalse(binding[0].isDisabled());
+	    assertFalse(binding[1].isDisabled());
+	} else {
+	    assertTrue(binding[0].isDisabled());
+	    assertTrue(binding[1].isDisabled());
+	}
     }
 
     @Test
@@ -301,14 +314,15 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
     }
 
     @Test
-    public void twoEvents_a_ab_3nodesAreCreated() throws Exception {
+    public void a_ab_creates3Nodes() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a));
 	pm.processEvent(fsm.e2.createEvent(a, b));
 	// verify
-	assertTrace(popNextCreatedMonitor(), fsm.e1);
-	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2);
-
+	assertNumberOfCreatedNodes(3);
+	assertNodeExists(getNode(a, _));
+	assertNodeExists(getNode(a, b));
+	assertNodeExists(getNode(_, b));
     }
 
     @Test
@@ -353,6 +367,17 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	// verify
 	assertTrace(popNextCreatedMonitor(), fsm.e1);
 	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2);
+    }
+
+    @Test
+    public void twoEvents_a_ab_monitorForBisNotCreated() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a));
+	pm.processEvent(fsm.e2.createEvent(a, b));
+
+	// verify
+	assertNodeExists(getNode(null, b));
+	assertNull(getMonitor(null, b));
     }
 
     // twoEvents_a_a associated to different base events ////////////////////////////////
@@ -402,8 +427,13 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 
 	// verify
 	LowLevelBinding[] binding = popNextRetrievedBinding();
-	assertTrue(binding[0].isDisabled());
-	assertTrue(binding[1].isDisabled());
+	if (ALGORITHM_D_FIXED) {
+	    assertFalse(binding[0].isDisabled());
+	    assertFalse(binding[1].isDisabled());
+	} else {
+	    assertTrue(binding[0].isDisabled());
+	    assertTrue(binding[1].isDisabled());
+	}
     }
 
     @Test
@@ -443,8 +473,8 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e1);
-	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2, fsm.e1);
+	assertTrace(getMonitor(a, _), fsm.e1, fsm.e1);
+	assertTrace(getMonitor(a, b), fsm.e1, fsm.e2, fsm.e1);
     }
 
     @Test
@@ -455,9 +485,9 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e3.createEvent(b));
 
 	// verify
-	assertEquals(1, getNode(array(a,_)).getMonitorSets().length);
-	assertEquals(1, getNode(array(_,b)).getMonitorSets().length);
-	assertEquals(0, getNode(array(a,_), array(_,b)).getMonitorSets().length);
+	assertEquals(1, getNode(array(a, _)).getMonitorSets().length);
+	assertEquals(1, getNode(array(_, b)).getMonitorSets().length);
+	assertEquals(0, getNode(array(a, _), array(_, b)).getMonitorSets().length);
     }
 
     @Test
@@ -468,8 +498,8 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e3.createEvent(b));
 
 	// verify
-	assertTrace(popNextCreatedMonitor(), fsm.e1);
-	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e2, fsm.e3);
+	assertTrace(getMonitor(a, _), fsm.e1);
+	assertTrace(getMonitor(a, b), fsm.e1, fsm.e2, fsm.e3);
     }
 
     @Test
@@ -480,7 +510,8 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e3.createEvent(b));
 
 	// verify
-	assertNull(getNode(null, b).getMonitor());
+	assertNodeExists(getNode(null, b));
+	assertNull(getMonitor(null, b));
     }
 
     @Test

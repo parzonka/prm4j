@@ -54,8 +54,10 @@ public abstract class FSMDefinitions {
 	public final FSMState error = fsm.createAcceptingState(matchHandler);
 
 	public FSM_SafeMapIterator() {
-	    initial.addTransition(createColl, s1);
-	    initial.addTransition(updateMap, initial);
+	    initial.addTransition(createColl, s1); // creation event
+	    initial.addTransition(updateMap, initial); // self-loop
+	    initial.addTransition(createIter, initial); // self-loop
+	    initial.addTransition(useIter, initial); // self-loop
 	    s1.addTransition(updateMap, s1);
 	    s1.addTransition(createIter, s2);
 	    s2.addTransition(useIter, s2);
@@ -120,8 +122,11 @@ public abstract class FSMDefinitions {
 	public final FSMState error = fsm.createAcceptingState(matchHandler);
 
 	public FSM_SafeSyncCollection() {
-	    initial.addTransition(sync, s1);
-	    s1.addTransition(asyncCreateIter, error);
+	    initial.addTransition(sync, s1); // creation event
+	    initial.addTransition(asyncCreateIter, initial); // self-loop
+	    initial.addTransition(syncCreateIter, initial); // self-loop
+	    initial.addTransition(accessIter, initial); // self-loop
+	    s1.addTransition(asyncCreateIter, error); // self-loop
 	    s1.addTransition(syncCreateIter, s2);
 	    s2.addTransition(accessIter, error);
 	}

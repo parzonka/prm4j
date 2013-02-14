@@ -97,13 +97,6 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	// monitor associated with the instance node. May be null if the instance node is a NullNode
 	BaseMonitor instanceMonitor = instanceNode.getMonitor();
 
-	// disable all bindings which are
-	if (eventContext.isDisablingEvent(baseEvent)) { // 2
-	    for (int i = 0; i < parameterMask.length; i++) { // 3
-		bindings[parameterMask[i]].setDisabled(true); // 4
-	    } // 5
-	} // 6
-
 	if (instanceMonitor == null) { // 7
 	    // direct update phase
 	    for (MonitorSet monitorSet : instanceNode.getMonitorSets()) { // (30 - 32) new
@@ -142,8 +135,14 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    Node node = null;
 	    monitorCreation: if (instanceMonitor == null) {
 		if (eventContext.isCreationEvent(baseEvent)) { // 20
+		    // disable all bindings which are
+		    if (eventContext.isDisablingEvent(baseEvent)) { // 2
+			for (int i = 0; i < parameterMask.length; i++) { // 3
+			    bindings[parameterMask[i]].setDisabled(true); // 4
+			} // 5
+		    } // 6
 		    for (int i = 0; i < parameterMask.length; i++) { // 21
-			if (bindings[i].isDisabled()) {// 22
+			if (bindings[parameterMask[i]].isDisabled()) {// 22
 			    break monitorCreation; // 23
 			}
 		    }
