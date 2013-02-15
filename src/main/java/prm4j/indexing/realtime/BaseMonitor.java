@@ -8,18 +8,28 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing;
+package prm4j.indexing.realtime;
 
 import prm4j.api.Event;
-import prm4j.api.ParametricMonitor;
-import prm4j.indexing.realtime.LowLevelBinding;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.staticdata.MetaNode;
+
+/*
+ * Copyright (c) 2012, 2013 Mateusz Parzonka
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Mateusz Parzonka - initial API and implementation
+ */
 
 /**
  * Abstract base class for a concrete monitor instance, representing the internal state of a {@link ParametricMonitor}
  * for one single concrete variable binding.
  */
-public abstract class BaseMonitor {
+public abstract class BaseMonitor implements Monitor {
 
     private final static LowLevelBinding[] EMPTY_BINDINGS = new LowLevelBinding[0];
 
@@ -52,39 +62,43 @@ public abstract class BaseMonitor {
 
     /**
      * Creates a low level deep copy of this monitor.
-     *
+     * 
      * @param bindings
      * @return
      */
-    public final BaseMonitor copy(LowLevelBinding[] bindings) {
-	BaseMonitor copy = copy();
-	copy.bindings = bindings;
-	copy.timestamp = timestamp;
+    @Override
+    public final Monitor copy(LowLevelBinding[] bindings) {
+	Monitor copy = copy();
+	copy.setBindings(bindings);
+	copy.setTimestamp(timestamp);
 	return copy;
     }
 
-    public final BaseMonitor copy(LowLevelBinding[] bindings, long timestamp) {
-	BaseMonitor copy = copy();
-	copy.bindings = bindings;
-	copy.timestamp = timestamp;
+    @Override
+    public final Monitor copy(LowLevelBinding[] bindings, long timestamp) {
+	Monitor copy = copy();
+	copy.setBindings(bindings);
+	copy.setTimestamp(timestamp);
 	return copy;
     }
 
     /**
      * Returns a compressed representation of low level bindings
-     *
+     * 
      * @return
      */
+    @Override
     public final LowLevelBinding[] getLowLevelBindings() {
 	return bindings;
     }
 
     /**
      * Returns a uncompressed representation of high-level bindings.
-     *
+     * 
      * @return
      */
-    protected final prm4j.api.Binding[] getBindings() {
+    @Override
+    public final prm4j.api.Binding[] getBindings() {
 	if (metaNode == null) {
 	    // upcast
 	    return bindings;
@@ -97,19 +111,22 @@ public abstract class BaseMonitor {
      * Ends the life-span of this monitor. A terminated monitor can be removed from all data structures it is referenced
      * by.
      */
+    @Override
     public final void terminate() {
 	bindings = null;
     }
 
     /**
      * Returns <code>true</code>, if the life of this monitor is over.
-     *
+     * 
      * @return <code>true</code> if terminated
      */
+    @Override
     public final boolean isTerminated() {
 	return bindings == null;
     }
 
+    @Override
     public final long getCreationTime() {
 	return timestamp;
     }
@@ -117,9 +134,10 @@ public abstract class BaseMonitor {
     /**
      * Updates the base monitors internal state by consuming an event. After processing the event, the monitor is either
      * alive or dead. A dead monitor will no longer process events.
-     *
+     * 
      * @return <code>true</code> if a the monitor is still alive
      */
+    @Override
     public final boolean process(Event event) {
 	updatedMonitorsCount++;
 	return processEvent(event);
@@ -128,35 +146,51 @@ public abstract class BaseMonitor {
     /**
      * Updates the base monitors internal state by consuming an event. After processing the event, the monitor is either
      * alive or dead. A dead monitor will no longer process events.
-     *
+     * 
      * @return <code>true</code> if a the monitor is still alive
      */
+    @Override
     public abstract boolean processEvent(Event event);
 
     /**
      * The monitor decides if am accepting state is reachable based on its current internal state. This allows efficient
      * parametric monitors to remove the monitor instance in case it should be impossible to reach any accepting state.
-     *
+     * 
      * @return <code>true</code> if an accepting state is still reachable
      */
+    @Override
     public abstract boolean isAcceptingStateReachable();
 
     /**
      * Creates a deep copy of this base monitor.
      */
-    public abstract BaseMonitor copy();
+    @Override
+    public abstract Monitor copy();
 
+    @Override
     public MetaNode getMetaNode() {
 	return metaNode;
     }
 
+    @Override
     public void setMetaNode(MetaNode metaNode) {
 	this.metaNode = metaNode;
     }
 
+    @Override
+    public void setBindings(LowLevelBinding[] bindings) {
+	this.bindings = bindings;
+
+    }
+
+    @Override
+    public void setTimestamp(long timestamp) {
+	this.timestamp = timestamp;
+    }
+
     /**
      * DIAGNOSTIC
-     *
+     * 
      * @return the number of created monitors
      */
     public static long getCreatedMonitorsCount() {
@@ -165,7 +199,7 @@ public abstract class BaseMonitor {
 
     /**
      * DIAGNOSTIC
-     *
+     * 
      * @return the number of updated monitors
      */
     public static long getUpdateddMonitorsCount() {
@@ -174,7 +208,7 @@ public abstract class BaseMonitor {
 
     /**
      * DIAGNOSTIC
-     *
+     * 
      * @return the number of derived monitors
      */
     public static long getDerivedMonitorsCount() {

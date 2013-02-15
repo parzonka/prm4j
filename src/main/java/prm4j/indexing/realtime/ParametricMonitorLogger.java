@@ -22,7 +22,6 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import prm4j.Util;
 import prm4j.api.MatchHandler;
-import prm4j.indexing.BaseMonitor;
 
 public class ParametricMonitorLogger {
 

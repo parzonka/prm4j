@@ -24,7 +24,7 @@ import org.junit.After;
 import prm4j.AbstractTest;
 import prm4j.api.ParametricMonitor;
 import prm4j.api.Symbol;
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
@@ -35,7 +35,7 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
      * Algorithm D' is flawed. Nevertheless we can assert a certain flavor of incorrect test results. Switch this flag
      * to test the corrected algorithm.
      */
-    public final static boolean ALGORITHM_D_FIXED = false;
+    public final static boolean ALGORITHM_D_FIXED = true;
 
     public final static Object _ = null;
     protected FiniteParametricProperty fpp;
@@ -117,9 +117,33 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	}
     }
 
+    protected void assertNullNode(Node node) {
+	if (node != NullNode.instance) {
+	    fail("Node is not the NullNode!");
+	}
+    }
+
+    protected void assertMonitorExistsAndIsNotTheDeadMonitor(Monitor monitor) {
+	if (monitor == null) {
+	    throw new NullPointerException("Monitor was null!");
+	}
+	if (monitor.isDead()) {
+	    fail("Monitor is the dead monitor!");
+	}
+
+    }
+
     protected AwareBaseMonitor getMonitor(Object... boundObjects) {
 	int[] parameterMask = toParameterMask(boundObjects);
 	return (AwareBaseMonitor) nodeStore.getNode(bindingStore.getBindings(boundObjects), parameterMask).getMonitor();
+    }
+
+    protected void assertDeadMonitor(Object... boundObjects) {
+	int[] parameterMask = toParameterMask(boundObjects);
+	final Monitor monitor = nodeStore.getNode(bindingStore.getBindings(boundObjects), parameterMask).getMonitor();
+	if (!(nodeStore.getNode(bindingStore.getBindings(boundObjects), parameterMask).getMonitor().isDead())) {
+	    fail("Monitor [" + monitor + "] was not the dead monitor!");
+	}
     }
 
     protected Node getOrCreateNode(Object... boundObjects) {

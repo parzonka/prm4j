@@ -10,7 +10,7 @@
  */
 package prm4j.indexing.realtime;
 
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.staticdata.MetaNode;
 
 public class NullNode implements Node {
@@ -50,12 +50,12 @@ public class NullNode implements Node {
     }
 
     @Override
-    public BaseMonitor getMonitor() {
+    public Monitor getMonitor() {
 	return null;
     }
 
     @Override
-    public void setMonitor(BaseMonitor monitor) {
+    public void setMonitor(Monitor monitor) {
 	throw new UnsupportedOperationException();
     }
 
@@ -97,6 +97,21 @@ public class NullNode implements Node {
     @Override
     public int parameterIndex() {
 	return 0;
+    }
+
+    @Override
+    public void setTimestamp(long timestamp) {
+	// do nothing
+    }
+
+    @Override
+    public long getTimestamp() {
+	return Long.MIN_VALUE; // the null node did always exist
+    }
+
+    @Override
+    public String toString() {
+	return "NullNode";
     }
 
 }

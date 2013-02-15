@@ -20,8 +20,7 @@ import org.junit.After;
 import prm4j.AbstractTest;
 import prm4j.api.ParametricMonitor;
 import prm4j.api.Symbol;
-import prm4j.indexing.BaseMonitor;
-import prm4j.indexing.StatefulMonitor;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
@@ -33,7 +32,7 @@ public class AbstractParametricMonitorTest extends AbstractTest {
     protected StaticDataConverter converter;
     protected DefaultBindingStore bindingStore;
     protected NodeStore nodeStore;
-    protected BaseMonitor prototypeMonitor;
+    protected Monitor prototypeMonitor;
     protected NodeManager nodeManager;
     protected ParametricMonitor pm;
 

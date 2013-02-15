@@ -17,9 +17,9 @@ import java.util.Set;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.BaseMonitorState;
-import prm4j.indexing.StatefulMonitor;
+import prm4j.indexing.realtime.StatefulMonitor;
 import prm4j.spec.FiniteSpec;
 
 public class FSMSpec implements FiniteSpec {
@@ -52,7 +52,7 @@ public class FSMSpec implements FiniteSpec {
     }
 
     @Override
-    public BaseMonitor getInitialMonitor() {
+    public Monitor getInitialMonitor() {
 	return new StatefulMonitor(getInitialState());
     }
 

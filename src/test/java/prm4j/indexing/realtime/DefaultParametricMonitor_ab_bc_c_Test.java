@@ -19,14 +19,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.staticdata.ModelVerifier;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParametricMonitorTest {
 
     FSM_ab_bc_c fsm;
-    final String a = "a";
-    final String b = "b";
-    final String c = "c";
+    final String a1 = "a1";
+    final String b1 = "b1";
+    final String c1 = "c1";
 
     @Before
     public void init() {
@@ -35,12 +36,19 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
 	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    public void model() throws Exception {
+	ModelVerifier modelVerifier = new ModelVerifier(converter);
+	modelVerifier.joinOverParameterSets(fsm.e2, list(asSet(fsm.a, fsm.b)));
+    }
+
     // firstEvent_ab //////////////////////////////////////////////////////////////////
 
     @Test
     public void firstEvent_ab_createsOnlyOneMonitor() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
 	popNextCreatedMonitor();
@@ -50,7 +58,7 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void firstEvent_ab_updatesOnlyOneMonitor() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
 	popNextUpdatedMonitor();
@@ -60,7 +68,7 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void firstEvent_ab_retrievesTwoNodes() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
 	popNextRetrievedNode();
@@ -71,7 +79,7 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void firstEvent_ab_nodesAreNotNullNodes() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
 	assertNotSame(NullNode.instance, popNextRetrievedNode());
@@ -81,7 +89,7 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void firstEvent_ab_createsMonitorWithCreationTime0() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
 	assertEquals(0L, popNextUpdatedMonitor().getCreationTime());
@@ -90,7 +98,7 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void firstEvent_ab_createsCorrectTrace() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
 	assertTrace(popNextUpdatedMonitor(), fsm.e1);
@@ -99,16 +107,16 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void firstEvent_ab_monitorBindsAllItsParameters() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
-	assertBoundObjects(popNextUpdatedMonitor(), a, b);
+	assertBoundObjects(popNextUpdatedMonitor(), a1, b1);
     }
 
     @Test
     public void firstEvent_ab_noMatchDetected() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
 	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
@@ -117,23 +125,23 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void firstEvent_ab_nodesHaveDifferentMetaNodes() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
-	assertNotSame(getNode(a, null, null).getMetaNode(), getNode(null, b, null).getMetaNode());
-	assertNotSame(getNode(a, b, null).getMetaNode(), getNode(null, b, null).getMetaNode());
-	assertNotSame(getNode(a, b, null).getMetaNode(), getNode(a, null, null).getMetaNode());
+	assertNotSame(getNode(a1, null, null).getMetaNode(), getNode(null, b1, null).getMetaNode());
+	assertNotSame(getNode(a1, b1, null).getMetaNode(), getNode(null, b1, null).getMetaNode());
+	assertNotSame(getNode(a1, b1, null).getMetaNode(), getNode(a1, null, null).getMetaNode());
     }
 
     @Test
     public void firstEvent_ab_chainingIsPerformedCorrectly() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
-	assertEquals(0, getNode(a, null, null).getMonitorSets().length);
-	assertEquals(1, getNode(null, b, null).getMonitorSets().length);
-	assertEquals(1, getNode(null, b, null).getMonitorSet(0).getSize());
+	assertEquals(0, getNode(a1, null, null).getMonitorSets().length);
+	assertEquals(1, getNode(null, b1, null).getMonitorSets().length);
+	assertEquals(1, getNode(null, b1, null).getMonitorSet(0).getSize());
     }
 
     // twoEvents ab and bc //////////////////////////////////////////////////////////////////
@@ -145,24 +153,24 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void joining_ab_bc_createsCorrectMonitors() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
 
 	// verify
-	assertBoundObjects(popNextCreatedMonitor(), a, b);
-	assertBoundObjects(popNextCreatedMonitor(), a, b, c);
+	assertBoundObjects(popNextCreatedMonitor(), a1, b1);
+	assertBoundObjects(popNextCreatedMonitor(), a1, b1, c1);
 	assertNoMoreCreatedMonitors();
     }
 
     @Test
     public void joining_ab_bc_createsCorrectNodes() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
 
 	// verify
-	assertCreatedNodes(array(a, null, null), array(null, b, null), array(null, null, c), array(a, b, null),
-		array(null, b, c), array(a, b, c));
+	assertCreatedNodes(array(a1, null, null), array(null, b1, null), array(null, null, c1), array(a1, b1, null),
+		array(null, b1, c1), array(a1, b1, c1));
     }
 
     @Test
@@ -171,57 +179,91 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
 
 	// verify
 	assertEquals(
-		asSet(tuple(asSet(fsm.p1, fsm.p2), asSet(fsm.p1, fsm.p2, fsm.p3)),
-			tuple(asSet(fsm.p2, fsm.p3), asSet(fsm.p1, fsm.p2, fsm.p3)),
-			tuple(asSet(fsm.p3), asSet(fsm.p1, fsm.p2, fsm.p3))), fpp.getUpdates());
+		asSet(tuple(asSet(fsm.a, fsm.b), asSet(fsm.a, fsm.b, fsm.c)),
+			tuple(asSet(fsm.b, fsm.c), asSet(fsm.a, fsm.b, fsm.c)),
+			tuple(asSet(fsm.c), asSet(fsm.a, fsm.b, fsm.c))), fpp.getUpdates());
     }
 
     @Test
     public void joining_ab_bc_chainingFromABtoABCexists() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
 
 	// verify
-	assertChaining(array(a, b, null), array(a, b, c));
+	assertChaining(array(a1, b1, null), array(a1, b1, c1));
     }
 
     @Test
     public void joining_ab_bc_chainingFromCtoABCexists() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
 
 	// verify
-	assertChaining(array(null, null, c), array(a, b, c));
+	assertChaining(array(null, null, c1), array(a1, b1, c1));
     }
 
     @Test
     public void joining_ab_bc_chainingFromBCtoABCexists() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
 
 	// verify
-	assertChaining(array(null, b, c), array(a, b, c));
+	assertChaining(array(null, b1, c1), array(a1, b1, c1));
+    }
+
+    @Test
+    public void joining_ab_bc_correctTimestamps() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
+
+	// verify
+	assertEquals(0L, getNode(a1, b1, _).getTimestamp());
+	assertEquals(0L, getNode(a1, b1, _).getMonitor().getCreationTime());
+	assertEquals(1L, getNode(_, b1, c1).getTimestamp());
+	assertEquals(1L, getNode(_, b1, c1).getMonitor().getCreationTime());
+    }
+
+    @Test
+    public void joining_ab_bc_joinedMonitorExists1() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
+
+	// verify
+	assertMonitorExistsAndIsNotTheDeadMonitor(getMonitor(a1, b1, c1));
+    }
+
+    @Test
+    public void joining_ab_bc_joinedMonitorExists2() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent("x", "y"));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
+
+	// verify
+	assertMonitorExistsAndIsNotTheDeadMonitor(getMonitor(a1, b1, c1));
     }
 
     @Test
     public void joining_ab_bc_joinedMonitorHasCorrectTimestamp() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent("x", "y")); // time = 0
-	pm.processEvent(fsm.e1.createEvent(a, b)); // time = 1
-	pm.processEvent(fsm.e2.createEvent(b, c)); // derives 1 from (a, b)
+	pm.processEvent(fsm.e1.createEvent(a1, b1)); // time = 1
+	pm.processEvent(fsm.e2.createEvent(b1, c1)); // derives 1 from (a, b)
 
 	// verify
-	assertEquals(1L, getNode(a, b, c).getMonitor().getCreationTime());
+	assertEquals(1L, getNode(a1, b1, c1).getMonitor().getCreationTime());
     }
 
     @Test
     public void joining_ab_bc_assertCorrectTraces() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
 
 	// verify
 	assertTrace(popNextCreatedMonitor(), fsm.e1);
@@ -233,11 +275,11 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void moreEvents_ab_bc_c_matchesTrace() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
-	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
 	assertTrue(fsm.matchHandler.getHandledMatches().isEmpty());
-	pm.processEvent(fsm.e3.createEvent(c));
+	pm.processEvent(fsm.e3.createEvent(c1));
 
 	// verify
 	assertTrue(!fsm.matchHandler.getHandledMatches().isEmpty());
@@ -246,12 +288,12 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void moreEvents_ab_bc_c_bc_ab_c_correctTrace() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e2.createEvent(b, c));
-	pm.processEvent(fsm.e3.createEvent(c));
-	pm.processEvent(fsm.e2.createEvent(b, c));
-	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e3.createEvent(c));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
+	pm.processEvent(fsm.e3.createEvent(c1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e3.createEvent(c1));
 
 	// verify
 	assertTrace(popNextCreatedMonitor(), fsm.e1, fsm.e1);
@@ -262,10 +304,10 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void moreEvents_ab_bc_c_c_matchesOnlyOneTrace() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e2.createEvent(b, c));
-	pm.processEvent(fsm.e3.createEvent(c));
-	pm.processEvent(fsm.e3.createEvent(c));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
+	pm.processEvent(fsm.e3.createEvent(c1));
+	pm.processEvent(fsm.e3.createEvent(c1));
 
 	// verify
 	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
@@ -274,12 +316,12 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     public void moreEvents_ab_bc_c_ab_bc_c_matchesOnlyOneTrace() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e2.createEvent(b, c));
-	pm.processEvent(fsm.e3.createEvent(c));
-	pm.processEvent(fsm.e1.createEvent(a, b));
-	pm.processEvent(fsm.e2.createEvent(b, c));
-	pm.processEvent(fsm.e3.createEvent(c));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
+	pm.processEvent(fsm.e3.createEvent(c1));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
+	pm.processEvent(fsm.e3.createEvent(c1));
 
 	// verify
 	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
@@ -288,33 +330,37 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     // disabling //////////////////////////////////////////////////////////////////
 
     @Test
-    public void disabling_bc_noNodesAreCreated() throws Exception {
+    public void disabling_bc_singleNodeIsCreated() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e2.createEvent(b, c));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
 
 	// verify
-	assertCreatedNodes();
+	assertCreatedNodes(array(_, b1, c1));
     }
 
     @Test
     public void disabling_bc_ab_noMonitorsAreCreated() throws Exception {
 
 	// exercise
-	pm.processEvent(fsm.e2.createEvent(b, c));
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
-	assertNoMoreCreatedMonitors();
+	assertDeadMonitor(_, b1, c1);
+	assertNumberOfCreatedMonitors(1);
+	assertMonitorExistsAndIsNotTheDeadMonitor(getMonitor(a1, b1, _));
     }
 
     @Test
     public void disabling_bc_ab_noNodesAreCreated() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e2.createEvent(b, c));
-	pm.processEvent(fsm.e1.createEvent(a, b));
+	pm.processEvent(fsm.e2.createEvent(b1, c1));
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
-	assertCreatedNodes();
+	assertNodeExists(getNode(_, b1, c1));
+	assertNodeExists(getNode(a1, b1, _));
+	assertNumberOfCreatedNodes(4);
     }
 
 }

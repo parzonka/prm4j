@@ -298,15 +298,15 @@ public abstract class FSMDefinitions {
 
 	public final Alphabet alphabet = new Alphabet();
 
-	public final Parameter<String> p1 = alphabet.createParameter("p1", String.class);
-	public final Parameter<String> p2 = alphabet.createParameter("p2", String.class);
-	public final Parameter<String> p3 = alphabet.createParameter("p3", String.class);
+	public final Parameter<String> a = alphabet.createParameter("a", String.class);
+	public final Parameter<String> b = alphabet.createParameter("b", String.class);
+	public final Parameter<String> c = alphabet.createParameter("c", String.class);
 
-	public final Symbol2<String, String> e1 = alphabet.createSymbol2("e1", p1, p2);
-	public final Symbol2<String, String> e2 = alphabet.createSymbol2("e2", p2, p3);
-	public final Symbol1<String> e3 = alphabet.createSymbol1("e3", p3);
+	public final Symbol2<String, String> e1 = alphabet.createSymbol2("e1", a, b);
+	public final Symbol2<String, String> e2 = alphabet.createSymbol2("e2", b, c);
+	public final Symbol1<String> e3 = alphabet.createSymbol1("e3", c);
 
-	public final AwareMatchHandler2<String, String> matchHandler = AwareMatchHandler.create(p1, p3);
+	public final AwareMatchHandler2<String, String> matchHandler = AwareMatchHandler.create(a, c);
 
 	public final FSM fsm = new FSM(alphabet);
 
@@ -354,17 +354,17 @@ public abstract class FSMDefinitions {
 
 	public final Alphabet alphabet = new Alphabet();
 
-	public final Parameter<String> p1 = alphabet.createParameter("p1", String.class);
-	public final Parameter<String> p2 = alphabet.createParameter("p2", String.class);
-	public final Parameter<String> p3 = alphabet.createParameter("p3", String.class);
-	public final Parameter<String> p4 = alphabet.createParameter("p4", String.class);
+	public final Parameter<String> a = alphabet.createParameter("a", String.class);
+	public final Parameter<String> b = alphabet.createParameter("b", String.class);
+	public final Parameter<String> c = alphabet.createParameter("c", String.class);
+	public final Parameter<String> d = alphabet.createParameter("d", String.class);
 
-	public final Symbol2<String, String> e1 = alphabet.createSymbol2("e1", p1, p2);
-	public final Symbol2<String, String> e2 = alphabet.createSymbol2("e2", p2, p3);
-	public final Symbol2<String, String> e3 = alphabet.createSymbol2("e3", p3, p4);
-	public final Symbol2<String, String> e4 = alphabet.createSymbol2("e4", p1, p4);
+	public final Symbol2<String, String> event_ab = alphabet.createSymbol2("e1", a, b);
+	public final Symbol2<String, String> event_bc = alphabet.createSymbol2("e2", b, c);
+	public final Symbol2<String, String> event_cd = alphabet.createSymbol2("e3", c, d);
+	public final Symbol2<String, String> event_ad = alphabet.createSymbol2("e4", a, d);
 
-	public final AwareMatchHandler2<String, String> matchHandler = AwareMatchHandler.create(p1, p4);
+	public final AwareMatchHandler2<String, String> matchHandler = AwareMatchHandler.create(a, d);
 
 	public final FSM fsm = new FSM(alphabet);
 
@@ -375,10 +375,10 @@ public abstract class FSMDefinitions {
 	public final FSMState error = fsm.createAcceptingState(matchHandler);
 
 	public FSM_ab_bc_cd_ad() {
-	    initial.addTransition(e1, s1);
-	    s1.addTransition(e2, s2);
-	    s2.addTransition(e3, s3);
-	    s3.addTransition(e4, error);
+	    initial.addTransition(event_ab, s1);
+	    s1.addTransition(event_bc, s2);
+	    s2.addTransition(event_cd, s3);
+	    s3.addTransition(event_ad, error);
 	}
     }
 

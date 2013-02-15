@@ -8,12 +8,14 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing;
+package prm4j.indexing.realtime;
 
 import prm4j.Globals;
 import prm4j.api.BaseEvent;
 import prm4j.api.Event;
 import prm4j.api.MatchHandler;
+import prm4j.indexing.BaseMonitorState;
+import prm4j.indexing.Monitor;
 
 /**
  * A base monitor holding a {@link BaseMonitorState} which is updated when processing {@link BaseEvent}s.
@@ -58,7 +60,7 @@ public class StatefulMonitor extends BaseMonitor {
     }
 
     @Override
-    public BaseMonitor copy() {
+    public Monitor copy() {
 	return new StatefulMonitor(state);
     }
 
@@ -106,6 +108,11 @@ public class StatefulMonitor extends BaseMonitor {
 	    return false;
 	}
 	return true;
+    }
+
+    @Override
+    public boolean isDead() {
+	return false;
     }
 
 }

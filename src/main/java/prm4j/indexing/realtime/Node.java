@@ -10,7 +10,7 @@
  */
 package prm4j.indexing.realtime;
 
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.map.NodeMapEntry;
 import prm4j.indexing.staticdata.MetaNode;
 
@@ -19,13 +19,13 @@ public interface Node extends NodeMapEntry<Node> {
     public MetaNode getMetaNode();
 
     /**
-     *
+     * 
      * @return monitor matching the node's binding or <code>null</code>, if the queried path is no prefix of a final
      *         path.
      */
-    public BaseMonitor getMonitor();
+    public Monitor getMonitor();
 
-    public void setMonitor(BaseMonitor monitor);
+    public void setMonitor(Monitor monitor);
 
     public Node getOrCreateNode(int parameterIndex, LowLevelBinding binding);
 
@@ -36,7 +36,7 @@ public interface Node extends NodeMapEntry<Node> {
     /**
      * Returns a monitor set which represents a (sometimes not real) subset of instances which are more informative than
      * the instance represented by this node.
-     *
+     * 
      * @param monitorSetId
      *            the id of the monitor set <br>
      *            Ids <i>should</i> be in the range [0, n].<br>
@@ -53,5 +53,16 @@ public interface Node extends NodeMapEntry<Node> {
     public int size();
 
     public NodeRef getNodeRef();
+
+    /**
+     * @param timestamp
+     *            last time the associated instance was seen
+     */
+    public void setTimestamp(long timestamp);
+
+    /**
+     * Get the last time the associated instance was seen
+     */
+    public long getTimestamp();
 
 }

@@ -10,15 +10,16 @@
  */
 package prm4j.indexing.realtime;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.BaseMonitor;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor_a_a_a_Test extends AbstractDefaultParametricMonitorTest {
@@ -130,7 +131,6 @@ public class DefaultParametricMonitor_a_a_a_Test extends AbstractDefaultParametr
     }
 
     // recurringEvent = same event as first event again ////////////////////////////////
-
 
     @Test
     public void recurringEvent_updatesOneMonitorTwice() throws Exception {

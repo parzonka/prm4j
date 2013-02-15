@@ -18,14 +18,16 @@ public class EventContext {
     private final MaxData[][] maxDataArray;
     private final boolean[] creationEvents;
     private final boolean[] disablingEvents;
+    // baseEvent * numberOfExistingMonitorMasks * parameterMaskLength
+    private final int[][][] existingMonitorMasks;
 
-    public EventContext(JoinData[][] joinData,
-	    MaxData[][] maxData, boolean[] creationEvents, boolean[] disablingEvents) {
+    public EventContext(JoinData[][] joinData, MaxData[][] maxData, boolean[] creationEvents,
+	    boolean[] disablingEvents, int[][][] existingMonitorMasks) {
 	joinDataArray = joinData;
 	maxDataArray = maxData;
 	this.creationEvents = creationEvents;
 	this.disablingEvents = disablingEvents;
-
+	this.existingMonitorMasks = existingMonitorMasks;
     }
 
     public MaxData[] getMaxData(BaseEvent baseEvent) {
@@ -42,6 +44,14 @@ public class EventContext {
 
     public boolean isDisablingEvent(BaseEvent baseEvent) {
 	return disablingEvents[baseEvent.getIndex()];
+    }
+
+    /**
+     * @param baseEvent
+     * @return numberOfExistingMonitorMasks * parameterMaskLength
+     */
+    public int[][] getExistingMonitorMasks(BaseEvent baseEvent) {
+	return existingMonitorMasks[baseEvent.getIndex()];
     }
 
 }

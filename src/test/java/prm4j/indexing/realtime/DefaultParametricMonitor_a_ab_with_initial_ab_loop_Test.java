@@ -27,7 +27,7 @@ import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor_a_ab_with_initial_ab_loop_Test extends AbstractDefaultParametricMonitorTest {
 
-    public static class FSM_ab_a {
+    public static class FSM_a_ab_with_initial_ab_loop {
 
 	public final Alphabet alphabet = new Alphabet();
 
@@ -45,7 +45,7 @@ public class DefaultParametricMonitor_a_ab_with_initial_ab_loop_Test extends Abs
 	public final FSMState s1 = fsm.createState();
 	public final FSMState error = fsm.createAcceptingState(matchHandler);
 
-	public FSM_ab_a() {
+	public FSM_a_ab_with_initial_ab_loop() {
 	    initial.addTransition(e1, s1);
 	    initial.addTransition(e2, initial);
 	    s1.addTransition(e2, error);
@@ -53,7 +53,7 @@ public class DefaultParametricMonitor_a_ab_with_initial_ab_loop_Test extends Abs
 
     }
 
-    FSM_ab_a fsm;
+    FSM_a_ab_with_initial_ab_loop fsm;
     final String a1 = "a1";
     final String b1 = "b1";
     final String a2 = "a2";
@@ -61,7 +61,7 @@ public class DefaultParametricMonitor_a_ab_with_initial_ab_loop_Test extends Abs
 
     @Before
     public void init() {
-	fsm = new FSM_ab_a();
+	fsm = new FSM_a_ab_with_initial_ab_loop();
 	FiniteSpec finiteSpec = new FSMSpec(fsm.fsm);
 	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
     }

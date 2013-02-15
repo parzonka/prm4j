@@ -12,7 +12,7 @@ package prm4j.api;
 
 import java.util.Arrays;
 
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 
 /**
  * An event contains a generic base event and a number of {@link Binding}s.
@@ -35,7 +35,7 @@ public class Event {
 	this.condition = condition;
     }
 
-    public BaseEvent getEvaluatedBaseEvent(BaseMonitor baseMonitor) {
+    public BaseEvent getEvaluatedBaseEvent(Monitor baseMonitor) {
 	if (condition == null) {
 	    return baseEvent;
 	}

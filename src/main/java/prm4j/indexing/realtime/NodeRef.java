@@ -13,11 +13,11 @@ package prm4j.indexing.realtime;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 
 public class NodeRef extends WeakReference<Node> implements Holder<LowLevelBinding> {
 
-    public BaseMonitor monitor;
+    public Monitor monitor;
 
     public NodeRef(Node node, ReferenceQueue<Node> refQueue) {
 	super(node, refQueue);

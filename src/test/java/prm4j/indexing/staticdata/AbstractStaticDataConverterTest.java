@@ -47,16 +47,16 @@ public class AbstractStaticDataConverterTest extends AbstractTest {
     }
 
     protected void assertMaxData(BaseEvent baseEvent, List<MaxData> maxDataList) {
-   	assertArrayEquals(maxDataList.toArray(), sdc.getEventContext().getMaxData(baseEvent));
-       }
+	assertArrayEquals(maxDataList.toArray(), sdc.getEventContext().getMaxData(baseEvent));
+    }
 
     protected static ChainData chainData(int[] nodeMask, int monitorSetId) {
 	return new ChainData(nodeMask, monitorSetId);
     }
 
     protected static JoinData joinData(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern,
-	    int[] diffMask) {
-	return new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask);
+	    int[][] disableMasks) {
+	return new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, disableMasks);
     }
 
 }

@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference;
 
 import prm4j.Util;
 import prm4j.api.Parameter;
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.staticdata.MetaNode;
 
 public class DefaultNode extends AbstractNode {
@@ -23,6 +23,7 @@ public class DefaultNode extends AbstractNode {
     private final MetaNode metaNode;
     private final MonitorSet[] monitorSets;
     private final NodeRef nodeRef;
+    private long timestamp = Long.MIN_VALUE; // this instance was not seen yet
 
     private WeakReference<Node> cachedNodeRef = null;
     private LowLevelBinding cachedBinding = null;
@@ -61,7 +62,7 @@ public class DefaultNode extends AbstractNode {
     }
 
     @Override
-    public BaseMonitor getMonitor() {
+    public Monitor getMonitor() {
 	return nodeRef.monitor;
     }
 
@@ -92,7 +93,7 @@ public class DefaultNode extends AbstractNode {
     }
 
     @Override
-    public void setMonitor(BaseMonitor monitor) {
+    public void setMonitor(Monitor monitor) {
 	nodeRef.monitor = monitor;
 	monitor.setMetaNode(metaNode);
     }
@@ -144,6 +145,17 @@ public class DefaultNode extends AbstractNode {
     @Override
     public int parameterIndex() {
 	return metaNode.getLastParameterIndex();
+    }
+
+    @Override
+    public void setTimestamp(long timestamp) {
+	this.timestamp = timestamp;
+
+    }
+
+    @Override
+    public long getTimestamp() {
+	return timestamp;
     }
 
 }

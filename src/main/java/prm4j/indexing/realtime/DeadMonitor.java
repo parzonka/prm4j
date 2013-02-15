@@ -1,0 +1,105 @@
+/*
+ * Copyright (c) 2012, 2013 Mateusz Parzonka
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Mateusz Parzonka - initial API and implementation
+ */
+package prm4j.indexing.realtime;
+
+import prm4j.api.Binding;
+import prm4j.api.Event;
+import prm4j.indexing.Monitor;
+import prm4j.indexing.staticdata.MetaNode;
+
+public class DeadMonitor implements Monitor {
+
+    private final long creationTime;
+
+    public DeadMonitor(long creationTime) {
+	this.creationTime = creationTime;
+    }
+
+    @Override
+    public boolean isDead() {
+	return true;
+    }
+
+    @Override
+    public boolean processEvent(Event event) {
+	return false;
+    }
+
+    @Override
+    public boolean isAcceptingStateReachable() {
+	return false;
+    }
+
+    @Override
+    public Monitor copy() {
+	return this;
+    }
+
+    @Override
+    public LowLevelBinding[] getLowLevelBindings() {
+	return null;
+    }
+
+    @Override
+    public Binding[] getBindings() {
+	return null;
+    }
+
+    @Override
+    public void terminate() {
+
+    }
+
+    @Override
+    public boolean isTerminated() {
+	return false;
+    }
+
+    @Override
+    public long getCreationTime() {
+	return creationTime;
+    }
+
+    @Override
+    public boolean process(Event event) {
+	return false;
+    }
+
+    @Override
+    public MetaNode getMetaNode() {
+	return null;
+    }
+
+    @Override
+    public void setMetaNode(MetaNode metaNode) {
+
+    }
+
+    @Override
+    public void setBindings(LowLevelBinding[] bindings) {
+    }
+
+    @Override
+    public void setTimestamp(long timestamp) {
+
+    }
+
+    @Override
+    public Monitor copy(LowLevelBinding[] bindings) {
+	return null;
+    }
+
+    @Override
+    public Monitor copy(LowLevelBinding[] bindings, long timestamp) {
+	return null;
+    }
+
+}

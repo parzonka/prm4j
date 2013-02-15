@@ -18,12 +18,11 @@ import java.util.List;
 import prm4j.Util;
 import prm4j.api.BaseEvent;
 import prm4j.api.Event;
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.BaseMonitorState;
-import prm4j.indexing.StatefulMonitor;
 
 /**
- * {@link BaseMonitor} which is aware of all bindings of the trace it processed, and of all monitors which got updated
+ * {@link Monitor} which is aware of all bindings of the trace it processed, and of all monitors which got updated
  * and created.
  */
 public class AwareBaseMonitor extends StatefulMonitor {
@@ -56,7 +55,7 @@ public class AwareBaseMonitor extends StatefulMonitor {
     }
 
     @Override
-    public BaseMonitor copy() {
+    public Monitor copy() {
 	AwareBaseMonitor copy = new AwareBaseMonitor(state, new ArrayList<BaseEvent>(baseEventTrace), updatedMonitors,
 		createdMonitors);
 	return copy;

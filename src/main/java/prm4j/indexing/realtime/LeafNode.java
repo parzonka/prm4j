@@ -14,7 +14,7 @@ import java.lang.ref.ReferenceQueue;
 
 import prm4j.Util;
 import prm4j.api.Parameter;
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.staticdata.MetaNode;
 
 public class LeafNode implements Node {
@@ -22,6 +22,7 @@ public class LeafNode implements Node {
     private final static MonitorSet[] EMPTY_MONITOR_SET = new MonitorSet[0];
     private final MetaNode metaNode;
     private final NodeRef nodeRef;
+    private long timestamp = Long.MIN_VALUE; // this instance was not seen yet
 
     private final LowLevelBinding key;
     private Node nextNode;
@@ -45,7 +46,7 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public BaseMonitor getMonitor() {
+    public Monitor getMonitor() {
 	return nodeRef.monitor;
     }
 
@@ -60,7 +61,7 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public void setMonitor(BaseMonitor monitor) {
+    public void setMonitor(Monitor monitor) {
 	nodeRef.monitor = monitor;
 	monitor.setMetaNode(metaNode);
     }
@@ -133,6 +134,17 @@ public class LeafNode implements Node {
     @Override
     public int size() {
 	throw new UnsupportedOperationException("This node should not need to use this operation!");
+    }
+
+    @Override
+    public void setTimestamp(long timestamp) {
+	this.timestamp = timestamp;
+
+    }
+
+    @Override
+    public long getTimestamp() {
+	return timestamp;
     }
 
 }

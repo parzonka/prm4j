@@ -184,6 +184,7 @@ public class StaticDataConverterTest extends AbstractTest {
 
 	assertArrayEquals(expected, actual);
     }
+
     // /////////////// getCopyPattern ///////////////////////////
 
     @Test
@@ -368,9 +369,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	expected[u.updateMap.getIndex()] = new JoinData[0];
 
 	JoinData[] jd = new JoinData[1];
-	// u.createIter.getParameters() = { c, i }
-	// compatible node selected by { c }
-	jd[0] = new JoinData(array(1), 0, array(-1, 1, 2), array(0, 0), array(2));
+	jd[0] = new JoinData(array(1), 0, array(-1, 1, 2), array(0, 0), new int[0][]);
 	expected[u.createIter.getIndex()] = jd;
 
 	expected[u.useIter.getIndex()] = new JoinData[0];
@@ -430,8 +429,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	expected.createAndGetMetaNode(u.i).setMonitorSetCount(1);
 
 	// depth 2
-	expected.getMetaNode(u.m, u.c).setChainData(
-		asSet(new ChainData(toNodeMask(u.c), 0)));
+	expected.getMetaNode(u.m, u.c).setChainData(asSet(new ChainData(toNodeMask(u.c), 0)));
 	expected.getMetaNode(u.m, u.c).setMonitorSetCount(1);
 
 	expected.getMetaNode(u.c, u.i).setChainData(emptyChainDataSet);

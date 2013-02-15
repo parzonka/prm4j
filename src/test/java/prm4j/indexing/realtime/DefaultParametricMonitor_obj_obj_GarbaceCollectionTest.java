@@ -25,8 +25,7 @@ import org.junit.Test;
 import prm4j.AbstractTest;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.BaseMonitor;
-import prm4j.indexing.StatefulMonitor;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
@@ -36,7 +35,7 @@ public class DefaultParametricMonitor_obj_obj_GarbaceCollectionTest extends Abst
     protected StaticDataConverter converter;
     protected DefaultBindingStore bindingStore;
     protected AwareDefaultNodeStore nodeStore;
-    protected BaseMonitor prototypeMonitor;
+    protected Monitor prototypeMonitor;
     protected NodeManager nodeManager;
     protected DefaultParametricMonitor pm;
 

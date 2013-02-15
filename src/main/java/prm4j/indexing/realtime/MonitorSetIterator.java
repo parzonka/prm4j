@@ -10,13 +10,13 @@
  */
 package prm4j.indexing.realtime;
 
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 
 public interface MonitorSetIterator {
 
-    public BaseMonitor next();
+    public Monitor next();
 
-    public boolean hasNext(BaseMonitor lastMonitor, boolean isLastMonitorAlive);
+    public boolean hasNext(Monitor lastMonitor, boolean isLastMonitorAlive);
 
     public void done();
 

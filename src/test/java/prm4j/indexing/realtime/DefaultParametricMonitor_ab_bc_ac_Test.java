@@ -11,6 +11,7 @@
 package prm4j.indexing.realtime;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -61,11 +62,67 @@ public class DefaultParametricMonitor_ab_bc_ac_Test extends AbstractDefaultParam
     }
 
     @Test
+    public void a1b1_a1c1_nodeA1C1isCreated() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e3.createEvent(a1, c1));
+
+	// verify
+	assertNodeExists(getNode(a1, b1, _));
+	assertNodeExists(getNode(a1, _, c1));
+    }
+
+    @Test
+    public void a1b1_a1c1_nodeA1B1C1isNotCreated() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e3.createEvent(a1, c1));
+
+	// verify
+	assertNullNode(getNode(a1, b1, c1));
+    }
+
+    @Test
+    public void a1b1_a1c1_correctMonitorsAreCreated() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e3.createEvent(a1, c1));
+
+	// verify
+	assertMonitorExistsAndIsNotTheDeadMonitor(getMonitor(a1, b1, _));
+	assertDeadMonitor(a1, _, c1);
+    }
+
+    @Test
+    public void a1b1_a1c1_correctTimestamps() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e3.createEvent(a1, c1));
+
+	// verify
+	assertEquals(0L, getNode(a1, b1, _).getTimestamp());
+	assertEquals(0L, getNode(a1, b1, _).getMonitor().getCreationTime());
+	assertEquals(1L, getNode(a1, _, c1).getTimestamp());
+	assertEquals(1L, getNode(a1, _, c1).getMonitor().getCreationTime());
+    }
+
+    @Test
+    public void monitorForABC() throws Exception {
+	// exercise
+	pm.processEvent(fsm.e1.createEvent(a1, b1));
+	pm.processEvent(fsm.e3.createEvent(a1, c1)); // disable a1c1 via timestamp
+	pm.processEvent(fsm.e2.createEvent(b1, c1)); // monitor for a1b1c1 is not created since a1c1 already defined
+
+	// verify
+	assertNull(getNode(a1, b1, c1).getMonitor());
+    }
+
+    @Test
     public void disableEventPreventsMatch2() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a1, b1));
-	pm.processEvent(fsm.e3.createEvent(a1, c1)); // disable c1
-	pm.processEvent(fsm.e2.createEvent(b1, c1));
+	pm.processEvent(fsm.e3.createEvent(a1, c1)); // disable a1c1 via timestamp
+	pm.processEvent(fsm.e2.createEvent(b1, c1)); // monitor for a1b1c1 is not created since a1c1 already defined
 	pm.processEvent(fsm.e3.createEvent(a1, c1));
 
 	// verify
@@ -80,12 +137,7 @@ public class DefaultParametricMonitor_ab_bc_ac_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e2.createEvent(b1, c1));
 	pm.processEvent(fsm.e3.createEvent(a1, c1));
 
-	// verify
-	if (ALGORITHM_D_FIXED) {
-	    assertEquals(1, fsm.matchHandler.getHandledMatches().size());
-	} else {
-	    assertEquals(0, fsm.matchHandler.getHandledMatches().size());
-	}
+	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
     }
 
 }

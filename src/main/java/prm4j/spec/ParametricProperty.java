@@ -51,7 +51,7 @@ public interface ParametricProperty {
     public ListMultimap<BaseEvent, Set<Parameter<?>>> getMaxData();
 
     /**
-     * @return mapping of base events to tuples representing a set of compatible joinable instances
+     * @return multiMap[baseEvent -> tuple(compatibleSubset, enablingParameterSet)]
      */
     public ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinData();
 

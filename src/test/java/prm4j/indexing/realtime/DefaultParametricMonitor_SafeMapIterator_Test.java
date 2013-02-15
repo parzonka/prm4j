@@ -20,7 +20,6 @@ import org.junit.Test;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.BaseMonitor;
 import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;

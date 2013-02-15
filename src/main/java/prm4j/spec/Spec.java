@@ -14,7 +14,7 @@ import java.util.Set;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.BaseMonitorState;
 
 /**
@@ -28,6 +28,6 @@ public interface Spec {
 
     public BaseMonitorState getInitialState();
 
-    public BaseMonitor getInitialMonitor();
+    public Monitor getInitialMonitor();
 
 }

@@ -10,17 +10,26 @@
  */
 package prm4j.indexing.realtime;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.staticdata.ModelVerifier;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor_ab_bc_cd_ad_Test extends AbstractDefaultParametricMonitorTest {
 
     FSM_ab_bc_cd_ad fsm;
+
+    Parameter<?> a;
+    Parameter<?> b;
+    Parameter<?> c;
+    Parameter<?> d;
+
     final String a1 = "a1";
     final String b1 = "b1";
     final String c1 = "c1";
@@ -33,17 +42,103 @@ public class DefaultParametricMonitor_ab_bc_cd_ad_Test extends AbstractDefaultPa
     @Before
     public void init() {
 	fsm = new FSM_ab_bc_cd_ad();
+	a = fsm.a;
+	b = fsm.b;
+	c = fsm.c;
+	d = fsm.d;
 	FiniteSpec finiteSpec = new FSMSpec(fsm.fsm);
 	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
     }
 
     @Test
+    @SuppressWarnings("unchecked")
+    public void model() throws Exception {
+	ModelVerifier m = new ModelVerifier(converter);
+
+	// event_ab
+	m.findMaxOverParameterSets(fsm.event_ab, list());
+	m.findMaxOverParameterSets(fsm.event_ad, list());
+	m.joinOverParameterSets(fsm.event_ab, list());
+
+	// event_bc
+	m.findMaxOverParameterSets(fsm.event_bc, list()); // does not look for max
+	m.joinOverCompatibleInstances(fsm.event_bc, list(asSet(b)));
+	m.joinOverParameterSets(fsm.event_bc, list(asSet(a, b)));
+	m.disableParameterSets(fsm.event_bc, asSet(a, b), list(asSet(b, c)));
+
+	// event_cd
+	m.findMaxOverParameterSets(fsm.event_cd, list());
+	m.joinOverCompatibleInstances(fsm.event_cd, list(asSet(c)));
+	m.joinOverParameterSets(fsm.event_cd, list(asSet(a, b, c)));
+	m.disableParameterSets(fsm.event_cd, asSet(a, b, c), list(asSet(a, d), asSet(c, d)));
+
+	m.joinOverParameterSets(fsm.event_ad, list());
+	m.joinOverCompatibleInstances(fsm.event_ab, list());
+    }
+
+    @Test
+    public void ab_bc_cd_createNodes1() throws Exception {
+	// exercise
+	pm.processEvent(fsm.event_ab.createEvent(a1, b1));
+	pm.processEvent(fsm.event_bc.createEvent(b1, c1));
+
+	assertNodeExists(getNode(a1, b1, c1, _));
+    }
+
+    @Test
+    public void ab_correctBindingsInMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.event_ab.createEvent(a1, b1));
+
+	LowLevelBinding b_a1 = bindingStore.getBinding(a1);
+	LowLevelBinding b_b1 = bindingStore.getBinding(b1);
+
+	assertArrayEquals(array(b_a1, b_b1), getNode(a1, b1, _, _).getMonitor().getLowLevelBindings());
+    }
+
+    @Test
+    public void ab_bc_cd_correctUncompressedBindings() throws Exception {
+	// exercise
+	pm.processEvent(fsm.event_ab.createEvent(a1, b1));
+	pm.processEvent(fsm.event_bc.createEvent(b1, c1));
+
+	LowLevelBinding b_a1 = bindingStore.getBinding(a1);
+	LowLevelBinding b_b1 = bindingStore.getBinding(b1);
+	LowLevelBinding b_c1 = bindingStore.getBinding(c1);
+
+	assertArrayEquals(array(b_a1, b_b1, null, null), getNode(a1, b1, _, _).getMonitor().getBindings());
+	assertArrayEquals(array(b_a1, b_b1, b_c1, null), getNode(a1, b1, c1, _).getMonitor().getBindings());
+    }
+
+    @Test
+    public void ab_bc_correctBindingsInMonitor() throws Exception {
+	// exercise
+	pm.processEvent(fsm.event_ab.createEvent(a1, b1));
+	pm.processEvent(fsm.event_bc.createEvent(b1, c1));
+	LowLevelBinding b_a1 = bindingStore.getBinding(a1);
+	LowLevelBinding b_b1 = bindingStore.getBinding(b1);
+	LowLevelBinding b_c1 = bindingStore.getBinding(c1);
+
+	assertArrayEquals(array(b_a1, b_b1, b_c1), getNode(a1, b1, c1, _).getMonitor().getLowLevelBindings());
+    }
+
+    @Test
+    public void ab_bc_cd_ad_createNodes2() throws Exception {
+	// exercise
+	pm.processEvent(fsm.event_ab.createEvent(a1, b1));
+	pm.processEvent(fsm.event_bc.createEvent(b1, c1));
+	pm.processEvent(fsm.event_cd.createEvent(c1, d1));
+
+	assertNodeExists(getNode(a1, b1, c1, d1));
+    }
+
+    @Test
     public void ab_bc_cd_ad_simpleMatch() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a1, b1));
-	pm.processEvent(fsm.e2.createEvent(b1, c1));
-	pm.processEvent(fsm.e3.createEvent(c1, d1));
-	pm.processEvent(fsm.e4.createEvent(a1, d1));
+	pm.processEvent(fsm.event_ab.createEvent(a1, b1));
+	pm.processEvent(fsm.event_bc.createEvent(b1, c1));
+	pm.processEvent(fsm.event_cd.createEvent(c1, d1));
+	pm.processEvent(fsm.event_ad.createEvent(a1, d1));
 
 	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
     }
@@ -51,11 +146,11 @@ public class DefaultParametricMonitor_ab_bc_cd_ad_Test extends AbstractDefaultPa
     @Test
     public void ab_bc_cd_ad_disableMatch1() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e3.createEvent(c1, d1));
-	pm.processEvent(fsm.e1.createEvent(a1, b1));
-	pm.processEvent(fsm.e2.createEvent(b1, c1));
-	pm.processEvent(fsm.e3.createEvent(c1, d1));
-	pm.processEvent(fsm.e4.createEvent(a1, d1));
+	pm.processEvent(fsm.event_cd.createEvent(c1, d1));
+	pm.processEvent(fsm.event_ab.createEvent(a1, b1));
+	pm.processEvent(fsm.event_bc.createEvent(b1, c1));
+	pm.processEvent(fsm.event_cd.createEvent(c1, d1));
+	pm.processEvent(fsm.event_ad.createEvent(a1, d1));
 
 	assertEquals(0, fsm.matchHandler.getHandledMatches().size());
     }
@@ -63,11 +158,11 @@ public class DefaultParametricMonitor_ab_bc_cd_ad_Test extends AbstractDefaultPa
     @Test
     public void ab_bc_cd_ad_disableMatch2() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(a1, b1));
-	pm.processEvent(fsm.e3.createEvent(c1, d1));
-	pm.processEvent(fsm.e2.createEvent(b1, c1));
-	pm.processEvent(fsm.e3.createEvent(c1, d1));
-	pm.processEvent(fsm.e4.createEvent(a1, d1));
+	pm.processEvent(fsm.event_ab.createEvent(a1, b1));
+	pm.processEvent(fsm.event_cd.createEvent(c1, d1));
+	pm.processEvent(fsm.event_bc.createEvent(b1, c1));
+	pm.processEvent(fsm.event_cd.createEvent(c1, d1));
+	pm.processEvent(fsm.event_ad.createEvent(a1, d1));
 
 	assertEquals(0, fsm.matchHandler.getHandledMatches().size());
     }
@@ -75,18 +170,16 @@ public class DefaultParametricMonitor_ab_bc_cd_ad_Test extends AbstractDefaultPa
     @Test
     public void ab_bc_cd_ad_interveningTraceSlice() throws Exception {
 	// exercise
-	pm.processEvent(fsm.e1.createEvent(c1, d2)); // an event from another traceslice
-	pm.processEvent(fsm.e1.createEvent(a1, b1));
-	pm.processEvent(fsm.e2.createEvent(b1, c1));
-	pm.processEvent(fsm.e3.createEvent(c1, d1)); // c1d2 prevents creation of node c1d1 because the timestamp of c1
+	pm.processEvent(fsm.event_ab.createEvent(c1, d2)); // an event from another traceslice
+	pm.processEvent(fsm.event_ab.createEvent(a1, b1));
+	pm.processEvent(fsm.event_bc.createEvent(b1, c1));
+	pm.processEvent(fsm.event_cd.createEvent(c1, d1)); // c1d2 prevents creation of node c1d1 because the timestamp
+							   // of c1
 	// an improved version would need to store timestamps with nodes, not bindings
-	pm.processEvent(fsm.e4.createEvent(a1, d1));
+	pm.processEvent(fsm.event_ad.createEvent(a1, d1));
 
-	if (ALGORITHM_D_FIXED) {
-	    assertEquals(1, fsm.matchHandler.getHandledMatches().size());
-	} else {
-	    assertEquals(0, fsm.matchHandler.getHandledMatches().size());
-	}
+	// algorithm seems to fixed here
+	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
     }
 
 }

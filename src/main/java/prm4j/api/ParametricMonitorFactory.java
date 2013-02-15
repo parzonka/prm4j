@@ -11,7 +11,8 @@
 package prm4j.api;
 
 import prm4j.Globals;
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
+import prm4j.indexing.realtime.BaseMonitor;
 import prm4j.indexing.realtime.BindingFactory;
 import prm4j.indexing.realtime.BindingStore;
 import prm4j.indexing.realtime.ArrayBasedBindingFactory;
@@ -41,7 +42,7 @@ public class ParametricMonitorFactory {
 	final BindingStore bindingStore = new DefaultBindingStore(bindingFactory, finiteSpec.getFullParameterSet());
 	final NodeManager nodeManager = new NodeManager();
 	final NodeStore nodeStore = new DefaultNodeStore(converter.getMetaTree(), nodeManager);
-	final BaseMonitor prototypeMonitor = finiteSpec.getInitialMonitor();
+	final Monitor prototypeMonitor = finiteSpec.getInitialMonitor();
 
 	final ParametricMonitor parametricMonitor = new DefaultParametricMonitor(bindingStore, nodeStore,
 		prototypeMonitor, converter.getEventContext(), nodeManager, false);

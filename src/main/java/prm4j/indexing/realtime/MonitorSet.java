@@ -13,11 +13,11 @@ package prm4j.indexing.realtime;
 import java.util.Arrays;
 
 import prm4j.api.Event;
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 import prm4j.indexing.staticdata.ChainData;
 
 /**
- * Holds a set of {@link BaseMonitor}s.
+ * Holds a set of {@link Monitor}s.
  */
 public class MonitorSet {
 
@@ -41,7 +41,7 @@ public class MonitorSet {
 
     /**
      * Adds a monitor to the monitor set.
-     *
+     * 
      * @param monitor
      */
     public void add(NodeRef monitor) {
@@ -64,7 +64,7 @@ public class MonitorSet {
      * if they have reached the end of their lifetime. In this case, they are removed from the monitor set. A monitor
      * has reached the end of its lifetime if is already terminated, or if some bindings, necessary to reach an
      * accepting state, have already expired.
-     *
+     * 
      * @param event
      *            the current event
      */
@@ -72,7 +72,7 @@ public class MonitorSet {
 	int deadPartitionStart = 0;
 	for (int i = 0; i < size; i++) { // 63
 	    final NodeRef nodeRef = monitorSet[i];
-	    final BaseMonitor monitor = nodeRef.monitor;
+	    final Monitor monitor = nodeRef.monitor;
 	    // check if the monitor was already gc'ed by the NodeManager
 	    if (nodeRef.monitor == null) {
 		continue;
@@ -99,7 +99,7 @@ public class MonitorSet {
      * set. All monitors in the set are tested, if they have reached the end of their lifetime. In this case, they are
      * removed from the monitor set. A monitor has reached the end of its lifetime if is already terminated, or if some
      * bindings, necessary to reach an accepting state, have already expired.
-     *
+     * 
      * @param nodeStore
      *            access to all nodes
      * @param event
@@ -109,13 +109,13 @@ public class MonitorSet {
      *            'merge') with the bindings in the compatible monitor
      * @param someBindingsAreKnown
      *            <code>true</code>, if some bindings have been seen already
-     * @param tmax
+     * @param maxInstanceTimestamp
      *            the latest 'seeing' time of all bindings in joinableBindings
      * @param copyPattern
      *            used to copy a number of bindings from the compatible monitor
      */
     public void join(NodeStore nodeStore, Event event, final LowLevelBinding[] joinableBindings,
-	    boolean someBindingsAreKnown, long tmax, int[] copyPattern) {
+	    long minMonitorTimestamp, long maxInstanceTimestamp, int[] copyPattern) {
 
 	// create initial copy of the joinable; will gets cloned again if this one is used in a monitor
 	LowLevelBinding[] joinable = joinableBindings.clone(); // 62
@@ -127,10 +127,11 @@ public class MonitorSet {
 
 	    // this monitor holds some bindings we would like to copy to our joined bindings
 	    final NodeRef compatibleNodeRef = monitorSet[i];
-	    final BaseMonitor compatibleMonitor = compatibleNodeRef.monitor;
+	    final Monitor compatibleMonitor = compatibleNodeRef.monitor;
+	    final long compatibleMonitorTimestamp = compatibleMonitor.getCreationTime();
 
 	    // test if some of the bindings had been used already after the compatible monitor was created.
-	    if (someBindingsAreKnown && compatibleMonitor.getCreationTime() < tmax) { // 64
+	    if (maxInstanceTimestamp > compatibleMonitorTimestamp || minMonitorTimestamp < compatibleMonitorTimestamp) { // 64
 		// => the binding was not yet enabled => current event is not part of an accepting trace continued from
 		// this monitor => the joined monitor would never reach accepting state
 		deadPartitionStart++; // this monitor may be still alive, we just avoid joining with it
@@ -148,7 +149,7 @@ public class MonitorSet {
 	    // due to multiple joining phases, it can happen that the node already has a monitor
 	    if (lastNode.getMonitor() == null) { // 72
 		// inlined 'DefineTo' // 73
-		final BaseMonitor monitor = compatibleMonitor.copy(joinable); // 102-105
+		final Monitor monitor = compatibleMonitor.copy(joinable); // 102-105
 		lastNode.setMonitor(monitor); // 106
 		// process and test if monitor is still alive
 		if (monitor.process(event)) { // 103
@@ -174,7 +175,7 @@ public class MonitorSet {
 
     /**
      * Merges the joiningBindings into the joinableBindings.
-     *
+     * 
      * @param joinableBindings
      *            special expanded array representation of the current event bindings
      * @param joiningBindings
@@ -192,11 +193,11 @@ public class MonitorSet {
 
     /**
      * DIAGNOSTIC: Searches the set linearly if monitor is contained, testing for object identity.
-     *
+     * 
      * @param monitor
      * @return <code>true</code> if monitor is contained
      */
-    public boolean contains(BaseMonitor monitor) {
+    public boolean contains(Monitor monitor) {
 	for (int i = 0; i < size; i++) {
 	    if (monitorSet[i].monitor == monitor) {
 		return true;
@@ -207,7 +208,7 @@ public class MonitorSet {
 
     /**
      * Returns the number of monitors contained in the monitor set. It is unknown if the monitors are alive or dead.
-     *
+     * 
      * @return number of contained monitors
      */
     public int getSize() {

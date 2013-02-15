@@ -30,6 +30,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 
 /**
@@ -43,16 +44,20 @@ public class StaticDataConverter {
     private final ParametricProperty pp;
     private final ListMultimap<BaseEvent, MaxData> maxData;
     private final ListMultimap<BaseEvent, JoinData> joinData;
+    private final Table<BaseEvent, Set<Parameter<?>>, List<Set<Parameter<?>>>> disableParameterSets;
     private final SetMultimap<Set<Parameter<?>>, ChainData> chainData;
     private final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
+    private final int[][][] existingMonitorMasks;
     private final MetaNode metaTree;
 
     public StaticDataConverter(ParametricProperty pp) {
 	this.pp = pp;
 	maxData = ArrayListMultimap.create();
 	joinData = ArrayListMultimap.create();
+	disableParameterSets = HashBasedTable.create();
 	chainData = HashMultimap.create();
 	monitorSetIds = HashBasedTable.create();
+	existingMonitorMasks = new int[pp.getBaseEvents().size()][][];
 	convertToLowLevelStaticData();
 	metaTree = new MetaNode(new HashSet<Parameter<?>>(), pp.getParameters());
 	createMetaTree();
@@ -69,19 +74,40 @@ public class StaticDataConverter {
 	    } // 7
 	} // 8
 	for (BaseEvent baseEvent : pp.getBaseEvents()) { // 9
-	    for (Set<Parameter<?>> parameterSet : pp.getMaxData().get(baseEvent)) { // 10
-		final int[] nodeMask = toParameterMask(parameterSet); // 12
-		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), parameterSet)); // 13
-		maxData.put(baseEvent, new MaxData(nodeMask, diffMask)); // 11, 14
+	    for (Set<Parameter<?>> enableParameterSet : pp.getMaxData().get(baseEvent)) { // 10
+		final int[] nodeMask = toParameterMask(enableParameterSet); // 12
+		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), enableParameterSet)); // 13
+		final int[][] disableMasks = calculateDisableParameterMasks(toListOfParameterSetsAscending(calculateDisableCheckParameterSets(
+			baseEvent.getParameters(), enableParameterSet)));
+		maxData.put(baseEvent, new MaxData(nodeMask, diffMask, disableMasks)); // 11, 14
 	    } // 15
+	    existingMonitorMasks[baseEvent.getIndex()] = calculateExistingMonitorMasks(baseEvent.getParameters());
+	    /*
+	     * Iterate through a ordered list of tuples for each base event. Each tuple is of type (ParameterSet,
+	     * ParameterSet) and has the following semantics: (compatibleParameterSet, enablingParameterSet) in relation
+	     * to the base event or its parameter set. In a join operation, we want to create a combination with the
+	     * enabling parameter set. We have to retrieve it via the compatible parameter set, because it has a
+	     * reference to it in its monitor set.
+	     */
+	    // tuple(compatibleSubset, enablingParameterSet)
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) { // 16
-		// we have to select the compatible parameters from the parameters in the base event
-		final int[] nodeMask = toParameterMask(Util.intersection(tuple.getLeft(), baseEvent.getParameters())); // 18
-		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight()); // 19
-		final int[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), tuple.getRight()); // 20
-		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), tuple.getRight()); // 21
-		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), tuple.getLeft())); // 22
-		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, diffMask)); // 23
+		final Set<Parameter<?>> compatibleSubset = tuple.getLeft();
+		final Set<Parameter<?>> enablingParameterSet = tuple.getRight();
+		// the nodeMask selects the compatible node which has references to the enabling instance we want to
+		// combine with
+		final int[] nodeMask = toParameterMask(compatibleSubset); // 18
+		final int monitorSetId = monitorSetIds.get(compatibleSubset, enablingParameterSet); // 19
+		final int[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), enablingParameterSet); // 20
+		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), enablingParameterSet); // 21
+		final List<Set<Parameter<?>>> listOfDisableParameterSets = toListOfParameterSetsAscending(Sets
+			.intersection(
+				calculateDisableCheckParameterSets(
+					Sets.union(baseEvent.getParameters(), enablingParameterSet),
+					enablingParameterSet), toParameterSets(pp.getCreationEvents())));
+		disableParameterSets.put(baseEvent, enablingParameterSet, listOfDisableParameterSets);
+		final int[][] disableMasks = calculateDisableParameterMasks(listOfDisableParameterSets);
+		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern,
+			disableMasks)); // 23
 	    } // 24
 	} // 25
 	for (Set<Parameter<?>> parameterSet : pp.getChainData().keys()) { // 26
@@ -92,6 +118,105 @@ public class StaticDataConverter {
 	    } // 32
 	} // 33
     } // 34
+
+    public static int[][] calculateExistingMonitorMasks(Set<Parameter<?>> baseEventParameterSet) {
+	final Set<Set<Parameter<?>>> powerset = new HashSet<Set<Parameter<?>>>();
+	for (Set<Parameter<?>> parameterSet : Sets.powerSet(baseEventParameterSet)) {
+	    powerset.add(parameterSet);
+	}
+	final int[][] result = new int[powerset.size()][];
+	int i = 0;
+	for (Set<Parameter<?>> parameterSet : toListOfParameterSetsAscending(powerset)) {
+	    result[i++] = toParameterMask(parameterSet);
+	}
+	return result;
+    }
+
+    public static Set<Set<Parameter<?>>> calculateDisableCheckParameterSetsForFindMax(
+	    Set<Parameter<?>> baseEventParameterSet) {
+	final Set<Set<Parameter<?>>> result = new HashSet<Set<Parameter<?>>>();
+	for (Set<Parameter<?>> parameterSet : Sets.powerSet(baseEventParameterSet)) {
+	    result.add(parameterSet);
+	}
+	return result;
+    }
+
+    /**
+     * Calculates the set of theta'' in the first line of the defineTo method of algorithm D. The parameter sets
+     * identify instances which will be checked if they have (dead) monitors, or if single bindings are disabled, when
+     * the parameter sets contain only one element.
+     * 
+     * @param combinedParameterSet
+     * @param enableParameterSet
+     * @return
+     */
+    public static Set<Set<Parameter<?>>> calculateDisableCheckParameterSets(Set<Parameter<?>> combinedParameterSet,
+	    Set<Parameter<?>> enableParameterSet) {
+	final Set<Set<Parameter<?>>> result = new HashSet<Set<Parameter<?>>>();
+
+	for (Set<Parameter<?>> parameterSet : Sets.powerSet(combinedParameterSet)) {
+	    // filter the baseParameterSet otherwise we get a false timestamp when joining
+	    if (!enableParameterSet.containsAll(parameterSet)) {
+		result.add(parameterSet);
+	    }
+	}
+	return result;
+    }
+
+    private static Set<Set<Parameter<?>>> toParameterSets(Set<BaseEvent> setOfBaseEvents) {
+	Set<Set<Parameter<?>>> result = new HashSet<Set<Parameter<?>>>();
+	for (BaseEvent baseEvent : setOfBaseEvents) {
+	    result.add(baseEvent.getParameters());
+	}
+	return result;
+    }
+
+    /**
+     * @param setOfParameterSets
+     * @return a list of parameter sets in topological ascending order, i.e. small sets first, largest last. If two sets
+     *         have the same size, the parameter indizes are added and the set with the smallest number is sorted first.
+     */
+    public static List<Set<Parameter<?>>> toListOfParameterSetsAscending(Set<Set<Parameter<?>>> setOfParameterSets) {
+	List<Set<Parameter<?>>> result = new ArrayList<Set<Parameter<?>>>(setOfParameterSets);
+	Collections.sort(result, new Comparator<Set<Parameter<?>>>() {
+
+	    @Override
+	    public int compare(Set<Parameter<?>> o1, Set<Parameter<?>> o2) {
+		if (o1.size() == o2.size()) {
+		    int indexSum1 = 0;
+		    for (Parameter<?> parameterSet : o1) {
+			indexSum1 += parameterSet.getIndex();
+		    }
+		    int indexSum2 = 0;
+		    for (Parameter<?> parameterSet : o2) {
+			indexSum2 += parameterSet.getIndex();
+		    }
+		    return indexSum1 - indexSum2;
+
+		}
+		return o1.size() - o2.size();
+	    }
+
+	});
+
+	return result;
+    }
+
+    /**
+     * Returns the an array of parameter mask representations (uncompressed) of the disable check parameter sets.
+     * Basically a map over the set with 'toParameterMask'.
+     * 
+     * @param disableCheckParameterSet
+     * @return
+     */
+    public static int[][] calculateDisableParameterMasks(List<Set<Parameter<?>>> disableCheckParameterSet) {
+	final int[][] result = new int[disableCheckParameterSet.size()][];
+	int i = 0;
+	for (Set<Parameter<?>> parameterSet : disableCheckParameterSet) {
+	    result[i++] = toParameterMask(parameterSet);
+	}
+	return result;
+    }
 
     /**
      * Return a ordered list of tuples. The ordering is not neccessary for correctness. It is just useful for display
@@ -281,7 +406,8 @@ public class StaticDataConverter {
     }
 
     public EventContext getEventContext() {
-	return new EventContext(getJoinData(), getMaxData(), getCreationEvents(), getDisablingEvents());
+	return new EventContext(getJoinData(), getMaxData(), getCreationEvents(), getDisablingEvents(),
+		existingMonitorMasks);
     }
 
     /**
@@ -331,6 +457,14 @@ public class StaticDataConverter {
 
     protected Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> getMonitorSetIds() {
 	return monitorSetIds;
+    }
+
+    public ParametricProperty getParametricProperty() {
+	return pp;
+    }
+
+    public Table<BaseEvent, Set<Parameter<?>>, List<Set<Parameter<?>>>> getDisableParameterSets() {
+	return disableParameterSets;
     }
 
 }

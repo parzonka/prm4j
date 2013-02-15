@@ -12,11 +12,12 @@ package prm4j.indexing;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.MatchHandler;
+import prm4j.indexing.realtime.StatefulMonitor;
 
 /**
  * Models the internal state of a {@link StatefulMonitor} where the state space may be finite or infinite.
  *
- * @see  {@link BaseMonitor}
+ * @see  {@link Monitor}
  */
 public abstract class BaseMonitorState {
 

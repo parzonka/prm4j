@@ -81,6 +81,14 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	return result;
     }
 
+    public static List<Set<Parameter<?>>> list(Set<Parameter<?>>... objects) {
+	List<Set<Parameter<?>>> result = new ArrayList<Set<Parameter<?>>>();
+	for (Set<Parameter<?>> t : objects) {
+	    result.add(t);
+	}
+	return result;
+    }
+
     public static <T> int[] array(int... objects) {
 	return objects;
     }

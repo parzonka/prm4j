@@ -10,11 +10,11 @@
  */
 package prm4j.api;
 
-import prm4j.indexing.BaseMonitor;
+import prm4j.indexing.Monitor;
 
 public abstract class Condition {
 
-    private transient BaseMonitor baseMonitor;
+    private transient Monitor baseMonitor;
 
     /**
      * Evaluate this condition based on the state of the base monitor and its attached parametric instance with
@@ -23,7 +23,7 @@ public abstract class Condition {
      * @param baseMonitor
      * @return
      */
-    public boolean eval(BaseMonitor baseMonitor) {
+    public boolean eval(Monitor baseMonitor) {
 	this.baseMonitor = baseMonitor;
 	boolean result = false;
 	// protects from condition specification which try to access non-existing parameter values or similar

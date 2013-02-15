@@ -10,15 +10,19 @@
  */
 package prm4j.indexing.staticdata;
 
+import java.util.Arrays;
+
 public class MaxData {
 
     private final int[] nodeMask;
     private final int[] diffMask;
+    private final int[][] disableMasks;
 
-    public MaxData(int[] nodeMask, int[] diffMask) {
+    public MaxData(int[] nodeMask, int[] diffMask, int[][] disableMasks) {
 	super();
 	this.nodeMask = nodeMask;
 	this.diffMask = diffMask;
+	this.disableMasks = disableMasks;
     }
 
     public int[] getNodeMask() {
@@ -27,6 +31,27 @@ public class MaxData {
 
     public int[] getDiffMask() {
 	return diffMask;
+    }
+
+    public int[][] getDisableMasks() {
+	return disableMasks;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	StringBuilder disableMasksString = new StringBuilder("[");
+	for (int[] disableMask : disableMasks) {
+	    disableMasksString.append(Arrays.toString(disableMask));
+	    disableMasksString.append(" ");
+	}
+	disableMasksString.append("]");
+	return "MaxData [nodeMask=" + Arrays.toString(nodeMask) + ", diffMask=" + Arrays.toString(diffMask)
+		+ ", disableMasks=" + disableMasksString.toString() + "]";
     }
 
 }
