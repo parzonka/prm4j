@@ -202,7 +202,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		// join is performed in monitor set
 		compatibleNode.getMonitorSet(joinData.getMonitorSetId()).join(nodeStore, event, joinableBindings,
 			minMonitorTimestamp, maxInstanceTimestamp, joinData.getCopyPattern());
+
 	    }
+	    nodeStore.getNode(bindings, parameterMask).setTimestamp(timestamp);
 	} else {
 	    // update phase
 	    instanceMonitor.process(event); // 30
@@ -212,7 +214,6 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		}
 	    }
 	}
-	nodeStore.getNode(bindings, parameterMask).setTimestamp(timestamp);
 
 	nodeManager.tryToClean(timestamp);
 	if (logger != null) {
