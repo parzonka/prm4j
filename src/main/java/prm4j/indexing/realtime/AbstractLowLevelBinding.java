@@ -15,15 +15,12 @@ import java.lang.ref.WeakReference;
 
 public abstract class AbstractLowLevelBinding extends WeakReference<Object> implements LowLevelBinding {
 
-    private long timestamp;
-    private boolean disabled;
     private final int hashCode;
     private LowLevelBinding next;
 
     public AbstractLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q) {
 	super(boundObject, q);
 	this.hashCode = hashCode;
-	timestamp = Long.MAX_VALUE; // indicates the binding was just created
     }
 
     /**
@@ -49,27 +46,6 @@ public abstract class AbstractLowLevelBinding extends WeakReference<Object> impl
     @Override
     public void setNext(LowLevelBinding next) {
 	this.next = next;
-    }
-
-    @Override
-    public boolean isDisabled() {
-	return disabled;
-    }
-
-    @Override
-    public void setDisabled(boolean disabled) {
-	this.disabled = disabled;
-
-    }
-
-    @Override
-    public long getTimestamp() {
-	return timestamp;
-    }
-
-    @Override
-    public void setTimestamp(long timestamp) {
-	this.timestamp = timestamp;
     }
 
     @Override

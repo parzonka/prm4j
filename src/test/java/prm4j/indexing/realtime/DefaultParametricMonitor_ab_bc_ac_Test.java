@@ -101,9 +101,9 @@ public class DefaultParametricMonitor_ab_bc_ac_Test extends AbstractDefaultParam
 
 	// verify
 	assertEquals(0L, getNode(a1, b1, _).getTimestamp());
-	assertEquals(0L, getNode(a1, b1, _).getMonitor().getCreationTime());
+	assertEquals(0L, getNode(a1, b1, _).getMonitor().getTimestamp());
 	assertEquals(1L, getNode(a1, _, c1).getTimestamp());
-	assertEquals(1L, getNode(a1, _, c1).getMonitor().getCreationTime());
+	assertEquals(1L, getNode(a1, _, c1).getMonitor().getTimestamp());
     }
 
     @Test

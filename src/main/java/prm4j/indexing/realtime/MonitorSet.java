@@ -128,7 +128,7 @@ public class MonitorSet {
 	    // this monitor holds some bindings we would like to copy to our joined bindings
 	    final NodeRef compatibleNodeRef = monitorSet[i];
 	    final Monitor compatibleMonitor = compatibleNodeRef.monitor;
-	    final long compatibleMonitorTimestamp = compatibleMonitor.getCreationTime();
+	    final long compatibleMonitorTimestamp = compatibleMonitor.getTimestamp();
 
 	    // test if some of the bindings had been used already after the compatible monitor was created.
 	    if (maxInstanceTimestamp > compatibleMonitorTimestamp || minMonitorTimestamp < compatibleMonitorTimestamp) { // 64

@@ -127,7 +127,7 @@ public abstract class BaseMonitor implements Monitor {
     }
 
     @Override
-    public final long getCreationTime() {
+    public final long getTimestamp() {
 	return timestamp;
     }
 

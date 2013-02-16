@@ -107,13 +107,13 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    findMaxPhase: for (MaxData maxData : eventContext.getMaxData(baseEvent)) { // 8
 		Monitor maxMonitor = nodeStore.getNode(bindings, maxData.getNodeMask()).getMonitor(); // 9
 		if (maxMonitor != null) { // 10
-		    final long maxMonitorTimestamp = maxMonitor.getCreationTime();
+		    final long maxMonitorTimestamp = maxMonitor.getTimestamp();
 		    for (int[] disableMask : maxData.getDisableMasks()) {
 			final Node subInstanceNode = nodeStore.getNode(bindings, disableMask);
 			if (subInstanceNode != NullNode.instance) {
 			    if (subInstanceNode.getTimestamp() > maxMonitorTimestamp
 				    || (subInstanceNode.getMonitor() != null && subInstanceNode.getMonitor()
-					    .getCreationTime() < maxMonitorTimestamp)) {
+					    .getTimestamp() < maxMonitorTimestamp)) {
 				continue findMaxPhase;
 			    }
 			}
@@ -188,7 +188,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 			maxInstanceTimestamp = instanceTimestamp;
 		    }
 		    if (subInstanceNode.getMonitor() != null) {
-			final long monitorTimestamp = subInstanceNode.getMonitor().getCreationTime();
+			final long monitorTimestamp = subInstanceNode.getMonitor().getTimestamp();
 			if (minMonitorTimestamp > monitorTimestamp) {
 			    minMonitorTimestamp = monitorTimestamp;
 			}

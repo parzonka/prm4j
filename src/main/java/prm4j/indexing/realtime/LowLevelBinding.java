@@ -30,14 +30,6 @@ public interface LowLevelBinding extends prm4j.api.Binding, MinimalMapEntry<Obje
      */
     void registerHolder(Holder<LowLevelBinding> bindingHolder);
 
-    boolean isDisabled();
-
-    void setDisabled(boolean disable);
-
-    long getTimestamp();
-
-    void setTimestamp(long timestamp);
-
     public Node getNode();
 
     public void setNode(Node node);

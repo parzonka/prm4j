@@ -72,7 +72,7 @@ public class DefaultParametricMonitor_a_a_a_Test extends AbstractDefaultParametr
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertEquals(0L, popNextUpdatedMonitor().getCreationTime());
+	assertEquals(0L, popNextUpdatedMonitor().getTimestamp());
     }
 
     @Test
@@ -181,8 +181,8 @@ public class DefaultParametricMonitor_a_a_a_Test extends AbstractDefaultParametr
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertEquals(0L, popNextUpdatedMonitor().getCreationTime());
-	assertEquals(0L, popNextUpdatedMonitor().getCreationTime());
+	assertEquals(0L, popNextUpdatedMonitor().getTimestamp());
+	assertEquals(0L, popNextUpdatedMonitor().getTimestamp());
     }
 
     @Test
@@ -260,8 +260,8 @@ public class DefaultParametricMonitor_a_a_a_Test extends AbstractDefaultParametr
 	pm.processEvent(fsm.e1.createEvent(b));
 
 	// verify
-	assertEquals(0L, popNextCreatedMonitor().getCreationTime());
-	assertEquals(1L, popNextCreatedMonitor().getCreationTime());
+	assertEquals(0L, popNextCreatedMonitor().getTimestamp());
+	assertEquals(1L, popNextCreatedMonitor().getTimestamp());
     }
 
     @Test

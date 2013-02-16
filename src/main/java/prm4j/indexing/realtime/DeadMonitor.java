@@ -30,7 +30,7 @@ public class DeadMonitor implements Monitor {
 
     @Override
     public boolean processEvent(Event event) {
-	return false;
+	throw new IllegalStateException("Dead monitor should not receive updates!");
     }
 
     @Override
@@ -64,7 +64,7 @@ public class DeadMonitor implements Monitor {
     }
 
     @Override
-    public long getCreationTime() {
+    public long getTimestamp() {
 	return creationTime;
     }
 

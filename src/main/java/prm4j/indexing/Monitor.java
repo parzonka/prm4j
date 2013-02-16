@@ -43,7 +43,11 @@ public interface Monitor {
      */
     public boolean isTerminated();
 
-    public long getCreationTime();
+    /**
+     * @return the creation timestamp of this monitor. This refers to the creation time of this monitor, if it was
+     *         created as a new monitor, or to the timestamp of the monitor it was derived from.
+     */
+    public long getTimestamp();
 
     /**
      * Updates the base monitors internal state by consuming an event. After processing the event, the monitor is either

@@ -12,7 +12,6 @@ package prm4j.indexing.realtime;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
@@ -73,7 +72,7 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertEquals(0L, popNextUpdatedMonitor().getCreationTime());
+	assertEquals(0L, popNextUpdatedMonitor().getTimestamp());
     }
 
     @Test
@@ -173,22 +172,6 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
     }
 
     @Test
-    public void firstEvent_ab_bothBindingsAreNotDisabled() throws Exception {
-	// exercise
-	pm.processEvent(fsm.e2.createEvent(a, b));
-
-	// verify
-	LowLevelBinding[] binding = popNextRetrievedBinding();
-	if (ALGORITHM_D_FIXED) {
-	    assertFalse(binding[0].isDisabled());
-	    assertFalse(binding[1].isDisabled());
-	} else {
-	    assertTrue(binding[0].isDisabled());
-	    assertTrue(binding[1].isDisabled());
-	}
-    }
-
-    @Test
     public void firstEvent_ab_noMatchDetected() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(a, b));
@@ -261,8 +244,8 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e1.createEvent(b));
 
 	// verify
-	assertEquals(0L, popNextCreatedMonitor().getCreationTime());
-	assertEquals(1L, popNextCreatedMonitor().getCreationTime());
+	assertEquals(0L, popNextCreatedMonitor().getTimestamp());
+	assertEquals(1L, popNextCreatedMonitor().getTimestamp());
     }
 
     @Test
@@ -352,8 +335,8 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e2.createEvent(a, b));
 
 	// verify
-	assertEquals(0L, popNextCreatedMonitor().getCreationTime());
-	assertEquals(0L, popNextCreatedMonitor().getCreationTime());
+	assertEquals(0L, popNextCreatedMonitor().getTimestamp());
+	assertEquals(0L, popNextCreatedMonitor().getTimestamp());
     }
 
     @Test
@@ -421,16 +404,15 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	// monitor for a is created, since it can be part of many trace slices: (a, b1), (a, b2) ...
     }
 
-    // @Test
-    // TODO a,b does not need to receive updates, since it has a dead monitor anyway... functionality is yet to be
-    // implemented
+    @Test
     public void twoEvents_ab_a_noUpdates() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(a, b));
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertNoMoreUpdatedMonitors();
+	assertTrace(getMonitor(a, _), fsm.e1);
+	assertDeadMonitor(a, b);
     }
 
     @Test
@@ -439,12 +421,9 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e2.createEvent(a, b));
 
 	// verify
-	LowLevelBinding[] binding = popNextRetrievedBinding();
+	assertEquals(0L, getNode(a, b).getTimestamp());
+	assertEquals(0L, getNode(a, b).getMonitor().getTimestamp());
 
-	// TODO check timestamp of ab
-
-	assertFalse(binding[0].isDisabled());
-	assertFalse(binding[1].isDisabled());
     }
 
     @Test
@@ -454,12 +433,8 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	LowLevelBinding[] binding = popNextRetrievedBinding();
-
-	// TODO check timestamp of ab
-
-	assertFalse(binding[0].isDisabled());
-	assertFalse(binding[1].isDisabled());
+	assertEquals(1L, getNode(a, _).getTimestamp());
+	assertEquals(1L, getNode(a, _).getMonitor().getTimestamp());
     }
 
     @Test
