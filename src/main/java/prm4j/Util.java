@@ -163,7 +163,7 @@ public class Util {
 
     public static String bindingsToString(Binding[] bindings) {
 	// implementation copied from Arrays.toString
-	// substituting brackets for parantheses
+	// substituting brackets for parentheses
 	if (bindings == null) {
 	    return "null";
 	}

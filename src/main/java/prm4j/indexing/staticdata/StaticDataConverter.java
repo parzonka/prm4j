@@ -174,7 +174,7 @@ public class StaticDataConverter {
     /**
      * @param setOfParameterSets
      * @return a list of parameter sets in topological ascending order, i.e. small sets first, largest last. If two sets
-     *         have the same size, the parameter indizes are added and the set with the smallest number is sorted first.
+     *         have the same size, the parameter indices are added and the set with the smallest number is sorted first.
      */
     public static List<Set<Parameter<?>>> toListOfParameterSetsAscending(Set<Set<Parameter<?>>> setOfParameterSets) {
 	List<Set<Parameter<?>>> result = new ArrayList<Set<Parameter<?>>>(setOfParameterSets);
