@@ -14,14 +14,19 @@ import java.util.Arrays;
 
 public class MaxData {
 
+    /**
+     * Identifies the node which is checked for a defined monitor to derive its state from.
+     */
     private final int[] nodeMask;
-    private final int[] diffMask;
+    /**
+     * The set of theta'' in the first line of the defineTo method of algorithm D. The parameter sets identify instances
+     * which will be checked if they have (dead) monitors.
+     */
     private final int[][] disableMasks;
 
     public MaxData(int[] nodeMask, int[] diffMask, int[][] disableMasks) {
 	super();
 	this.nodeMask = nodeMask;
-	this.diffMask = diffMask;
 	this.disableMasks = disableMasks;
     }
 
@@ -29,19 +34,10 @@ public class MaxData {
 	return nodeMask;
     }
 
-    public int[] getDiffMask() {
-	return diffMask;
-    }
-
     public int[][] getDisableMasks() {
 	return disableMasks;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
 	StringBuilder disableMasksString = new StringBuilder("[");
@@ -50,8 +46,8 @@ public class MaxData {
 	    disableMasksString.append(" ");
 	}
 	disableMasksString.append("]");
-	return "MaxData [nodeMask=" + Arrays.toString(nodeMask) + ", diffMask=" + Arrays.toString(diffMask)
-		+ ", disableMasks=" + disableMasksString.toString() + "]";
+	return "MaxData [nodeMask=" + Arrays.toString(nodeMask) + ", disableMasks=" + disableMasksString.toString()
+		+ "]";
     }
 
 }
