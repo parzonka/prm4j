@@ -22,7 +22,7 @@ public class Visualizer {
 
     /**
      * Generates a diagram from meta tree
-     *
+     * 
      * @param metaTree
      * @param subPath
      *            the name of the test-class and testing method
@@ -46,7 +46,7 @@ public class Visualizer {
     private static void visualizeMetaNode(MetaNode metaNode, GvGraph graph) {
 	if (metaNode.getChainDataArray() != null) {
 	    for (ChainData chainData : metaNode.getChainDataArray()) {
-		GvNode x = graph.getNode(Arrays.toString(chainData.getNodeMask()));
+		GvNode x = graph.getNode(Arrays.toString(chainData.nodeMask));
 		GvNode y = graph.getNode(Arrays.toString(metaNode.getNodeMask()));
 		graph.addEdge(x, y).setStyle("dashed");
 	    }

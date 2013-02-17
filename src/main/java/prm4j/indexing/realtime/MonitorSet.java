@@ -159,8 +159,8 @@ public class MonitorSet {
 		// normal chain phase: connect necessary less informative instances so the joined binding will gets some
 		// updates (or be used in join phase itself as compatible monitor)
 		for (ChainData chainData : lastNode.getMetaNode().getChainDataArray()) {
-		    nodeStore.getOrCreateNode(joinable, chainData.getNodeMask())
-			    .getMonitorSet(chainData.getMonitorSetId()).add(lastNode.getNodeRef());
+		    nodeStore.getOrCreateNode(joinable, chainData.nodeMask).getMonitorSet(chainData.monitorSetId)
+			    .add(lastNode.getNodeRef());
 		} // 99
 		  // copy got used => clone again
 		joinable = joinableBindings.clone(); // 74

@@ -22,47 +22,15 @@ import prm4j.indexing.realtime.DeadMonitor;
 public class JoinData {
 
     // identifies the node, which represents the compatible part of the instance, we want to join with
-    private final int[] nodeMask;
+    public final int[] nodeMask;
     // identifies the monitor set, which contains the monitors carrying the bindings we will join with (they are
     // strictly more informative than the node, selected by the nodeMask)
-    private final int monitorSetId;
+    public final int monitorSetId;
     // prepares the event bindings for the join
-    private final int[] extensionPattern;
+    public final int[] extensionPattern;
     // identifies the bindings which will be used for the join, picking out only "new" parameters
-    private final int[] copyPattern;
-
-    private int[][] disableMasks;
-
-    public JoinData(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern, int[][] disableMasks) {
-	super();
-	this.nodeMask = nodeMask;
-	this.monitorSetId = monitorSetId;
-	this.extensionPattern = extensionPattern;
-	this.copyPattern = copyPattern;
-	this.disableMasks = disableMasks;
-    }
-
-    public int[] getNodeMask() {
-	return nodeMask;
-    }
-
-    public int getMonitorSetId() {
-	return monitorSetId;
-    }
-
-    public int[] getExtensionPattern() {
-	return extensionPattern;
-    }
-
-    /**
-     * 
-     * { joiningBinding[i1], joinableBinding[j1], joiningBinding[i2], joinableBinding[j2], ... }
-     * 
-     * @return
-     */
-    public int[] getCopyPattern() {
-	return copyPattern;
-    }
+    // { joiningBinding[i1], joinableBinding[j1], joiningBinding[i2], joinableBinding[j2], ... }
+    public final int[] copyPattern;
 
     /**
      * ParameterMasks to be used with uncompressed bindings. Each parameterMask selects a instance to check if it has a
@@ -71,8 +39,15 @@ public class JoinData {
      * 
      * @return array of parameter masks
      */
-    public int[][] getDisableMasks() {
-	return disableMasks;
+    public int[][] disableMasks;
+
+    public JoinData(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern, int[][] disableMasks) {
+	super();
+	this.nodeMask = nodeMask;
+	this.monitorSetId = monitorSetId;
+	this.extensionPattern = extensionPattern;
+	this.copyPattern = copyPattern;
+	this.disableMasks = disableMasks;
     }
 
     @Override

@@ -17,25 +17,17 @@ public class MaxData {
     /**
      * Identifies the node which is checked for a defined monitor to derive its state from.
      */
-    private final int[] nodeMask;
+    public final int[] nodeMask;
     /**
      * The set of theta'' in the first line of the defineTo method of algorithm D. The parameter sets identify instances
      * which will be checked if they have (dead) monitors.
      */
-    private final int[][] disableMasks;
+    public final int[][] disableMasks;
 
     public MaxData(int[] nodeMask, int[] diffMask, int[][] disableMasks) {
 	super();
 	this.nodeMask = nodeMask;
 	this.disableMasks = disableMasks;
-    }
-
-    public int[] getNodeMask() {
-	return nodeMask;
-    }
-
-    public int[][] getDisableMasks() {
-	return disableMasks;
     }
 
     @Override

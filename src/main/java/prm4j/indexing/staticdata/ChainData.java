@@ -21,8 +21,8 @@ import prm4j.Util;
  */
 public class ChainData {
 
-    private final int[] nodeMask;
-    private final int monitorSetId;
+    public final int[] nodeMask;
+    public final int monitorSetId;
 
     public ChainData(int[] nodeMask, int monitorSetId) {
 	super();
@@ -36,14 +36,6 @@ public class ChainData {
 	this.monitorSetId = monitorSetId;
     }
 
-    public int[] getNodeMask() {
-	return nodeMask;
-    }
-
-    public int getMonitorSetId() {
-	return monitorSetId;
-    }
-
     @Override
     public int hashCode() {
 	final int prime = 31;
@@ -55,17 +47,22 @@ public class ChainData {
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
+	if (this == obj) {
 	    return true;
-	if (obj == null)
+	}
+	if (obj == null) {
 	    return false;
-	if (getClass() != obj.getClass())
+	}
+	if (getClass() != obj.getClass()) {
 	    return false;
+	}
 	ChainData other = (ChainData) obj;
-	if (monitorSetId != other.monitorSetId)
+	if (monitorSetId != other.monitorSetId) {
 	    return false;
-	if (!Arrays.equals(nodeMask, other.nodeMask))
+	}
+	if (!Arrays.equals(nodeMask, other.nodeMask)) {
 	    return false;
+	}
 	return true;
     }
 
