@@ -115,12 +115,7 @@ public class DefaultParametricMonitor_a_ab_Test extends AbstractDefaultParametri
 	pm.processEvent(fsm.e1.createEvent(a1));
 	pm.processEvent(fsm.e2.createEvent(a1, b1));
 
-	// verify
-	if (ALGORITHM_D_FIXED) {
-	    assertEquals(1, fsm.matchHandler.getHandledMatches().size());
-	} else {
-	    assertEquals(0, fsm.matchHandler.getHandledMatches().size());
-	}
+	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
     }
 
     @Test
@@ -130,12 +125,7 @@ public class DefaultParametricMonitor_a_ab_Test extends AbstractDefaultParametri
 	pm.processEvent(fsm.e1.createEvent(a1));
 	pm.processEvent(fsm.e2.createEvent(a1, b1));
 
-	// verify
-	if (ALGORITHM_D_FIXED) {
-	    assertEquals(1, fsm.matchHandler.getHandledMatches().size());
-	} else {
-	    assertEquals(0, fsm.matchHandler.getHandledMatches().size());
-	}
+	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
     }
 
 }

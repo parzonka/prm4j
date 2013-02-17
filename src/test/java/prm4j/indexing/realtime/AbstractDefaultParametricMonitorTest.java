@@ -31,12 +31,6 @@ import prm4j.spec.FiniteSpec;
 
 public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 
-    /**
-     * Algorithm D' is flawed. Nevertheless we can assert a certain flavor of incorrect test results. Switch this flag
-     * to test the corrected algorithm.
-     */
-    public final static boolean ALGORITHM_D_FIXED = true;
-
     public final static Object _ = null;
     protected FiniteParametricProperty fpp;
     protected StaticDataConverter converter;
