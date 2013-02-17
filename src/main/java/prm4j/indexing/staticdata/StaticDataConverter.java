@@ -76,9 +76,9 @@ public class StaticDataConverter {
 	for (BaseEvent baseEvent : pp.getBaseEvents()) { // 9
 	    for (Set<Parameter<?>> enableParameterSet : pp.getMaxData().get(baseEvent)) { // 10
 		final int[] nodeMask = toParameterMask(enableParameterSet); // 12
-		final int[] diffMask = toParameterMask(Util.difference(baseEvent.getParameters(), enableParameterSet)); // 13
-		final int[][] disableMasks = calculateDisableParameterMasks(toListOfParameterSetsAscending(calculateDisableCheckParameterSets(
-			baseEvent.getParameters(), enableParameterSet)));
+		final int[] diffMask = toParameterMask(Sets.difference(baseEvent.getParameters(), enableParameterSet)); // 13
+		final int[][] disableMasks = toParameterMasks(toListOfParameterSetsAscending(toSetWithoutSubsets(pp
+			.getEnablingParameterSets().get(baseEvent), enableParameterSet)));
 		maxData.put(baseEvent, new MaxData(nodeMask, diffMask, disableMasks)); // 11, 14
 	    } // 15
 	    existingMonitorMasks[baseEvent.getIndex()] = calculateExistingMonitorMasks(baseEvent.getParameters());
@@ -99,13 +99,16 @@ public class StaticDataConverter {
 		final int monitorSetId = monitorSetIds.get(compatibleSubset, enablingParameterSet); // 19
 		final int[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), enablingParameterSet); // 20
 		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), enablingParameterSet); // 21
+		// TODO the list of disable parameter sets would be even smaller if we would just calculate the set of
+		// disable events for the property. Disable events are events which point to a dead state from any
+		// state but an accepting state.
 		final List<Set<Parameter<?>>> listOfDisableParameterSets = toListOfParameterSetsAscending(Sets
 			.intersection(
-				calculateDisableCheckParameterSets(
-					Sets.union(baseEvent.getParameters(), enablingParameterSet),
+				toSetWithoutSubsets(
+					Sets.powerSet(Sets.union(baseEvent.getParameters(), enablingParameterSet)),
 					enablingParameterSet), toParameterSets(pp.getCreationEvents())));
 		disableParameterSets.put(baseEvent, enablingParameterSet, listOfDisableParameterSets);
-		final int[][] disableMasks = calculateDisableParameterMasks(listOfDisableParameterSets);
+		final int[][] disableMasks = toParameterMasks(listOfDisableParameterSets);
 		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern,
 			disableMasks)); // 23
 	    } // 24
@@ -132,37 +135,29 @@ public class StaticDataConverter {
 	return result;
     }
 
-    public static Set<Set<Parameter<?>>> calculateDisableCheckParameterSetsForFindMax(
-	    Set<Parameter<?>> baseEventParameterSet) {
-	final Set<Set<Parameter<?>>> result = new HashSet<Set<Parameter<?>>>();
-	for (Set<Parameter<?>> parameterSet : Sets.powerSet(baseEventParameterSet)) {
-	    result.add(parameterSet);
-	}
-	return result;
-    }
-
     /**
-     * Calculates the set of theta'' in the first line of the defineTo method of algorithm D. The parameter sets
-     * identify instances which will be checked if they have (dead) monitors, or if single bindings are disabled, when
-     * the parameter sets contain only one element.
+     * Returns all sets in setOfSets, which are no subsets of filterSet.
      * 
-     * @param combinedParameterSet
-     * @param enableParameterSet
-     * @return
+     * @param setOfSets
+     * @param filterSet
+     * @return a set without subsets of filterSet
      */
-    public static Set<Set<Parameter<?>>> calculateDisableCheckParameterSets(Set<Parameter<?>> combinedParameterSet,
-	    Set<Parameter<?>> enableParameterSet) {
-	final Set<Set<Parameter<?>>> result = new HashSet<Set<Parameter<?>>>();
-
-	for (Set<Parameter<?>> parameterSet : Sets.powerSet(combinedParameterSet)) {
-	    // filter the baseParameterSet otherwise we get a false timestamp when joining
-	    if (!enableParameterSet.containsAll(parameterSet)) {
+    public static <T> Set<Set<T>> toSetWithoutSubsets(Set<Set<T>> setOfSets, Set<T> filterSet) {
+	final Set<Set<T>> result = new HashSet<Set<T>>();
+	for (Set<T> parameterSet : setOfSets) {
+	    if (!filterSet.containsAll(parameterSet)) {
 		result.add(parameterSet);
 	    }
 	}
 	return result;
     }
 
+    /**
+     * Basically a map over a set of base events with 'getParameters'.
+     * 
+     * @param setOfBaseEvents
+     * @return a set of parameter sets per baseEvent
+     */
     private static Set<Set<Parameter<?>>> toParameterSets(Set<BaseEvent> setOfBaseEvents) {
 	Set<Set<Parameter<?>>> result = new HashSet<Set<Parameter<?>>>();
 	for (BaseEvent baseEvent : setOfBaseEvents) {
@@ -203,16 +198,15 @@ public class StaticDataConverter {
     }
 
     /**
-     * Returns the an array of parameter mask representations (uncompressed) of the disable check parameter sets.
-     * Basically a map over the set with 'toParameterMask'.
+     * Basically a map over a list of parameters sets with 'toParameterMask'.
      * 
-     * @param disableCheckParameterSet
-     * @return
+     * @param listOfParameterSets
+     * @return an array of parameter masks (uncompressed)
      */
-    public static int[][] calculateDisableParameterMasks(List<Set<Parameter<?>>> disableCheckParameterSet) {
-	final int[][] result = new int[disableCheckParameterSet.size()][];
+    public static int[][] toParameterMasks(List<Set<Parameter<?>>> listOfParameterSets) {
+	final int[][] result = new int[listOfParameterSets.size()][];
 	int i = 0;
-	for (Set<Parameter<?>> parameterSet : disableCheckParameterSet) {
+	for (Set<Parameter<?>> parameterSet : listOfParameterSets) {
 	    result[i++] = toParameterMask(parameterSet);
 	}
 	return result;
@@ -250,7 +244,7 @@ public class StaticDataConverter {
     protected static int[] getExtensionPattern(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
 	final List<Integer> result = new ArrayList<Integer>();
 	final Set<Integer> baseParameterIndexSet = toParameterIndexSet(baseSet);
-	final int[] joinedArray = toParameterMask(Util.union(baseSet, joiningSet));
+	final int[] joinedArray = toParameterMask(Sets.union(baseSet, joiningSet));
 	for (int parameterIndex : joinedArray) {
 	    if (baseParameterIndexSet.contains(parameterIndex)) {
 		result.add(parameterIndex);

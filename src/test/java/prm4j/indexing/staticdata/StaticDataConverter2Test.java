@@ -29,6 +29,7 @@ import prm4j.api.fsm.FSMSpec;
 import prm4j.spec.FiniteParametricProperty;
 
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 
 public class StaticDataConverter2Test extends AbstractTest {
@@ -120,7 +121,7 @@ public class StaticDataConverter2Test extends AbstractTest {
     }
 
     @Test
-    public void calculateDisableCheckParameterSets1() {
+    public void setWithoutSubsets1() {
 
 	Parameter<String> a = new Parameter<String>("a");
 	Parameter<String> b = new Parameter<String>("b");
@@ -132,7 +133,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 	expected.add(asSet(b));
 	expected.add(asSet(a, b));
 
-	Set<Set<Parameter<?>>> actual = StaticDataConverter.calculateDisableCheckParameterSets(combinedParameterSet,
+	Set<Set<Parameter<?>>> actual = StaticDataConverter.toSetWithoutSubsets(Sets.powerSet(combinedParameterSet),
 		enableParameterSet);
 
 	assertEquals(expected, actual);
@@ -146,8 +147,8 @@ public class StaticDataConverter2Test extends AbstractTest {
 	Parameter<String> b = new Parameter<String>("b");
 	Parameter<String> c = new Parameter<String>("c");
 
-	Set<Parameter<?>> baseEventParameterSet = asSet(a, b, c);
-	Set<Parameter<?>> enableSet = asSet(a);
+	Set<Parameter<?>> combinedParameterSet = asSet(a, b, c);
+	Set<Parameter<?>> enableParameterSet = asSet(a);
 
 	Set<Set<Parameter<?>>> expected = new HashSet<Set<Parameter<?>>>();
 	expected.add(asSet(a, b, c));
@@ -157,8 +158,8 @@ public class StaticDataConverter2Test extends AbstractTest {
 	expected.add(asSet(b));
 	expected.add(asSet(c));
 
-	Set<Set<Parameter<?>>> actual = StaticDataConverter.calculateDisableCheckParameterSets(baseEventParameterSet,
-		enableSet);
+	Set<Set<Parameter<?>>> actual = StaticDataConverter.toSetWithoutSubsets(Sets.powerSet(combinedParameterSet),
+		enableParameterSet);
 
 	assertEquals(expected, actual);
 
@@ -171,8 +172,8 @@ public class StaticDataConverter2Test extends AbstractTest {
 	Parameter<String> b = new Parameter<String>("b");
 	Parameter<String> c = new Parameter<String>("c");
 
-	Set<Parameter<?>> baseEventParameterSet = asSet(a, b, c);
-	Set<Parameter<?>> enableSet = asSet(a, b);
+	Set<Parameter<?>> combinedParameterSet = asSet(a, b, c);
+	Set<Parameter<?>> enableParameterSet = asSet(a, b);
 
 	Set<Set<Parameter<?>>> expected = new HashSet<Set<Parameter<?>>>();
 	expected.add(asSet(a, b, c));
@@ -180,8 +181,8 @@ public class StaticDataConverter2Test extends AbstractTest {
 	expected.add(asSet(b, c));
 	expected.add(asSet(c));
 
-	Set<Set<Parameter<?>>> actual = StaticDataConverter.calculateDisableCheckParameterSets(baseEventParameterSet,
-		enableSet);
+	Set<Set<Parameter<?>>> actual = StaticDataConverter.toSetWithoutSubsets(Sets.powerSet(combinedParameterSet),
+		enableParameterSet);
 
 	assertEquals(expected, actual);
 
@@ -199,7 +200,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 	setOfParameterSets.add(asSet(b));
 	setOfParameterSets.add(asSet(a, b));
 
-	int[][] actual = StaticDataConverter.calculateDisableParameterMasks(setOfParameterSets);
+	int[][] actual = StaticDataConverter.toParameterMasks(setOfParameterSets);
 
 	int[][] expected = new int[2][];
 	expected[0] = array(1);
@@ -224,7 +225,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 	listOfParameterSets.add(asSet(a, b));
 	listOfParameterSets.add(asSet(b, c));
 
-	int[][] actual = StaticDataConverter.calculateDisableParameterMasks(listOfParameterSets);
+	int[][] actual = StaticDataConverter.toParameterMasks(listOfParameterSets);
 
 	int[][] expected = new int[3][];
 	expected[0] = array(2);
