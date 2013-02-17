@@ -207,11 +207,11 @@ public class Util {
 	    this.right = right;
 	}
 
-	public T1 getLeft() {
+	public T1 _1() {
 	    return left;
 	}
 
-	public T2 getRight() {
+	public T2 _2() {
 	    return right;
 	}
 

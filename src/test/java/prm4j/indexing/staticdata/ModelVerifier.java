@@ -55,7 +55,7 @@ public class ModelVerifier {
 	List<Set<Parameter<?>>> list = new ArrayList<Set<Parameter<?>>>();
 	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : converter.getParametricProperty().getJoinData()
 		.get(baseEvent)) {
-	    list.add(tuple.getRight());
+	    list.add(tuple._2());
 	}
 	checkEquality(parameterSets, list, "joinOverParameterSets");
     }
@@ -64,7 +64,7 @@ public class ModelVerifier {
 	List<Set<Parameter<?>>> list = new ArrayList<Set<Parameter<?>>>();
 	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : converter.getParametricProperty().getJoinData()
 		.get(baseEvent)) {
-	    list.add(tuple.getLeft());
+	    list.add(tuple._1());
 	}
 	checkEquality(parameterSets, list, "joinOverCompatibleInstances");
     }

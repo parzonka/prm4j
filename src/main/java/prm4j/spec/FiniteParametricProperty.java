@@ -218,9 +218,9 @@ public class FiniteParametricProperty implements ParametricProperty {
 		} // 20
 	    } // 21
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : parameterSets.updates) { // 22
-		if (!monitorSetData.containsEntry(tuple.getLeft(), tuple(tuple.getRight(), true))) { // 23
-		    chainData.put(tuple.getRight(), tuple(tuple.getLeft(), EMPTY_PARAMETER_SET)); // 24
-		    monitorSetData.put(tuple.getLeft(), tuple(EMPTY_PARAMETER_SET, true)); // 25
+		if (!monitorSetData.containsEntry(tuple._1(), tuple(tuple._2(), true))) { // 23
+		    chainData.put(tuple._2(), tuple(tuple._1(), EMPTY_PARAMETER_SET)); // 24
+		    monitorSetData.put(tuple._1(), tuple(EMPTY_PARAMETER_SET, true)); // 25
 		} // 26
 	    } // 27
 	}// 28

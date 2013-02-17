@@ -70,7 +70,7 @@ public class StaticDataConverter {
 	for (Set<Parameter<?>> parameterSet : pp.getMonitorSetData().keys()) { // 2
 	    int i = 0; // 3
 	    for (Tuple<Set<Parameter<?>>, Boolean> tuple : getMonitorSetDataInTopologicalOrdering(parameterSet)) { // 4
-		monitorSetIds.put(parameterSet, tuple.getLeft(), i++); // 5, 6
+		monitorSetIds.put(parameterSet, tuple._1(), i++); // 5, 6
 	    } // 7
 	} // 8
 	for (BaseEvent baseEvent : pp.getBaseEvents()) { // 9
@@ -91,8 +91,8 @@ public class StaticDataConverter {
 	     */
 	    // tuple(compatibleSubset, enablingParameterSet)
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) { // 16
-		final Set<Parameter<?>> compatibleSubset = tuple.getLeft();
-		final Set<Parameter<?>> enablingParameterSet = tuple.getRight();
+		final Set<Parameter<?>> compatibleSubset = tuple._1();
+		final Set<Parameter<?>> enablingParameterSet = tuple._2();
 		// the nodeMask selects the compatible node which has references to the enabling instance we want to
 		// combine with
 		final int[] nodeMask = toParameterMask(compatibleSubset); // 18
@@ -115,8 +115,8 @@ public class StaticDataConverter {
 	} // 25
 	for (Set<Parameter<?>> parameterSet : pp.getChainData().keys()) { // 26
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getChainData().get(parameterSet)) { // 27
-		final int[] nodeMask = toParameterMask(tuple.getLeft()); // 29
-		final int monitorSetId = monitorSetIds.get(tuple.getLeft(), tuple.getRight()); // 30
+		final int[] nodeMask = toParameterMask(tuple._1()); // 29
+		final int monitorSetId = monitorSetIds.get(tuple._1(), tuple._2()); // 30
 		chainData.put(parameterSet, new ChainData(nodeMask, monitorSetId)); // 28, 31
 	    } // 32
 	} // 33
@@ -226,7 +226,7 @@ public class StaticDataConverter {
 	Collections.sort(tupleList, new Comparator<Tuple<Set<Parameter<?>>, Boolean>>() {
 	    @Override
 	    public int compare(Tuple<Set<Parameter<?>>, Boolean> t1, Tuple<Set<Parameter<?>>, Boolean> t2) {
-		return t1.getLeft().size() - t2.getLeft().size();
+		return t1._1().size() - t2._1().size();
 	    }
 	});
 	return tupleList;
