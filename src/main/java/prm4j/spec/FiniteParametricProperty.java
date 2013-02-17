@@ -45,113 +45,78 @@ import com.google.common.collect.SetMultimap;
  */
 public class FiniteParametricProperty implements ParametricProperty {
 
-    private final FiniteSpec finiteSpec;
-    private final Set<BaseEvent> creationEvents;
-    private final Set<BaseEvent> disablingEvents;
-    private final SetMultimap<BaseEvent, Set<BaseEvent>> enablingEventSets;
-    // enablingParameterSets are currenty unused, we do all the calculation using the enablingEventSets
-    private final SetMultimap<BaseEvent, Set<Parameter<?>>> enablingParameterSets;
-    private final Set<Set<Parameter<?>>> possibleParameterSets;
-    private final ListMultimap<BaseEvent, Set<Parameter<?>>> maxData;
-    private final ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinData;
-    private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainData;
-    private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> monitorSetData;
-    private final Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates;
-    private final Set<Set<Parameter<?>>> aliveParameterSets;
-
     private final static Set<Parameter<?>> EMPTY_PARAMETER_SET = new HashSet<Parameter<?>>();
+
+    private final FiniteSpec finiteSpec;
+
+    private final ParameterSets parameterSets;
+    private final RealtimeAlgorithmArguments realtimeAlgorithmArguments;
+    private final CoenableSets coenableSets;
 
     public FiniteParametricProperty(FiniteSpec finiteSpec) {
 
 	this.finiteSpec = finiteSpec;
-	creationEvents = calculateCreationEvents();
-	disablingEvents = calculateDisablingEvents();
-
-	RelationCalculator p = new RelationCalculator();
-	enablingEventSets = p.getEnablingEventSets();
-	possibleParameterSets = Collections.unmodifiableSet(p.getPossibleParameterSets());
-	enablingParameterSets = toMap2SetOfSetOfParameters(enablingEventSets);
-	updates = Collections.unmodifiableSet(p.getUpdates());
-
-	maxData = ArrayListMultimap.create();
-	joinData = ArrayListMultimap.create();
-	chainData = HashMultimap.create();
-	monitorSetData = HashMultimap.create();
-	calculateStaticData();
-
-	aliveParameterSets = new AlivenessCalculator().aliveParameterSets;
+	parameterSets = new ParameterSets();
+	realtimeAlgorithmArguments = new RealtimeAlgorithmArguments();
+	coenableSets = new CoenableSets();
     }
 
-    @Override
-    public boolean isFinite() {
-	return true;
-    }
+    private class ParameterSets {
 
-    @Override
-    public int getStateCount() {
-	return finiteSpec.getStates().size();
-    }
-
-    /**
-     * Creation events are events for which the successor of the initial state is a non-initial state (including the a
-     * dead state).
-     * 
-     * @return the creation events
-     */
-    private Set<BaseEvent> calculateCreationEvents() {
-	Set<BaseEvent> creationEvents = new HashSet<BaseEvent>();
-	BaseMonitorState initialState = finiteSpec.getInitialState();
-	for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
-	    BaseMonitorState successor = initialState.getSuccessor(symbol);
-	    if (successor != initialState) {
-		creationEvents.add(symbol);
-	    }
-	}
-	return creationEvents;
-    }
-
-    /**
-     * Disabling events are events for which the successor of the initial state is a dead state.
-     * 
-     * @return the disabling events
-     */
-    private Set<BaseEvent> calculateDisablingEvents() {
-	Set<BaseEvent> disablingEvents = new HashSet<BaseEvent>();
-	BaseMonitorState initialState = finiteSpec.getInitialState();
-	for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
-	    BaseMonitorState successor = initialState.getSuccessor(symbol);
-	    if (successor == null) {
-		disablingEvents.add(symbol);
-	    }
-	}
-	return disablingEvents;
-    }
-
-    private class RelationCalculator {
-
+	private final Set<BaseEvent> creationEvents;
+	private final Set<BaseEvent> disablingEvents;
 	private final SetMultimap<BaseEvent, Set<BaseEvent>> enablingEventSets;
-	private final Set<Set<Parameter<?>>> possibleParameterSets;
-	private final SetMultimap<BaseMonitorState, Set<BaseEvent>> stateToSeenBaseEvents;
 	private final Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates;
+	private final Set<Set<Parameter<?>>> possibleParameterSets;
+	private final SetMultimap<BaseEvent, Set<Parameter<?>>> enablingParameterSets;
+	private final SetMultimap<BaseMonitorState, Set<BaseEvent>> stateToSeenBaseEvents;
 
-	public RelationCalculator() {
+	public ParameterSets() {
+	    creationEvents = calculateCreationEvents();
+	    disablingEvents = calculateDisablingEvents();
 	    enablingEventSets = HashMultimap.create();
+	    updates = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>();
 	    possibleParameterSets = new HashSet<Set<Parameter<?>>>();
 	    stateToSeenBaseEvents = HashMultimap.create();
-	    updates = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>();
+	    calculateCreationEvents();
+	    calculateDisablingEvents();
 	    computeRelations(finiteSpec.getInitialState(), new HashSet<BaseEvent>(), new HashSet<Parameter<?>>()); // 2
+	    enablingParameterSets = toMap2SetOfSetOfParameters(enablingEventSets);
 	}
 
-	public SetMultimap<BaseEvent, Set<BaseEvent>> getEnablingEventSets() {
-	    return enablingEventSets;
+	/**
+	 * Creation events are events for which the successor of the initial state is a non-initial state (including the
+	 * a dead state).
+	 * 
+	 * @return the creation events
+	 */
+	private Set<BaseEvent> calculateCreationEvents() {
+	    Set<BaseEvent> creationEvents = new HashSet<BaseEvent>();
+	    BaseMonitorState initialState = finiteSpec.getInitialState();
+	    for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
+		BaseMonitorState successor = initialState.getSuccessor(symbol);
+		if (successor != initialState) {
+		    creationEvents.add(symbol);
+		}
+	    }
+	    return creationEvents;
 	}
 
-	public Set<Set<Parameter<?>>> getPossibleParameterSets() {
-	    return possibleParameterSets;
-	}
-
-	public Set<? extends Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getUpdates() {
-	    return updates;
+	/**
+	 * Disabling events are events for which the successor of the initial state is a dead state.
+	 * 
+	 * @return the disabling events
+	 */
+	private Set<BaseEvent> calculateDisablingEvents() {
+	    Set<BaseEvent> disablingEvents = new HashSet<BaseEvent>();
+	    BaseMonitorState initialState = finiteSpec.getInitialState();
+	    for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
+		BaseMonitorState successor = initialState.getSuccessor(symbol);
+		if (successor == null) {
+		    disablingEvents.add(symbol);
+		}
+	    }
+	    return disablingEvents;
 	}
 
 	private void computeRelations(BaseMonitorState state, Set<BaseEvent> seenBaseEvents,
@@ -171,9 +136,8 @@ public class FiniteParametricProperty implements ParametricProperty {
 		 * path to an accepting state. If the property is defined properly this should be always the case
 		 * though.
 		 */
-		/*
-		 * We behave, as would self-loops be in fact edges to the dead state.
-		 */
+		// We do not follow self-loops on the initial state. this is important to maintain total matching
+		// semantics without user-annotation of creation events.
 		if (nextState != null && !(state == getInitialState() && nextState == getInitialState())) {
 		    // we remove the current base event because an event does not need to enable itself
 		    final Set<BaseEvent> seenBaseEventsWithoutCurrentBaseEvent = unmodifiableDifference(seenBaseEvents,
@@ -191,87 +155,92 @@ public class FiniteParametricProperty implements ParametricProperty {
 		} // 14
 	    } // 15
 	} // 16
-    }
 
-    private static <T> SetMultimap<T, Set<Parameter<?>>> toMap2SetOfSetOfParameters(
-	    Multimap<T, Set<BaseEvent>> multimapBaseEvent2SetOfBaseEvents) {
-	SetMultimap<T, Set<Parameter<?>>> result = HashMultimap.create();
-	Map<T, Collection<Set<BaseEvent>>> mapBaseEvent2SetOfSetOfBaseEvents = multimapBaseEvent2SetOfBaseEvents
-		.asMap();
-	for (Entry<T, Collection<Set<BaseEvent>>> entry : mapBaseEvent2SetOfSetOfBaseEvents.entrySet()) {
-	    for (Set<Parameter<?>> parameterSet : toParameterSets(entry.getValue())) {
-		result.put(entry.getKey(), parameterSet);
+	private <T> SetMultimap<T, Set<Parameter<?>>> toMap2SetOfSetOfParameters(
+		Multimap<T, Set<BaseEvent>> multimapBaseEvent2SetOfBaseEvents) {
+	    SetMultimap<T, Set<Parameter<?>>> result = HashMultimap.create();
+	    Map<T, Collection<Set<BaseEvent>>> mapBaseEvent2SetOfSetOfBaseEvents = multimapBaseEvent2SetOfBaseEvents
+		    .asMap();
+	    for (Entry<T, Collection<Set<BaseEvent>>> entry : mapBaseEvent2SetOfSetOfBaseEvents.entrySet()) {
+		for (Set<Parameter<?>> parameterSet : toParameterSets(entry.getValue())) {
+		    result.put(entry.getKey(), parameterSet);
+		}
 	    }
+	    return result;
 	}
-	return result;
-    }
-
-    private static Set<Set<Parameter<?>>> toParameterSets(Collection<Set<BaseEvent>> propertyEnableSet) {
-	Set<Set<Parameter<?>>> result = new HashSet<Set<Parameter<?>>>();
-	for (Set<BaseEvent> set : propertyEnableSet) {
-	    Set<Parameter<?>> parameterSet = new HashSet<Parameter<?>>();
-	    for (BaseEvent baseEvent : set) {
-		parameterSet.addAll(baseEvent.getParameters());
-	    }
-	    result.add(parameterSet);
-	}
-	return result;
     }
 
     /**
      * Calculates maxData, joinData, chainData and monitorSetData. Numbers represent line numbers in the algorithm
      * presented in thesis.
      */
-    private void calculateStaticData() { // 1
-	for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
-	    final Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
-	    for (Set<Parameter<?>> enablingParameterSet : getEnablingParameterSetsInReverseTopologicalOrdering(baseEvent)) { // 5
-		/*
-		 * the empty parameter set {} can be filtered. No parameter set can contain less elements, so there can
-		 * be no maxData = (X -> {}). And a joindata = (e -> ( {} -> {} )) makes no sense either. The same with
-		 * chaining from {} to {} and updates.
-		 */
-		if (!enablingParameterSet.equals(EMPTY_PARAMETER_SET)
-			&& !isSubsetEq(parameterSet, enablingParameterSet)) { // 6
-		    if (isSuperset(parameterSet, enablingParameterSet)) { // 7
-			maxData.put(baseEvent, enablingParameterSet); // 8
-		    } else { // 9
-			final Set<Parameter<?>> compatibleSubset = intersection(parameterSet, enablingParameterSet); // 10
-			final Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple = tuple(compatibleSubset,
-				enablingParameterSet);
-			joinData.put(baseEvent, tuple); // 11
-			chainData.put(enablingParameterSet, tuple); // 12
-			if (updates.contains(tuple)) { // 13
-			    monitorSetData.put(compatibleSubset, tuple(enablingParameterSet, true)); // 14
-			} else { // 15
-			    monitorSetData.put(compatibleSubset, tuple(enablingParameterSet, false)); // 16
-			} // 17
-		    } // 18
-		} // 19
-	    } // 20
-	} // 21
-	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : updates) { // 22
-	    if (!monitorSetData.containsEntry(tuple.getLeft(), tuple(tuple.getRight(), true))) { // 23
-		chainData.put(tuple.getRight(), tuple(tuple.getLeft(), EMPTY_PARAMETER_SET)); // 24
-		monitorSetData.put(tuple.getLeft(), tuple(EMPTY_PARAMETER_SET, true)); // 25
-	    } // 26
-	} // 27
-    }// 28
+    private class RealtimeAlgorithmArguments {
 
-    private List<Set<Parameter<?>>> getEnablingParameterSetsInReverseTopologicalOrdering(BaseEvent baseEvent) {
-	List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
-		enablingParameterSets.get(baseEvent));
-	Collections.sort(enableSetInReverseTopolicalOrdering, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR);
-	return enableSetInReverseTopolicalOrdering;
+	private final ListMultimap<BaseEvent, Set<Parameter<?>>> maxData;
+	private final ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> joinData;
+	private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> chainData;
+	private final SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> monitorSetData;
+
+	public RealtimeAlgorithmArguments() {
+	    maxData = ArrayListMultimap.create();
+	    joinData = ArrayListMultimap.create();
+	    chainData = HashMultimap.create();
+	    monitorSetData = HashMultimap.create();
+	    main();
+	}
+
+	private void main() { // 1
+	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 3
+		final Set<Parameter<?>> parameterSet = baseEvent.getParameters(); // 4
+		for (Set<Parameter<?>> enablingParameterSet : getEnablingParameterSetsInReverseTopologicalOrdering(baseEvent)) { // 5
+		    /*
+		     * the empty parameter set {} can be filtered. No parameter set can contain less elements, so there
+		     * can be no maxData = (X -> {}). And a joindata = (e -> ( {} -> {} )) makes no sense either. The
+		     * same with chaining from {} to {} and updates.
+		     */
+		    if (!enablingParameterSet.equals(EMPTY_PARAMETER_SET)
+			    && !isSubsetEq(parameterSet, enablingParameterSet)) { // 6
+			if (isSuperset(parameterSet, enablingParameterSet)) { // 7
+			    maxData.put(baseEvent, enablingParameterSet); // 8
+			} else { // 9
+			    final Set<Parameter<?>> compatibleSubset = intersection(parameterSet, enablingParameterSet); // 10
+			    final Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple = tuple(compatibleSubset,
+				    enablingParameterSet);
+			    joinData.put(baseEvent, tuple); // 11
+			    chainData.put(enablingParameterSet, tuple); // 12
+			    if (parameterSets.updates.contains(tuple)) { // 13
+				monitorSetData.put(compatibleSubset, tuple(enablingParameterSet, true)); // 14
+			    } else { // 15
+				monitorSetData.put(compatibleSubset, tuple(enablingParameterSet, false)); // 16
+			    } // 17
+			} // 18
+		    } // 19
+		} // 20
+	    } // 21
+	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : parameterSets.updates) { // 22
+		if (!monitorSetData.containsEntry(tuple.getLeft(), tuple(tuple.getRight(), true))) { // 23
+		    chainData.put(tuple.getRight(), tuple(tuple.getLeft(), EMPTY_PARAMETER_SET)); // 24
+		    monitorSetData.put(tuple.getLeft(), tuple(EMPTY_PARAMETER_SET, true)); // 25
+		} // 26
+	    } // 27
+	}// 28
+
+	private List<Set<Parameter<?>>> getEnablingParameterSetsInReverseTopologicalOrdering(BaseEvent baseEvent) {
+	    List<Set<Parameter<?>>> enableSetInReverseTopolicalOrdering = new ArrayList<Set<Parameter<?>>>(
+		    parameterSets.enablingParameterSets.get(baseEvent));
+	    Collections.sort(enableSetInReverseTopolicalOrdering, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR);
+	    return enableSetInReverseTopolicalOrdering;
+	}
+
     }
 
-    private class AlivenessCalculator {
+    private class CoenableSets {
 
 	private final SetMultimap<BaseMonitorState, BaseMonitorState> reversedFSM;
 	private final Set<BaseMonitorState> acceptingStates;
 	private final Set<Set<Parameter<?>>> aliveParameterSets;
 
-	public AlivenessCalculator() {
+	public CoenableSets() {
 	    reversedFSM = HashMultimap.create();
 	    acceptingStates = new HashSet<BaseMonitorState>();
 	    aliveParameterSets = new HashSet<Set<Parameter<?>>>();
@@ -344,6 +313,28 @@ public class FiniteParametricProperty implements ParametricProperty {
 
     }
 
+    private static Set<Set<Parameter<?>>> toParameterSets(Collection<Set<BaseEvent>> propertyEnableSet) {
+	Set<Set<Parameter<?>>> result = new HashSet<Set<Parameter<?>>>();
+	for (Set<BaseEvent> set : propertyEnableSet) {
+	    Set<Parameter<?>> parameterSet = new HashSet<Parameter<?>>();
+	    for (BaseEvent baseEvent : set) {
+		parameterSet.addAll(baseEvent.getParameters());
+	    }
+	    result.add(parameterSet);
+	}
+	return result;
+    }
+
+    @Override
+    public boolean isFinite() {
+	return true;
+    }
+
+    @Override
+    public int getStateCount() {
+	return finiteSpec.getStates().size();
+    }
+
     /**
      * Creation events are events for which the successor of the initial state is:
      * <ul>
@@ -355,7 +346,7 @@ public class FiniteParametricProperty implements ParametricProperty {
      */
     @Override
     public Set<BaseEvent> getCreationEvents() {
-	return creationEvents;
+	return parameterSets.creationEvents;
     }
 
     /**
@@ -365,42 +356,42 @@ public class FiniteParametricProperty implements ParametricProperty {
      */
     @Override
     public Set<BaseEvent> getDisablingEvents() {
-	return disablingEvents;
+	return parameterSets.disablingEvents;
     }
 
     @Override
     public ListMultimap<BaseEvent, Set<Parameter<?>>> getMaxData() {
-	return maxData;
+	return realtimeAlgorithmArguments.maxData;
     }
 
     @Override
     public ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinData() {
-	return joinData;
+	return realtimeAlgorithmArguments.joinData;
     }
 
     @Override
     public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainData() {
-	return chainData;
+	return realtimeAlgorithmArguments.chainData;
     }
 
     @Override
     public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> getMonitorSetData() {
-	return monitorSetData;
+	return realtimeAlgorithmArguments.monitorSetData;
     }
 
     @Override
     public SetMultimap<BaseEvent, Set<BaseEvent>> getEnablingEventSets() {
-	return enablingEventSets;
+	return parameterSets.enablingEventSets;
     }
 
     @Override
     public Set<Set<Parameter<?>>> getPossibleParameterSets() {
-	return possibleParameterSets;
+	return Collections.unmodifiableSet(parameterSets.possibleParameterSets);
     }
 
     @Override
     public SetMultimap<BaseEvent, Set<Parameter<?>>> getEnablingParameterSets() {
-	return enablingParameterSets;
+	return parameterSets.enablingParameterSets;
     }
 
     @Override
@@ -419,12 +410,12 @@ public class FiniteParametricProperty implements ParametricProperty {
     }
 
     public Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getUpdates() {
-	return updates;
+	return parameterSets.updates;
     }
 
     @Override
     public Set<Set<Parameter<?>>> getAliveParameterSets() {
-	return aliveParameterSets;
+	return coenableSets.aliveParameterSets;
     }
 
 }
