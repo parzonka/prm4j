@@ -51,10 +51,24 @@ public class JoinData {
     }
 
     @Override
+    public String toString() {
+	StringBuilder disableMasksString = new StringBuilder("[");
+	for (int[] disableMask : disableMasks) {
+	    disableMasksString.append(Arrays.toString(disableMask));
+	    disableMasksString.append(" ");
+	}
+	disableMasksString.append("]");
+	return "JoinData [nodeMask=" + Arrays.toString(nodeMask) + ", monitorSetId=" + monitorSetId
+		+ ", extensionPattern=" + Arrays.toString(extensionPattern) + ", copyPattern="
+		+ Arrays.toString(copyPattern) + ", disableMasks=" + disableMasksString.toString() + "]";
+    }
+
+    @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + Arrays.hashCode(copyPattern);
+	result = prime * result + Arrays.hashCode(disableMasks);
 	result = prime * result + Arrays.hashCode(extensionPattern);
 	result = prime * result + monitorSetId;
 	result = prime * result + Arrays.hashCode(nodeMask);
@@ -76,7 +90,7 @@ public class JoinData {
 	if (!Arrays.equals(copyPattern, other.copyPattern)) {
 	    return false;
 	}
-	if (!Arrays.equals(disableMasks, other.disableMasks)) {
+	if (!Arrays.deepEquals(disableMasks, other.disableMasks)) {
 	    return false;
 	}
 	if (!Arrays.equals(extensionPattern, other.extensionPattern)) {
@@ -89,18 +103,5 @@ public class JoinData {
 	    return false;
 	}
 	return true;
-    }
-
-    @Override
-    public String toString() {
-	StringBuilder disableMasksString = new StringBuilder("[");
-	for (int[] disableMask : disableMasks) {
-	    disableMasksString.append(Arrays.toString(disableMask));
-	    disableMasksString.append(" ");
-	}
-	disableMasksString.append("]");
-	return "JoinData [nodeMask=" + Arrays.toString(nodeMask) + ", monitorSetId=" + monitorSetId
-		+ ", extensionPattern=" + Arrays.toString(extensionPattern) + ", copyPattern="
-		+ Arrays.toString(copyPattern) + ", disableMasks=" + disableMasksString.toString() + "]";
     }
 }

@@ -25,6 +25,7 @@ import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.spec.ParametricProperty;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashMultimap;
@@ -73,12 +74,11 @@ public class StaticDataConverter {
 		monitorSetIds.put(parameterSet, tuple._1(), i++); // 5, 6
 	    } // 7
 	} // 8
-	for (BaseEvent baseEvent : pp.getBaseEvents()) { // 9
-	    for (Set<Parameter<?>> enableParameterSet : pp.getMaxData().get(baseEvent)) { // 10
+	for (final BaseEvent baseEvent : pp.getBaseEvents()) { // 9
+	    for (final Set<Parameter<?>> enableParameterSet : pp.getMaxData().get(baseEvent)) { // 10
 		final int[] nodeMask = toParameterMask(enableParameterSet); // 12
 		final int[] diffMask = toParameterMask(Sets.difference(baseEvent.getParameters(), enableParameterSet)); // 13
-		final int[][] disableMasks = toParameterMasks(toListOfParameterSetsAscending(toSetWithoutSubsets(pp
-			.getEnablingParameterSets().get(baseEvent), enableParameterSet)));
+		final int[][] disableMasks = toParameterMasks(getDisableSets(baseEvent, enableParameterSet));
 		maxData.put(baseEvent, new MaxData(nodeMask, diffMask, disableMasks)); // 11, 14
 	    } // 15
 	    existingMonitorMasks[baseEvent.getIndex()] = calculateExistingMonitorMasks(baseEvent.getParameters());
@@ -92,22 +92,18 @@ public class StaticDataConverter {
 	    // tuple(compatibleSubset, enablingParameterSet)
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getJoinData().get(baseEvent)) { // 16
 		final Set<Parameter<?>> compatibleSubset = tuple._1();
-		final Set<Parameter<?>> enablingParameterSet = tuple._2();
+		final Set<Parameter<?>> enableSet = tuple._2();
 		// the nodeMask selects the compatible node which has references to the enabling instance we want to
 		// combine with
 		final int[] nodeMask = toParameterMask(compatibleSubset); // 18
-		final int monitorSetId = monitorSetIds.get(compatibleSubset, enablingParameterSet); // 19
-		final int[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), enablingParameterSet); // 20
-		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), enablingParameterSet); // 21
+		final int monitorSetId = monitorSetIds.get(compatibleSubset, enableSet); // 19
+		final int[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), enableSet); // 20
+		final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), enableSet); // 21
 		// TODO the list of disable parameter sets would be even smaller if we would just calculate the set of
 		// disable events for the property. Disable events are events which point to a dead state from any
 		// state but an accepting state.
-		final List<Set<Parameter<?>>> listOfDisableParameterSets = toListOfParameterSetsAscending(Sets
-			.intersection(
-				toSetWithoutSubsets(
-					Sets.powerSet(Sets.union(baseEvent.getParameters(), enablingParameterSet)),
-					enablingParameterSet), toParameterSets(pp.getCreationEvents())));
-		disableParameterSets.put(baseEvent, enablingParameterSet, listOfDisableParameterSets);
+		final List<Set<Parameter<?>>> listOfDisableParameterSets = getDisableSets(baseEvent, enableSet);
+		disableParameterSets.put(baseEvent, enableSet, listOfDisableParameterSets);
 		final int[][] disableMasks = toParameterMasks(listOfDisableParameterSets);
 		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern,
 			disableMasks)); // 23
@@ -121,6 +117,26 @@ public class StaticDataConverter {
 	    } // 32
 	} // 33
     } // 34
+
+    /**
+     * Return the list of all baseEvent parameter sets which are subsets of the union of the given baseEvent and
+     * enableSet but not subsets of the given enableSet.
+     * 
+     * @param baseEvent
+     * @param enableSet
+     * @return a list of parameter sets
+     */
+    public List<Set<Parameter<?>>> getDisableSets(BaseEvent baseEvent, final Set<Parameter<?>> enableSet) {
+	final Set<Parameter<?>> combination = Sets.union(baseEvent.getParameters(), enableSet);
+	return toListOfParameterSetsAscending(Sets.filter(toParameterSets(pp.getBaseEvents()),
+		new Predicate<Set<Parameter<?>>>() {
+		    @Override
+		    public boolean apply(Set<Parameter<?>> baseEventParameterSet) {
+			return combination.containsAll(baseEventParameterSet)
+				&& !enableSet.containsAll(baseEventParameterSet);
+		    }
+		}));
+    }
 
     public static int[][] calculateExistingMonitorMasks(Set<Parameter<?>> baseEventParameterSet) {
 	final Set<Set<Parameter<?>>> powerset = new HashSet<Set<Parameter<?>>>();

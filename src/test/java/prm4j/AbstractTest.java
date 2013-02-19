@@ -139,7 +139,7 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	    }
 	    for (int j = 0; j < expected[i].length; j++) {
 		if (!expected[i][j].equals(actual[i][j])) {
-		    fail("2-dim array differs in at [" + i + "][" + j + "]. Expected:<" + expected[i][j].toString()
+		    fail("2-dim array differs at [" + i + "][" + j + "]. Expected:<" + expected[i][j].toString()
 			    + "> but was: <" + actual[i][j].toString() + ">");
 		}
 	    }

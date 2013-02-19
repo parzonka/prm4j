@@ -369,7 +369,8 @@ public class StaticDataConverterTest extends AbstractTest {
 	expected[u.updateMap.getIndex()] = new JoinData[0];
 
 	JoinData[] jd = new JoinData[1];
-	jd[0] = new JoinData(array(1), 0, array(-1, 1, 2), array(0, 0), new int[0][]);
+	int[][] disableMasks = { { 2 }, { 1, 2 } };
+	jd[0] = new JoinData(array(1), 0, array(-1, 1, 2), array(0, 0), disableMasks);
 	expected[u.createIter.getIndex()] = jd;
 
 	expected[u.useIter.getIndex()] = new JoinData[0];
