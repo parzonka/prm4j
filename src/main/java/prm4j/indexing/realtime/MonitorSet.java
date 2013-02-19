@@ -130,8 +130,9 @@ public class MonitorSet {
 	    final Monitor compatibleMonitor = compatibleNodeRef.monitor;
 	    final long compatibleMonitorTimestamp = compatibleMonitor.getTimestamp();
 
-	    // test if some of the bindings had been used already after the compatible monitor was created.
-	    if (maxInstanceTimestamp > compatibleMonitorTimestamp || minMonitorTimestamp < compatibleMonitorTimestamp) { // 64
+	    // test if 1: a monitor in the disable set have been created before the compatible monitor was created
+	    // 2: a instance in the disable set have been used after the compatible monitor was created.
+	    if (minMonitorTimestamp < compatibleMonitorTimestamp || compatibleMonitorTimestamp < maxInstanceTimestamp) { // 64
 		// => the binding was not yet enabled => current event is not part of an accepting trace continued from
 		// this monitor => the joined monitor would never reach accepting state
 		deadPartitionStart++; // this monitor may be still alive, we just avoid joining with it

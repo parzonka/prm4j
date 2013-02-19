@@ -216,6 +216,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    }
 	}
 
+	// we increment the timestamp at the end (deviating from the algorithm) because we want to count the number of
+	// events (and reuse the logger in the nodeManager, but this may be changed in the future)
 	nodeManager.tryToClean(timestamp);
 	if (logger != null) {
 	    logger.log(timestamp);
