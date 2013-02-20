@@ -51,37 +51,38 @@ public class NodeManager {
     private final ReferenceQueue<Node> referenceQueue;
 
     public NodeManager() {
-	referenceQueue = new ReferenceQueue<Node>();
+	referenceQueue = null;
     }
 
     /**
      * Calls {@link #reallyClean()} each time the cleaning interval is reached.
-     *
+     * 
      * @param timestamp
      */
     public void tryToClean(long timestamp) {
-	if (timestamp % CLEANING_INTERVAL == 0)
-	    reallyClean();
+	if (timestamp % CLEANING_INTERVAL == 0) {
+	    // reallyClean();
+	}
     }
 
     /**
      * Polls all expired {@link NodeRef}s and nullifies all monitors which can never reach an accepting state.
      */
     public void reallyClean() {
-	NodeRef nodeRef = (NodeRef) referenceQueue.poll();
-	while (nodeRef != null) {
-	    orphanedMonitors++;
-	    if (nodeRef.monitor != null && !nodeRef.monitor.isAcceptingStateReachable()) {
-		nodeRef.monitor = null;
-		collectedMonitors++;
-	    }
-	    nodeRef = (NodeRef) referenceQueue.poll();
-	}
+	// NodeRef nodeRef = (NodeRef) referenceQueue.poll();
+	// while (nodeRef != null) {
+	// orphanedMonitors++;
+	// if (nodeRef.monitor != null && !nodeRef.monitor.isAcceptingStateReachable()) {
+	// nodeRef.monitor = null;
+	// collectedMonitors++;
+	// }
+	// nodeRef = (NodeRef) referenceQueue.poll();
+	// }
     }
 
     /**
      * DIAGNOSTIC: Called by each {@link NodeFactory} each time a node has been created.
-     *
+     * 
      * @param node
      */
     public void createdNode(Node node) {
@@ -90,7 +91,7 @@ public class NodeManager {
 
     /**
      * DIAGNOSTIC: Returns the number of created nodes by each {@link NodeFactory}.
-     *
+     * 
      * @return the number of created nodes
      */
     public long getCreatedCount() {
@@ -103,7 +104,7 @@ public class NodeManager {
 
     /**
      * DIAGNOSTIC: Returns the number of monitors for which their associated {@link Node} has been garbage collected.
-     *
+     * 
      * @return the number of orphaned monitors
      */
     public long getOrphanedMonitorsCount() {
@@ -113,7 +114,7 @@ public class NodeManager {
     /**
      * DIAGNOSTIC: Returns the number of orphaned monitors that could never reach an accepting state and got garbage
      * collected.
-     *
+     * 
      * @return the number of garbage collected monitors
      */
     public long getCollectedMonitorsCount() {
