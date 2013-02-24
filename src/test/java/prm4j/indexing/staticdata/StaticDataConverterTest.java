@@ -13,7 +13,6 @@ package prm4j.indexing.staticdata;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static prm4j.Util.toNodeMask;
-import static prm4j.Visualizer.visualizeMetaTree;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -441,9 +440,6 @@ public class StaticDataConverterTest extends AbstractTest {
 		asSet(new ChainData(toNodeMask(u.m), 0), new ChainData(toNodeMask(u.m, u.c), 0), new ChainData(
 			toNodeMask(u.c, u.i), 0), new ChainData(toNodeMask(u.i), 0)));
 	expected.getMetaNode(u.m, u.c, u.i).setMonitorSetCount(0);
-
-	visualizeMetaTree(expected, "StaticDataConverter/getMetaTree_unsafeMapIterator", "expected");
-	visualizeMetaTree(actual, "StaticDataConverter/getMetaTree_unsafeMapIterator", "actual");
 
 	assertEquals(expected, actual);
     }
