@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import prm4j.AbstractTest;
@@ -30,7 +31,7 @@ import prm4j.indexing.staticdata.StaticDataConverter;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
 
-public class DefaultParametricMonitor_obj_obj_GarbaceCollectionTest extends AbstractTest {
+public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends AbstractTest {
 
     protected StaticDataConverter converter;
     protected DefaultBindingStore bindingStore;
@@ -231,6 +232,7 @@ public class DefaultParametricMonitor_obj_obj_GarbaceCollectionTest extends Abst
 	assertEquals(1, nodeStore.getRootNode().size()); // first 5 nodes are removed, last node persists
     }
 
+    @Ignore("Fails on some systems due to GC-Nondeterminism")
     @Test
     @SuppressWarnings("rawtypes")
     public void twoEvents_expiredBindings_unsafeMapIterator_allCleaned() throws Exception {
