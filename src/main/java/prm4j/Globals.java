@@ -55,7 +55,7 @@ public class Globals {
 	final String value = System.getProperty(key);
 	final boolean result = value != null ? expectedValue.equals(value) : false;
 	if (PRINT_CONFIGURATION) {
-	    System.out.println("[prm4j] " + key + "=" + result);
+	    System.out.println("[prm4j.config] " + key + "=" + result);
 	}
 	return result;
     }
