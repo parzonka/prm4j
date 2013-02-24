@@ -31,6 +31,13 @@ public class NodeManager {
     private final static int CLEANING_INTERVAL = Globals.MONITOR_CLEANING_INTERVAL;
 
     /**
+     * In cases, where Globals.MONITOR_CLEANING_INTERVAL == Globals.BINDING_CLEANING_INTERVAL it is not advised to
+     * perform them at the same point in time. The shift prevents this effect, as it moves the point of cleaning half
+     * the interval into the future.
+     */
+    private final static int CLEANING_INTERVAL_SHIFT = CLEANING_INTERVAL / 2;
+
+    /**
      * The number of created nodes by each {@link NodeFactory}.
      */
     private long createdNodeCount;
@@ -56,12 +63,13 @@ public class NodeManager {
 
     /**
      * Calls {@link #reallyClean()} each time the cleaning interval is reached.
-     *
+     * 
      * @param timestamp
      */
     public void tryToClean(long timestamp) {
-	if (timestamp % CLEANING_INTERVAL == 0)
+	if (timestamp % CLEANING_INTERVAL == CLEANING_INTERVAL_SHIFT) {
 	    reallyClean();
+	}
     }
 
     /**
@@ -81,7 +89,7 @@ public class NodeManager {
 
     /**
      * DIAGNOSTIC: Called by each {@link NodeFactory} each time a node has been created.
-     *
+     * 
      * @param node
      */
     public void createdNode(Node node) {
@@ -90,7 +98,7 @@ public class NodeManager {
 
     /**
      * DIAGNOSTIC: Returns the number of created nodes by each {@link NodeFactory}.
-     *
+     * 
      * @return the number of created nodes
      */
     public long getCreatedCount() {
@@ -103,7 +111,7 @@ public class NodeManager {
 
     /**
      * DIAGNOSTIC: Returns the number of monitors for which their associated {@link Node} has been garbage collected.
-     *
+     * 
      * @return the number of orphaned monitors
      */
     public long getOrphanedMonitorsCount() {
@@ -113,7 +121,7 @@ public class NodeManager {
     /**
      * DIAGNOSTIC: Returns the number of orphaned monitors that could never reach an accepting state and got garbage
      * collected.
-     *
+     * 
      * @return the number of garbage collected monitors
      */
     public long getCollectedMonitorsCount() {
