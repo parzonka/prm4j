@@ -77,9 +77,8 @@ public class StaticDataConverter {
 	for (final BaseEvent baseEvent : pp.getBaseEvents()) { // 9
 	    for (final Set<Parameter<?>> enableParameterSet : pp.getMaxData().get(baseEvent)) { // 10
 		final int[] nodeMask = toParameterMask(enableParameterSet); // 12
-		final int[] diffMask = toParameterMask(Sets.difference(baseEvent.getParameters(), enableParameterSet)); // 13
 		final int[][] disableMasks = toParameterMasks(getDisableSets(baseEvent, enableParameterSet));
-		maxData.put(baseEvent, new MaxData(nodeMask, diffMask, disableMasks)); // 11, 14
+		maxData.put(baseEvent, new MaxData(nodeMask, disableMasks)); // 11, 14
 	    } // 15
 	    existingMonitorMasks[baseEvent.getIndex()] = calculateExistingMonitorMasks(baseEvent.getParameters());
 	    /*
