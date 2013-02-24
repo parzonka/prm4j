@@ -22,10 +22,10 @@ public class Globals {
      */
     public static final boolean PRINT_CONFIGURATION = true;
 
-    public final static boolean DEBUG = isSystemProperty("prm4j.debug", "true");
+    public final static boolean LOGGING = isSystemProperty("prm4j.logging", "true");
 
     public static final int MONITOR_CLEANING_INTERVAL = Integer.parseInt(getSystemProperty(
-	    "prm4j.monitorCleaningInterval", "2000"));
+	    "prm4j.monitorCleaningInterval", "10000"));
 
     /**
      * Specifies the number of retrieve-operations after which the store will try to clean expired bindings. It will
