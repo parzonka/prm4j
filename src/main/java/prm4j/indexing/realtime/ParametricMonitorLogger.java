@@ -73,9 +73,11 @@ public class ParametricMonitorLogger {
 			bindingStore.getCreatedBindingsCount(), bindingStore.getCollectedBindingsCount(),
 			bindingStore.size()));
 	logger.log(Level.INFO, String.format("%s NODES (created) %d", experimentName, nodeManager.getCreatedCount()));
-	logger.log(Level.INFO, String.format("%s MONITORS (created/updated/orphaned/collected) %d %d %d %d",
-		experimentName, BaseMonitor.getCreatedMonitorsCount(), BaseMonitor.getUpdateddMonitorsCount(),
-		nodeManager.getOrphanedMonitorsCount(), nodeManager.getCollectedMonitorsCount()));
+	logger.log(Level.INFO, String.format(
+		"%s MONITORS (createdAlive/updated/orphaned/collected/createdDead) %d %d %d %d %d", experimentName,
+		BaseMonitor.getCreatedMonitorsCount(), BaseMonitor.getUpdateddMonitorsCount(),
+		nodeManager.getOrphanedMonitorsCount(), nodeManager.getCollectedMonitorsCount()), DeadMonitor
+		.getCreatedMonitorsCount());
 	memStats.clear();
     }
 

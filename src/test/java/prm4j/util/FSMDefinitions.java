@@ -126,7 +126,7 @@ public abstract class FSMDefinitions {
 	    initial.addTransition(asyncCreateIter, initial); // self-loop
 	    initial.addTransition(syncCreateIter, initial); // self-loop
 	    initial.addTransition(accessIter, initial); // self-loop
-	    s1.addTransition(asyncCreateIter, error); // self-loop
+	    s1.addTransition(asyncCreateIter, error);
 	    s1.addTransition(syncCreateIter, s2);
 	    s2.addTransition(accessIter, error);
 	}

@@ -121,7 +121,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 
 	private void computeRelations(BaseMonitorState state, Set<BaseEvent> seenBaseEvents,
 		Set<Parameter<?>> parameterSet) { // 5
-
+	    stateToSeenBaseEvents.put(state, seenBaseEvents); // 6
 	    possibleParameterSets.add(parameterSet); // 7
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 8
 		final BaseMonitorState nextState = state.getSuccessor(baseEvent);
@@ -149,7 +149,6 @@ public class FiniteParametricProperty implements ParametricProperty {
 		    // nextSeenBaseEvents
 		    final Set<BaseEvent> nextSeenBaseEvents = unmodifiableUnion(seenBaseEvents, set(baseEvent)); // 11
 		    if (!stateToSeenBaseEvents.containsEntry(state, nextSeenBaseEvents)) { // 11
-			stateToSeenBaseEvents.put(state, nextSeenBaseEvents); // 6
 			computeRelations(state.getSuccessor(baseEvent), nextSeenBaseEvents, nextParameterSet); // 12
 		    } // 13
 		} // 14

@@ -24,7 +24,7 @@ public class MaxData {
      */
     public final int[][] disableMasks;
 
-    public MaxData(int[] nodeMask, int[] diffMask, int[][] disableMasks) {
+    public MaxData(int[] nodeMask, int[][] disableMasks) {
 	super();
 	this.nodeMask = nodeMask;
 	this.disableMasks = disableMasks;

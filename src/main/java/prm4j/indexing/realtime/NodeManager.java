@@ -31,6 +31,13 @@ public class NodeManager {
     private final static int CLEANING_INTERVAL = Globals.MONITOR_CLEANING_INTERVAL;
 
     /**
+     * In cases, where Globals.MONITOR_CLEANING_INTERVAL == Globals.BINDING_CLEANING_INTERVAL it is not advised to
+     * perform them at the same point in time. The shift prevents this effect, as it moves the point of cleaning half
+     * the interval into the future.
+     */
+    private final static int CLEANING_INTERVAL_SHIFT = CLEANING_INTERVAL / 2;
+
+    /**
      * The number of created nodes by each {@link NodeFactory}.
      */
     private long createdNodeCount;
@@ -51,7 +58,7 @@ public class NodeManager {
     private final ReferenceQueue<Node> referenceQueue;
 
     public NodeManager() {
-	referenceQueue = null;
+	referenceQueue = new ReferenceQueue<Node>();
     }
 
     /**
@@ -60,8 +67,8 @@ public class NodeManager {
      * @param timestamp
      */
     public void tryToClean(long timestamp) {
-	if (timestamp % CLEANING_INTERVAL == 0) {
-	    // reallyClean();
+	if (timestamp % CLEANING_INTERVAL == CLEANING_INTERVAL_SHIFT) {
+	    reallyClean();
 	}
     }
 
@@ -69,15 +76,15 @@ public class NodeManager {
      * Polls all expired {@link NodeRef}s and nullifies all monitors which can never reach an accepting state.
      */
     public void reallyClean() {
-	// NodeRef nodeRef = (NodeRef) referenceQueue.poll();
-	// while (nodeRef != null) {
-	// orphanedMonitors++;
-	// if (nodeRef.monitor != null && !nodeRef.monitor.isAcceptingStateReachable()) {
-	// nodeRef.monitor = null;
-	// collectedMonitors++;
-	// }
-	// nodeRef = (NodeRef) referenceQueue.poll();
-	// }
+	NodeRef nodeRef = (NodeRef) referenceQueue.poll();
+	while (nodeRef != null) {
+	    orphanedMonitors++;
+	    if (nodeRef.monitor != null && !nodeRef.monitor.isAcceptingStateReachable()) {
+		nodeRef.monitor = null;
+		collectedMonitors++;
+	    }
+	    nodeRef = (NodeRef) referenceQueue.poll();
+	}
     }
 
     /**

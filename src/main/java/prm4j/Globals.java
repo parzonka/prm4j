@@ -22,10 +22,10 @@ public class Globals {
      */
     public static final boolean PRINT_CONFIGURATION = true;
 
-    public final static boolean DEBUG = isSystemProperty("prm4j.debug", "true");
+    public final static boolean LOGGING = isSystemProperty("prm4j.logging", "true");
 
     public static final int MONITOR_CLEANING_INTERVAL = Integer.parseInt(getSystemProperty(
-	    "prm4j.monitorCleaningInterval", "2000"));
+	    "prm4j.monitorCleaningInterval", "10000"));
 
     /**
      * Specifies the number of retrieve-operations after which the store will try to clean expired bindings. It will
@@ -42,7 +42,7 @@ public class Globals {
      * linked-link based storage, <code>false</code> for array based.
      */
     public final static boolean LINKEDLIST_STORED_BACKLINKS = getBooleanSystemProperty(
-	    "prm4j.linkedListStoredBacklinks", true);
+	    "prm4j.linkedListStoredBacklinks", false);
 
     /**
      * Compare the value of a system property.
@@ -55,7 +55,7 @@ public class Globals {
 	final String value = System.getProperty(key);
 	final boolean result = value != null ? expectedValue.equals(value) : false;
 	if (PRINT_CONFIGURATION) {
-	    System.out.println("[prm4j] " + key + "=" + result);
+	    System.out.println("[prm4j.config] " + key + "=" + result);
 	}
 	return result;
     }
