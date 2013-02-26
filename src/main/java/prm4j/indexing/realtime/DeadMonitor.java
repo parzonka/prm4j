@@ -17,9 +17,12 @@ import prm4j.indexing.staticdata.MetaNode;
 
 public class DeadMonitor implements Monitor {
 
+    private static long createdMonitorsCount = 0L;
+
     private final long creationTime;
 
     public DeadMonitor(long creationTime) {
+	createdMonitorsCount++;
 	this.creationTime = creationTime;
     }
 
@@ -100,6 +103,22 @@ public class DeadMonitor implements Monitor {
     @Override
     public Monitor copy(LowLevelBinding[] bindings, long timestamp) {
 	return null;
+    }
+
+    /**
+     * DIAGNOSTIC
+     * 
+     * @return the number of created dead monitors
+     */
+    public static long getCreatedMonitorsCount() {
+	return createdMonitorsCount;
+    }
+
+    /**
+     * DIAGNOSTIC
+     */
+    public static long reset() {
+	return createdMonitorsCount = 0;
     }
 
 }

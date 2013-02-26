@@ -264,6 +264,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	nodeStore.reset();
 	nodeManager.reset();
 	BaseMonitor.reset();
+	DeadMonitor.reset();
 	MatchHandler.reset();
     }
 

@@ -236,6 +236,7 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 	pm = null;
 	monitor = null;
 	BaseMonitor.reset();
+	DeadMonitor.reset();
     }
 
 }
