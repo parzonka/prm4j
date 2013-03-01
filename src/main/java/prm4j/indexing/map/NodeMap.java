@@ -12,16 +12,6 @@ package prm4j.indexing.map;
 
 import prm4j.indexing.realtime.LowLevelBinding;
 
-/**
- * This hash map uses, stores and returns its values as entries, omitting the creation of wrapping map entries. This is
- * useful, when the values have to store their keys anyway and being aware of the {@link NodeMap} is no problem. Values
- * have to implement {@link MinimalMapEntry}-interface to be used as entries.
- * <p>
- * The map transparently creates entries which are not found in the map, omitting a 'put' method.
- *
- * @param <E>
- *            the type of the value which is also used as map entry
- */
 public abstract class NodeMap<E extends NodeMapEntry<E>> {
 
     /**
@@ -52,7 +42,7 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
 
     /**
      * The next size value at which to resize (capacity * load factor).
-     *
+     * 
      * @serial
      */
     int threshold;
@@ -67,10 +57,11 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
     /**
      * Retrieves the entry associated with this key and the provided hash code or creates a and stores new entry based
      * on the key and hash code.
-     *
+     * 
+     * @param parameterIndex
+     *            the node is only retrieved, if the binding has the specified index
      * @param key
-     * @param hashcode
-     *            should be consistently calculated with the provided method of this class (or a subtype)
+     *            the binding
      * @return the entry
      */
     public E getOrCreate(final int parameterIndex, final LowLevelBinding key) {
@@ -99,10 +90,11 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
 
     /**
      * Retrieves the entry associated with this key and the provided hash code or returns null.
-     *
+     * 
+     * @param parameterIndex
+     *            the node is only retrieved, if the binding has the specified index
      * @param key
-     * @param hashcode
-     *            should be consistently calculated with the provided method of this class (or a subtype)
+     *            the binding
      * @return the entry or null, if entry is not stored in the map
      */
     public E get(final int parameterIndex, final LowLevelBinding key) {
@@ -152,16 +144,16 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
 
     /**
      * Creates a new entry based on the key and hash code.
-     *
+     * 
+     * @param parameterIndex
      * @param key
-     * @param hashCode
      * @return the entry
      */
     protected abstract E createEntry(final int parameterIndex, LowLevelBinding key);
 
     /**
      * Removes <b>all</b> entries with the given binding, regardless of any parameterIndex.
-     *
+     * 
      * @param key
      * @param hashCode
      */
