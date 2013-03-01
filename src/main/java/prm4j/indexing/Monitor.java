@@ -87,13 +87,20 @@ public interface Monitor {
 
     public Monitor copy(LowLevelBinding[] bindings);
 
-    public Monitor copy(LowLevelBinding[] bindings, long timestamp);
+    /**
+     * Creates a copy of this monitor by setting new stored compressed bindings and timestamp.
+     * 
+     * @param compressedBindings
+     * @param timestamp
+     * @return a new monitor with given bindings and timestamp
+     */
+    public Monitor copy(LowLevelBinding[] compressedBindings, long timestamp);
 
     public MetaNode getMetaNode();
 
     public void setMetaNode(MetaNode metaNode);
 
-    public void setBindings(LowLevelBinding[] bindings);
+    public void setCompressedBindings(LowLevelBinding[] bindings);
 
     public void setTimestamp(long timestamp);
 

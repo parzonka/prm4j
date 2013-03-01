@@ -50,51 +50,51 @@ public abstract class BaseMonitor implements Monitor {
 
     private MetaNode metaNode;
     // low level access
-    private LowLevelBinding[] bindings;
+    private LowLevelBinding[] compressedBindings;
     // low level access
     private long timestamp;
 
     public BaseMonitor() {
 	createdMonitorsCount++;
-	bindings = EMPTY_BINDINGS;
+	compressedBindings = EMPTY_BINDINGS;
 	timestamp = 0L;
     }
 
     /**
      * Creates a low level deep copy of this monitor.
      * 
-     * @param bindings
+     * @param compressedBindings
      * @return
      */
     @Override
-    public final Monitor copy(LowLevelBinding[] bindings) {
+    public final Monitor copy(LowLevelBinding[] compressedBindings) {
 	Monitor copy = copy();
-	copy.setBindings(bindings);
+	copy.setCompressedBindings(compressedBindings);
 	copy.setTimestamp(timestamp);
 	return copy;
     }
 
     @Override
-    public final Monitor copy(LowLevelBinding[] bindings, long timestamp) {
+    public final Monitor copy(LowLevelBinding[] compressedBindings, long timestamp) {
 	Monitor copy = copy();
-	copy.setBindings(bindings);
+	copy.setCompressedBindings(compressedBindings);
 	copy.setTimestamp(timestamp);
 	return copy;
     }
 
     @Override
     public final LowLevelBinding[] getCompressedBindings() {
-	return bindings;
+	return compressedBindings;
     }
 
     @Override
     public final prm4j.api.Binding[] getUncompressedBindings() {
 	if (metaNode == null) {
 	    // upcast
-	    return bindings;
+	    return compressedBindings;
 	}
 	// upcast
-	return metaNode.uncompressBindings(bindings);
+	return metaNode.uncompressBindings(compressedBindings);
     }
 
     /**
@@ -103,7 +103,7 @@ public abstract class BaseMonitor implements Monitor {
      */
     @Override
     public final void terminate() {
-	bindings = null;
+	compressedBindings = null;
     }
 
     /**
@@ -113,7 +113,7 @@ public abstract class BaseMonitor implements Monitor {
      */
     @Override
     public final boolean isTerminated() {
-	return bindings == null;
+	return compressedBindings == null;
     }
 
     @Override
@@ -168,8 +168,8 @@ public abstract class BaseMonitor implements Monitor {
     }
 
     @Override
-    public void setBindings(LowLevelBinding[] bindings) {
-	this.bindings = bindings;
+    public void setCompressedBindings(LowLevelBinding[] compressedBindings) {
+	this.compressedBindings = compressedBindings;
 
     }
 
