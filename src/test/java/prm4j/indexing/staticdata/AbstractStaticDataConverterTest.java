@@ -34,7 +34,7 @@ public class AbstractStaticDataConverterTest extends AbstractTest {
 	sdc = new StaticDataConverter(fpp);
     }
 
-    protected final static MaxData[] EMPTY_MAXDATA_ARRAY = new MaxData[0];
+    protected final static FindMaxArgs[] EMPTY_MAXDATA_ARRAY = new FindMaxArgs[0];
     protected final static Set<ChainData> EMPTY_CHAINDATA_SET = Collections.emptySet();
     protected final static List<JoinData> EMPTY_JOINDATA_LIST = Collections.emptyList();
 
@@ -46,8 +46,8 @@ public class AbstractStaticDataConverterTest extends AbstractTest {
 	assertArrayEquals(joinDataList.toArray(), sdc.getEventContext().getJoinData(baseEvent));
     }
 
-    protected void assertMaxData(BaseEvent baseEvent, List<MaxData> maxDataList) {
-	assertArrayEquals(maxDataList.toArray(), sdc.getEventContext().getMaxData(baseEvent));
+    protected void assertMaxData(BaseEvent baseEvent, List<FindMaxArgs> maxDataList) {
+	assertArrayEquals(maxDataList.toArray(), sdc.getEventContext().getFindMaxArgs(baseEvent));
     }
 
     protected static ChainData chainData(int[] nodeMask, int monitorSetId) {

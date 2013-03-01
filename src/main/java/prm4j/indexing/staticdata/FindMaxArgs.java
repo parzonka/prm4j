@@ -12,7 +12,7 @@ package prm4j.indexing.staticdata;
 
 import java.util.Arrays;
 
-public class MaxData {
+public class FindMaxArgs {
 
     /**
      * Identifies the node which is checked for a defined monitor to derive its state from.
@@ -24,7 +24,7 @@ public class MaxData {
      */
     public final int[][] disableMasks;
 
-    public MaxData(int[] nodeMask, int[][] disableMasks) {
+    public FindMaxArgs(int[] nodeMask, int[][] disableMasks) {
 	super();
 	this.nodeMask = nodeMask;
 	this.disableMasks = disableMasks;
@@ -38,7 +38,7 @@ public class MaxData {
 	    disableMasksString.append(" ");
 	}
 	disableMasksString.append("]");
-	return "MaxData [nodeMask=" + Arrays.toString(nodeMask) + ", disableMasks=" + disableMasksString.toString()
+	return "FindMaxArgs [nodeMask=" + Arrays.toString(nodeMask) + ", disableMasks=" + disableMasksString.toString()
 		+ "]";
     }
 

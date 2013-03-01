@@ -19,7 +19,7 @@ import prm4j.indexing.Monitor;
 import prm4j.indexing.staticdata.ChainData;
 import prm4j.indexing.staticdata.EventContext;
 import prm4j.indexing.staticdata.JoinData;
-import prm4j.indexing.staticdata.MaxData;
+import prm4j.indexing.staticdata.FindMaxArgs;
 import prm4j.indexing.staticdata.MetaNode;
 import prm4j.spec.Spec;
 
@@ -104,11 +104,11 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    monitorSet.processEvent(event);
 		}
 	    }
-	    findMaxPhase: for (MaxData maxData : eventContext.getMaxData(baseEvent)) { // 8
-		Monitor maxMonitor = nodeStore.getNode(bindings, maxData.nodeMask).getMonitor(); // 9
+	    findMaxPhase: for (FindMaxArgs findMaxArgs : eventContext.getFindMaxArgs(baseEvent)) { // 8
+		Monitor maxMonitor = nodeStore.getNode(bindings, findMaxArgs.nodeMask).getMonitor(); // 9
 		if (maxMonitor != null) { // 10
 		    final long maxMonitorTimestamp = maxMonitor.getTimestamp();
-		    for (int[] disableMask : maxData.disableMasks) {
+		    for (int[] disableMask : findMaxArgs.disableMasks) {
 			final Node subInstanceNode = nodeStore.getNode(bindings, disableMask);
 			if (subInstanceNode != NullNode.instance) {
 			    if (subInstanceNode.getTimestamp() > maxMonitorTimestamp

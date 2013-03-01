@@ -15,13 +15,13 @@ import prm4j.api.BaseEvent;
 public class EventContext {
 
     private final JoinData[][] joinDataArray;
-    private final MaxData[][] maxDataArray;
+    private final FindMaxArgs[][] maxDataArray;
     private final boolean[] creationEvents;
     private final boolean[] disablingEvents;
     // baseEvent * numberOfExistingMonitorMasks * parameterMaskLength
     private final int[][][] existingMonitorMasks;
 
-    public EventContext(JoinData[][] joinData, MaxData[][] maxData, boolean[] creationEvents,
+    public EventContext(JoinData[][] joinData, FindMaxArgs[][] maxData, boolean[] creationEvents,
 	    boolean[] disablingEvents, int[][][] existingMonitorMasks) {
 	joinDataArray = joinData;
 	maxDataArray = maxData;
@@ -30,7 +30,7 @@ public class EventContext {
 	this.existingMonitorMasks = existingMonitorMasks;
     }
 
-    public MaxData[] getMaxData(BaseEvent baseEvent) {
+    public FindMaxArgs[] getFindMaxArgs(BaseEvent baseEvent) {
 	return maxDataArray[baseEvent.getIndex()];
     }
 

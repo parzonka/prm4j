@@ -39,11 +39,11 @@ import com.google.common.collect.Table;
  */
 public class StaticDataConverter {
 
-    private final static MaxData[] EMPTY_MAX_DATA = new MaxData[0];
+    private final static FindMaxArgs[] EMPTY_MAX_DATA = new FindMaxArgs[0];
     private final static JoinData[] EMPTY_JOIN_DATA = new JoinData[0];
 
     private final ParametricProperty pp;
-    private final ListMultimap<BaseEvent, MaxData> maxData;
+    private final ListMultimap<BaseEvent, FindMaxArgs> findMaxArgs;
     private final ListMultimap<BaseEvent, JoinData> joinData;
     private final Table<BaseEvent, Set<Parameter<?>>, List<Set<Parameter<?>>>> disableParameterSets;
     private final SetMultimap<Set<Parameter<?>>, ChainData> chainData;
@@ -53,7 +53,7 @@ public class StaticDataConverter {
 
     public StaticDataConverter(ParametricProperty pp) {
 	this.pp = pp;
-	maxData = ArrayListMultimap.create();
+	findMaxArgs = ArrayListMultimap.create();
 	joinData = ArrayListMultimap.create();
 	disableParameterSets = HashBasedTable.create();
 	chainData = HashMultimap.create();
@@ -65,7 +65,7 @@ public class StaticDataConverter {
     }
 
     /**
-     * Creates arrays of maxData, joinData, chainData.
+     * Creates arrays of findMaxArgs, joinData, chainData.
      */
     private void convertToLowLevelStaticData() { // 1
 	for (Set<Parameter<?>> parameterSet : pp.getMonitorSetData().keys()) { // 2
@@ -78,7 +78,7 @@ public class StaticDataConverter {
 	    for (final Set<Parameter<?>> enableParameterSet : pp.getMaxData().get(baseEvent)) { // 10
 		final int[] nodeMask = toParameterMask(enableParameterSet); // 12
 		final int[][] disableMasks = toParameterMasks(getDisableSets(baseEvent, enableParameterSet));
-		maxData.put(baseEvent, new MaxData(nodeMask, disableMasks)); // 11, 14
+		findMaxArgs.put(baseEvent, new FindMaxArgs(nodeMask, disableMasks)); // 11, 14
 	    } // 15
 	    existingMonitorMasks[baseEvent.getIndex()] = calculateExistingMonitorMasks(baseEvent.getParameters());
 	    /*
@@ -430,10 +430,10 @@ public class StaticDataConverter {
 	return chainData;
     }
 
-    protected MaxData[][] getMaxData() {
-	MaxData[][] maxDataArray = new MaxData[pp.getBaseEvents().size()][];
+    protected FindMaxArgs[][] getMaxData() {
+	FindMaxArgs[][] maxDataArray = new FindMaxArgs[pp.getBaseEvents().size()][];
 	for (BaseEvent baseEvent : pp.getBaseEvents()) {
-	    maxDataArray[baseEvent.getIndex()] = maxData.get(baseEvent) != null ? maxData.get(baseEvent).toArray(
+	    maxDataArray[baseEvent.getIndex()] = findMaxArgs.get(baseEvent) != null ? findMaxArgs.get(baseEvent).toArray(
 		    EMPTY_MAX_DATA) : EMPTY_MAX_DATA;
 	}
 	return maxDataArray;

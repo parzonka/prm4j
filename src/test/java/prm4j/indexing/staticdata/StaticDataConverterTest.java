@@ -338,13 +338,13 @@ public class StaticDataConverterTest extends AbstractTest {
 	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 
-	MaxData[][] actual = sdc.getMaxData();
+	FindMaxArgs[][] actual = sdc.getMaxData();
 
-	MaxData[][] expected = new MaxData[fpp.getBaseEvents().size()][];
-	expected[u.createColl.getIndex()] = new MaxData[0];
-	expected[u.updateMap.getIndex()] = new MaxData[0];
-	expected[u.createIter.getIndex()] = new MaxData[0];
-	expected[u.useIter.getIndex()] = new MaxData[0];
+	FindMaxArgs[][] expected = new FindMaxArgs[fpp.getBaseEvents().size()][];
+	expected[u.createColl.getIndex()] = new FindMaxArgs[0];
+	expected[u.updateMap.getIndex()] = new FindMaxArgs[0];
+	expected[u.createIter.getIndex()] = new FindMaxArgs[0];
+	expected[u.useIter.getIndex()] = new FindMaxArgs[0];
 
 	assertArrayEquals(expected, actual);
     }
