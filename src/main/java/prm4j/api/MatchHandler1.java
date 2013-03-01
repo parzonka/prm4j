@@ -19,7 +19,7 @@ public abstract class MatchHandler1<P1> extends MatchHandler {
     public MatchHandler1(Parameter<P1> param1) {
 	super();
 	this.param1 = param1;
-	this.param1.setStrong(true);
+	this.param1.setPersistent(true);
     }
 
     @Override

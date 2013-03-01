@@ -21,11 +21,11 @@ public abstract class MatchHandler3<P1, P2, P3> extends MatchHandler {
     public MatchHandler3(Parameter<P1> param1, Parameter<P2> param2, Parameter<P3> param3) {
 	super();
 	this.param1 = param1;
-	this.param1.setStrong(true);
+	this.param1.setPersistent(true);
 	this.param2 = param2;
-	this.param2.setStrong(true);
+	this.param2.setPersistent(true);
 	this.param3 = param3;
-	this.param3.setStrong(true);
+	this.param3.setPersistent(true);
     }
 
     @Override

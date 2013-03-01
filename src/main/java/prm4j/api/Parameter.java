@@ -11,8 +11,8 @@
 package prm4j.api;
 
 /**
- * A parameter which can be bound to an object.
- *
+ * A parameter can be bound to an object (aka parameter value).
+ * 
  * @param <T>
  *            the type of the object which can be bound to this parameter
  */
@@ -20,7 +20,7 @@ public class Parameter<T> implements Comparable<Parameter<?>> {
 
     private int parameterIndex = -1;
     private final String uniqueName;
-    private boolean isStrong = false;
+    private boolean isPersistent = false;
 
     public Parameter(String uniqueName) {
 	this.uniqueName = uniqueName;
@@ -29,7 +29,7 @@ public class Parameter<T> implements Comparable<Parameter<?>> {
     /**
      * Returns a unique index for this parameter. It is mandatory that all indexes are in the interval [0, ..., n-1]
      * with n = number of parameters.
-     *
+     * 
      * @return
      */
     public final int getIndex() {
@@ -46,12 +46,16 @@ public class Parameter<T> implements Comparable<Parameter<?>> {
 	this.parameterIndex = parameterIndex;
     }
 
-    public boolean isStrong() {
-	return this.isStrong;
+    /**
+     * @return <code>true</code>, if associated parameter values should be kept in memory as long as the matches are
+     *         possible involving this parameter.
+     */
+    public boolean isPersistent() {
+	return this.isPersistent;
     }
 
-    public void setStrong(boolean isStrong) {
-	this.isStrong = isStrong;
+    public void setPersistent(boolean isPersistent) {
+	this.isPersistent = isPersistent;
     }
 
     @Override
