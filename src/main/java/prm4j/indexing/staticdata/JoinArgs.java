@@ -19,7 +19,7 @@ import prm4j.indexing.realtime.DeadMonitor;
  * <p>
  * Used by {@link EventContext}
  */
-public class JoinData {
+public class JoinArgs {
 
     // identifies the node, which represents the compatible part of the instance, we want to join with
     public final int[] nodeMask;
@@ -41,7 +41,7 @@ public class JoinData {
      */
     public int[][] disableMasks;
 
-    public JoinData(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern, int[][] disableMasks) {
+    public JoinArgs(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern, int[][] disableMasks) {
 	super();
 	this.nodeMask = nodeMask;
 	this.monitorSetId = monitorSetId;
@@ -58,7 +58,7 @@ public class JoinData {
 	    disableMasksString.append(" ");
 	}
 	disableMasksString.append("]");
-	return "JoinData [nodeMask=" + Arrays.toString(nodeMask) + ", monitorSetId=" + monitorSetId
+	return "JoinArgs [nodeMask=" + Arrays.toString(nodeMask) + ", monitorSetId=" + monitorSetId
 		+ ", extensionPattern=" + Arrays.toString(extensionPattern) + ", copyPattern="
 		+ Arrays.toString(copyPattern) + ", disableMasks=" + disableMasksString.toString() + "]";
     }
@@ -86,7 +86,7 @@ public class JoinData {
 	if (getClass() != obj.getClass()) {
 	    return false;
 	}
-	JoinData other = (JoinData) obj;
+	JoinArgs other = (JoinArgs) obj;
 	if (!Arrays.equals(copyPattern, other.copyPattern)) {
 	    return false;
 	}

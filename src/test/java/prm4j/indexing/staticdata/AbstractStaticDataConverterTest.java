@@ -36,13 +36,13 @@ public class AbstractStaticDataConverterTest extends AbstractTest {
 
     protected final static FindMaxArgs[] EMPTY_MAXDATA_ARRAY = new FindMaxArgs[0];
     protected final static Set<UpdateChainingsArgs> EMPTY_CHAINDATA_SET = Collections.emptySet();
-    protected final static List<JoinData> EMPTY_JOINDATA_LIST = Collections.emptyList();
+    protected final static List<JoinArgs> EMPTY_JOINDATA_LIST = Collections.emptyList();
 
     protected void assertChainData(Set<Parameter<?>> parameterSet, Set<UpdateChainingsArgs> chainDataSet) {
 	assertEquals(chainDataSet, sdc.getMetaTree().getMetaNode(Util.asSortedList(parameterSet)).getChainDataSet());
     }
 
-    protected void assertJoinData(BaseEvent baseEvent, List<JoinData> joinDataList) {
+    protected void assertJoinData(BaseEvent baseEvent, List<JoinArgs> joinDataList) {
 	assertArrayEquals(joinDataList.toArray(), sdc.getEventContext().getJoinData(baseEvent));
     }
 
@@ -54,9 +54,9 @@ public class AbstractStaticDataConverterTest extends AbstractTest {
 	return new UpdateChainingsArgs(nodeMask, monitorSetId);
     }
 
-    protected static JoinData joinData(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern,
+    protected static JoinArgs joinArgs(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern,
 	    int[][] disableMasks) {
-	return new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, disableMasks);
+	return new JoinArgs(nodeMask, monitorSetId, extensionPattern, copyPattern, disableMasks);
     }
 
 }

@@ -76,7 +76,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 	int[][] disableMasks = new int[2][];
 	disableMasks[0] = array(2);
 	disableMasks[1] = array(1, 2);
-	assertJoinData(ec, fsm.e2, joinData(array(1), 0, array(-1, 1, 2), array(0, 0), disableMasks));
+	assertJoinData(ec, fsm.e2, joinArgs(array(1), 0, array(-1, 1, 2), array(0, 0), disableMasks));
     }
 
     @Test
@@ -295,7 +295,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 	assertEquals(chainDataSet, metaTree.getMetaNode(Util.asSortedList(parameterSet)).getChainDataSet());
     }
 
-    protected static void assertJoinData(EventContext eventContext, BaseEvent baseEvent, JoinData... joinDatas) {
+    protected static void assertJoinData(EventContext eventContext, BaseEvent baseEvent, JoinArgs... joinDatas) {
 	assertArrayEquals(joinDatas, eventContext.getJoinData(baseEvent));
     }
 
@@ -303,9 +303,9 @@ public class StaticDataConverter2Test extends AbstractTest {
 	return new UpdateChainingsArgs(nodeMask, monitorSetId);
     }
 
-    protected static JoinData joinData(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern,
+    protected static JoinArgs joinArgs(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern,
 	    int[][] disableMasks) {
-	return new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern, disableMasks);
+	return new JoinArgs(nodeMask, monitorSetId, extensionPattern, copyPattern, disableMasks);
     }
 
 }

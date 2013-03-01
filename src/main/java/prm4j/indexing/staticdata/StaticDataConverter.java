@@ -40,11 +40,11 @@ import com.google.common.collect.Table;
 public class StaticDataConverter {
 
     private final static FindMaxArgs[] EMPTY_MAX_DATA = new FindMaxArgs[0];
-    private final static JoinData[] EMPTY_JOIN_DATA = new JoinData[0];
+    private final static JoinArgs[] EMPTY_JOIN_DATA = new JoinArgs[0];
 
     private final ParametricProperty pp;
     private final ListMultimap<BaseEvent, FindMaxArgs> findMaxArgs;
-    private final ListMultimap<BaseEvent, JoinData> joinData;
+    private final ListMultimap<BaseEvent, JoinArgs> joinArgs;
     private final Table<BaseEvent, Set<Parameter<?>>, List<Set<Parameter<?>>>> disableParameterSets;
     private final SetMultimap<Set<Parameter<?>>, UpdateChainingsArgs> updateChainingsArgs;
     private final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
@@ -54,7 +54,7 @@ public class StaticDataConverter {
     public StaticDataConverter(ParametricProperty pp) {
 	this.pp = pp;
 	findMaxArgs = ArrayListMultimap.create();
-	joinData = ArrayListMultimap.create();
+	joinArgs = ArrayListMultimap.create();
 	disableParameterSets = HashBasedTable.create();
 	updateChainingsArgs = HashMultimap.create();
 	monitorSetIds = HashBasedTable.create();
@@ -65,7 +65,7 @@ public class StaticDataConverter {
     }
 
     /**
-     * Creates arrays of findMaxArgs, joinData, updateChainingsArgs.
+     * Creates arrays of findMaxArgs, joinArgs, updateChainingsArgs.
      */
     private void convertToLowLevelStaticData() { // 1
 	for (Set<Parameter<?>> parameterSet : pp.getMonitorSetData().keys()) { // 2
@@ -104,7 +104,7 @@ public class StaticDataConverter {
 		final List<Set<Parameter<?>>> listOfDisableParameterSets = getDisableSets(baseEvent, enableSet);
 		disableParameterSets.put(baseEvent, enableSet, listOfDisableParameterSets);
 		final int[][] disableMasks = toParameterMasks(listOfDisableParameterSets);
-		joinData.put(baseEvent, new JoinData(nodeMask, monitorSetId, extensionPattern, copyPattern,
+		joinArgs.put(baseEvent, new JoinArgs(nodeMask, monitorSetId, extensionPattern, copyPattern,
 			disableMasks)); // 23
 	    } // 24
 	} // 25
@@ -439,10 +439,10 @@ public class StaticDataConverter {
 	return maxDataArray;
     }
 
-    protected JoinData[][] getJoinData() {
-	JoinData[][] joinDataArray = new JoinData[pp.getBaseEvents().size()][];
+    protected JoinArgs[][] getJoinData() {
+	JoinArgs[][] joinDataArray = new JoinArgs[pp.getBaseEvents().size()][];
 	for (BaseEvent baseEvent : pp.getBaseEvents()) {
-	    joinDataArray[baseEvent.getIndex()] = joinData.get(baseEvent) != null ? joinData.get(baseEvent).toArray(
+	    joinDataArray[baseEvent.getIndex()] = joinArgs.get(baseEvent) != null ? joinArgs.get(baseEvent).toArray(
 		    EMPTY_JOIN_DATA) : EMPTY_JOIN_DATA;
 	}
 	return joinDataArray;

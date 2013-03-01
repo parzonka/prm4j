@@ -18,7 +18,7 @@ import prm4j.api.ParametricMonitor;
 import prm4j.indexing.Monitor;
 import prm4j.indexing.staticdata.UpdateChainingsArgs;
 import prm4j.indexing.staticdata.EventContext;
-import prm4j.indexing.staticdata.JoinData;
+import prm4j.indexing.staticdata.JoinArgs;
 import prm4j.indexing.staticdata.FindMaxArgs;
 import prm4j.indexing.staticdata.MetaNode;
 import prm4j.spec.Spec;
@@ -169,10 +169,10 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    }
 
 	    // inlined Join from 42
-	    joinPhase: for (JoinData joinData : eventContext.getJoinData(baseEvent)) { // 43
+	    joinPhase: for (JoinArgs joinArgs : eventContext.getJoinData(baseEvent)) { // 43
 
 		// if node does not exist there can't be any joinable monitors
-		final Node compatibleNode = nodeStore.getNode(bindings, joinData.nodeMask);
+		final Node compatibleNode = nodeStore.getNode(bindings, joinArgs.nodeMask);
 		if (compatibleNode == NullNode.instance) {
 		    continue joinPhase;
 		}
@@ -180,7 +180,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		long maxInstanceTimestamp = Long.MIN_VALUE;
 		long minMonitorTimestamp = Long.MAX_VALUE;
 
-		final int[][] disableMasks = joinData.disableMasks;
+		final int[][] disableMasks = joinArgs.disableMasks;
 		for (int i = 0; i < disableMasks.length; i++) {
 		    final Node subInstanceNode = nodeStore.getNode(bindings, disableMasks[i]);
 		    final long instanceTimestamp = subInstanceNode.getTimestamp();
@@ -196,13 +196,13 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		}
 
 		// calculate once the bindings to be joined with the whole monitor set
-		final Binding[] joinableBindings = createJoinableBindings(bindings, joinData.extensionPattern); // 56
+		final Binding[] joinableBindings = createJoinableBindings(bindings, joinArgs.extensionPattern); // 56
 															// -
 															// 61
 
 		// join is performed in monitor set
-		compatibleNode.getMonitorSet(joinData.monitorSetId).join(nodeStore, event, joinableBindings,
-			minMonitorTimestamp, maxInstanceTimestamp, joinData.copyPattern);
+		compatibleNode.getMonitorSet(joinArgs.monitorSetId).join(nodeStore, event, joinableBindings,
+			minMonitorTimestamp, maxInstanceTimestamp, joinArgs.copyPattern);
 
 	    }
 	    nodeStore.getNode(bindings, parameterMask).setTimestamp(timestamp);

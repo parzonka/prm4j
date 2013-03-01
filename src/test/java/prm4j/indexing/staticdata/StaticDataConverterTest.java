@@ -360,19 +360,19 @@ public class StaticDataConverterTest extends AbstractTest {
 	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 
-	JoinData[][] actual = sdc.getJoinData();
+	JoinArgs[][] actual = sdc.getJoinData();
 
-	JoinData[][] expected = new JoinData[fpp.getBaseEvents().size()][];
-	expected[u.createColl.getIndex()] = new JoinData[0];
+	JoinArgs[][] expected = new JoinArgs[fpp.getBaseEvents().size()][];
+	expected[u.createColl.getIndex()] = new JoinArgs[0];
 
-	expected[u.updateMap.getIndex()] = new JoinData[0];
+	expected[u.updateMap.getIndex()] = new JoinArgs[0];
 
-	JoinData[] jd = new JoinData[1];
+	JoinArgs[] jd = new JoinArgs[1];
 	int[][] disableMasks = { { 2 }, { 1, 2 } };
-	jd[0] = new JoinData(array(1), 0, array(-1, 1, 2), array(0, 0), disableMasks);
+	jd[0] = new JoinArgs(array(1), 0, array(-1, 1, 2), array(0, 0), disableMasks);
 	expected[u.createIter.getIndex()] = jd;
 
-	expected[u.useIter.getIndex()] = new JoinData[0];
+	expected[u.useIter.getIndex()] = new JoinArgs[0];
 
 	assert2DimArrayEquals(expected, actual);
     }
