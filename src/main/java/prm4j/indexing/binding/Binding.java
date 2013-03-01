@@ -12,20 +12,28 @@ package prm4j.indexing.binding;
 
 import prm4j.indexing.map.MinimalMapEntry;
 
+/**
+ * A binding encapsulates the bound object (aka parameter value). The Binding is agnostic regarding the parameter it is
+ * bound to, it is only known that there exists at least one parameter which is bound to it. A Binding may be bound to
+ * multiple parameters.
+ */
 public interface Binding extends MinimalMapEntry<Object, Binding> {
 
+    /**
+     * @return the bound object (parameter value9
+     */
     public Object get();
 
     /**
      * Releases all resources used in the indexing data structure and/or notifies monitors about unreachability of the
-     * parameter object. Amount of released resources can vary strongly with the implementation.
+     * parameter object. Amount of released resources can vary with the implementation.
      */
     void release();
 
     /**
-     * Register a map which uses this binding as key.
+     * Register a holder which uses this binding as a resource. This is normally a node in an indexing tree.
      * 
-     * @param nodeRef
+     * @param bindingHolder
      */
     void registerHolder(Holder<Binding> bindingHolder);
 

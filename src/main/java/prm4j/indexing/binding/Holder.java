@@ -10,8 +10,13 @@
  */
 package prm4j.indexing.binding;
 
+/**
+ * A Holder holds resources which are related to a given object.
+ * 
+ * @param <T>
+ */
 public interface Holder<T> {
 
-    public void release(T objectToBeReleased);
+    public void release(T object);
 
 }

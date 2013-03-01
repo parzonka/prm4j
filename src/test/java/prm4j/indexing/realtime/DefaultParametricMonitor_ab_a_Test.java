@@ -35,7 +35,7 @@ public class DefaultParametricMonitor_ab_a_Test extends AbstractDefaultParametri
 	public final Parameter<String> p2 = alphabet.createParameter("p2", String.class);
 
 	public final Symbol2<String, String> e1 = alphabet.createSymbol2("e1", p1, p2);
-	public final Symbol1<String> e2 = alphabet.createSymbol1("e1", p1);
+	public final Symbol1<String> e2 = alphabet.createSymbol1("e2", p1);
 
 	public final AwareMatchHandler1<String> matchHandler = AwareMatchHandler.create(p1);
 
