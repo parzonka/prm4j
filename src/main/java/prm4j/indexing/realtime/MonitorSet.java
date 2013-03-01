@@ -138,7 +138,7 @@ public class MonitorSet {
 		deadPartitionStart++; // this monitor may be still alive, we just avoid joining with it
 		continue; // 65
 	    }
-	    final LowLevelBinding[] compatibleBindings = compatibleMonitor.getLowLevelBindings();
+	    final LowLevelBinding[] compatibleBindings = compatibleMonitor.getCompressedBindings();
 	    // test if lifetime of monitor is already over
 	    if (compatibleBindings == null) {
 		continue; // don't increment the deadPartitionStart => this monitor will be removed from the set

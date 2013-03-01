@@ -146,7 +146,7 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     }
 
     protected void assertBoundObjects(AwareBaseMonitor monitor, Object... boundObjects) {
-	LowLevelBinding[] bindings = monitor.getLowLevelBindings();
+	LowLevelBinding[] bindings = monitor.getCompressedBindings();
 	Object[] monitorBoundObjects = new Object[bindings.length];
 	for (int i = 0; i < bindings.length; i++) {
 	    monitorBoundObjects[i] = bindings[i].get();

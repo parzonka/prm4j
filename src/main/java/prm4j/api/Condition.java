@@ -37,7 +37,7 @@ public abstract class Condition {
     }
 
     public <T> T getParameterValue(Parameter<T> parameter) {
-	return baseMonitor.getMetaNode().getParameterValue(parameter, baseMonitor.getLowLevelBindings());
+	return baseMonitor.getMetaNode().getParameterValue(parameter, baseMonitor.getCompressedBindings());
     }
 
     public abstract boolean eval();

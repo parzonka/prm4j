@@ -80,7 +80,7 @@ public class LeafNode implements Node {
     public String toString() {
 	if (nodeRef.monitor != null) {
 	    // output e.g.: (p2=b, p3=c, p5=e)
-	    return Util.bindingsToString(nodeRef.monitor.getLowLevelBindings());
+	    return Util.bindingsToString(nodeRef.monitor.getCompressedBindings());
 	}
 	// output e.g.: (p2=?, p3=?, p5=e) because we only now the key and the node parameter set
 	final StringBuilder sb = new StringBuilder();

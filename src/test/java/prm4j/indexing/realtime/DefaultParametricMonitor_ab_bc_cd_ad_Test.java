@@ -93,7 +93,7 @@ public class DefaultParametricMonitor_ab_bc_cd_ad_Test extends AbstractDefaultPa
 	LowLevelBinding b_a1 = bindingStore.getBinding(a1);
 	LowLevelBinding b_b1 = bindingStore.getBinding(b1);
 
-	assertArrayEquals(array(b_a1, b_b1), getNode(a1, b1, _, _).getMonitor().getLowLevelBindings());
+	assertArrayEquals(array(b_a1, b_b1), getNode(a1, b1, _, _).getMonitor().getCompressedBindings());
     }
 
     @Test
@@ -119,7 +119,7 @@ public class DefaultParametricMonitor_ab_bc_cd_ad_Test extends AbstractDefaultPa
 	LowLevelBinding b_b1 = bindingStore.getBinding(b1);
 	LowLevelBinding b_c1 = bindingStore.getBinding(c1);
 
-	assertArrayEquals(array(b_a1, b_b1, b_c1), getNode(a1, b1, c1, _).getMonitor().getLowLevelBindings());
+	assertArrayEquals(array(b_a1, b_b1, b_c1), getNode(a1, b1, c1, _).getMonitor().getCompressedBindings());
     }
 
     @Test

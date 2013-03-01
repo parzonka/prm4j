@@ -88,7 +88,7 @@ public abstract class BaseMonitor implements Monitor {
      * @return
      */
     @Override
-    public final LowLevelBinding[] getLowLevelBindings() {
+    public final LowLevelBinding[] getCompressedBindings() {
 	return bindings;
     }
 

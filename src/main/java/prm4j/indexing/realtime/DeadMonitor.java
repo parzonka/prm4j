@@ -47,7 +47,7 @@ public class DeadMonitor implements Monitor {
     }
 
     @Override
-    public LowLevelBinding[] getLowLevelBindings() {
+    public LowLevelBinding[] getCompressedBindings() {
 	return null;
     }
 

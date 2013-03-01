@@ -52,7 +52,7 @@ public class StatefulMonitor extends BaseMonitor {
 	}
 	if (state.isFinal()
 		|| (Globals.CHECK_MONITOR_VALIDITY_ON_EACH_UPDATE && !getMetaNode().isAcceptingStateReachable(
-			getLowLevelBindings()))) {
+			getCompressedBindings()))) {
 	    terminate();
 	    return false;
 	}
@@ -77,7 +77,7 @@ public class StatefulMonitor extends BaseMonitor {
     @Override
     public boolean isAcceptingStateReachable() {
 	return !isTerminated() && state != null && !state.isFinal()
-		&& getMetaNode().isAcceptingStateReachable(getLowLevelBindings());
+		&& getMetaNode().isAcceptingStateReachable(getCompressedBindings());
     }
 
     @Override

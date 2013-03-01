@@ -21,7 +21,7 @@ import prm4j.indexing.staticdata.MetaNode;
  */
 public interface Monitor {
 
-    public LowLevelBinding[] getLowLevelBindings();
+    public LowLevelBinding[] getCompressedBindings();
 
     /**
      * Returns a uncompressed representation of high-level bindings.
