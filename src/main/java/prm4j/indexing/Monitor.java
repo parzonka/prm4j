@@ -21,12 +21,19 @@ import prm4j.indexing.staticdata.MetaNode;
  */
 public interface Monitor {
 
+    /**
+     * Compressed bindings do not contain null values. No information about the associated parameter is available and
+     * has to be maintained externally.
+     * 
+     * @return a compressed representation of bindings
+     */
     public LowLevelBinding[] getCompressedBindings();
 
     /**
-     * Returns a uncompressed representation of high-level bindings.
+     * Uncompressed bindings my contain null values. The position in the array represents the parameter id of the
+     * associated parameter for each binding.
      * 
-     * @return
+     * @return a uncompressed representation of bindings
      */
     public prm4j.api.Binding[] getUncompressedBindings();
 

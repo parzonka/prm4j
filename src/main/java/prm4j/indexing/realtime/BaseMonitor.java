@@ -82,21 +82,11 @@ public abstract class BaseMonitor implements Monitor {
 	return copy;
     }
 
-    /**
-     * Returns a compressed representation of low level bindings
-     * 
-     * @return
-     */
     @Override
     public final LowLevelBinding[] getCompressedBindings() {
 	return bindings;
     }
 
-    /**
-     * Returns a uncompressed representation of high-level bindings.
-     * 
-     * @return
-     */
     @Override
     public final prm4j.api.Binding[] getUncompressedBindings() {
 	if (metaNode == null) {
