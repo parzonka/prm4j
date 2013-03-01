@@ -28,7 +28,7 @@ public interface Monitor {
      * 
      * @return
      */
-    public prm4j.api.Binding[] getBindings();
+    public prm4j.api.Binding[] getUncompressedBindings();
 
     /**
      * Ends the life-span of this monitor. A terminated monitor can be removed from all data structures it is referenced

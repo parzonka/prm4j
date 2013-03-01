@@ -90,7 +90,7 @@ public class AwareBaseMonitor extends StatefulMonitor {
 
     @Override
     public String toString() {
-	return Util.bindingsToString(getBindings());
+	return Util.bindingsToString(getUncompressedBindings());
     }
 
 }

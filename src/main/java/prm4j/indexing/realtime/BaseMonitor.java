@@ -98,7 +98,7 @@ public abstract class BaseMonitor implements Monitor {
      * @return
      */
     @Override
-    public final prm4j.api.Binding[] getBindings() {
+    public final prm4j.api.Binding[] getUncompressedBindings() {
 	if (metaNode == null) {
 	    // upcast
 	    return bindings;

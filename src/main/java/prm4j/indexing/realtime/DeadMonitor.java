@@ -52,7 +52,7 @@ public class DeadMonitor implements Monitor {
     }
 
     @Override
-    public Binding[] getBindings() {
+    public Binding[] getUncompressedBindings() {
 	return null;
     }
 
