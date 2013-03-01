@@ -10,7 +10,7 @@
  */
 package prm4j.api;
 
-import prm4j.indexing.Monitor;
+import prm4j.indexing.monitor.Monitor;
 
 public abstract class Condition {
 
@@ -37,7 +37,7 @@ public abstract class Condition {
     }
 
     public <T> T getParameterValue(Parameter<T> parameter) {
-	return baseMonitor.getMetaNode().getParameterValue(parameter, baseMonitor.getCompressedBindings());
+	return baseMonitor.getParameterNode().getParameterValue(parameter, baseMonitor.getCompressedBindings());
     }
 
     public abstract boolean eval();

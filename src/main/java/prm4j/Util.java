@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import prm4j.api.Parameter;
-import prm4j.indexing.realtime.Binding;
+import prm4j.indexing.binding.Binding;
 
 public class Util {
 

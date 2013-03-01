@@ -12,7 +12,7 @@ package prm4j.spec;
 
 import java.util.Set;
 
-import prm4j.indexing.BaseMonitorState;
+import prm4j.indexing.monitor.BaseMonitorState;
 
 /**
  * Represents a specification of a property with finite number of states.

@@ -17,7 +17,11 @@ import java.util.Deque;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import prm4j.indexing.staticdata.MetaNode;
+import prm4j.indexing.binding.Binding;
+import prm4j.indexing.logic.ParameterNode;
+import prm4j.indexing.node.DefaultNodeStore;
+import prm4j.indexing.node.Node;
+import prm4j.indexing.node.NodeManager;
 
 /**
  * {@link DefaultNodeStore} which is aware of all nodes it produces and retrieves.
@@ -27,8 +31,8 @@ public class AwareDefaultNodeStore extends DefaultNodeStore {
     private final Deque<WeakReference<Node>> retrievedNodes;
     private final Set<Node> createdNodes; // weak set
 
-    public AwareDefaultNodeStore(MetaNode metaTree, NodeManager nodeManager) {
-	super(metaTree, nodeManager);
+    public AwareDefaultNodeStore(ParameterNode parameterTree, NodeManager nodeManager) {
+	super(parameterTree, nodeManager);
 	retrievedNodes = new ArrayDeque<WeakReference<Node>>();
 	createdNodes = Collections.newSetFromMap(new WeakHashMap<Node, Boolean>());
     }

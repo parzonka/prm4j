@@ -14,7 +14,7 @@ import prm4j.api.Alphabet;
 import prm4j.api.BaseEvent;
 import prm4j.api.MatchHandler;
 import prm4j.api.Symbol;
-import prm4j.indexing.BaseMonitorState;
+import prm4j.indexing.monitor.BaseMonitorState;
 
 public class FSMState extends BaseMonitorState {
 

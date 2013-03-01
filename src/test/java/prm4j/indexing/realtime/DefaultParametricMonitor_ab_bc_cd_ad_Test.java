@@ -18,7 +18,8 @@ import org.junit.Test;
 
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.staticdata.ModelVerifier;
+import prm4j.indexing.binding.Binding;
+import prm4j.indexing.logic.ModelVerifier;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor_ab_bc_cd_ad_Test extends AbstractDefaultParametricMonitorTest {
@@ -53,7 +54,7 @@ public class DefaultParametricMonitor_ab_bc_cd_ad_Test extends AbstractDefaultPa
     @Test
     @SuppressWarnings("unchecked")
     public void model() throws Exception {
-	ModelVerifier m = new ModelVerifier(converter);
+	ModelVerifier m = new ModelVerifier(processor);
 
 	// event_ab
 	m.findMaxOverParameterSets(fsm.event_ab, list());

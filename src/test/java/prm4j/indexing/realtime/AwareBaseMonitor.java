@@ -18,8 +18,9 @@ import java.util.List;
 import prm4j.Util;
 import prm4j.api.BaseEvent;
 import prm4j.api.Event;
-import prm4j.indexing.Monitor;
-import prm4j.indexing.BaseMonitorState;
+import prm4j.indexing.monitor.BaseMonitorState;
+import prm4j.indexing.monitor.Monitor;
+import prm4j.indexing.monitor.StatefulMonitor;
 
 /**
  * {@link Monitor} which is aware of all bindings of the trace it processed, and of all monitors which got updated

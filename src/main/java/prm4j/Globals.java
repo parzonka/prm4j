@@ -10,7 +10,7 @@
  */
 package prm4j;
 
-import prm4j.indexing.realtime.Binding;
+import prm4j.indexing.binding.Binding;
 
 /**
  * Encapsulates configuration via Java System Properties.

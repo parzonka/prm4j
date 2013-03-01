@@ -26,14 +26,23 @@ import org.junit.Test;
 import prm4j.AbstractTest;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.Monitor;
-import prm4j.indexing.staticdata.StaticDataConverter;
+import prm4j.indexing.DefaultParametricMonitor;
+import prm4j.indexing.binding.ArrayBasedBinding;
+import prm4j.indexing.binding.ArrayBasedBindingFactory;
+import prm4j.indexing.binding.Binding;
+import prm4j.indexing.binding.DefaultBindingStore;
+import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.monitor.Monitor;
+import prm4j.indexing.monitor.StatefulMonitor;
+import prm4j.indexing.node.Node;
+import prm4j.indexing.node.NodeManager;
+import prm4j.indexing.node.NodeRef;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends AbstractTest {
 
-    protected StaticDataConverter converter;
+    protected ParametricPropertyProcessor processor;
     protected DefaultBindingStore bindingStore;
     protected AwareDefaultNodeStore nodeStore;
     protected Monitor prototypeMonitor;
@@ -42,14 +51,14 @@ public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends Abst
 
     public void createDefaultParametricMonitorWithAwareComponents(FSM fsm, int cleaningInterval) {
 	FiniteSpec finiteSpec = new FSMSpec(fsm);
-	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
+	processor = new ParametricPropertyProcessor(new FiniteParametricProperty(finiteSpec));
 	bindingStore = new DefaultBindingStore(new ArrayBasedBindingFactory(), finiteSpec.getFullParameterSet(),
 		cleaningInterval);
 	prototypeMonitor = new StatefulMonitor(finiteSpec.getInitialState());
 	nodeManager = new NodeManager();
-	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
-	converter.getMetaTree().setNodeManagerToTree(nodeManager);
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(),
+	nodeStore = new AwareDefaultNodeStore(processor.getParameterTree(), nodeManager);
+	processor.getParameterTree().setNodeManagerToTree(nodeManager);
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, processor.getEventContext(),
 		nodeManager, true);
     }
 
@@ -191,7 +200,7 @@ public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends Abst
 	fakeBindings[0] = new ArrayBasedBinding(fakeObject, 42, null, 1);
 	nodeRef.monitor = prototypeMonitor.copy(fakeBindings, 1L);
 	// we also need a correct metanode, so that the accepting-state-test is performed correctly
-	nodeRef.monitor.setMetaNode(nodeStore.getRootNode().getMetaNode().getMetaNode(fsm.p1));
+	nodeRef.monitor.setParameterNode(nodeStore.getRootNode().getParameterNode().getParameterNode(fsm.p1));
 
 	// verify
 	runGarbageCollectorAFewTimes();

@@ -18,7 +18,13 @@ import org.junit.Test;
 
 import prm4j.AbstractTest;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.staticdata.StaticDataConverter;
+import prm4j.indexing.binding.ArrayBasedBinding;
+import prm4j.indexing.binding.Binding;
+import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.node.DefaultNodeStore;
+import prm4j.indexing.node.Node;
+import prm4j.indexing.node.NodeManager;
+import prm4j.indexing.node.NullNode;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
 
@@ -26,7 +32,7 @@ public class DefaultNodeStoreTest extends AbstractTest {
 
     FSM_a_a_a fsm;
     FiniteSpec finiteSpec;
-    StaticDataConverter converter;
+    ParametricPropertyProcessor processor;
     DefaultNodeStore nodeStore;
     Binding[] bindings;
 
@@ -34,8 +40,8 @@ public class DefaultNodeStoreTest extends AbstractTest {
     public void init() throws Exception {
 	fsm = new FSM_a_a_a();
 	finiteSpec = new FSMSpec(fsm.fsm);
-	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
-	nodeStore = new DefaultNodeStore(converter.getMetaTree(), new NodeManager());
+	processor = new ParametricPropertyProcessor(new FiniteParametricProperty(finiteSpec));
+	nodeStore = new DefaultNodeStore(processor.getParameterTree(), new NodeManager());
 	bindings = new Binding[1];
 	bindings[0] = new ArrayBasedBinding("a", 42, null, 2);
     }

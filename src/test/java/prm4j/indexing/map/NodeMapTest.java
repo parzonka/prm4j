@@ -17,8 +17,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import prm4j.indexing.realtime.ArrayBasedBinding;
-import prm4j.indexing.realtime.Binding;
+import prm4j.indexing.binding.ArrayBasedBinding;
+import prm4j.indexing.binding.Binding;
 
 public class NodeMapTest {
 

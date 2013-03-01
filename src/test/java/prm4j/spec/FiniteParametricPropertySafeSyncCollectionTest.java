@@ -24,8 +24,8 @@ import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.staticdata.MetaNode;
-import prm4j.indexing.staticdata.StaticDataConverter;
+import prm4j.indexing.logic.ParameterNode;
+import prm4j.indexing.logic.ParametricPropertyProcessor;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
@@ -95,11 +95,11 @@ public class FiniteParametricPropertySafeSyncCollectionTest extends AbstractTest
 
     @Test
     public void getAliveParameterMasks() throws Exception {
-	StaticDataConverter sdc = new StaticDataConverter(fpp);
+	ParametricPropertyProcessor sdc = new ParametricPropertyProcessor(fpp);
 
-	MetaNode c = sdc.getMetaTree().getMetaNode(fsm.c);
-	MetaNode i = sdc.getMetaTree().getMetaNode(fsm.i);
-	MetaNode ci = sdc.getMetaTree().getMetaNode(fsm.c, fsm.i);
+	ParameterNode c = sdc.getParameterTree().getParameterNode(fsm.c);
+	ParameterNode i = sdc.getParameterTree().getParameterNode(fsm.i);
+	ParameterNode ci = sdc.getParameterTree().getParameterNode(fsm.c, fsm.i);
 
 	// verify
 	assertEquals(1, c.getAliveParameterMasks().length);

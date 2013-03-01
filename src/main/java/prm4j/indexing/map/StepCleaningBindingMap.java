@@ -12,8 +12,8 @@ package prm4j.indexing.map;
 
 import java.lang.ref.ReferenceQueue;
 
-import prm4j.indexing.realtime.BindingStore;
-import prm4j.indexing.realtime.Binding;
+import prm4j.indexing.binding.Binding;
+import prm4j.indexing.binding.BindingStore;
 
 /**
  * BindingMap to be used with a {@link BindingStore} which does not depend on garbage collection by

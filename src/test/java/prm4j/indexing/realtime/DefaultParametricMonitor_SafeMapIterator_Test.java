@@ -20,7 +20,10 @@ import org.junit.Test;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.staticdata.StaticDataConverter;
+import prm4j.indexing.DefaultParametricMonitor;
+import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.monitor.BaseMonitor;
+import prm4j.indexing.node.NodeManager;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
 
@@ -53,12 +56,12 @@ public class DefaultParametricMonitor_SafeMapIterator_Test extends AbstractDefau
 
     @Override
     public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
-	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
+	processor = new ParametricPropertyProcessor(new FiniteParametricProperty(finiteSpec));
 	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
 	prototypeMonitor = new AwareBaseMonitor(finiteSpec.getInitialState());
 	nodeManager = new NodeManager();
-	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(),
+	nodeStore = new AwareDefaultNodeStore(processor.getParameterTree(), nodeManager);
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, processor.getEventContext(),
 		nodeManager, true);
     }
 

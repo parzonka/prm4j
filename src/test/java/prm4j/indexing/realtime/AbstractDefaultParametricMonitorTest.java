@@ -24,8 +24,17 @@ import org.junit.After;
 import prm4j.AbstractTest;
 import prm4j.api.ParametricMonitor;
 import prm4j.api.Symbol;
-import prm4j.indexing.Monitor;
-import prm4j.indexing.staticdata.StaticDataConverter;
+import prm4j.indexing.DefaultParametricMonitor;
+import prm4j.indexing.binding.Binding;
+import prm4j.indexing.binding.BindingStore;
+import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.monitor.BaseMonitor;
+import prm4j.indexing.monitor.DeadMonitor;
+import prm4j.indexing.monitor.Monitor;
+import prm4j.indexing.monitor.MonitorSet;
+import prm4j.indexing.node.Node;
+import prm4j.indexing.node.NodeManager;
+import prm4j.indexing.node.NullNode;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
 
@@ -33,7 +42,7 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 
     public final static Object _ = null;
     protected FiniteParametricProperty fpp;
-    protected StaticDataConverter converter;
+    protected ParametricPropertyProcessor processor;
     protected AwareDefaultBindingStore bindingStore;
     protected AwareDefaultNodeStore nodeStore;
     protected AwareBaseMonitor prototypeMonitor;
@@ -44,12 +53,12 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 
     public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
 	fpp = new FiniteParametricProperty(finiteSpec);
-	converter = new StaticDataConverter(fpp);
+	processor = new ParametricPropertyProcessor(fpp);
 	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
 	nodeManager = new NodeManager();
-	nodeStore = new AwareDefaultNodeStore(converter.getMetaTree(), nodeManager);
+	nodeStore = new AwareDefaultNodeStore(processor.getParameterTree(), nodeManager);
 	prototypeMonitor = new AwareBaseMonitor(finiteSpec.getInitialState());
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(),
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, processor.getEventContext(),
 		nodeManager, true);
     }
 
@@ -229,7 +238,7 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 
     @After
     public void cleanup() {
-	converter = null;
+	processor = null;
 	bindingStore = null;
 	nodeStore = null;
 	prototypeMonitor = null;

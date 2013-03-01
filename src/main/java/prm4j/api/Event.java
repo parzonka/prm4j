@@ -12,7 +12,7 @@ package prm4j.api;
 
 import java.util.Arrays;
 
-import prm4j.indexing.Monitor;
+import prm4j.indexing.monitor.Monitor;
 
 /**
  * An event contains a generic base event and a number of parameter values.

@@ -19,7 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.staticdata.ModelVerifier;
+import prm4j.indexing.logic.ModelVerifier;
+import prm4j.indexing.node.NullNode;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParametricMonitorTest {
@@ -39,7 +40,7 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     @Test
     @SuppressWarnings("unchecked")
     public void model() throws Exception {
-	ModelVerifier modelVerifier = new ModelVerifier(converter);
+	ModelVerifier modelVerifier = new ModelVerifier(processor);
 	modelVerifier.joinOverParameterSets(fsm.e2, list(asSet(fsm.a, fsm.b)));
     }
 
@@ -123,14 +124,14 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     }
 
     @Test
-    public void firstEvent_ab_nodesHaveDifferentMetaNodes() throws Exception {
+    public void firstEvent_ab_nodesHaveDifferentParameterNodes() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a1, b1));
 
 	// verify
-	assertNotSame(getNode(a1, null, null).getMetaNode(), getNode(null, b1, null).getMetaNode());
-	assertNotSame(getNode(a1, b1, null).getMetaNode(), getNode(null, b1, null).getMetaNode());
-	assertNotSame(getNode(a1, b1, null).getMetaNode(), getNode(a1, null, null).getMetaNode());
+	assertNotSame(getNode(a1, null, null).getParameterNode(), getNode(null, b1, null).getParameterNode());
+	assertNotSame(getNode(a1, b1, null).getParameterNode(), getNode(null, b1, null).getParameterNode());
+	assertNotSame(getNode(a1, b1, null).getParameterNode(), getNode(a1, null, null).getParameterNode());
     }
 
     @Test

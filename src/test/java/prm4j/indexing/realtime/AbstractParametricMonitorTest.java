@@ -20,8 +20,19 @@ import org.junit.After;
 import prm4j.AbstractTest;
 import prm4j.api.ParametricMonitor;
 import prm4j.api.Symbol;
-import prm4j.indexing.Monitor;
-import prm4j.indexing.staticdata.StaticDataConverter;
+import prm4j.indexing.DefaultParametricMonitor;
+import prm4j.indexing.binding.ArrayBasedBindingFactory;
+import prm4j.indexing.binding.DefaultBindingStore;
+import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.monitor.BaseMonitor;
+import prm4j.indexing.monitor.DeadMonitor;
+import prm4j.indexing.monitor.Monitor;
+import prm4j.indexing.monitor.MonitorSet;
+import prm4j.indexing.monitor.StatefulMonitor;
+import prm4j.indexing.node.DefaultNodeStore;
+import prm4j.indexing.node.Node;
+import prm4j.indexing.node.NodeManager;
+import prm4j.indexing.node.NodeStore;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
 
@@ -29,7 +40,7 @@ public class AbstractParametricMonitorTest extends AbstractTest {
 
     public final static BoundObject _ = null;
     protected FiniteParametricProperty fpp;
-    protected StaticDataConverter converter;
+    protected ParametricPropertyProcessor processor;
     protected DefaultBindingStore bindingStore;
     protected NodeStore nodeStore;
     protected Monitor prototypeMonitor;
@@ -38,12 +49,12 @@ public class AbstractParametricMonitorTest extends AbstractTest {
 
     public void createDefaultParametricMonitor(FiniteSpec finiteSpec) {
 	fpp = new FiniteParametricProperty(finiteSpec);
-	converter = new StaticDataConverter(fpp);
+	processor = new ParametricPropertyProcessor(fpp);
 	bindingStore = new DefaultBindingStore(new ArrayBasedBindingFactory(), finiteSpec.getFullParameterSet(), 1);
 	nodeManager = new NodeManager();
-	nodeStore = new DefaultNodeStore(converter.getMetaTree(), nodeManager);
+	nodeStore = new DefaultNodeStore(processor.getParameterTree(), nodeManager);
 	prototypeMonitor = new StatefulMonitor(fpp.getInitialState());
-	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, converter.getEventContext(),
+	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, processor.getEventContext(),
 		nodeManager, true);
     }
 
@@ -108,7 +119,7 @@ public class AbstractParametricMonitorTest extends AbstractTest {
 
     @After
     public void cleanup() {
-	converter = null;
+	processor = null;
 	bindingStore = null;
 	nodeStore = null;
 	prototypeMonitor = null;

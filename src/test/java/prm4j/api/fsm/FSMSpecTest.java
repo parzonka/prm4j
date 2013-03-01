@@ -19,9 +19,9 @@ import org.junit.Test;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.Monitor;
-import prm4j.indexing.BaseMonitorState;
-import prm4j.indexing.realtime.StatefulMonitor;
+import prm4j.indexing.monitor.BaseMonitorState;
+import prm4j.indexing.monitor.Monitor;
+import prm4j.indexing.monitor.StatefulMonitor;
 import prm4j.util.FSMDefinitions.FSM_SafeMapIterator;
 
 public class FSMSpecTest {

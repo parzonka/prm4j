@@ -21,6 +21,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.monitor.BaseMonitor;
+import prm4j.indexing.monitor.MonitorSet;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParametricMonitorTest {
@@ -122,12 +124,12 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
     }
 
     @Test
-    public void firstEvent_a_metaNodeHasCorrectParameterSet() throws Exception {
+    public void firstEvent_a_parameterNodeHasCorrectParameterSet() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertEquals(asSet(fsm.p1), popNextRetrievedNode().getMetaNode().getNodeParameterSet());
+	assertEquals(asSet(fsm.p1), popNextRetrievedNode().getParameterNode().getNodeParameterSet());
     }
 
     // firstEvent_ab //////////////////////////////////////////////////////////////////

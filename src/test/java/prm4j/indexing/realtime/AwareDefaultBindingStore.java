@@ -16,6 +16,9 @@ import java.util.Deque;
 import java.util.Set;
 
 import prm4j.api.Parameter;
+import prm4j.indexing.binding.ArrayBasedBindingFactory;
+import prm4j.indexing.binding.Binding;
+import prm4j.indexing.binding.DefaultBindingStore;
 
 /**
  * {@link DefaultBindingStore} which is aware of all bindings it produces and retrieves.

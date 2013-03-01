@@ -11,18 +11,18 @@
 package prm4j.api;
 
 import prm4j.Globals;
-import prm4j.indexing.Monitor;
-import prm4j.indexing.realtime.BaseMonitor;
-import prm4j.indexing.realtime.BindingFactory;
-import prm4j.indexing.realtime.BindingStore;
-import prm4j.indexing.realtime.ArrayBasedBindingFactory;
-import prm4j.indexing.realtime.DefaultBindingStore;
-import prm4j.indexing.realtime.DefaultNodeStore;
-import prm4j.indexing.realtime.DefaultParametricMonitor;
-import prm4j.indexing.realtime.LinkedListBindingFactory;
-import prm4j.indexing.realtime.NodeManager;
-import prm4j.indexing.realtime.NodeStore;
-import prm4j.indexing.staticdata.StaticDataConverter;
+import prm4j.indexing.DefaultParametricMonitor;
+import prm4j.indexing.binding.ArrayBasedBindingFactory;
+import prm4j.indexing.binding.BindingFactory;
+import prm4j.indexing.binding.BindingStore;
+import prm4j.indexing.binding.DefaultBindingStore;
+import prm4j.indexing.binding.LinkedListBindingFactory;
+import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.monitor.BaseMonitor;
+import prm4j.indexing.monitor.Monitor;
+import prm4j.indexing.node.DefaultNodeStore;
+import prm4j.indexing.node.NodeManager;
+import prm4j.indexing.node.NodeStore;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
 import prm4j.spec.ParametricProperty;
@@ -34,18 +34,18 @@ public class ParametricMonitorFactory {
 	BaseMonitor.reset(); // Diagnostic
 
 	final ParametricProperty parametricProperty = new FiniteParametricProperty(finiteSpec);
-	final StaticDataConverter converter = new StaticDataConverter(parametricProperty);
+	final ParametricPropertyProcessor processor = new ParametricPropertyProcessor(parametricProperty);
 
 	// build object graph
 	final BindingFactory bindingFactory = Globals.LINKEDLIST_STORED_BACKLINKS ? new LinkedListBindingFactory()
 		: new ArrayBasedBindingFactory();
 	final BindingStore bindingStore = new DefaultBindingStore(bindingFactory, finiteSpec.getFullParameterSet());
 	final NodeManager nodeManager = new NodeManager();
-	final NodeStore nodeStore = new DefaultNodeStore(converter.getMetaTree(), nodeManager);
+	final NodeStore nodeStore = new DefaultNodeStore(processor.getParameterTree(), nodeManager);
 	final Monitor prototypeMonitor = finiteSpec.getInitialMonitor();
 
 	final ParametricMonitor parametricMonitor = new DefaultParametricMonitor(bindingStore, nodeStore,
-		prototypeMonitor, converter.getEventContext(), nodeManager, false);
+		prototypeMonitor, processor.getEventContext(), nodeManager, false);
 
 	return parametricMonitor;
     }

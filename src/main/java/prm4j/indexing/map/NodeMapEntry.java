@@ -10,7 +10,7 @@
  */
 package prm4j.indexing.map;
 
-import prm4j.indexing.realtime.Binding;
+import prm4j.indexing.binding.Binding;
 
 public interface NodeMapEntry<E extends NodeMapEntry<E>>{
 

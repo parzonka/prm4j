@@ -29,6 +29,11 @@ import org.junit.Test;
 import prm4j.AbstractTest;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.binding.ArrayBasedBindingFactory;
+import prm4j.indexing.binding.Binding;
+import prm4j.indexing.binding.DefaultBindingStore;
+import prm4j.indexing.node.Node;
+import prm4j.indexing.node.NodeRef;
 import prm4j.spec.FiniteSpec;
 
 public class DefaultBindingStoreTest extends AbstractTest {

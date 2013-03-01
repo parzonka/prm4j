@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import prm4j.api.Event;
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.monitor.BaseMonitor;
 
 public class DefaultParametricMonitor_StressTest extends AbstractParametricMonitorTest {
 

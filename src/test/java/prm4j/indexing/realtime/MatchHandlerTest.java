@@ -18,6 +18,7 @@ import prm4j.api.Parameter;
 
 public class MatchHandlerTest {
 
+    @SuppressWarnings("rawtypes")
     class CustomMatchHandler extends MatchHandler2<Collection, Iterator> {
 
 	public CustomMatchHandler(Parameter<Collection> param1, Parameter<Iterator> param2) {

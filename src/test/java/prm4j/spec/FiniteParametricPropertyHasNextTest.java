@@ -21,8 +21,8 @@ import org.junit.Test;
 import prm4j.AbstractTest;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.realtime.NodeManager;
-import prm4j.indexing.staticdata.StaticDataConverter;
+import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.node.NodeManager;
 
 public class FiniteParametricPropertyHasNextTest extends AbstractTest {
 
@@ -37,8 +37,8 @@ public class FiniteParametricPropertyHasNextTest extends AbstractTest {
 
     @Test
     public void getCreationEvents() throws Exception {
-	StaticDataConverter sdc = new StaticDataConverter(fpp);
-	sdc.getMetaTree().setNodeManagerToTree(new NodeManager());
+	ParametricPropertyProcessor sdc = new ParametricPropertyProcessor(fpp);
+	sdc.getParameterTree().setNodeManagerToTree(new NodeManager());
     }
 
     @Test
