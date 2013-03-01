@@ -17,12 +17,11 @@ import java.util.List;
 import java.util.Set;
 
 import prm4j.Util;
-import prm4j.api.Binding;
 import prm4j.api.Parameter;
 import prm4j.indexing.realtime.DefaultNodeFactory;
 import prm4j.indexing.realtime.LeafNodeFactory;
 import prm4j.indexing.realtime.LeafNodeWithMonitorSetsFactory;
-import prm4j.indexing.realtime.LowLevelBinding;
+import prm4j.indexing.realtime.Binding;
 import prm4j.indexing.realtime.Node;
 import prm4j.indexing.realtime.NodeManager;
 
@@ -122,7 +121,7 @@ public class MetaNode {
      * @param binding
      * @return the node
      */
-    public Node createNode(LowLevelBinding binding) {
+    public Node createNode(Binding binding) {
 	return nodeFactory.createNode(this, lastParameterIndex, binding);
     }
 
@@ -139,7 +138,7 @@ public class MetaNode {
      *            the binding which will augment the binding set associated with the node
      * @return the node
      */
-    public Node createNode(int parameterIndex, LowLevelBinding binding) {
+    public Node createNode(int parameterIndex, Binding binding) {
 	return successors[parameterIndex].createNode(binding);
     }
 
@@ -442,7 +441,7 @@ public class MetaNode {
      *            A number of these bindings is checked for aliveness.
      * @return <code>true</code> if an accepting state is reachable
      */
-    public boolean isAcceptingStateReachable(LowLevelBinding[] compressedBindings) {
+    public boolean isAcceptingStateReachable(Binding[] compressedBindings) {
 	boolean[] parameterMask;
 	outer: for (int i = 0; i < aliveParameterMasks.length; i++) {
 	    parameterMask = aliveParameterMasks[i];
@@ -464,7 +463,7 @@ public class MetaNode {
      * @return the parameter value
      */
     @SuppressWarnings("unchecked")
-    public <T> T getParameterValue(Parameter<T> parameter, LowLevelBinding[] compressedBindings) {
+    public <T> T getParameterValue(Parameter<T> parameter, Binding[] compressedBindings) {
 	return (T) compressedBindings[compressedIndex[parameter.getIndex()]].get();
     }
 

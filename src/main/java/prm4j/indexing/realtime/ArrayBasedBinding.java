@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 public class ArrayBasedBinding extends AbstractLowLevelBinding {
 
-    private Holder<LowLevelBinding>[] bindingHolders;
+    private Holder<Binding>[] bindingHolders;
     private int bindingHoldersSize;
 
     public ArrayBasedBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q, int initialHoldersSize) {
@@ -26,7 +26,7 @@ public class ArrayBasedBinding extends AbstractLowLevelBinding {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void registerHolder(Holder<LowLevelBinding> bindingHolder) {
+    public void registerHolder(Holder<Binding> bindingHolder) {
 	// create bindingHoldersSize lazily
 	if (bindingHolders == null) {
 	    // we had hijacked the bindingHoldersSize field to store the initial bindingHolders capacity

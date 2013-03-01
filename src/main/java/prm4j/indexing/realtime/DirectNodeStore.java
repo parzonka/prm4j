@@ -22,7 +22,7 @@ public class DirectNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getOrCreateNode(LowLevelBinding[] bindings) {
+    public Node getOrCreateNode(Binding[] bindings) {
 	if (bindings.length > 0) {
 	    Node node = getNode(bindings[0], 0);
 	    // we iterate over the rest { node1 , ..., nodeN }, traversing the tree
@@ -36,7 +36,7 @@ public class DirectNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getOrCreateNode(LowLevelBinding[] bindings, int[] parameterMask) {
+    public Node getOrCreateNode(Binding[] bindings, int[] parameterMask) {
 	if (parameterMask.length > 0) {
 	    Node node = getNode(bindings[parameterMask[0]], parameterMask[0]);
 	    // we iterate over the rest { node1 , ..., nodeN }, traversing the tree
@@ -51,7 +51,7 @@ public class DirectNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getNode(LowLevelBinding[] bindings) {
+    public Node getNode(Binding[] bindings) {
 	if (bindings.length > 0) {
 	    Node node = getNode(bindings[0], 0);
 	    // we iterate over the rest { node1 , ..., nodeN }, traversing the tree
@@ -68,7 +68,7 @@ public class DirectNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getNode(LowLevelBinding[] bindings, int[] parameterMask) {
+    public Node getNode(Binding[] bindings, int[] parameterMask) {
 	if (parameterMask.length > 0) {
 	    Node node = getNode(bindings[parameterMask[0]], parameterMask[0]);
 	    // we iterate over the rest { node1 , ..., nodeN }, traversing the tree
@@ -87,7 +87,7 @@ public class DirectNodeStore implements NodeStore {
 	return NullNode.instance;
     }
 
-    private Node getNode(LowLevelBinding binding, int parameterIndex) {
+    private Node getNode(Binding binding, int parameterIndex) {
 	Node node = binding.getNode();
 	if (node == null) {
 	    node = metaTree.getMetaNode(parameterIndex).createNode(binding);

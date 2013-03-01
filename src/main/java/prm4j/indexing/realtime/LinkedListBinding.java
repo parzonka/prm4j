@@ -13,7 +13,7 @@ package prm4j.indexing.realtime;
 import java.lang.ref.ReferenceQueue;
 
 /**
- * Implementation of LowLevelBinding using a linked list as a back reference to its associated hash maps.
+ * Implementation of Binding using a linked list as a back reference to its associated hash maps.
  */
 public class LinkedListBinding extends AbstractLowLevelBinding {
 
@@ -24,7 +24,7 @@ public class LinkedListBinding extends AbstractLowLevelBinding {
     }
 
     @Override
-    public void registerHolder(Holder<LowLevelBinding> bindingHolder) {
+    public void registerHolder(Holder<Binding> bindingHolder) {
 	// prepend to the linked list
 	link = new Link(bindingHolder, link);
     }
@@ -40,9 +40,9 @@ public class LinkedListBinding extends AbstractLowLevelBinding {
     class Link {
 
 	final Link next;
-	final Holder<LowLevelBinding> bindingHolder;
+	final Holder<Binding> bindingHolder;
 
-	Link(Holder<LowLevelBinding> bindingHolder, Link next) {
+	Link(Holder<Binding> bindingHolder, Link next) {
 	    this.bindingHolder = bindingHolder;
 	    this.next = next;
 	}

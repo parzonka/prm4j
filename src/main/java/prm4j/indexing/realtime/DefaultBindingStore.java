@@ -23,13 +23,13 @@ public class DefaultBindingStore implements BindingStore {
     private final Cleaner cleaner = new Cleaner();
     private final int cleaningInterval;
     private final int fullParameterCount;
-    private final LowLevelBinding[] bindings;
+    private final Binding[] bindings;
     private final BindingFactory bindingFactory;
 
     private long createdBindingsCount;
     private long collectedBindingsCount;
 
-    private MinimalMap<Object, LowLevelBinding> store;
+    private MinimalMap<Object, Binding> store;
 
     public DefaultBindingStore(BindingFactory bindingFactory, Set<Parameter<?>> fullParameterSet) {
 	this(bindingFactory, fullParameterSet, Globals.BINDING_CLEANING_INTERVAL);
@@ -44,8 +44,8 @@ public class DefaultBindingStore implements BindingStore {
 	bindings = createInitialBindings();
     }
 
-    private LowLevelBinding[] createInitialBindings() {
-	LowLevelBinding[] result = new LowLevelBinding[fullParameterCount];
+    private Binding[] createInitialBindings() {
+	Binding[] result = new Binding[fullParameterCount];
 	for (int i = 0; i < result.length; i++) {
 	    // fill the bindings-array with pseudo-bindings
 	    result[i] = new ArrayBasedBinding(new Object(), 0, null, 0);
@@ -54,7 +54,7 @@ public class DefaultBindingStore implements BindingStore {
     }
 
     @Override
-    public LowLevelBinding[] getBindings(Object[] boundObjects) {
+    public Binding[] getBindings(Object[] boundObjects) {
 	assert boundObjects.length == fullParameterCount;
 	for (int i = 0; i < boundObjects.length; i++) {
 	    final Object boundObject = boundObjects[i];
@@ -68,17 +68,17 @@ public class DefaultBindingStore implements BindingStore {
     }
 
     @Override
-    public LowLevelBinding getBinding(Object boundObject) {
+    public Binding getBinding(Object boundObject) {
 	return store.get(boundObject);
     }
 
     @Override
-    public LowLevelBinding getOrCreateBinding(Object boundObject) {
+    public Binding getOrCreateBinding(Object boundObject) {
 	return store.getOrCreate(boundObject);
     }
 
     @Override
-    public boolean removeBinding(LowLevelBinding binding) {
+    public boolean removeBinding(Binding binding) {
 	return store.removeEntry(binding);
     }
 
@@ -98,15 +98,15 @@ public class DefaultBindingStore implements BindingStore {
     /**
      * Stores bindings associated to a single parameter
      */
-    class DefaultStore extends MinimalMap<Object, LowLevelBinding> {
+    class DefaultStore extends MinimalMap<Object, Binding> {
 
 	@Override
-	protected LowLevelBinding[] createTable(int size) {
+	protected Binding[] createTable(int size) {
 	    return bindingFactory.createTable(size);
 	}
 
 	@Override
-	protected LowLevelBinding createEntry(Object key, int hashCode) {
+	protected Binding createEntry(Object key, int hashCode) {
 	    createdBindingsCount++;
 	    return bindingFactory.createBinding(key, hashCode, referenceQueue, fullParameterCount);
 	}
@@ -124,12 +124,12 @@ public class DefaultBindingStore implements BindingStore {
 	}
 
 	private void removeExpiredBindings() {
-	    LowLevelBinding binding = (LowLevelBinding) referenceQueue.poll();
+	    Binding binding = (Binding) referenceQueue.poll();
 	    while (binding != null) {
 		removeBinding(binding);
 		binding.release();
 		collectedBindingsCount++;
-		binding = (LowLevelBinding) referenceQueue.poll();
+		binding = (Binding) referenceQueue.poll();
 	    }
 	}
     }

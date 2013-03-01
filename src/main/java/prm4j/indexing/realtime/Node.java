@@ -27,11 +27,11 @@ public interface Node extends NodeMapEntry<Node> {
 
     public void setMonitor(Monitor monitor);
 
-    public Node getOrCreateNode(int parameterIndex, LowLevelBinding binding);
+    public Node getOrCreateNode(int parameterIndex, Binding binding);
 
-    public Node getNode(int parameterIndex, LowLevelBinding binding);
+    public Node getNode(int parameterIndex, Binding binding);
 
-    public void remove(LowLevelBinding binding);
+    public void remove(Binding binding);
 
     /**
      * Returns a monitor set which represents a (sometimes not real) subset of instances which are more informative than

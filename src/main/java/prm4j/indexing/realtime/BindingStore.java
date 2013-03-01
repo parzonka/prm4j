@@ -16,13 +16,13 @@ package prm4j.indexing.realtime;
 public interface BindingStore {
 
     /**
-     * Returns an uncompressed array of {@link LowLevelBinding}s modeling an instance for the given bound objects.
+     * Returns an uncompressed array of {@link Binding}s modeling an instance for the given bound objects.
      *
      * @param boundObjects
      *            (uncompressed)
      * @return bindings (uncompressed)
      */
-    public LowLevelBinding[] getBindings(Object[] boundObjects);
+    public Binding[] getBindings(Object[] boundObjects);
 
     /**
      * Retrieves the binding for a given bound object, or returns <code>null</code>, if the binding does not exist.
@@ -30,7 +30,7 @@ public interface BindingStore {
      * @param boundObject
      * @return the binding
      */
-    public LowLevelBinding getBinding(Object boundObject);
+    public Binding getBinding(Object boundObject);
 
     /**
      * Creates the binding for a given bound object, or retrieves it if it already exists.
@@ -38,7 +38,7 @@ public interface BindingStore {
      * @param parameter
      * @return the binding
      */
-    public LowLevelBinding getOrCreateBinding(Object boundObject);
+    public Binding getOrCreateBinding(Object boundObject);
 
     /**
      * Removes a binding from the binding store.
@@ -46,7 +46,7 @@ public interface BindingStore {
      * @param binding
      * @return <code>true</code> if the binding could found and removed successfully
      */
-    public boolean removeBinding(LowLevelBinding binding);
+    public boolean removeBinding(Binding binding);
 
     public int size();
 

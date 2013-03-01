@@ -18,15 +18,15 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import prm4j.indexing.realtime.ArrayBasedBinding;
-import prm4j.indexing.realtime.LowLevelBinding;
+import prm4j.indexing.realtime.Binding;
 
 public class NodeMapTest {
 
-    private final static LowLevelBinding b0 = new ArrayBasedBinding(null, 0, null, 2);
-    private final static LowLevelBinding b1 = new ArrayBasedBinding(null, 1, null, 2);
-    private final static LowLevelBinding b2 = new ArrayBasedBinding(null, 2, null, 2);
-    private final static LowLevelBinding b3 = new ArrayBasedBinding(null, 3, null, 2);
-    private final static LowLevelBinding b4 = new ArrayBasedBinding(null, 4, null, 2);
+    private final static Binding b0 = new ArrayBasedBinding(null, 0, null, 2);
+    private final static Binding b1 = new ArrayBasedBinding(null, 1, null, 2);
+    private final static Binding b2 = new ArrayBasedBinding(null, 2, null, 2);
+    private final static Binding b3 = new ArrayBasedBinding(null, 3, null, 2);
+    private final static Binding b4 = new ArrayBasedBinding(null, 4, null, 2);
 
     @Test
     public void size_sizeGrowsWithAddedEntries() throws Exception {
@@ -187,7 +187,7 @@ public class NodeMapTest {
 	}
 
 	@Override
-	protected MockEntry createEntry(int parameterIndex, LowLevelBinding binding) {
+	protected MockEntry createEntry(int parameterIndex, Binding binding) {
 	    return new MockEntry(parameterIndex, binding);
 	}
 
@@ -195,17 +195,17 @@ public class NodeMapTest {
 
     static class MockEntry implements NodeMapEntry<MockEntry> {
 
-	private final LowLevelBinding binding;
+	private final Binding binding;
 	private final int parameterIndex;
 	private MockEntry next;
 
-	public MockEntry(int parameterIndex, LowLevelBinding binding) {
+	public MockEntry(int parameterIndex, Binding binding) {
 	    this.parameterIndex = parameterIndex;
 	    this.binding = binding;
 	}
 
 	@Override
-	public LowLevelBinding getKey() {
+	public Binding getKey() {
 	    return binding;
 	}
 

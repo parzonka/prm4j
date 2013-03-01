@@ -22,8 +22,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import prm4j.api.Binding;
 import prm4j.api.Parameter;
+import prm4j.indexing.realtime.Binding;
 
 public class Util {
 

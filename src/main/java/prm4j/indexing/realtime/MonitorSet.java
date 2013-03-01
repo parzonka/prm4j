@@ -114,11 +114,11 @@ public class MonitorSet {
      * @param copyPattern
      *            used to copy a number of bindings from the compatible monitor
      */
-    public void join(NodeStore nodeStore, Event event, final LowLevelBinding[] joinableBindings,
+    public void join(NodeStore nodeStore, Event event, final Binding[] joinableBindings,
 	    long minMonitorTimestamp, long maxInstanceTimestamp, int[] copyPattern) {
 
 	// create initial copy of the joinable; will gets cloned again if this one is used in a monitor
-	LowLevelBinding[] joinable = joinableBindings.clone(); // 62
+	Binding[] joinable = joinableBindings.clone(); // 62
 
 	// post-loop invariant: all monitors up to monitorSet[deadPartitionStart] are not dead
 	int deadPartitionStart = 0;
@@ -138,7 +138,7 @@ public class MonitorSet {
 		deadPartitionStart++; // this monitor may be still alive, we just avoid joining with it
 		continue; // 65
 	    }
-	    final LowLevelBinding[] compatibleBindings = compatibleMonitor.getCompressedBindings();
+	    final Binding[] compatibleBindings = compatibleMonitor.getCompressedBindings();
 	    // test if lifetime of monitor is already over
 	    if (compatibleBindings == null) {
 		continue; // don't increment the deadPartitionStart => this monitor will be removed from the set
@@ -184,7 +184,7 @@ public class MonitorSet {
      * @param copyPattern
      *            encodes which binding from joiningBindings gets copied to which location in joinableBindings
      */
-    private static void createJoin(LowLevelBinding[] joinableBindings, LowLevelBinding[] joiningBindings,
+    private static void createJoin(Binding[] joinableBindings, Binding[] joiningBindings,
 	    int[] copyPattern) {
 	for (int j = 0; j < copyPattern.length; j += 2) {
 	    // copy from j to j+1

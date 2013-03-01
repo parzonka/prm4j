@@ -34,7 +34,7 @@ public class AwareDefaultNodeStore extends DefaultNodeStore {
     }
 
     @Override
-    public Node getOrCreateNode(LowLevelBinding[] bindings) {
+    public Node getOrCreateNode(Binding[] bindings) {
 	Node node = getRootNode();
 	for (int i = 0; i < bindings.length; i++) {
 	    node = node.getOrCreateNode(i, bindings[i]);
@@ -45,7 +45,7 @@ public class AwareDefaultNodeStore extends DefaultNodeStore {
     }
 
     @Override
-    public Node getOrCreateNode(LowLevelBinding[] bindings, int[] parameterMask) {
+    public Node getOrCreateNode(Binding[] bindings, int[] parameterMask) {
 	Node node = getRootNode();
 	for (int i = 0; i < parameterMask.length; i++) {
 	    node = node.getOrCreateNode(parameterMask[i], bindings[parameterMask[i]]);

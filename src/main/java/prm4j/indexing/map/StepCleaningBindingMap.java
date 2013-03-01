@@ -13,14 +13,14 @@ package prm4j.indexing.map;
 import java.lang.ref.ReferenceQueue;
 
 import prm4j.indexing.realtime.BindingStore;
-import prm4j.indexing.realtime.LowLevelBinding;
+import prm4j.indexing.realtime.Binding;
 
 /**
  * BindingMap to be used with a {@link BindingStore} which does not depend on garbage collection by
  * {@link ReferenceQueue}. Performs small cleaning steps on each operation performed on the map. Performs a complete
  * cleaning on each resize of the inner table.
  */
-public abstract class StepCleaningBindingMap extends MinimalMap<Object, LowLevelBinding> {
+public abstract class StepCleaningBindingMap extends MinimalMap<Object, Binding> {
 
     private int cleaningIndex = 0;
 
@@ -29,7 +29,7 @@ public abstract class StepCleaningBindingMap extends MinimalMap<Object, LowLevel
      * and
      */
     protected void clean() {
-	LowLevelBinding entry = null;
+	Binding entry = null;
 	while (entry == null) {
 	    if (++cleaningIndex >= table.length) {
 		cleaningIndex = 0;
@@ -37,9 +37,9 @@ public abstract class StepCleaningBindingMap extends MinimalMap<Object, LowLevel
 	    }
 	    entry = table[cleaningIndex];
 	}
-	LowLevelBinding lastEntry = null;
+	Binding lastEntry = null;
 	while (entry != null) {
-	    final LowLevelBinding nextEntry = entry.next();
+	    final Binding nextEntry = entry.next();
 	    if (entry.get() == null) {
 		if (lastEntry == null) {
 		    table[cleaningIndex] = nextEntry;
@@ -63,15 +63,15 @@ public abstract class StepCleaningBindingMap extends MinimalMap<Object, LowLevel
 
 	if (size >= threshold) {
 	    final int newCapacity = table.length * 2;
-	    final LowLevelBinding[] oldTable = table;
+	    final Binding[] oldTable = table;
 	    // transfer to new table
-	    final LowLevelBinding[] newTable = createTable(newCapacity);
+	    final Binding[] newTable = createTable(newCapacity);
 	    for (int i = 0; i < oldTable.length; i++) {
-		LowLevelBinding entry = oldTable[i];
+		Binding entry = oldTable[i];
 		if (entry != null) {
 		    oldTable[i] = null; // help gc
 		    do {
-			final LowLevelBinding nextEntry = entry.next();
+			final Binding nextEntry = entry.next();
 			// check for expired bindings
 			if (entry.get() != null) {
 			    final int newIndex = hashIndex(entry.hashCode(), newCapacity);
@@ -97,10 +97,10 @@ public abstract class StepCleaningBindingMap extends MinimalMap<Object, LowLevel
 	// remove expired bindings
 	if (size >= threshold) {
 	    for (int i = 0; i < table.length; i++) {
-		LowLevelBinding entry = table[i];
-		LowLevelBinding lastEntry = null;
+		Binding entry = table[i];
+		Binding lastEntry = null;
 		while (entry != null) {
-		    final LowLevelBinding nextEntry = entry.next();
+		    final Binding nextEntry = entry.next();
 		    if (entry.get() == null) {
 			if (lastEntry == null) {
 			    table[i] = nextEntry;
@@ -118,25 +118,25 @@ public abstract class StepCleaningBindingMap extends MinimalMap<Object, LowLevel
     }
 
     @Override
-    public LowLevelBinding getOrCreate(Object key) {
+    public Binding getOrCreate(Object key) {
 	clean();
 	return super.getOrCreate(key);
     }
 
     @Override
-    public LowLevelBinding getOrCreate(Object key, int hashCode) {
+    public Binding getOrCreate(Object key, int hashCode) {
 	clean();
 	return super.getOrCreate(key, hashCode);
     }
 
     @Override
-    public LowLevelBinding get(Object key) {
+    public Binding get(Object key) {
 	clean();
 	return super.get(key);
     }
 
     @Override
-    public LowLevelBinding get(Object key, int hashCode) {
+    public Binding get(Object key, int hashCode) {
 	clean();
 	return super.get(key, hashCode);
     }
@@ -154,7 +154,7 @@ public abstract class StepCleaningBindingMap extends MinimalMap<Object, LowLevel
     }
 
     @Override
-    public boolean removeEntry(LowLevelBinding entryToRemove) {
+    public boolean removeEntry(Binding entryToRemove) {
 	clean();
 	return super.removeEntry(entryToRemove);
     }

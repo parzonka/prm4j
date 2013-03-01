@@ -15,7 +15,7 @@ import java.util.Arrays;
 import prm4j.indexing.Monitor;
 
 /**
- * An event contains a generic base event and a number of {@link Binding}s.
+ * An event contains a generic base event and a number of parameter values.
  */
 public class Event {
 

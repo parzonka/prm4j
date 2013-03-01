@@ -24,7 +24,7 @@ public class LeafNode implements Node {
     private final NodeRef nodeRef;
     private long timestamp = Long.MIN_VALUE; // this instance was not seen yet
 
-    private final LowLevelBinding key;
+    private final Binding key;
     private Node nextNode;
 
     /**
@@ -34,7 +34,7 @@ public class LeafNode implements Node {
      * @param hashCode
      *            hash code of the key
      */
-    public LeafNode(MetaNode metaNode, LowLevelBinding key, ReferenceQueue<Node> refQueue) {
+    public LeafNode(MetaNode metaNode, Binding key, ReferenceQueue<Node> refQueue) {
 	this.metaNode = metaNode;
 	this.key = key;
 	nodeRef = new NodeRef(this, refQueue);
@@ -51,12 +51,12 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public Node getOrCreateNode(int parameterIndex, LowLevelBinding binding) {
+    public Node getOrCreateNode(int parameterIndex, Binding binding) {
 	throw new UnsupportedOperationException("This node should not need to use this operation!");
     }
 
     @Override
-    public Node getNode(int parameterIndex, LowLevelBinding binding) {
+    public Node getNode(int parameterIndex, Binding binding) {
 	throw new UnsupportedOperationException("This node should not need to use this operation!");
     }
 
@@ -110,7 +110,7 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public LowLevelBinding getKey() {
+    public Binding getKey() {
 	return key;
     }
 
@@ -126,7 +126,7 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public void remove(LowLevelBinding binding) {
+    public void remove(Binding binding) {
 	throw new UnsupportedOperationException("This node should not need to use this operation!");
 
     }

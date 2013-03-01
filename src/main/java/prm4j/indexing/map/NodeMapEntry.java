@@ -10,11 +10,11 @@
  */
 package prm4j.indexing.map;
 
-import prm4j.indexing.realtime.LowLevelBinding;
+import prm4j.indexing.realtime.Binding;
 
 public interface NodeMapEntry<E extends NodeMapEntry<E>>{
 
-    public LowLevelBinding getKey();
+    public Binding getKey();
 
     public int parameterIndex();
 

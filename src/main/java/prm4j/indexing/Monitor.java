@@ -12,7 +12,7 @@ package prm4j.indexing;
 
 import prm4j.api.Event;
 import prm4j.api.ParametricMonitor;
-import prm4j.indexing.realtime.LowLevelBinding;
+import prm4j.indexing.realtime.Binding;
 import prm4j.indexing.staticdata.MetaNode;
 
 /**
@@ -27,7 +27,7 @@ public interface Monitor {
      * 
      * @return a compressed representation of bindings
      */
-    public LowLevelBinding[] getCompressedBindings();
+    public Binding[] getCompressedBindings();
 
     /**
      * Uncompressed bindings my contain null values. The position in the array represents the parameter id of the
@@ -35,7 +35,7 @@ public interface Monitor {
      * 
      * @return a uncompressed representation of bindings
      */
-    public prm4j.api.Binding[] getUncompressedBindings();
+    public Binding[] getUncompressedBindings();
 
     /**
      * Ends the life-span of this monitor. A terminated monitor can be removed from all data structures it is referenced
@@ -85,7 +85,7 @@ public interface Monitor {
      */
     public Monitor copy();
 
-    public Monitor copy(LowLevelBinding[] bindings);
+    public Monitor copy(Binding[] bindings);
 
     /**
      * Creates a copy of this monitor by setting new stored compressed bindings and timestamp.
@@ -94,13 +94,13 @@ public interface Monitor {
      * @param timestamp
      * @return a new monitor with given bindings and timestamp
      */
-    public Monitor copy(LowLevelBinding[] compressedBindings, long timestamp);
+    public Monitor copy(Binding[] compressedBindings, long timestamp);
 
     public MetaNode getMetaNode();
 
     public void setMetaNode(MetaNode metaNode);
 
-    public void setCompressedBindings(LowLevelBinding[] bindings);
+    public void setCompressedBindings(Binding[] bindings);
 
     public void setTimestamp(long timestamp);
 

@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference;
 
 import prm4j.indexing.Monitor;
 
-public class NodeRef extends WeakReference<Node> implements Holder<LowLevelBinding> {
+public class NodeRef extends WeakReference<Node> implements Holder<Binding> {
 
     public Monitor monitor;
 
@@ -24,7 +24,7 @@ public class NodeRef extends WeakReference<Node> implements Holder<LowLevelBindi
     }
 
     @Override
-    public void release(LowLevelBinding binding) {
+    public void release(Binding binding) {
 	final Node node = get();
 	if (node != null) {
 	    node.remove(binding);

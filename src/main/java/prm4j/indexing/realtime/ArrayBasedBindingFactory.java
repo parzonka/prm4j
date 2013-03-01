@@ -15,12 +15,12 @@ import java.lang.ref.ReferenceQueue;
 public class ArrayBasedBindingFactory implements BindingFactory {
 
     @Override
-    public LowLevelBinding[] createTable(int size) {
+    public Binding[] createTable(int size) {
 	return new ArrayBasedBinding[size];
     }
 
     @Override
-    public LowLevelBinding createBinding(Object boundObject, int hashCode, ReferenceQueue<Object> referenceQueue,
+    public Binding createBinding(Object boundObject, int hashCode, ReferenceQueue<Object> referenceQueue,
 	    int fullParameterCount) {
 	return new ArrayBasedBinding(boundObject, hashCode, referenceQueue, fullParameterCount);
     }

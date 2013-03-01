@@ -10,7 +10,6 @@
  */
 package prm4j.indexing.realtime;
 
-import prm4j.api.Binding;
 import prm4j.api.Event;
 import prm4j.indexing.Monitor;
 import prm4j.indexing.staticdata.MetaNode;
@@ -47,7 +46,7 @@ public class DeadMonitor implements Monitor {
     }
 
     @Override
-    public LowLevelBinding[] getCompressedBindings() {
+    public Binding[] getCompressedBindings() {
 	return null;
     }
 
@@ -87,7 +86,7 @@ public class DeadMonitor implements Monitor {
     }
 
     @Override
-    public void setCompressedBindings(LowLevelBinding[] bindings) {
+    public void setCompressedBindings(Binding[] bindings) {
     }
 
     @Override
@@ -96,12 +95,12 @@ public class DeadMonitor implements Monitor {
     }
 
     @Override
-    public Monitor copy(LowLevelBinding[] bindings) {
+    public Monitor copy(Binding[] bindings) {
 	return null;
     }
 
     @Override
-    public Monitor copy(LowLevelBinding[] bindings, long timestamp) {
+    public Monitor copy(Binding[] bindings, long timestamp) {
 	return null;
     }
 

@@ -57,7 +57,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	Object object = new Object();
 
 	// exercise
-	LowLevelBinding[] bindings = bs.getBindings(array(object));
+	Binding[] bindings = bs.getBindings(array(object));
 
 	// verify
 	assertArrayEquals(bindings, array(bs.getBinding(object)));
@@ -70,7 +70,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	Object object = new Object();
 
 	// exercise
-	LowLevelBinding[] bindings = bs.getBindings(array(object));
+	Binding[] bindings = bs.getBindings(array(object));
 	bs.removeBinding(bindings[0]);
 
 	// verify
@@ -84,7 +84,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bs.getBindings(array(object));
+	Binding[] bindings = bs.getBindings(array(object));
 	object = null;
 
 	runGarbageCollectorAFewTimes();
@@ -100,7 +100,7 @@ public class DefaultBindingStoreTest extends AbstractTest {
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bs.getBindings(array(object));
+	Binding[] bindings = bs.getBindings(array(object));
 	object = null;
 
 	runGarbageCollectorAFewTimes();
@@ -231,10 +231,10 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// create bindings
 	Map map = map(tuple(1, "a"));
 	Collection coll = map.entrySet();
-	LowLevelBinding[] bindings = bs.getBindings(array(map, coll, null));
+	Binding[] bindings = bs.getBindings(array(map, coll, null));
 
-	LowLevelBinding mBinding = bindings[0];
-	LowLevelBinding cBinding = bindings[1];
+	Binding mBinding = bindings[0];
+	Binding cBinding = bindings[1];
 
 	// verify binding store does not compress bindings
 	assertEquals(3, bindings.length);
@@ -253,10 +253,10 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// create bindings
 	Map map = map(tuple(1, "a"));
 	Collection coll = map.entrySet();
-	LowLevelBinding[] bindings = bs.getBindings(array(map, coll, null));
+	Binding[] bindings = bs.getBindings(array(map, coll, null));
 
-	LowLevelBinding mBinding = bindings[0];
-	LowLevelBinding cBinding = bindings[1];
+	Binding mBinding = bindings[0];
+	Binding cBinding = bindings[1];
 
 	// register node mocks
 	Node mNode = mock(Node.class);
@@ -291,10 +291,10 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	// create bindings
 	Map map = map(tuple(1, "a"));
 	Collection coll = map.entrySet();
-	LowLevelBinding[] bindings = bs.getBindings(array(map, coll, null));
+	Binding[] bindings = bs.getBindings(array(map, coll, null));
 
-	LowLevelBinding mBinding = bindings[0];
-	LowLevelBinding cBinding = bindings[1];
+	Binding mBinding = bindings[0];
+	Binding cBinding = bindings[1];
 
 	// verify no 'compression'
 	assertEquals(3, bindings.length);
@@ -313,10 +313,10 @@ public class DefaultBindingStoreTest extends AbstractTest {
 	Map map = map(tuple(1, "a"));
 	Collection coll = map.entrySet();
 	Iterator iter = coll.iterator();
-	LowLevelBinding[] bindings = bs.getBindings(array(map, null, iter));
+	Binding[] bindings = bs.getBindings(array(map, null, iter));
 
-	LowLevelBinding mBinding = bindings[0];
-	LowLevelBinding iBinding = bindings[2];
+	Binding mBinding = bindings[0];
+	Binding iBinding = bindings[2];
 
 	// verify no 'compression'
 	assertEquals(3, bindings.length);

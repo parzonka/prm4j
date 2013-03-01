@@ -14,9 +14,9 @@ import java.lang.ref.ReferenceQueue;
 
 public interface BindingFactory {
 
-    public LowLevelBinding[] createTable(int size);
+    public Binding[] createTable(int size);
 
-    public LowLevelBinding createBinding(Object boundObject, int hashCode, ReferenceQueue<Object> referenceQueue,
+    public Binding createBinding(Object boundObject, int hashCode, ReferenceQueue<Object> referenceQueue,
 	    int fullParameterCount);
 
 }

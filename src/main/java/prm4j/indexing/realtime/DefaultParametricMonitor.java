@@ -91,7 +91,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	// selects all bindings from 'bindings' which are not null
 	final int[] parameterMask = baseEvent.getParameterMask();
 	// uncompressed representation of bindings
-	final LowLevelBinding[] bindings = bindingStore.getBindings(event.getBoundObjects());
+	final Binding[] bindings = bindingStore.getBindings(event.getBoundObjects());
 	// node associated to the current bindings. May be NullNode if binding is encountered the first time
 	Node instanceNode = nodeStore.getNode(bindings, parameterMask);
 	// monitor associated with the instance node. May be null if the instance node is a NullNode
@@ -196,7 +196,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		}
 
 		// calculate once the bindings to be joined with the whole monitor set
-		final LowLevelBinding[] joinableBindings = createJoinableBindings(bindings, joinData.extensionPattern); // 56
+		final Binding[] joinableBindings = createJoinableBindings(bindings, joinData.extensionPattern); // 56
 															// -
 															// 61
 
@@ -225,8 +225,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	timestamp++; // 40
     }
 
-    private static LowLevelBinding[] toCompressedBindings(LowLevelBinding[] uncompressedBindings, int[] parameterMask) {
-	LowLevelBinding[] result = new LowLevelBinding[parameterMask.length];
+    private static Binding[] toCompressedBindings(Binding[] uncompressedBindings, int[] parameterMask) {
+	Binding[] result = new Binding[parameterMask.length];
 	int j = 0;
 	for (int i = 0; i < parameterMask.length; i++) {
 	    result[j++] = uncompressedBindings[parameterMask[i]];
@@ -242,8 +242,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
      *            allows transformation of the bindings to joinable bindings
      * @return joinable bindings
      */
-    static LowLevelBinding[] createJoinableBindings(LowLevelBinding[] bindings, int[] extensionPattern) {
-	final LowLevelBinding[] joinableBindings = new LowLevelBinding[extensionPattern.length];
+    static Binding[] createJoinableBindings(Binding[] bindings, int[] extensionPattern) {
+	final Binding[] joinableBindings = new Binding[extensionPattern.length];
 	for (int i = 0; i < extensionPattern.length; i++) {
 	    final int e = extensionPattern[i];
 	    if (e >= 0) {

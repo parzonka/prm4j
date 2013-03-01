@@ -25,7 +25,7 @@ public class DefaultNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getOrCreateNode(LowLevelBinding[] bindings) {
+    public Node getOrCreateNode(Binding[] bindings) {
 	Node node = rootNode;
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 0; i < bindings.length; i++) {
@@ -36,7 +36,7 @@ public class DefaultNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getOrCreateNode(LowLevelBinding[] bindings, int[] parameterMask) {
+    public Node getOrCreateNode(Binding[] bindings, int[] parameterMask) {
 	Node node = rootNode;
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 0; i < parameterMask.length; i++) {
@@ -47,7 +47,7 @@ public class DefaultNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getNode(LowLevelBinding[] bindings) {
+    public Node getNode(Binding[] bindings) {
 	Node node = rootNode;
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 0; i < bindings.length; i++) {
@@ -61,7 +61,7 @@ public class DefaultNodeStore implements NodeStore {
     }
 
     @Override
-    public Node getNode(LowLevelBinding[] bindings, int[] parameterMask) {
+    public Node getNode(Binding[] bindings, int[] parameterMask) {
 	Node node = rootNode;
 	// we iterate over the rest { node1 , ..., nodeN }, traversing the tree
 	for (int i = 0; i < parameterMask.length; i++) {

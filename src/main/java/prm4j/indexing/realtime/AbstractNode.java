@@ -14,7 +14,7 @@ import prm4j.indexing.map.NodeMap;
 
 public abstract class AbstractNode extends NodeMap<Node> implements Node {
 
-    private final LowLevelBinding key;
+    private final Binding key;
     private Node nextNode;
 
     /**
@@ -24,7 +24,7 @@ public abstract class AbstractNode extends NodeMap<Node> implements Node {
      * @param hashCode
      *            hash code of the key
      */
-    public AbstractNode(LowLevelBinding key) {
+    public AbstractNode(Binding key) {
 	this.key = key;
     }
 
@@ -34,7 +34,7 @@ public abstract class AbstractNode extends NodeMap<Node> implements Node {
     }
 
     @Override
-    public LowLevelBinding getKey() {
+    public Binding getKey() {
 	return key;
     }
 
@@ -54,7 +54,7 @@ public abstract class AbstractNode extends NodeMap<Node> implements Node {
     }
 
     @Override
-    protected Node createEntry(int parameterIndex, LowLevelBinding key) {
+    protected Node createEntry(int parameterIndex, Binding key) {
 	return getMetaNode().createNode(parameterIndex, key);
     }
 

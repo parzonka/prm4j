@@ -22,7 +22,7 @@ public class LeafNodeFactory extends NodeFactory {
     }
 
     @Override
-    public Node createNode(MetaNode metaNode, int parameterIndex, LowLevelBinding binding) {
+    public Node createNode(MetaNode metaNode, int parameterIndex, Binding binding) {
 	Node node = new LeafNode(metaNode, binding, nodeManager.getReferenceQueue());
 	nodeManager.createdNode(node);
 	return node;

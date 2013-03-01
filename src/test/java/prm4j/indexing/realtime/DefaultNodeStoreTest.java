@@ -28,7 +28,7 @@ public class DefaultNodeStoreTest extends AbstractTest {
     FiniteSpec finiteSpec;
     StaticDataConverter converter;
     DefaultNodeStore nodeStore;
-    LowLevelBinding[] bindings;
+    Binding[] bindings;
 
     @Before
     public void init() throws Exception {
@@ -36,7 +36,7 @@ public class DefaultNodeStoreTest extends AbstractTest {
 	finiteSpec = new FSMSpec(fsm.fsm);
 	converter = new StaticDataConverter(new FiniteParametricProperty(finiteSpec));
 	nodeStore = new DefaultNodeStore(converter.getMetaTree(), new NodeManager());
-	bindings = new LowLevelBinding[1];
+	bindings = new Binding[1];
 	bindings[0] = new ArrayBasedBinding("a", 42, null, 2);
     }
 

@@ -12,10 +12,9 @@ package prm4j.indexing.realtime;
 
 import prm4j.indexing.map.MinimalMapEntry;
 
-/**
- * A binding used by optimized indexing strategies.
- */
-public interface LowLevelBinding extends prm4j.api.Binding, MinimalMapEntry<Object, LowLevelBinding> {
+public interface Binding extends MinimalMapEntry<Object, Binding> {
+
+    public Object get();
 
     /**
      * Releases all resources used in the indexing data structure and/or notifies monitors about unreachability of the
@@ -28,7 +27,7 @@ public interface LowLevelBinding extends prm4j.api.Binding, MinimalMapEntry<Obje
      * 
      * @param nodeRef
      */
-    void registerHolder(Holder<LowLevelBinding> bindingHolder);
+    void registerHolder(Holder<Binding> bindingHolder);
 
     public Node getNode();
 

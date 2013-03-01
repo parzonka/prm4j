@@ -22,21 +22,21 @@ import prm4j.api.Parameter;
  */
 public class AwareDefaultBindingStore extends DefaultBindingStore {
 
-    private final Deque<WeakReference<LowLevelBinding[]>> retrievedBindings;
+    private final Deque<WeakReference<Binding[]>> retrievedBindings;
 
     public AwareDefaultBindingStore(Set<Parameter<?>> fullParameterSet, int cleaningInterval) {
 	super(new ArrayBasedBindingFactory(), fullParameterSet, cleaningInterval);
-	retrievedBindings = new ArrayDeque<WeakReference<LowLevelBinding[]>>();
+	retrievedBindings = new ArrayDeque<WeakReference<Binding[]>>();
     }
 
     @Override
-    public LowLevelBinding[] getBindings(Object[] boundObjects) {
-	LowLevelBinding[] bindings = super.getBindings(boundObjects);
-	getListOfBindings().add(new WeakReference<LowLevelBinding[]>(bindings));
+    public Binding[] getBindings(Object[] boundObjects) {
+	Binding[] bindings = super.getBindings(boundObjects);
+	getListOfBindings().add(new WeakReference<Binding[]>(bindings));
 	return bindings;
     }
 
-    public Deque<WeakReference<LowLevelBinding[]>> getListOfBindings() {
+    public Deque<WeakReference<Binding[]>> getListOfBindings() {
 	return retrievedBindings;
     }
 

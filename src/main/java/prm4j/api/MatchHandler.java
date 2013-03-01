@@ -10,6 +10,8 @@
  */
 package prm4j.api;
 
+import prm4j.indexing.realtime.Binding;
+
 public abstract class MatchHandler {
 
     private static long matchCounter = 0L;

@@ -10,7 +10,7 @@
  */
 package prm4j.indexing.map;
 
-import prm4j.indexing.realtime.LowLevelBinding;
+import prm4j.indexing.realtime.Binding;
 
 public abstract class NodeMap<E extends NodeMapEntry<E>> {
 
@@ -64,7 +64,7 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
      *            the binding
      * @return the entry
      */
-    public E getOrCreate(final int parameterIndex, final LowLevelBinding key) {
+    public E getOrCreate(final int parameterIndex, final Binding key) {
 
 	final int index = hashIndex(key.hashCode(), table.length);
 	E entry = table[index];
@@ -97,7 +97,7 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
      *            the binding
      * @return the entry or null, if entry is not stored in the map
      */
-    public E get(final int parameterIndex, final LowLevelBinding key) {
+    public E get(final int parameterIndex, final Binding key) {
 
 	final int index = hashIndex(key.hashCode(), table.length);
 	E entry = table[index];
@@ -149,7 +149,7 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
      * @param key
      * @return the entry
      */
-    protected abstract E createEntry(final int parameterIndex, LowLevelBinding key);
+    protected abstract E createEntry(final int parameterIndex, Binding key);
 
     /**
      * Removes <b>all</b> entries with the given binding, regardless of any parameterIndex.
@@ -157,7 +157,7 @@ public abstract class NodeMap<E extends NodeMapEntry<E>> {
      * @param key
      * @param hashCode
      */
-    public void remove(final LowLevelBinding key) {
+    public void remove(final Binding key) {
 
 	final int hashIndex = hashIndex(key.hashCode(), table.length);
 	E entry = table[hashIndex];

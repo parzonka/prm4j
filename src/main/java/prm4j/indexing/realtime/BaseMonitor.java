@@ -31,7 +31,7 @@ import prm4j.indexing.staticdata.MetaNode;
  */
 public abstract class BaseMonitor implements Monitor {
 
-    private final static LowLevelBinding[] EMPTY_BINDINGS = new LowLevelBinding[0];
+    private final static Binding[] EMPTY_BINDINGS = new Binding[0];
 
     /**
      * Sum of derived and underived monitors.
@@ -50,7 +50,7 @@ public abstract class BaseMonitor implements Monitor {
 
     private MetaNode metaNode;
     // low level access
-    private LowLevelBinding[] compressedBindings;
+    private Binding[] compressedBindings;
     // low level access
     private long timestamp;
 
@@ -67,7 +67,7 @@ public abstract class BaseMonitor implements Monitor {
      * @return
      */
     @Override
-    public final Monitor copy(LowLevelBinding[] compressedBindings) {
+    public final Monitor copy(Binding[] compressedBindings) {
 	Monitor copy = copy();
 	copy.setCompressedBindings(compressedBindings);
 	assert timestamp >= 0L : "Derive only from properly initialized nodes.";
@@ -76,7 +76,7 @@ public abstract class BaseMonitor implements Monitor {
     }
 
     @Override
-    public final Monitor copy(LowLevelBinding[] compressedBindings, long timestamp) {
+    public final Monitor copy(Binding[] compressedBindings, long timestamp) {
 	Monitor copy = copy();
 	copy.setCompressedBindings(compressedBindings);
 	copy.setTimestamp(timestamp);
@@ -84,12 +84,12 @@ public abstract class BaseMonitor implements Monitor {
     }
 
     @Override
-    public final LowLevelBinding[] getCompressedBindings() {
+    public final Binding[] getCompressedBindings() {
 	return compressedBindings;
     }
 
     @Override
-    public final prm4j.api.Binding[] getUncompressedBindings() {
+    public final Binding[] getUncompressedBindings() {
 	if (metaNode == null) {
 	    // upcast
 	    return compressedBindings;
@@ -169,7 +169,7 @@ public abstract class BaseMonitor implements Monitor {
     }
 
     @Override
-    public void setCompressedBindings(LowLevelBinding[] compressedBindings) {
+    public void setCompressedBindings(Binding[] compressedBindings) {
 	this.compressedBindings = compressedBindings;
 
     }

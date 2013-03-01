@@ -13,10 +13,10 @@ package prm4j.indexing.realtime;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
-public abstract class AbstractLowLevelBinding extends WeakReference<Object> implements LowLevelBinding {
+public abstract class AbstractLowLevelBinding extends WeakReference<Object> implements Binding {
 
     private final int hashCode;
-    private LowLevelBinding next;
+    private Binding next;
 
     public AbstractLowLevelBinding(Object boundObject, int hashCode, ReferenceQueue<Object> q) {
 	super(boundObject, q);
@@ -39,12 +39,12 @@ public abstract class AbstractLowLevelBinding extends WeakReference<Object> impl
     }
 
     @Override
-    public LowLevelBinding next() {
+    public Binding next() {
 	return next;
     }
 
     @Override
-    public void setNext(LowLevelBinding next) {
+    public void setNext(Binding next) {
 	this.next = next;
     }
 

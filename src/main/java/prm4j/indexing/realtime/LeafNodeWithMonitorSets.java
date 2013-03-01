@@ -18,7 +18,7 @@ public class LeafNodeWithMonitorSets extends LeafNode {
 
     private final MonitorSet[] monitorSets;
 
-    public LeafNodeWithMonitorSets(MetaNode metaNode, LowLevelBinding key, ReferenceQueue<Node> refQueue) {
+    public LeafNodeWithMonitorSets(MetaNode metaNode, Binding key, ReferenceQueue<Node> refQueue) {
 	super(metaNode, key, refQueue);
 	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
     }

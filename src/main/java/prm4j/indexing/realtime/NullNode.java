@@ -26,7 +26,7 @@ public class NullNode implements Node {
     }
 
     @Override
-    public LowLevelBinding getKey() {
+    public Binding getKey() {
 	return null;
     }
 
@@ -60,7 +60,7 @@ public class NullNode implements Node {
     }
 
     @Override
-    public void remove(LowLevelBinding binding) {
+    public void remove(Binding binding) {
 	throw new UnsupportedOperationException();
     }
 
@@ -85,12 +85,12 @@ public class NullNode implements Node {
     }
 
     @Override
-    public Node getOrCreateNode(int parameterIndex, LowLevelBinding binding) {
+    public Node getOrCreateNode(int parameterIndex, Binding binding) {
 	return null;
     }
 
     @Override
-    public Node getNode(int parameterIndex, LowLevelBinding binding) {
+    public Node getNode(int parameterIndex, Binding binding) {
 	return null;
     }
 

@@ -10,12 +10,12 @@
  */
 package prm4j.indexing.staticdata;
 
-import prm4j.indexing.realtime.LowLevelBinding;
+import prm4j.indexing.realtime.Binding;
 import prm4j.indexing.realtime.Node;
 
 public abstract class NodeFactory {
 
-    public abstract Node createNode(MetaNode metaNode, int parameterIndex, LowLevelBinding binding);
+    public abstract Node createNode(MetaNode metaNode, int parameterIndex, Binding binding);
 
     @Override
     public String toString() {

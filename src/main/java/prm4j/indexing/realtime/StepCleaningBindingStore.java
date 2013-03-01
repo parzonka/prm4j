@@ -23,7 +23,7 @@ public class StepCleaningBindingStore implements BindingStore {
 
     private final ReferenceQueue<Object> referenceQueue;
     private final int fullParameterCount;
-    private final LowLevelBinding[] bindings;
+    private final Binding[] bindings;
     private final BindingFactory bindingFactory;
 
     private long createdBindingsCount;
@@ -39,8 +39,8 @@ public class StepCleaningBindingStore implements BindingStore {
 	bindings = createInitialBindings();
     }
 
-    private LowLevelBinding[] createInitialBindings() {
-	final LowLevelBinding[] result = new LowLevelBinding[fullParameterCount];
+    private Binding[] createInitialBindings() {
+	final Binding[] result = new Binding[fullParameterCount];
 	for (int i = 0; i < result.length; i++) {
 	    // fill the bindings-array with pseudo-bindings
 	    result[i] = new ArrayBasedBinding(new Object(), 0, null, 0);
@@ -49,7 +49,7 @@ public class StepCleaningBindingStore implements BindingStore {
     }
 
     @Override
-    public LowLevelBinding[] getBindings(Object[] boundObjects) {
+    public Binding[] getBindings(Object[] boundObjects) {
 	assert boundObjects.length == fullParameterCount;
 	for (int i = 0; i < boundObjects.length; i++) {
 	    final Object boundObject = boundObjects[i];
@@ -62,17 +62,17 @@ public class StepCleaningBindingStore implements BindingStore {
     }
 
     @Override
-    public LowLevelBinding getBinding(Object boundObject) {
+    public Binding getBinding(Object boundObject) {
 	return store.get(boundObject);
     }
 
     @Override
-    public LowLevelBinding getOrCreateBinding(Object boundObject) {
+    public Binding getOrCreateBinding(Object boundObject) {
 	return store.getOrCreate(boundObject);
     }
 
     @Override
-    public boolean removeBinding(LowLevelBinding binding) {
+    public boolean removeBinding(Binding binding) {
 	return store.removeEntry(binding);
     }
 
@@ -91,12 +91,12 @@ public class StepCleaningBindingStore implements BindingStore {
     class DefaultStore extends StepCleaningBindingMap {
 
 	@Override
-	protected LowLevelBinding[] createTable(int size) {
+	protected Binding[] createTable(int size) {
 	    return bindingFactory.createTable(size);
 	}
 
 	@Override
-	protected LowLevelBinding createEntry(Object key, int hashCode) {
+	protected Binding createEntry(Object key, int hashCode) {
 	    createdBindingsCount++;
 	    return bindingFactory.createBinding(key, hashCode, null, fullParameterCount);
 	}

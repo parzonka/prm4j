@@ -26,7 +26,7 @@ public class DefaultNode extends AbstractNode {
     private long timestamp = Long.MIN_VALUE; // this instance was not seen yet
 
     private WeakReference<Node> cachedNodeRef = null;
-    private LowLevelBinding cachedBinding = null;
+    private Binding cachedBinding = null;
     private int cachedParameterIndex = -1;
 
     /**
@@ -35,7 +35,7 @@ public class DefaultNode extends AbstractNode {
      * @param key
      * @param refQueue
      */
-    public DefaultNode(MetaNode metaNode, int parameterIndex, LowLevelBinding key, ReferenceQueue<Node> refQueue) {
+    public DefaultNode(MetaNode metaNode, int parameterIndex, Binding key, ReferenceQueue<Node> refQueue) {
 	super(key);
 	this.metaNode = metaNode;
 	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
@@ -49,7 +49,7 @@ public class DefaultNode extends AbstractNode {
      * @param parameterIndex
      * @param key
      */
-    public DefaultNode(MetaNode metaNode, int parameterIndex, LowLevelBinding key) {
+    public DefaultNode(MetaNode metaNode, int parameterIndex, Binding key) {
 	super(key);
 	this.metaNode = metaNode;
 	monitorSets = new MonitorSet[metaNode.getMonitorSetCount()];
@@ -67,7 +67,7 @@ public class DefaultNode extends AbstractNode {
     }
 
     @Override
-    public Node getOrCreateNode(int parameterIndex, LowLevelBinding binding) {
+    public Node getOrCreateNode(int parameterIndex, Binding binding) {
 	binding.registerHolder(nodeRef);
 	if (cachedParameterIndex != parameterIndex || cachedBinding != binding) {
 	    cachedParameterIndex = parameterIndex;
@@ -78,7 +78,7 @@ public class DefaultNode extends AbstractNode {
     }
 
     @Override
-    public Node getNode(int parameterIndex, LowLevelBinding binding) {
+    public Node getNode(int parameterIndex, Binding binding) {
 	if (cachedParameterIndex != parameterIndex || cachedBinding != binding) {
 	    final Node node = get(parameterIndex, binding);
 	    if (node != null) {

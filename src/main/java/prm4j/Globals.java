@@ -10,7 +10,7 @@
  */
 package prm4j;
 
-import prm4j.indexing.realtime.LowLevelBinding;
+import prm4j.indexing.realtime.Binding;
 
 /**
  * Encapsulates configuration via Java System Properties.
@@ -38,7 +38,7 @@ public class Globals {
 	    "prm4j.checkMonitorValidityOnEachUpdate", true);
 
     /**
-     * Specifies the method how backlinks in {@link LowLevelBinding}s are stored. <code>true</code> (default) for
+     * Specifies the method how backlinks in {@link Binding}s are stored. <code>true</code> (default) for
      * linked-link based storage, <code>false</code> for array based.
      */
     public final static boolean LINKEDLIST_STORED_BACKLINKS = getBooleanSystemProperty(

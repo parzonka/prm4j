@@ -10,6 +10,7 @@
  */
 package prm4j.api;
 
+import prm4j.indexing.realtime.Binding;
 
 public abstract class MatchHandler0 extends MatchHandler {
 

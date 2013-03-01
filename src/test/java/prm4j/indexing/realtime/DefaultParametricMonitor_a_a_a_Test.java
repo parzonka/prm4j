@@ -202,8 +202,8 @@ public class DefaultParametricMonitor_a_a_a_Test extends AbstractDefaultParametr
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	LowLevelBinding[] bindings1 = popNextRetrievedBinding();
-	LowLevelBinding[] bindings2 = popNextRetrievedBinding();
+	Binding[] bindings1 = popNextRetrievedBinding();
+	Binding[] bindings2 = popNextRetrievedBinding();
 	assertTrue(bindings1[0] == bindings2[0]);
     }
 

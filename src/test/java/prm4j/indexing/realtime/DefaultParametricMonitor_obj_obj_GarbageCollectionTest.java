@@ -61,7 +61,7 @@ public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends Abst
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+	Binding[] bindings = bindingStore.getBindings(array(object));
 	Node node = nodeStore.getOrCreateNode(bindings);
 
 	// verify
@@ -76,7 +76,7 @@ public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends Abst
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+	Binding[] bindings = bindingStore.getBindings(array(object));
 	nodeStore.getOrCreateNode(bindings);
 
 	// verify
@@ -91,7 +91,7 @@ public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends Abst
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+	Binding[] bindings = bindingStore.getBindings(array(object));
 	nodeStore.getOrCreateNode(bindings);
 
 	// verify
@@ -106,7 +106,7 @@ public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends Abst
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+	Binding[] bindings = bindingStore.getBindings(array(object));
 	nodeStore.getOrCreateNode(bindings);
 	object = null;
 	runGarbageCollectorAFewTimes();
@@ -124,7 +124,7 @@ public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends Abst
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+	Binding[] bindings = bindingStore.getBindings(array(object));
 	nodeStore.getOrCreateNode(bindings);
 	assertEquals(1, nodeStore.getRootNode().size()); // node is stored
 
@@ -147,7 +147,7 @@ public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends Abst
 
 	// exercise
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+	Binding[] bindings = bindingStore.getBindings(array(object));
 	// set the node to a node which will never reach an accepting state.
 	nodeStore.getOrCreateNode(bindings).getNodeRef().monitor = new StatefulMonitor(null);
 	assertEquals(1, nodeStore.getRootNode().size()); // node is stored
@@ -173,7 +173,7 @@ public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends Abst
 	// precondition
 	assertEquals(0L, nodeManager.getOrphanedMonitorsCount()); // no orphans seen yet
 	Object object = new Object();
-	LowLevelBinding[] bindings = bindingStore.getBindings(array(object));
+	Binding[] bindings = bindingStore.getBindings(array(object));
 
 	// we will hold the nodeRef to simulate a reference from a monitor set
 	final NodeRef nodeRef = nodeStore.getOrCreateNode(bindings).getNodeRef();
@@ -187,7 +187,7 @@ public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends Abst
 	// we have to fake the NodeManager, that we still have a stored binding, although the original object was
 	// collected already. We therefor create fakeBindings with a fakeObject.
 	final Object fakeObject = new Object();
-	final LowLevelBinding[] fakeBindings = new LowLevelBinding[1];
+	final Binding[] fakeBindings = new Binding[1];
 	fakeBindings[0] = new ArrayBasedBinding(fakeObject, 42, null, 1);
 	nodeRef.monitor = prototypeMonitor.copy(fakeBindings, 1L);
 	// we also need a correct metanode, so that the accepting-state-test is performed correctly
