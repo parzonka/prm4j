@@ -10,12 +10,15 @@
  */
 package prm4j.indexing.binding;
 
+import prm4j.indexing.map.MinimalMap;
 import prm4j.indexing.map.MinimalMapEntry;
 
 /**
  * A binding encapsulates the bound object (aka parameter value). The Binding is agnostic regarding the parameter it is
  * bound to, it is only known that there exists at least one parameter which is bound to it. A Binding may be bound to
  * multiple parameters.
+ * 
+ * The binding extends the MinimalMapEntry, so that it can be used as Entry in {@link MinimalMap}, saving an object.
  */
 public interface Binding extends MinimalMapEntry<Object, Binding> {
 

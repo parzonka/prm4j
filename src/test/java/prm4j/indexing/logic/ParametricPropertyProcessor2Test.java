@@ -302,7 +302,7 @@ public class ParametricPropertyProcessor2Test extends AbstractTest {
     }
 
     protected static void assertJoinData(EventContext eventContext, BaseEvent baseEvent, JoinArgs... joinDatas) {
-	assertArrayEquals(joinDatas, eventContext.getJoinData(baseEvent));
+	assertArrayEquals(joinDatas, eventContext.getJoinArgs(baseEvent));
     }
 
     protected static UpdateChainingsArgs updateChainingsArgs(int[] nodeMask, int monitorSetId) {

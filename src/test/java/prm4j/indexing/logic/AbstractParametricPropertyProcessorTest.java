@@ -47,7 +47,7 @@ public class AbstractParametricPropertyProcessorTest extends AbstractTest {
     }
 
     protected void assertJoinData(BaseEvent baseEvent, List<JoinArgs> joinDataList) {
-	assertArrayEquals(joinDataList.toArray(), sdc.getEventContext().getJoinData(baseEvent));
+	assertArrayEquals(joinDataList.toArray(), sdc.getEventContext().getJoinArgs(baseEvent));
     }
 
     protected void assertMaxData(BaseEvent baseEvent, List<FindMaxArgs> maxDataList) {

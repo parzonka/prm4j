@@ -14,28 +14,28 @@ import prm4j.api.BaseEvent;
 
 public class EventContext {
 
-    private final JoinArgs[][] joinDataArray;
-    private final FindMaxArgs[][] maxDataArray;
+    private final JoinArgs[][] joinArgsArray;
+    private final FindMaxArgs[][] findMaxArgsArray;
     private final boolean[] creationEvents;
     private final boolean[] disablingEvents;
     // baseEvent * numberOfExistingMonitorMasks * parameterMaskLength
     private final int[][][] existingMonitorMasks;
 
-    public EventContext(JoinArgs[][] joinData, FindMaxArgs[][] maxData, boolean[] creationEvents,
+    public EventContext(JoinArgs[][] joinArgsArray, FindMaxArgs[][] findMaxArgsArray, boolean[] creationEvents,
 	    boolean[] disablingEvents, int[][][] existingMonitorMasks) {
-	joinDataArray = joinData;
-	maxDataArray = maxData;
+	this.joinArgsArray = joinArgsArray;
+	this.findMaxArgsArray = findMaxArgsArray;
 	this.creationEvents = creationEvents;
 	this.disablingEvents = disablingEvents;
 	this.existingMonitorMasks = existingMonitorMasks;
     }
 
     public FindMaxArgs[] getFindMaxArgs(BaseEvent baseEvent) {
-	return maxDataArray[baseEvent.getIndex()];
+	return findMaxArgsArray[baseEvent.getIndex()];
     }
 
-    public JoinArgs[] getJoinData(BaseEvent baseEvent) {
-	return joinDataArray[baseEvent.getIndex()];
+    public JoinArgs[] getJoinArgs(BaseEvent baseEvent) {
+	return joinArgsArray[baseEvent.getIndex()];
     }
 
     public boolean isCreationEvent(BaseEvent baseEvent) {
