@@ -388,16 +388,16 @@ public class StaticDataConverterTest extends AbstractTest {
 	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
 	StaticDataConverter sdc = new StaticDataConverter(fpp);
 
-	SetMultimap<Set<Parameter<?>>, ChainData> actual = sdc.getChainData();
+	SetMultimap<Set<Parameter<?>>, UpdateChainingsArgs> actual = sdc.getChainData();
 
-	SetMultimap<Set<Parameter<?>>, ChainData> expected = HashMultimap.create();
-	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(0), 0));
-	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(2), 0));
-	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(0, 1), 0));
-	expected.put(asSet(u.m, u.c, u.i), new ChainData(list(1, 2), 0));
+	SetMultimap<Set<Parameter<?>>, UpdateChainingsArgs> expected = HashMultimap.create();
+	expected.put(asSet(u.m, u.c, u.i), new UpdateChainingsArgs(list(0), 0));
+	expected.put(asSet(u.m, u.c, u.i), new UpdateChainingsArgs(list(2), 0));
+	expected.put(asSet(u.m, u.c, u.i), new UpdateChainingsArgs(list(0, 1), 0));
+	expected.put(asSet(u.m, u.c, u.i), new UpdateChainingsArgs(list(1, 2), 0));
 	// optimized away by recognizing non-state changing transitions:
-	// expected.put(asSet(u.m, u.c), new ChainData(list(0), 0));
-	expected.put(asSet(u.m, u.c), new ChainData(list(1), 0));
+	// expected.put(asSet(u.m, u.c), new UpdateChainingsArgs(list(0), 0));
+	expected.put(asSet(u.m, u.c), new UpdateChainingsArgs(list(1), 0));
 
 	assertEquals(expected, actual);
     }
@@ -405,7 +405,7 @@ public class StaticDataConverterTest extends AbstractTest {
     @Test
     public void getMetaTree_unsafeMapIterator() {
 
-	final Set<ChainData> emptyChainDataSet = new HashSet<ChainData>();
+	final Set<UpdateChainingsArgs> emptyChainDataSet = new HashSet<UpdateChainingsArgs>();
 
 	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
 	FSM fsm = u.fsm;
@@ -429,7 +429,7 @@ public class StaticDataConverterTest extends AbstractTest {
 	expected.createAndGetMetaNode(u.i).setMonitorSetCount(1);
 
 	// depth 2
-	expected.getMetaNode(u.m, u.c).setChainData(asSet(new ChainData(toNodeMask(u.c), 0)));
+	expected.getMetaNode(u.m, u.c).setChainData(asSet(new UpdateChainingsArgs(toNodeMask(u.c), 0)));
 	expected.getMetaNode(u.m, u.c).setMonitorSetCount(1);
 
 	expected.getMetaNode(u.c, u.i).setChainData(emptyChainDataSet);
@@ -437,8 +437,8 @@ public class StaticDataConverterTest extends AbstractTest {
 
 	// depth 3
 	expected.getMetaNode(u.m, u.c, u.i).setChainData(
-		asSet(new ChainData(toNodeMask(u.m), 0), new ChainData(toNodeMask(u.m, u.c), 0), new ChainData(
-			toNodeMask(u.c, u.i), 0), new ChainData(toNodeMask(u.i), 0)));
+		asSet(new UpdateChainingsArgs(toNodeMask(u.m), 0), new UpdateChainingsArgs(toNodeMask(u.m, u.c), 0), new UpdateChainingsArgs(
+			toNodeMask(u.c, u.i), 0), new UpdateChainingsArgs(toNodeMask(u.i), 0)));
 	expected.getMetaNode(u.m, u.c, u.i).setMonitorSetCount(0);
 
 	assertEquals(expected, actual);

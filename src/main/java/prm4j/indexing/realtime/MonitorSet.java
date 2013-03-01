@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 import prm4j.api.Event;
 import prm4j.indexing.Monitor;
-import prm4j.indexing.staticdata.ChainData;
+import prm4j.indexing.staticdata.UpdateChainingsArgs;
 
 /**
  * Holds a set of {@link Monitor}s.
@@ -159,8 +159,8 @@ public class MonitorSet {
 		}
 		// normal chain phase: connect necessary less informative instances so the joined binding will gets some
 		// updates (or be used in join phase itself as compatible monitor)
-		for (ChainData chainData : lastNode.getMetaNode().getChainDataArray()) {
-		    nodeStore.getOrCreateNode(joinable, chainData.nodeMask).getMonitorSet(chainData.monitorSetId)
+		for (UpdateChainingsArgs updateChainingsArgs : lastNode.getMetaNode().getUpdateChainingsArgs()) {
+		    nodeStore.getOrCreateNode(joinable, updateChainingsArgs.nodeMask).getMonitorSet(updateChainingsArgs.monitorSetId)
 			    .add(lastNode.getNodeRef());
 		} // 99
 		  // copy got used => clone again

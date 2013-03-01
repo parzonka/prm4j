@@ -16,7 +16,7 @@ import prm4j.api.Event;
 import prm4j.api.MatchHandler;
 import prm4j.api.ParametricMonitor;
 import prm4j.indexing.Monitor;
-import prm4j.indexing.staticdata.ChainData;
+import prm4j.indexing.staticdata.UpdateChainingsArgs;
 import prm4j.indexing.staticdata.EventContext;
 import prm4j.indexing.staticdata.JoinData;
 import prm4j.indexing.staticdata.FindMaxArgs;
@@ -129,8 +129,8 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    instanceMonitor.process(event); // 103
 
 		    // inlined chain-method
-		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
-			nodeStore.getOrCreateNode(bindings, chainData.nodeMask).getMonitorSet(chainData.monitorSetId)
+		    for (UpdateChainingsArgs updateChainingsArgs : instanceNode.getMetaNode().getUpdateChainingsArgs()) { // 110
+			nodeStore.getOrCreateNode(bindings, updateChainingsArgs.nodeMask).getMonitorSet(updateChainingsArgs.monitorSetId)
 				.add(instanceNode.getNodeRef()); // 111
 		    } // 107
 		    break findMaxPhase;
@@ -161,9 +161,9 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    instanceMonitor.process(event); // 95
 
 		    // inlined chain-method
-		    for (ChainData chainData : instanceNode.getMetaNode().getChainDataArray()) { // 110
-			final Node node = nodeStore.getOrCreateNode(bindings, chainData.nodeMask);
-			node.getMonitorSet(chainData.monitorSetId).add(instanceNode.getNodeRef()); // 111
+		    for (UpdateChainingsArgs updateChainingsArgs : instanceNode.getMetaNode().getUpdateChainingsArgs()) { // 110
+			final Node node = nodeStore.getOrCreateNode(bindings, updateChainingsArgs.nodeMask);
+			node.getMonitorSet(updateChainingsArgs.monitorSetId).add(instanceNode.getNodeRef()); // 111
 		    } // 99
 		}
 	    }

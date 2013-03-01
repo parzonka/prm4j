@@ -44,7 +44,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 
 	assertChainData(mt, asSet(fsm.p1));
 	assertChainData(mt, asSet(fsm.p2));
-	assertChainData(mt, asSet(fsm.p1, fsm.p2), chainData(array(0), 0), chainData(array(1), 0));
+	assertChainData(mt, asSet(fsm.p1, fsm.p2), updateChainingsArgs(array(0), 0), updateChainingsArgs(array(1), 0));
     }
 
     @Test
@@ -58,10 +58,10 @@ public class StaticDataConverter2Test extends AbstractTest {
 	assertChainData(mt, asSet(fsm.a));
 	assertChainData(mt, asSet(fsm.b));
 	assertChainData(mt, asSet(fsm.c));
-	assertChainData(mt, asSet(fsm.a, fsm.b), chainData(array(1), 0));
+	assertChainData(mt, asSet(fsm.a, fsm.b), updateChainingsArgs(array(1), 0));
 	assertChainData(mt, asSet(fsm.b, fsm.c));
-	assertChainData(mt, asSet(fsm.a, fsm.b, fsm.c), chainData(array(0, 1), 0), chainData(array(1, 2), 0),
-		chainData(array(2), 0));
+	assertChainData(mt, asSet(fsm.a, fsm.b, fsm.c), updateChainingsArgs(array(0, 1), 0), updateChainingsArgs(array(1, 2), 0),
+		updateChainingsArgs(array(2), 0));
     }
 
     // @Test deactivated, the assertion holds, but nested arrays are compared on identity. To little time to implement
@@ -89,7 +89,7 @@ public class StaticDataConverter2Test extends AbstractTest {
 
 	assertChainData(mt, asSet(fsm.p1));
 	assertChainData(mt, asSet(fsm.p2));
-	assertChainData(mt, asSet(fsm.p1, fsm.p2), chainData(array(1), 0));
+	assertChainData(mt, asSet(fsm.p1, fsm.p2), updateChainingsArgs(array(1), 0));
     }
 
     @Test
@@ -290,8 +290,8 @@ public class StaticDataConverter2Test extends AbstractTest {
 
     }
 
-    protected static void assertChainData(MetaNode metaTree, Set<Parameter<?>> parameterSet, ChainData... chainDatas) {
-	Set<ChainData> chainDataSet = new HashSet<ChainData>(Arrays.asList(chainDatas));
+    protected static void assertChainData(MetaNode metaTree, Set<Parameter<?>> parameterSet, UpdateChainingsArgs... chainDatas) {
+	Set<UpdateChainingsArgs> chainDataSet = new HashSet<UpdateChainingsArgs>(Arrays.asList(chainDatas));
 	assertEquals(chainDataSet, metaTree.getMetaNode(Util.asSortedList(parameterSet)).getChainDataSet());
     }
 
@@ -299,8 +299,8 @@ public class StaticDataConverter2Test extends AbstractTest {
 	assertArrayEquals(joinDatas, eventContext.getJoinData(baseEvent));
     }
 
-    protected static ChainData chainData(int[] nodeMask, int monitorSetId) {
-	return new ChainData(nodeMask, monitorSetId);
+    protected static UpdateChainingsArgs updateChainingsArgs(int[] nodeMask, int monitorSetId) {
+	return new UpdateChainingsArgs(nodeMask, monitorSetId);
     }
 
     protected static JoinData joinData(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern,

@@ -35,10 +35,10 @@ public class AbstractStaticDataConverterTest extends AbstractTest {
     }
 
     protected final static FindMaxArgs[] EMPTY_MAXDATA_ARRAY = new FindMaxArgs[0];
-    protected final static Set<ChainData> EMPTY_CHAINDATA_SET = Collections.emptySet();
+    protected final static Set<UpdateChainingsArgs> EMPTY_CHAINDATA_SET = Collections.emptySet();
     protected final static List<JoinData> EMPTY_JOINDATA_LIST = Collections.emptyList();
 
-    protected void assertChainData(Set<Parameter<?>> parameterSet, Set<ChainData> chainDataSet) {
+    protected void assertChainData(Set<Parameter<?>> parameterSet, Set<UpdateChainingsArgs> chainDataSet) {
 	assertEquals(chainDataSet, sdc.getMetaTree().getMetaNode(Util.asSortedList(parameterSet)).getChainDataSet());
     }
 
@@ -50,8 +50,8 @@ public class AbstractStaticDataConverterTest extends AbstractTest {
 	assertArrayEquals(maxDataList.toArray(), sdc.getEventContext().getFindMaxArgs(baseEvent));
     }
 
-    protected static ChainData chainData(int[] nodeMask, int monitorSetId) {
-	return new ChainData(nodeMask, monitorSetId);
+    protected static UpdateChainingsArgs updateChainingsArgs(int[] nodeMask, int monitorSetId) {
+	return new UpdateChainingsArgs(nodeMask, monitorSetId);
     }
 
     protected static JoinData joinData(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern,

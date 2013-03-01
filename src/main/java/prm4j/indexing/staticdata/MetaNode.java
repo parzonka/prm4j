@@ -43,8 +43,8 @@ public class MetaNode {
     private NodeManager nodeManager;
     private NodeFactory nodeFactory;
 
-    private Set<ChainData> chainDataSet;
-    private ChainData[] chainDataArray;
+    private Set<UpdateChainingsArgs> chainDataSet;
+    private UpdateChainingsArgs[] chainDataArray;
     private int monitorSetCount;
 
     /**
@@ -104,14 +104,14 @@ public class MetaNode {
     /**
      * @return the array representation of the chain data.
      */
-    public ChainData[] getChainDataArray() {
+    public UpdateChainingsArgs[] getUpdateChainingsArgs() {
 	return chainDataArray;
     }
 
     /**
      * @return the set representation of the chain data.
      */
-    public Set<ChainData> getChainDataSet() {
+    public Set<UpdateChainingsArgs> getChainDataSet() {
 	return chainDataSet;
     }
 
@@ -142,8 +142,8 @@ public class MetaNode {
 	return successors[parameterIndex].createNode(binding);
     }
 
-    void setChainData(Set<ChainData> chainDataSet) {
-	chainDataArray = chainDataSet.toArray(new ChainData[0]);
+    void setChainData(Set<UpdateChainingsArgs> chainDataSet) {
+	chainDataArray = chainDataSet.toArray(new UpdateChainingsArgs[0]);
 	this.chainDataSet = chainDataSet;
     }
 

@@ -46,7 +46,7 @@ public class StaticDataConverter {
     private final ListMultimap<BaseEvent, FindMaxArgs> findMaxArgs;
     private final ListMultimap<BaseEvent, JoinData> joinData;
     private final Table<BaseEvent, Set<Parameter<?>>, List<Set<Parameter<?>>>> disableParameterSets;
-    private final SetMultimap<Set<Parameter<?>>, ChainData> chainData;
+    private final SetMultimap<Set<Parameter<?>>, UpdateChainingsArgs> updateChainingsArgs;
     private final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds;
     private final int[][][] existingMonitorMasks;
     private final MetaNode metaTree;
@@ -56,7 +56,7 @@ public class StaticDataConverter {
 	findMaxArgs = ArrayListMultimap.create();
 	joinData = ArrayListMultimap.create();
 	disableParameterSets = HashBasedTable.create();
-	chainData = HashMultimap.create();
+	updateChainingsArgs = HashMultimap.create();
 	monitorSetIds = HashBasedTable.create();
 	existingMonitorMasks = new int[pp.getBaseEvents().size()][][];
 	convertToLowLevelStaticData();
@@ -65,7 +65,7 @@ public class StaticDataConverter {
     }
 
     /**
-     * Creates arrays of findMaxArgs, joinData, chainData.
+     * Creates arrays of findMaxArgs, joinData, updateChainingsArgs.
      */
     private void convertToLowLevelStaticData() { // 1
 	for (Set<Parameter<?>> parameterSet : pp.getMonitorSetData().keys()) { // 2
@@ -112,7 +112,7 @@ public class StaticDataConverter {
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : pp.getChainData().get(parameterSet)) { // 27
 		final int[] nodeMask = toParameterMask(tuple._1()); // 29
 		final int monitorSetId = monitorSetIds.get(tuple._1(), tuple._2()); // 30
-		chainData.put(parameterSet, new ChainData(nodeMask, monitorSetId)); // 28, 31
+		updateChainingsArgs.put(parameterSet, new UpdateChainingsArgs(nodeMask, monitorSetId)); // 28, 31
 	    } // 32
 	} // 33
     } // 34
@@ -346,7 +346,7 @@ public class StaticDataConverter {
 		    node = node.getMetaNode(parameter);
 		} else {
 		    node = node.createAndGetMetaNode(parameter);
-		    node.setChainData(chainData.get(node.getNodeParameterSet()));
+		    node.setChainData(updateChainingsArgs.get(node.getNodeParameterSet()));
 		    node.setMonitorSetCount(monitorSetIds.row(node.getNodeParameterSet()).size());
 		    node.setAliveParameterMasks(calculateAliveParameterMasksBoolean(node.getNodeParameterSet()));
 		}
@@ -426,8 +426,8 @@ public class StaticDataConverter {
 	return metaTree;
     }
 
-    protected SetMultimap<Set<Parameter<?>>, ChainData> getChainData() {
-	return chainData;
+    protected SetMultimap<Set<Parameter<?>>, UpdateChainingsArgs> getChainData() {
+	return updateChainingsArgs;
     }
 
     protected FindMaxArgs[][] getMaxData() {

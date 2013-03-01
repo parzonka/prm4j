@@ -19,18 +19,18 @@ import prm4j.Util;
  * Represents all less informative instances of the event instance which match its enable sets and are associated with
  * symbols, PLUS the compatible partial instances which map to parameter sets to fully instantiate joinable instances.
  */
-public class ChainData {
+public class UpdateChainingsArgs {
 
     public final int[] nodeMask;
     public final int monitorSetId;
 
-    public ChainData(int[] nodeMask, int monitorSetId) {
+    public UpdateChainingsArgs(int[] nodeMask, int monitorSetId) {
 	super();
 	this.nodeMask = nodeMask;
 	this.monitorSetId = monitorSetId;
     }
 
-    public ChainData(List<Integer> nodeMask, int monitorSetId) {
+    public UpdateChainingsArgs(List<Integer> nodeMask, int monitorSetId) {
 	super();
 	this.nodeMask = Util.toPrimitiveIntegerArray(nodeMask);
 	this.monitorSetId = monitorSetId;
@@ -56,7 +56,7 @@ public class ChainData {
 	if (getClass() != obj.getClass()) {
 	    return false;
 	}
-	ChainData other = (ChainData) obj;
+	UpdateChainingsArgs other = (UpdateChainingsArgs) obj;
 	if (monitorSetId != other.monitorSetId) {
 	    return false;
 	}
@@ -68,7 +68,7 @@ public class ChainData {
 
     @Override
     public String toString() {
-	return "ChainData [nodeMask=" + Arrays.toString(nodeMask) + ", monitorSetId=" + monitorSetId + "]";
+	return "UpdateChainingsArgs [nodeMask=" + Arrays.toString(nodeMask) + ", monitorSetId=" + monitorSetId + "]";
     }
 
 }
