@@ -13,8 +13,6 @@ package prm4j.indexing.binding;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
-import prm4j.indexing.node.Node;
-
 public abstract class AbstractBinding extends WeakReference<Object> implements Binding {
 
     private final int hashCode;
@@ -53,18 +51,6 @@ public abstract class AbstractBinding extends WeakReference<Object> implements B
     @Override
     public String toString() {
 	return "Binding(" + hashCode + ")=" + get();
-    }
-
-    @Override
-    public Node getNode() {
-	// TODO remove if DirectNodeStore proves to be more effective
-	throw new UnsupportedOperationException("This class should not need to use this operation!");
-    }
-
-    @Override
-    public void setNode(Node node) {
-	// TODO remove if DirectNodeStore proves to be more effective
-	throw new UnsupportedOperationException("This class should not need to use this operation!");
     }
 
 }

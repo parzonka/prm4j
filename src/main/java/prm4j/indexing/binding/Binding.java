@@ -11,7 +11,6 @@
 package prm4j.indexing.binding;
 
 import prm4j.indexing.map.MinimalMapEntry;
-import prm4j.indexing.node.Node;
 
 public interface Binding extends MinimalMapEntry<Object, Binding> {
 
@@ -29,9 +28,5 @@ public interface Binding extends MinimalMapEntry<Object, Binding> {
      * @param nodeRef
      */
     void registerHolder(Holder<Binding> bindingHolder);
-
-    public Node getNode();
-
-    public void setNode(Node node);
 
 }
