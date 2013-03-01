@@ -15,7 +15,7 @@ import java.lang.ref.ReferenceQueue;
 /**
  * Implementation of Binding using a linked list as a back reference to its associated hash maps.
  */
-public class LinkedListBinding extends AbstractLowLevelBinding {
+public class LinkedListBinding extends AbstractBinding {
 
     private Link link;
 

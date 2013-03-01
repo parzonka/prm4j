@@ -13,7 +13,7 @@ package prm4j.indexing.realtime;
 import java.lang.ref.ReferenceQueue;
 import java.util.Arrays;
 
-public class ArrayBasedBinding extends AbstractLowLevelBinding {
+public class ArrayBasedBinding extends AbstractBinding {
 
     private Holder<Binding>[] bindingHolders;
     private int bindingHoldersSize;
