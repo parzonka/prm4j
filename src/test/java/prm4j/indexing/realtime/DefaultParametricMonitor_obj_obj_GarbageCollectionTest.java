@@ -189,7 +189,7 @@ public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends Abst
 	final Object fakeObject = new Object();
 	final LowLevelBinding[] fakeBindings = new LowLevelBinding[1];
 	fakeBindings[0] = new ArrayBasedBinding(fakeObject, 42, null, 1);
-	nodeRef.monitor = prototypeMonitor.copy(fakeBindings);
+	nodeRef.monitor = prototypeMonitor.copy(fakeBindings, 1L);
 	// we also need a correct metanode, so that the accepting-state-test is performed correctly
 	nodeRef.monitor.setMetaNode(nodeStore.getRootNode().getMetaNode().getMetaNode(fsm.p1));
 

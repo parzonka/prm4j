@@ -57,7 +57,7 @@ public abstract class BaseMonitor implements Monitor {
     public BaseMonitor() {
 	createdMonitorsCount++;
 	compressedBindings = EMPTY_BINDINGS;
-	timestamp = 0L;
+	timestamp = -1L;
     }
 
     /**
@@ -70,6 +70,7 @@ public abstract class BaseMonitor implements Monitor {
     public final Monitor copy(LowLevelBinding[] compressedBindings) {
 	Monitor copy = copy();
 	copy.setCompressedBindings(compressedBindings);
+	assert timestamp >= 0L : "Derive only from properly initialized nodes.";
 	copy.setTimestamp(timestamp);
 	return copy;
     }
