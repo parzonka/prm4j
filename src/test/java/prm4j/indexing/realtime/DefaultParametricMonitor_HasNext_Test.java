@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.node.LeafNode;
 
 @SuppressWarnings("rawtypes")
 public class DefaultParametricMonitor_HasNext_Test extends AbstractDefaultParametricMonitorTest {
@@ -86,6 +87,14 @@ public class DefaultParametricMonitor_HasNext_Test extends AbstractDefaultParame
 	// verify
 	popNextCreatedMonitor();
 	assertNoMoreCreatedMonitors();
+    }
+
+    @Test
+    public void firstEvent_leafNodeIsCreated() throws Exception {
+	// exercise
+	pm.processEvent(fsm.next.createEvent(i1));
+	// verify
+	assertEquals(LeafNode.class, getNode(i1).getClass());
     }
 
     @Test
