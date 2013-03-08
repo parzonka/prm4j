@@ -18,7 +18,7 @@ import prm4j.indexing.binding.BindingStore;
 import prm4j.indexing.binding.DefaultBindingStore;
 import prm4j.indexing.binding.LinkedListBindingFactory;
 import prm4j.indexing.logic.ParametricPropertyProcessor;
-import prm4j.indexing.monitor.BaseMonitor;
+import prm4j.indexing.monitor.AbstractMonitor;
 import prm4j.indexing.monitor.Monitor;
 import prm4j.indexing.node.DefaultNodeStore;
 import prm4j.indexing.node.NodeManager;
@@ -31,7 +31,7 @@ public class ParametricMonitorFactory {
 
     public static ParametricMonitor createParametricMonitor(FiniteSpec finiteSpec) {
 
-	BaseMonitor.reset(); // Diagnostic
+	AbstractMonitor.reset(); // Diagnostic
 
 	final ParametricProperty parametricProperty = new FiniteParametricProperty(finiteSpec);
 	final ParametricPropertyProcessor processor = new ParametricPropertyProcessor(parametricProperty);

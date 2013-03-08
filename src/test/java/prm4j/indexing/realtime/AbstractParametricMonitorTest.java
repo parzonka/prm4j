@@ -24,7 +24,7 @@ import prm4j.indexing.DefaultParametricMonitor;
 import prm4j.indexing.binding.ArrayBasedBindingFactory;
 import prm4j.indexing.binding.DefaultBindingStore;
 import prm4j.indexing.logic.ParametricPropertyProcessor;
-import prm4j.indexing.monitor.BaseMonitor;
+import prm4j.indexing.monitor.AbstractMonitor;
 import prm4j.indexing.monitor.DeadMonitor;
 import prm4j.indexing.monitor.Monitor;
 import prm4j.indexing.monitor.MonitorSet;
@@ -124,7 +124,7 @@ public class AbstractParametricMonitorTest extends AbstractTest {
 	nodeStore = null;
 	prototypeMonitor = null;
 	pm = null;
-	BaseMonitor.reset();
+	AbstractMonitor.reset();
 	DeadMonitor.reset();
     }
 

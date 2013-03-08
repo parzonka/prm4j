@@ -32,7 +32,7 @@ import prm4j.Util;
 import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.monitor.BaseMonitorState;
+import prm4j.indexing.monitor.AbstractMonitorState;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
@@ -69,7 +69,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	private final Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates;
 	private final Set<Set<Parameter<?>>> possibleParameterSets;
 	private final SetMultimap<BaseEvent, Set<Parameter<?>>> enablingParameterSets;
-	private final SetMultimap<BaseMonitorState, Set<BaseEvent>> stateToSeenBaseEvents;
+	private final SetMultimap<AbstractMonitorState, Set<BaseEvent>> stateToSeenBaseEvents;
 
 	public ParameterSets() {
 	    creationEvents = calculateCreationEvents();
@@ -92,9 +92,9 @@ public class FiniteParametricProperty implements ParametricProperty {
 	 */
 	private Set<BaseEvent> calculateCreationEvents() {
 	    Set<BaseEvent> creationEvents = new HashSet<BaseEvent>();
-	    BaseMonitorState initialState = finiteSpec.getInitialState();
+	    AbstractMonitorState initialState = finiteSpec.getInitialState();
 	    for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
-		BaseMonitorState successor = initialState.getSuccessor(symbol);
+		AbstractMonitorState successor = initialState.getSuccessor(symbol);
 		if (successor != initialState) {
 		    creationEvents.add(symbol);
 		}
@@ -109,9 +109,9 @@ public class FiniteParametricProperty implements ParametricProperty {
 	 */
 	private Set<BaseEvent> calculateDisablingEvents() {
 	    Set<BaseEvent> disablingEvents = new HashSet<BaseEvent>();
-	    BaseMonitorState initialState = finiteSpec.getInitialState();
+	    AbstractMonitorState initialState = finiteSpec.getInitialState();
 	    for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
-		BaseMonitorState successor = initialState.getSuccessor(symbol);
+		AbstractMonitorState successor = initialState.getSuccessor(symbol);
 		if (successor == null) {
 		    disablingEvents.add(symbol);
 		}
@@ -119,12 +119,12 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    return disablingEvents;
 	}
 
-	private void computeRelations(BaseMonitorState state, Set<BaseEvent> seenBaseEvents,
+	private void computeRelations(AbstractMonitorState state, Set<BaseEvent> seenBaseEvents,
 		Set<Parameter<?>> parameterSet) { // 5
 	    stateToSeenBaseEvents.put(state, seenBaseEvents); // 6
 	    possibleParameterSets.add(parameterSet); // 7
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) { // 8
-		final BaseMonitorState nextState = state.getSuccessor(baseEvent);
+		final AbstractMonitorState nextState = state.getSuccessor(baseEvent);
 
 		final Set<Parameter<?>> nextParameterSet = unmodifiableUnion(parameterSet, baseEvent.getParameters()); // 12
 		// add to updates only if the base event does change state and it is no self-update:
@@ -235,27 +235,27 @@ public class FiniteParametricProperty implements ParametricProperty {
 
     private class CoenableSets {
 
-	private final SetMultimap<BaseMonitorState, BaseMonitorState> reversedFSM;
-	private final Set<BaseMonitorState> acceptingStates;
+	private final SetMultimap<AbstractMonitorState, AbstractMonitorState> reversedFSM;
+	private final Set<AbstractMonitorState> acceptingStates;
 	private final Set<Set<Parameter<?>>> aliveParameterSets;
 
 	public CoenableSets() {
 	    reversedFSM = HashMultimap.create();
-	    acceptingStates = new HashSet<BaseMonitorState>();
+	    acceptingStates = new HashSet<AbstractMonitorState>();
 	    aliveParameterSets = new HashSet<Set<Parameter<?>>>();
-	    reverseIter(finiteSpec.getInitialState(), new HashSet<BaseMonitorState>());
-	    for (BaseMonitorState acceptingState : acceptingStates) {
-		alivenessIter(acceptingState, new HashSet<Parameter<?>>(), new HashSet<BaseMonitorState>());
+	    reverseIter(finiteSpec.getInitialState(), new HashSet<AbstractMonitorState>());
+	    for (AbstractMonitorState acceptingState : acceptingStates) {
+		alivenessIter(acceptingState, new HashSet<Parameter<?>>(), new HashSet<AbstractMonitorState>());
 	    }
 	    minimizeAliveParameterSets();
 	}
 
-	public void reverseIter(BaseMonitorState state, Set<BaseMonitorState> visited) {
+	public void reverseIter(AbstractMonitorState state, Set<AbstractMonitorState> visited) {
 	    if (state.isAccepting()) {
 		acceptingStates.add(state);
 	    }
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
-		BaseMonitorState successor = state.getSuccessor(baseEvent);
+		AbstractMonitorState successor = state.getSuccessor(baseEvent);
 		if (successor != null && !visited.contains(successor)) {
 		    reversedFSM.put(successor, state);
 		    reverseIter(successor, unmodifiableUnion(visited, set(successor)));
@@ -272,9 +272,9 @@ public class FiniteParametricProperty implements ParametricProperty {
 	 * @param visited
 	 *            aggregate visited states so that the recursion will terminate
 	 */
-	public void alivenessIter(BaseMonitorState state, Set<Parameter<?>> parameterSet, Set<BaseMonitorState> visited) {
+	public void alivenessIter(AbstractMonitorState state, Set<Parameter<?>> parameterSet, Set<AbstractMonitorState> visited) {
 	    // 'predessor' means a preceding state in the *unreversed* FSM!
-	    for (BaseMonitorState predessor : reversedFSM.get(state)) {
+	    for (AbstractMonitorState predessor : reversedFSM.get(state)) {
 		if (!visited.contains(predessor)) {
 		    // iterate through all edges which lead from the predessor to the current state
 		    for (BaseEvent baseEvent : getBaseEvent(predessor, state)) {
@@ -286,7 +286,7 @@ public class FiniteParametricProperty implements ParametricProperty {
 	    }
 	}
 
-	public Set<BaseEvent> getBaseEvent(BaseMonitorState from, BaseMonitorState to) {
+	public Set<BaseEvent> getBaseEvent(AbstractMonitorState from, AbstractMonitorState to) {
 	    Set<BaseEvent> result = new HashSet<BaseEvent>();
 	    for (BaseEvent baseEvent : finiteSpec.getBaseEvents()) {
 		if (from.getSuccessor(baseEvent) == to) {
@@ -394,7 +394,7 @@ public class FiniteParametricProperty implements ParametricProperty {
     }
 
     @Override
-    public BaseMonitorState getInitialState() {
+    public AbstractMonitorState getInitialState() {
 	return finiteSpec.getInitialState();
     }
 

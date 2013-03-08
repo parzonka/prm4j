@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import prm4j.api.Event;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.monitor.BaseMonitor;
+import prm4j.indexing.monitor.AbstractMonitor;
 
 public class DefaultParametricMonitor_StressTest extends AbstractParametricMonitorTest {
 
@@ -58,8 +58,8 @@ public class DefaultParametricMonitor_StressTest extends AbstractParametricMonit
 	}
 
 	assertEquals(5002, nodeManager.getCreatedCount()); // root + m + 1000*c, 1000*i, 1000*mc + 1000*ci + 1000*mci
-	assertEquals(2001, BaseMonitor.getCreatedMonitorsCount()); // m + 1000*mc + 1000*mci
-	assertEquals(2000, BaseMonitor.getUpdateddMonitorsCount()); // 1000*mc + 1000*mci
+	assertEquals(2001, AbstractMonitor.getCreatedMonitorsCount()); // m + 1000*mc + 1000*mci
+	assertEquals(2000, AbstractMonitor.getUpdateddMonitorsCount()); // 1000*mc + 1000*mci
     }
 
     @Test
@@ -75,8 +75,8 @@ public class DefaultParametricMonitor_StressTest extends AbstractParametricMonit
 							      // statechanging
 
 	assertEquals(5002, nodeManager.getCreatedCount()); // root + m + 1000*c, 1000*i, 1000*mc + 1000*ci + 1000*mci
-	assertEquals(2001, BaseMonitor.getCreatedMonitorsCount()); // m + 1000*mc + 1000*mci
-	assertEquals(3000, BaseMonitor.getUpdateddMonitorsCount()); // (1000*mc + 1000*mci) + 1000*mci
+	assertEquals(2001, AbstractMonitor.getCreatedMonitorsCount()); // m + 1000*mc + 1000*mci
+	assertEquals(3000, AbstractMonitor.getUpdateddMonitorsCount()); // (1000*mc + 1000*mci) + 1000*mci
 	//
     }
 

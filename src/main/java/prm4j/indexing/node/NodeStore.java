@@ -14,13 +14,13 @@ import prm4j.indexing.binding.Binding;
 
 public interface NodeStore {
 
-    public Node getOrCreateNode(Binding[] bindings);
+    public Node getOrCreateNode(Binding[] uncompressedBindings);
 
-    public Node getOrCreateNode(Binding[] bindings, int[] parameterMask);
+    public Node getOrCreateNode(Binding[] uncompressedBindings, int[] parameterMask);
 
-    public Node getNode(Binding[] bindings);
+    public Node getNode(Binding[] uncompressedBindings);
 
-    public Node getNode(Binding[] bindings, int[] parameterMask);
+    public Node getNode(Binding[] uncompressedBindings, int[] parameterMask);
 
     public void reset();
 

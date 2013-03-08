@@ -77,7 +77,7 @@ public class ParametricMonitorLogger {
 	logger.log(Level.INFO, String.format("%s NODES (created) %d", experimentName, nodeManager.getCreatedCount()));
 	logger.log(Level.INFO, String.format(
 		"%s MONITORS (createdAlive/updated/orphaned/collected/createdDead) %d %d %d %d %d", experimentName,
-		BaseMonitor.getCreatedMonitorsCount(), BaseMonitor.getUpdateddMonitorsCount(),
+		AbstractMonitor.getCreatedMonitorsCount(), AbstractMonitor.getUpdateddMonitorsCount(),
 		nodeManager.getOrphanedMonitorsCount(), nodeManager.getCollectedMonitorsCount(),
 		DeadMonitor.getCreatedMonitorsCount()));
 	memStats.clear();

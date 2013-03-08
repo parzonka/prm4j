@@ -15,7 +15,7 @@ import java.util.Set;
 import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.monitor.BaseMonitorState;
+import prm4j.indexing.monitor.AbstractMonitorState;
 
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
@@ -33,7 +33,7 @@ public interface ParametricProperty {
 
     public Set<Parameter<?>> getParameters();
 
-    public BaseMonitorState getInitialState();
+    public AbstractMonitorState getInitialState();
 
     public Set<BaseEvent> getCreationEvents();
 

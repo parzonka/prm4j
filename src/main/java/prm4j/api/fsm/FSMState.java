@@ -14,9 +14,9 @@ import prm4j.api.Alphabet;
 import prm4j.api.BaseEvent;
 import prm4j.api.MatchHandler;
 import prm4j.api.Symbol;
-import prm4j.indexing.monitor.BaseMonitorState;
+import prm4j.indexing.monitor.AbstractMonitorState;
 
-public class FSMState extends BaseMonitorState {
+public class FSMState extends AbstractMonitorState {
 
     private FSMState[] successorTable;
     private final boolean isAccepting;
@@ -45,7 +45,7 @@ public class FSMState extends BaseMonitorState {
     }
 
     @Override
-    public BaseMonitorState getSuccessor(BaseEvent baseEvent) {
+    public AbstractMonitorState getSuccessor(BaseEvent baseEvent) {
 	return successorTable[baseEvent.getIndex()];
     }
 

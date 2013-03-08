@@ -18,7 +18,7 @@ import prm4j.api.MatchHandler;
  *
  * @see  {@link Monitor}
  */
-public abstract class BaseMonitorState {
+public abstract class AbstractMonitorState {
 
     /**
      * Unique index for finite state spaces.
@@ -30,18 +30,18 @@ public abstract class BaseMonitorState {
      *
      * @param index
      */
-    public BaseMonitorState(int index) {
+    public AbstractMonitorState(int index) {
 	this.index = index;
     }
 
     /**
      * Creates a monitor state assuming an infinite state space. This monitor will not have an unique index.
      */
-    public BaseMonitorState() {
+    public AbstractMonitorState() {
 	index = -1;
     }
 
-    public abstract BaseMonitorState getSuccessor(BaseEvent baseEvent);
+    public abstract AbstractMonitorState getSuccessor(BaseEvent baseEvent);
 
     /**
      * Tests, if the current state is an accepting state.

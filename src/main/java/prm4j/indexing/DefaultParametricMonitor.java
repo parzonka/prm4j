@@ -24,7 +24,7 @@ import prm4j.indexing.logic.FindMaxArgs;
 import prm4j.indexing.logic.JoinArgs;
 import prm4j.indexing.logic.ParameterNode;
 import prm4j.indexing.logic.UpdateChainingsArgs;
-import prm4j.indexing.monitor.BaseMonitor;
+import prm4j.indexing.monitor.AbstractMonitor;
 import prm4j.indexing.monitor.DeadMonitor;
 import prm4j.indexing.monitor.Monitor;
 import prm4j.indexing.monitor.MonitorSet;
@@ -276,7 +276,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	bindingStore.reset();
 	nodeStore.reset();
 	nodeManager.reset();
-	BaseMonitor.reset();
+	AbstractMonitor.reset();
 	DeadMonitor.reset();
 	MatchHandler.reset();
     }

@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.monitor.BaseMonitorState;
+import prm4j.indexing.monitor.AbstractMonitorState;
 import prm4j.indexing.monitor.Monitor;
 import prm4j.indexing.monitor.StatefulMonitor;
 import prm4j.util.FSMDefinitions.FSM_SafeMapIterator;
@@ -65,9 +65,9 @@ public class FSMSpecTest {
 	FSM fsm = u.fsm;
 	FSMSpec fs = new FSMSpec(fsm);
 
-	Set<BaseMonitorState> actual = fs.getStates();
+	Set<AbstractMonitorState> actual = fs.getStates();
 
-	Set<BaseMonitorState> expected = new HashSet<BaseMonitorState>();
+	Set<AbstractMonitorState> expected = new HashSet<AbstractMonitorState>();
 	expected.add(u.initial);
 	expected.add(u.s1);
 	expected.add(u.s2);
@@ -83,9 +83,9 @@ public class FSMSpecTest {
 	FSM fsm = u.fsm;
 	FSMSpec fs = new FSMSpec(fsm);
 
-	BaseMonitorState actual = fs.getInitialState();
+	AbstractMonitorState actual = fs.getInitialState();
 
-	BaseMonitorState expected = u.initial;
+	AbstractMonitorState expected = u.initial;
 
 	assertEquals(expected, actual);
     }

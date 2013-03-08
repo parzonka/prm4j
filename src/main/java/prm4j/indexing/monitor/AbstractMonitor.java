@@ -29,7 +29,7 @@ import prm4j.indexing.logic.ParameterNode;
  * Abstract base class for a concrete monitor instance, representing the internal state of a {@link ParametricMonitor}
  * for one single concrete variable binding.
  */
-public abstract class BaseMonitor implements Monitor {
+public abstract class AbstractMonitor implements Monitor {
 
     private final static Binding[] EMPTY_BINDINGS = new Binding[0];
 
@@ -54,7 +54,7 @@ public abstract class BaseMonitor implements Monitor {
     // low level access
     private long timestamp;
 
-    public BaseMonitor() {
+    public AbstractMonitor() {
 	createdMonitorsCount++;
 	compressedBindings = EMPTY_BINDINGS;
 	timestamp = -1L;

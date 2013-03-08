@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.monitor.BaseMonitor;
+import prm4j.indexing.monitor.AbstractMonitor;
 import prm4j.indexing.monitor.MonitorSet;
 import prm4j.spec.FiniteSpec;
 
@@ -225,7 +225,7 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertEquals(3, BaseMonitor.getUpdateddMonitorsCount()); // a, b, a
+	assertEquals(3, AbstractMonitor.getUpdateddMonitorsCount()); // a, b, a
     }
 
     @Test
@@ -304,7 +304,7 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
 	pm.processEvent(fsm.e1.createEvent(a));
 
 	// verify
-	assertEquals(4, BaseMonitor.getUpdateddMonitorsCount()); // a, ab, a, ab
+	assertEquals(4, AbstractMonitor.getUpdateddMonitorsCount()); // a, ab, a, ab
     }
 
     @Test

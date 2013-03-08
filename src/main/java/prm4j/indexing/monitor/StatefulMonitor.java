@@ -16,13 +16,13 @@ import prm4j.api.Event;
 import prm4j.api.MatchHandler;
 
 /**
- * A base monitor holding a {@link BaseMonitorState} which is updated when processing {@link BaseEvent}s.
+ * A base monitor holding a {@link AbstractMonitorState} which is updated when processing {@link BaseEvent}s.
  */
-public class StatefulMonitor extends BaseMonitor {
+public class StatefulMonitor extends AbstractMonitor {
 
-    protected BaseMonitorState state;
+    protected AbstractMonitorState state;
 
-    public StatefulMonitor(BaseMonitorState state) {
+    public StatefulMonitor(AbstractMonitorState state) {
 	this.state = state;
     }
 

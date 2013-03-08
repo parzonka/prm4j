@@ -22,7 +22,7 @@ import prm4j.api.BaseEvent;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.DefaultParametricMonitor;
 import prm4j.indexing.logic.ParametricPropertyProcessor;
-import prm4j.indexing.monitor.BaseMonitor;
+import prm4j.indexing.monitor.AbstractMonitor;
 import prm4j.indexing.node.NodeManager;
 import prm4j.spec.FiniteParametricProperty;
 import prm4j.spec.FiniteSpec;
@@ -87,8 +87,8 @@ public class DefaultParametricMonitor_SafeMapIterator_Test extends AbstractDefau
 	assertEquals(7L, nodeManager.getCreatedCount()); // root + ...
 	assertCreatedNodes(array(m1, _, _), array(_, c1, _), array(m1, c1, _), array(_, c1, i1), array(m1, c1, i1),
 		array(_, _, i1));
-	assertEquals(3, BaseMonitor.getCreatedMonitorsCount()); // m1, m1c1, m1c1i1
-	assertEquals(2, BaseMonitor.getUpdateddMonitorsCount()); // m1c1, m1c1i1
+	assertEquals(3, AbstractMonitor.getCreatedMonitorsCount()); // m1, m1c1, m1c1i1
+	assertEquals(2, AbstractMonitor.getUpdateddMonitorsCount()); // m1c1, m1c1i1
     }
 
     @Test
@@ -104,7 +104,7 @@ public class DefaultParametricMonitor_SafeMapIterator_Test extends AbstractDefau
 	// This is correct, because at (1) only the monitor for mi is created.
 	// at (3) the monitor is created, but not updated. Only mci is updated, because the transition m->mc is not in
 	// the chainSet, because it is not stagechanging!
-	assertEquals(3, BaseMonitor.getUpdateddMonitorsCount()); // m1c1, m1c1i1, m1c1i1
+	assertEquals(3, AbstractMonitor.getUpdateddMonitorsCount()); // m1c1, m1c1i1, m1c1i1
     }
 
     @Test
@@ -121,7 +121,7 @@ public class DefaultParametricMonitor_SafeMapIterator_Test extends AbstractDefau
 	// the chainSet, because it is not stagechanging!
 	// at (4) m1 is not updated, because it will never have a monitor! m1c1 not (not stagechanging), and m1c1i1 is
 	// the only valid target.
-	assertEquals(4, BaseMonitor.getUpdateddMonitorsCount()); // m1c1, m1c1i1, m1c1i1. (4:) m1c1i1
+	assertEquals(4, AbstractMonitor.getUpdateddMonitorsCount()); // m1c1, m1c1i1, m1c1i1. (4:) m1c1i1
     }
 
     @Test
