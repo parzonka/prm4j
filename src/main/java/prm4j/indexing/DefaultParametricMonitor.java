@@ -114,7 +114,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    // direct update phase
 	    for (MonitorSet monitorSet : instanceNode.getMonitorSets()) { // (30 - 32) new
 		if (monitorSet != null) {
-		    monitorSet.processEvent(event);
+		    monitorSet.processUpdate(event);
 		}
 	    }
 	    findMaxPhase: for (FindMaxArgs findMaxArgs : eventContext.getFindMaxArgs(baseEvent)) { // 8
@@ -224,7 +224,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 	    instanceMonitor.process(event); // 30
 	    for (MonitorSet monitorSet : instanceNode.getMonitorSets()) { // 30 - 32
 		if (monitorSet != null) {
-		    monitorSet.processEvent(event);
+		    monitorSet.processUpdate(event);
 		}
 	    }
 	}

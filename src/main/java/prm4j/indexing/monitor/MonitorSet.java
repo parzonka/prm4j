@@ -71,7 +71,7 @@ public class MonitorSet {
      * @param event
      *            the current event
      */
-    public void processEvent(Event event) {
+    public void processUpdate(Event event) {
 	int deadPartitionStart = 0;
 	for (int i = 0; i < size; i++) { // 63
 	    final NodeRef nodeRef = monitorSet[i];
