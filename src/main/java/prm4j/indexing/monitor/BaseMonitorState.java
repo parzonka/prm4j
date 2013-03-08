@@ -56,7 +56,7 @@ public abstract class BaseMonitorState {
      * @return <code>true</code> if the state space is finite, of <code>false</code> if there may exist an infinite
      *         number of possible states.
      */
-    public boolean isFinite() {
+    public boolean isFiniteStateSpace() {
 	return index >= 0;
     }
 
