@@ -150,7 +150,7 @@ public abstract class BaseMonitor implements Monitor {
      * @return <code>true</code> if an accepting state is still reachable
      */
     @Override
-    public abstract boolean isAcceptingStateReachable();
+    public abstract boolean isAlive();
 
     /**
      * Creates a deep copy of this base monitor.

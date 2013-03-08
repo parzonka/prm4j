@@ -78,7 +78,7 @@ public class NodeManager {
 	NodeRef nodeRef = (NodeRef) referenceQueue.poll();
 	while (nodeRef != null) {
 	    orphanedMonitors++;
-	    if (nodeRef.monitor != null && !nodeRef.monitor.isAcceptingStateReachable()) {
+	    if (nodeRef.monitor != null && !nodeRef.monitor.isAlive()) {
 		nodeRef.monitor = null;
 		collectedMonitors++;
 	    }

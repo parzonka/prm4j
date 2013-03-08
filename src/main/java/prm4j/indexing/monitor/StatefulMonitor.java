@@ -73,7 +73,7 @@ public class StatefulMonitor extends BaseMonitor {
      * </ol>
      */
     @Override
-    public boolean isAcceptingStateReachable() {
+    public boolean isAlive() {
 	return !isTerminated() && state != null && !state.isFinal()
 		&& getParameterNode().isAcceptingStateReachable(getCompressedBindings());
     }

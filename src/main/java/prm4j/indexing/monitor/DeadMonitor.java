@@ -36,7 +36,7 @@ public class DeadMonitor implements Monitor {
     }
 
     @Override
-    public boolean isAcceptingStateReachable() {
+    public boolean isAlive() {
 	return false;
     }
 

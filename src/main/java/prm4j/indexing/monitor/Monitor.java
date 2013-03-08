@@ -73,12 +73,13 @@ public interface Monitor {
     public boolean processEvent(Event event);
 
     /**
-     * The monitor decides if am accepting state is reachable based on its current internal state. This allows efficient
-     * parametric monitors to remove the monitor instance in case it should be impossible to reach any accepting state.
+     * A monitor is alive, if a the non-parametric trace for its trace slice has chances to be matched. It may determine
+     * that this is not possible if events carrying certain bindings may not occur in the future because the bindings
+     * are expired.
      * 
-     * @return <code>true</code> if an accepting state is still reachable
+     * @return <code>true</code> if the monitor is still alive
      */
-    public boolean isAcceptingStateReachable();
+    public boolean isAlive();
 
     /**
      * Creates a deep copy of this base monitor.
