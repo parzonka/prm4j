@@ -12,6 +12,9 @@ package prm4j.indexing.logic;
 
 import prm4j.api.BaseEvent;
 
+/**
+ * Encapsulates related to {@link BaseEvent}s.
+ */
 public class EventContext {
 
     private final JoinArgs[][] joinArgsArray;
