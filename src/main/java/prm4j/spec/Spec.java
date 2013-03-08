@@ -14,7 +14,7 @@ import java.util.Set;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.monitor.AbstractMonitorState;
+import prm4j.indexing.monitor.MonitorState;
 import prm4j.indexing.monitor.Monitor;
 
 /**
@@ -26,7 +26,7 @@ public interface Spec {
 
     public Set<Parameter<?>> getFullParameterSet();
 
-    public AbstractMonitorState getInitialState();
+    public MonitorState getInitialState();
 
     public Monitor getInitialMonitor();
 

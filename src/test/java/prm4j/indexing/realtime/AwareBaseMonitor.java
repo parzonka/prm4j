@@ -18,8 +18,8 @@ import java.util.List;
 import prm4j.Util;
 import prm4j.api.BaseEvent;
 import prm4j.api.Event;
-import prm4j.indexing.monitor.AbstractMonitorState;
 import prm4j.indexing.monitor.Monitor;
+import prm4j.indexing.monitor.MonitorState;
 import prm4j.indexing.monitor.StatefulMonitor;
 
 /**
@@ -32,14 +32,14 @@ public class AwareBaseMonitor extends StatefulMonitor {
     private final Deque<AwareBaseMonitor> updatedMonitors;
     private final Deque<AwareBaseMonitor> createdMonitors;
 
-    public AwareBaseMonitor(AbstractMonitorState state) {
+    public AwareBaseMonitor(MonitorState state) {
 	super(state);
 	baseEventTrace = new ArrayList<BaseEvent>();
 	updatedMonitors = new ArrayDeque<AwareBaseMonitor>();
 	createdMonitors = new ArrayDeque<AwareBaseMonitor>();
     }
 
-    public AwareBaseMonitor(AbstractMonitorState state, List<BaseEvent> baseEventTrace, Deque<AwareBaseMonitor> updatedMonitors,
+    public AwareBaseMonitor(MonitorState state, List<BaseEvent> baseEventTrace, Deque<AwareBaseMonitor> updatedMonitors,
 	    Deque<AwareBaseMonitor> createdMonitors) {
 	super(state);
 	this.baseEventTrace = baseEventTrace;

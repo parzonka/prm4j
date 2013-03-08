@@ -15,10 +15,10 @@ import prm4j.api.MatchHandler;
 
 /**
  * Models the internal state of a {@link StatefulMonitor} where the state space may be finite or infinite.
- *
- * @see  {@link Monitor}
+ * 
+ * @see {@link Monitor}
  */
-public abstract class AbstractMonitorState {
+public abstract class AbstractMonitorState implements MonitorState {
 
     /**
      * Unique index for finite state spaces.
@@ -27,7 +27,7 @@ public abstract class AbstractMonitorState {
 
     /**
      * Creates a monitor state assuming a finite state space. The monitor will have an unique index.
-     *
+     * 
      * @param index
      */
     public AbstractMonitorState(int index) {
@@ -41,38 +41,24 @@ public abstract class AbstractMonitorState {
 	index = -1;
     }
 
-    public abstract AbstractMonitorState getSuccessor(BaseEvent baseEvent);
+    @Override
+    public abstract MonitorState getSuccessor(BaseEvent baseEvent);
 
-    /**
-     * Tests, if the current state is an accepting state.
-     *
-     * @return <code>true</code> if the current state is accepting
-     */
+    @Override
     public abstract boolean isAccepting();
 
+    @Override
     public abstract MatchHandler getMatchHandler();
 
-    /**
-     * @return <code>true</code> if the state space is finite, of <code>false</code> if there may exist an infinite
-     *         number of possible states.
-     */
+    @Override
     public boolean isFiniteStateSpace() {
 	return index >= 0;
     }
 
-    /**
-     * Tests, if all successor states are dead states. (A dead state is a non-accepting state, where all successors are
-     * dead states. Because final state <i>may</i> be an accepting state, it is not always a dead state.)
-     *
-     * @return <code>true</code> if all successor states are dead states
-     */
+    @Override
     public abstract boolean isFinal();
 
-    /**
-     * Returns the unique index of this state if the state space is finite. A valid index is a non-negative integer.
-     *
-     * @return the unique index of this state or -1 if the state space is infinite.
-     */
+    @Override
     public int getIndex() {
 	return index;
     }

@@ -20,9 +20,9 @@ import prm4j.api.MatchHandler;
  */
 public class StatefulMonitor extends AbstractMonitor {
 
-    protected AbstractMonitorState state;
+    protected MonitorState state;
 
-    public StatefulMonitor(AbstractMonitorState state) {
+    public StatefulMonitor(MonitorState state) {
 	this.state = state;
     }
 

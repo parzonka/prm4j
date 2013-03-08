@@ -17,7 +17,7 @@ import java.util.Set;
 
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.monitor.AbstractMonitorState;
+import prm4j.indexing.monitor.MonitorState;
 import prm4j.indexing.monitor.Monitor;
 import prm4j.indexing.monitor.StatefulMonitor;
 import prm4j.spec.FiniteSpec;
@@ -26,13 +26,13 @@ public class FSMSpec implements FiniteSpec {
 
     private final Set<BaseEvent> baseEvents;
     private final Set<Parameter<?>> parameters;
-    private final Set<AbstractMonitorState> states;
-    private final AbstractMonitorState initialState;
+    private final Set<MonitorState> states;
+    private final MonitorState initialState;
 
     public FSMSpec(FSM fsm) {
 	baseEvents = unmodifiableSet(new HashSet<BaseEvent>(fsm.getAlphabet().getSymbols()));
 	parameters = unmodifiableSet(fsm.getAlphabet().getParameters());
-	states = unmodifiableSet(new HashSet<AbstractMonitorState>(fsm.getStates()));
+	states = unmodifiableSet(new HashSet<MonitorState>(fsm.getStates()));
 	initialState = fsm.getInitialState();
     }
 
@@ -42,12 +42,12 @@ public class FSMSpec implements FiniteSpec {
     }
 
     @Override
-    public Set<AbstractMonitorState> getStates() {
+    public Set<MonitorState> getStates() {
 	return states;
     }
 
     @Override
-    public AbstractMonitorState getInitialState() {
+    public MonitorState getInitialState() {
 	return initialState;
     }
 

@@ -12,13 +12,13 @@ package prm4j.spec;
 
 import java.util.Set;
 
-import prm4j.indexing.monitor.AbstractMonitorState;
+import prm4j.indexing.monitor.MonitorState;
 
 /**
  * Represents a specification of a property with finite number of states.
  */
-public interface FiniteSpec extends Spec{
+public interface FiniteSpec extends Spec {
 
-    public Set<AbstractMonitorState> getStates();
+    public Set<MonitorState> getStates();
 
 }
