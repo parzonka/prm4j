@@ -52,7 +52,7 @@ public class FSMSpec implements FiniteSpec {
     }
 
     @Override
-    public Monitor getInitialMonitor() {
+    public Monitor getMonitorPrototype() {
 	return new StatefulMonitor(getInitialState());
     }
 

@@ -42,10 +42,10 @@ public class ParametricMonitorFactory {
 	final BindingStore bindingStore = new DefaultBindingStore(bindingFactory, finiteSpec.getFullParameterSet());
 	final NodeManager nodeManager = new NodeManager();
 	final NodeStore nodeStore = new DefaultNodeStore(processor.getParameterTree(), nodeManager);
-	final Monitor prototypeMonitor = finiteSpec.getInitialMonitor();
+	final Monitor monitorPrototype = finiteSpec.getMonitorPrototype();
 
 	final ParametricMonitor parametricMonitor = new DefaultParametricMonitor(bindingStore, nodeStore,
-		prototypeMonitor, processor.getEventContext(), nodeManager, false);
+		monitorPrototype, processor.getEventContext(), nodeManager, false);
 
 	return parametricMonitor;
     }

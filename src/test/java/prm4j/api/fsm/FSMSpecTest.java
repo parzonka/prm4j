@@ -96,7 +96,7 @@ public class FSMSpecTest {
 	FSM fsm = u.fsm;
 	FSMSpec fs = new FSMSpec(fsm);
 
-	Monitor actual = fs.getInitialMonitor();
+	Monitor actual = fs.getMonitorPrototype();
 
 	Monitor expected = new StatefulMonitor(u.initial);
 

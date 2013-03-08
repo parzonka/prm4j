@@ -60,7 +60,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
     public DefaultParametricMonitor(ParameterNode parameterTree, EventContext eventContext, Spec spec) {
 	this.eventContext = eventContext;
 	bindingStore = new DefaultBindingStore(new LinkedListBindingFactory(), spec.getFullParameterSet());
-	monitorPrototype = spec.getInitialMonitor();
+	monitorPrototype = spec.getMonitorPrototype();
 	nodeManager = new NodeManager();
 	nodeStore = new DefaultNodeStore(parameterTree, nodeManager);
 	logger = Globals.LOGGING ? new ParametricMonitorLogger(bindingStore, nodeManager) : null;

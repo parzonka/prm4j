@@ -28,6 +28,6 @@ public interface Spec {
 
     public MonitorState getInitialState();
 
-    public Monitor getInitialMonitor();
+    public Monitor getMonitorPrototype();
 
 }
