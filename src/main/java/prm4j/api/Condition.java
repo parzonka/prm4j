@@ -36,7 +36,7 @@ public abstract class Condition {
 	return result;
     }
 
-    public <T> T getParameterValue(Parameter<T> parameter) {
+    protected <T> T getParameterValue(Parameter<T> parameter) {
 	return baseMonitor.getParameterNode().getParameterValue(parameter, baseMonitor.getCompressedBindings());
     }
 
