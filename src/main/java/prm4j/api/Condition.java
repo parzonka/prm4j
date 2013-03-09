@@ -14,17 +14,17 @@ import prm4j.indexing.monitor.Monitor;
 
 public abstract class Condition {
 
-    private transient Monitor baseMonitor;
+    private transient Monitor monitor;
 
     /**
      * Evaluate this condition based on the state of the base monitor and its attached parametric instance with
      * bindings.
      * 
-     * @param baseMonitor
+     * @param monitor
      * @return
      */
-    public boolean eval(Monitor baseMonitor) {
-	this.baseMonitor = baseMonitor;
+    protected boolean eval(Monitor monitor) {
+	this.monitor = monitor;
 	boolean result = false;
 	// protects from condition specification which try to access non-existing parameter values or similar
 	try {
@@ -32,12 +32,12 @@ public abstract class Condition {
 	} finally {
 	    // do nothing
 	}
-	this.baseMonitor = null;
+	this.monitor = null;
 	return result;
     }
 
     protected <T> T getParameterValue(Parameter<T> parameter) {
-	return baseMonitor.getParameterNode().getParameterValue(parameter, baseMonitor.getCompressedBindings());
+	return monitor.getParameterNode().getParameterValue(parameter, monitor.getCompressedBindings());
     }
 
     public abstract boolean eval();
