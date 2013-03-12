@@ -27,7 +27,7 @@ import prm4j.api.Symbol;
 import prm4j.indexing.DefaultParametricMonitor;
 import prm4j.indexing.binding.Binding;
 import prm4j.indexing.binding.BindingStore;
-import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.model.ParametricPropertyProcessor;
 import prm4j.indexing.monitor.AbstractMonitor;
 import prm4j.indexing.monitor.DeadMonitor;
 import prm4j.indexing.monitor.Monitor;

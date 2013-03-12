@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 import prm4j.api.Event;
 import prm4j.indexing.binding.Binding;
-import prm4j.indexing.logic.UpdateChainingsArgs;
+import prm4j.indexing.model.UpdateChainingsArgs;
 import prm4j.indexing.node.Node;
 import prm4j.indexing.node.NodeRef;
 import prm4j.indexing.node.NodeStore;

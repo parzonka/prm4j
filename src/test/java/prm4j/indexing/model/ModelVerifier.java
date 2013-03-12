@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing.logic;
+package prm4j.indexing.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.Set;
 import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.model.ParametricPropertyProcessor;
 import static org.junit.Assert.fail;
 
 public class ModelVerifier {

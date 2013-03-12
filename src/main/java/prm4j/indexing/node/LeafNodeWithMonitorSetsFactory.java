@@ -11,7 +11,7 @@
 package prm4j.indexing.node;
 
 import prm4j.indexing.binding.Binding;
-import prm4j.indexing.logic.ParameterNode;
+import prm4j.indexing.model.ParameterNode;
 
 public class LeafNodeWithMonitorSetsFactory extends NodeFactory {
 

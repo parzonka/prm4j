@@ -31,7 +31,7 @@ import prm4j.indexing.binding.ArrayBasedBinding;
 import prm4j.indexing.binding.ArrayBasedBindingFactory;
 import prm4j.indexing.binding.Binding;
 import prm4j.indexing.binding.DefaultBindingStore;
-import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.model.ParametricPropertyProcessor;
 import prm4j.indexing.monitor.Monitor;
 import prm4j.indexing.monitor.StatefulMonitor;
 import prm4j.indexing.node.Node;

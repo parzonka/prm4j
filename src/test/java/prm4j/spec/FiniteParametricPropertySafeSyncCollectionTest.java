@@ -24,8 +24,8 @@ import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.logic.ParameterNode;
-import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.model.ParameterNode;
+import prm4j.indexing.model.ParametricPropertyProcessor;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;

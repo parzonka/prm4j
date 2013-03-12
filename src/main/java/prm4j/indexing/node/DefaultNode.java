@@ -16,7 +16,7 @@ import java.lang.ref.WeakReference;
 import prm4j.Util;
 import prm4j.api.Parameter;
 import prm4j.indexing.binding.Binding;
-import prm4j.indexing.logic.ParameterNode;
+import prm4j.indexing.model.ParameterNode;
 import prm4j.indexing.monitor.Monitor;
 import prm4j.indexing.monitor.MonitorSet;
 

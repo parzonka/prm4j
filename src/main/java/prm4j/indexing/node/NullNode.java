@@ -11,7 +11,7 @@
 package prm4j.indexing.node;
 
 import prm4j.indexing.binding.Binding;
-import prm4j.indexing.logic.ParameterNode;
+import prm4j.indexing.model.ParameterNode;
 import prm4j.indexing.monitor.Monitor;
 import prm4j.indexing.monitor.MonitorSet;
 

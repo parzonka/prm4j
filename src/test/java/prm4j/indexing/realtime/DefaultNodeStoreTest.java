@@ -20,7 +20,7 @@ import prm4j.AbstractTest;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.binding.ArrayBasedBinding;
 import prm4j.indexing.binding.Binding;
-import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.model.ParametricPropertyProcessor;
 import prm4j.indexing.node.DefaultNodeStore;
 import prm4j.indexing.node.Node;
 import prm4j.indexing.node.NodeManager;

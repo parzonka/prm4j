@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing.logic;
+package prm4j.indexing.model;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -16,8 +16,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import prm4j.indexing.logic.ParameterNode;
-import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.model.ParameterNode;
+import prm4j.indexing.model.ParametricPropertyProcessor;
 
 public class ParametricPropertyProcessor_HasNext_Test extends AbstractParametricPropertyProcessorTest {
 

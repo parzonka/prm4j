@@ -13,7 +13,7 @@ package prm4j.indexing.node;
 import java.lang.ref.ReferenceQueue;
 
 import prm4j.indexing.binding.Binding;
-import prm4j.indexing.logic.ParameterNode;
+import prm4j.indexing.model.ParameterNode;
 import prm4j.indexing.monitor.MonitorSet;
 
 public class LeafNodeWithMonitorSets extends LeafNode {

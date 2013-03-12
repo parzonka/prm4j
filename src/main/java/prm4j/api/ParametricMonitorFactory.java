@@ -17,7 +17,7 @@ import prm4j.indexing.binding.BindingFactory;
 import prm4j.indexing.binding.BindingStore;
 import prm4j.indexing.binding.DefaultBindingStore;
 import prm4j.indexing.binding.LinkedListBindingFactory;
-import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.model.ParametricPropertyProcessor;
 import prm4j.indexing.monitor.AbstractMonitor;
 import prm4j.indexing.monitor.Monitor;
 import prm4j.indexing.node.DefaultNodeStore;

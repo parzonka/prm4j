@@ -21,7 +21,7 @@ import org.junit.Test;
 import prm4j.AbstractTest;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.model.ParametricPropertyProcessor;
 import prm4j.indexing.node.NodeManager;
 
 public class FiniteParametricPropertyHasNextTest extends AbstractTest {

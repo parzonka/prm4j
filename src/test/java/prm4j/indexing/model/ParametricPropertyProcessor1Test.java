@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing.logic;
+package prm4j.indexing.model;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -24,11 +24,11 @@ import prm4j.AbstractTest;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.logic.FindMaxArgs;
-import prm4j.indexing.logic.JoinArgs;
-import prm4j.indexing.logic.ParameterNode;
-import prm4j.indexing.logic.ParametricPropertyProcessor;
-import prm4j.indexing.logic.UpdateChainingsArgs;
+import prm4j.indexing.model.FindMaxArgs;
+import prm4j.indexing.model.JoinArgs;
+import prm4j.indexing.model.ParameterNode;
+import prm4j.indexing.model.ParametricPropertyProcessor;
+import prm4j.indexing.model.UpdateChainingsArgs;
 import prm4j.spec.FiniteParametricProperty;
 
 import com.google.common.collect.HashMultimap;

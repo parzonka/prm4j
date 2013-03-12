@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import prm4j.indexing.binding.Binding;
-import prm4j.indexing.logic.ParameterNode;
+import prm4j.indexing.model.ParameterNode;
 import prm4j.indexing.node.DefaultNodeStore;
 import prm4j.indexing.node.Node;
 import prm4j.indexing.node.NodeManager;

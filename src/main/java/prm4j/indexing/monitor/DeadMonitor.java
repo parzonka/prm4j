@@ -12,7 +12,7 @@ package prm4j.indexing.monitor;
 
 import prm4j.api.Event;
 import prm4j.indexing.binding.Binding;
-import prm4j.indexing.logic.ParameterNode;
+import prm4j.indexing.model.ParameterNode;
 
 public class DeadMonitor implements Monitor {
 

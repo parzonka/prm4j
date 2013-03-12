@@ -19,7 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.logic.ModelVerifier;
+import prm4j.indexing.model.ModelVerifier;
 import prm4j.indexing.node.NullNode;
 import prm4j.spec.FiniteSpec;
 

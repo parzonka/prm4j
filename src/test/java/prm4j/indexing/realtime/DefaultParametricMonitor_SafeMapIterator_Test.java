@@ -21,7 +21,7 @@ import org.junit.Test;
 import prm4j.api.BaseEvent;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.DefaultParametricMonitor;
-import prm4j.indexing.logic.ParametricPropertyProcessor;
+import prm4j.indexing.model.ParametricPropertyProcessor;
 import prm4j.indexing.monitor.AbstractMonitor;
 import prm4j.indexing.node.NodeManager;
 import prm4j.spec.FiniteParametricProperty;

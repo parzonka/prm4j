@@ -8,7 +8,7 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.indexing.logic;
+package prm4j.indexing.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
