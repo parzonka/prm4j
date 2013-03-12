@@ -415,7 +415,7 @@ public class ParametricPropertyProcessor {
     }
 
     public EventContext getEventContext() {
-	return new EventContext(getJoinData(), getMaxData(), getCreationEvents(), getDisablingEvents(),
+	return new EventContext(getJoinData(), getMaxData(), getCreationEvents(), getDisableEvents(),
 		existingMonitorMasks);
     }
 
@@ -456,12 +456,12 @@ public class ParametricPropertyProcessor {
 	return creationEvents;
     }
 
-    protected boolean[] getDisablingEvents() {
-	boolean[] disablingEvents = new boolean[pp.getBaseEvents().size()];
+    protected boolean[] getDisableEvents() {
+	boolean[] disableEvents = new boolean[pp.getBaseEvents().size()];
 	for (BaseEvent baseEvent : pp.getBaseEvents()) {
-	    disablingEvents[baseEvent.getIndex()] = pp.getDisablingEvents().contains(baseEvent);
+	    disableEvents[baseEvent.getIndex()] = pp.getDisableEvents().contains(baseEvent);
 	}
-	return disablingEvents;
+	return disableEvents;
     }
 
     protected Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> getMonitorSetIds() {

@@ -37,7 +37,7 @@ public interface ParametricProperty {
 
     public Set<BaseEvent> getCreationEvents();
 
-    public Set<BaseEvent> getDisablingEvents();
+    public Set<BaseEvent> getDisableEvents();
 
     public Set<Set<Parameter<?>>> getPossibleParameterSets();
 

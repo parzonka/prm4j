@@ -64,7 +64,7 @@ public class FiniteParametricProperty implements ParametricProperty {
     private class ParameterSets {
 
 	private final Set<BaseEvent> creationEvents;
-	private final Set<BaseEvent> disablingEvents;
+	private final Set<BaseEvent> disableEvents;
 	private final SetMultimap<BaseEvent, Set<BaseEvent>> enablingEventSets;
 	private final Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates;
 	private final Set<Set<Parameter<?>>> possibleParameterSets;
@@ -73,13 +73,13 @@ public class FiniteParametricProperty implements ParametricProperty {
 
 	public ParameterSets() {
 	    creationEvents = calculateCreationEvents();
-	    disablingEvents = calculateDisablingEvents();
+	    disableEvents = calculateDisableEvents();
 	    enablingEventSets = HashMultimap.create();
 	    updates = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>();
 	    possibleParameterSets = new HashSet<Set<Parameter<?>>>();
 	    stateToSeenBaseEvents = HashMultimap.create();
 	    calculateCreationEvents();
-	    calculateDisablingEvents();
+	    calculateDisableEvents();
 	    computeRelations(finiteSpec.getInitialState(), new HashSet<BaseEvent>(), new HashSet<Parameter<?>>()); // 2
 	    enablingParameterSets = toMap2SetOfSetOfParameters(enablingEventSets);
 	}
@@ -103,20 +103,20 @@ public class FiniteParametricProperty implements ParametricProperty {
 	}
 
 	/**
-	 * Disabling events are events for which the successor of the initial state is a dead state.
+	 * Disable events are events for which the successor of the initial state is a dead state.
 	 * 
-	 * @return the disabling events
+	 * @return the disable events
 	 */
-	private Set<BaseEvent> calculateDisablingEvents() {
-	    Set<BaseEvent> disablingEvents = new HashSet<BaseEvent>();
+	private Set<BaseEvent> calculateDisableEvents() {
+	    Set<BaseEvent> disableEvents = new HashSet<BaseEvent>();
 	    MonitorState initialState = finiteSpec.getInitialState();
 	    for (BaseEvent symbol : finiteSpec.getBaseEvents()) {
 		MonitorState successor = initialState.getSuccessor(symbol);
 		if (successor == null) {
-		    disablingEvents.add(symbol);
+		    disableEvents.add(symbol);
 		}
 	    }
-	    return disablingEvents;
+	    return disableEvents;
 	}
 
 	private void computeRelations(MonitorState monitorState, Set<BaseEvent> seenBaseEvents,
@@ -349,13 +349,13 @@ public class FiniteParametricProperty implements ParametricProperty {
     }
 
     /**
-     * Disabling events are events for which the successor of the initial state is a dead state.
+     * Disable events are events for which the successor of the initial state is a dead state.
      * 
-     * @return the disabling events
+     * @return the disable events
      */
     @Override
-    public Set<BaseEvent> getDisablingEvents() {
-	return parameterSets.disablingEvents;
+    public Set<BaseEvent> getDisableEvents() {
+	return parameterSets.disableEvents;
     }
 
     @Override

@@ -159,7 +159,7 @@ public class DefaultParametricMonitor implements ParametricMonitor {
 		    }
 		}
 
-		if (eventContext.isDisablingEvent(baseEvent)) { // 2
+		if (eventContext.isDisableEvent(baseEvent)) { // 2
 		    instanceMonitor = new DeadMonitor(timestamp);
 		    nodeStore.getOrCreateNode(bindings, parameterMask).setMonitor(instanceMonitor);
 		} else {

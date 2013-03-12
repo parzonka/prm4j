@@ -43,7 +43,7 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
     public void setup() throws Exception {
 	// exercise
 	assertEquals(asSet(fsm.e1, fsm.e2, fsm.e3), fpp.getCreationEvents());
-	assertEquals(asSet(fsm.e2, fsm.e3), fpp.getDisablingEvents());
+	assertEquals(asSet(fsm.e2, fsm.e3), fpp.getDisableEvents());
     }
 
     // firstEvent_a //////////////////////////////////////////////////////////////////
@@ -389,7 +389,7 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
     // twoEvent_ab_a = ab followed by a (and some with b) ////////////////////////////////
 
     /*
-     * ab is in the disabling set and disables any traces with a, so we will not see any monitors created associated to
+     * ab is in the disable set and disables any traces with a, so we will not see any monitors created associated to
      * the instance a
      */
 
@@ -473,7 +473,7 @@ public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParam
     // twoEvent_ab_a = ab followed by a (and some with b) ////////////////////////////////
 
     /*
-     * ab is in the disabling set and disables any traces with a, so we will not see any monitors created associated to
+     * ab is in the disable set and disables any traces with a, so we will not see any monitors created associated to
      * the instance a
      */
 

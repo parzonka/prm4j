@@ -328,10 +328,10 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
 	assertEquals(1, fsm.matchHandler.getHandledMatches().size());
     }
 
-    // disabling //////////////////////////////////////////////////////////////////
+    // disable //////////////////////////////////////////////////////////////////
 
     @Test
-    public void disabling_bc_singleNodeIsCreated() throws Exception {
+    public void disable_bc_singleNodeIsCreated() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(b1, c1));
 
@@ -340,7 +340,7 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     }
 
     @Test
-    public void disabling_bc_ab_noMonitorsAreCreated() throws Exception {
+    public void disable_bc_ab_noMonitorsAreCreated() throws Exception {
 
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(b1, c1));
@@ -353,7 +353,7 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
     }
 
     @Test
-    public void disabling_bc_ab_noNodesAreCreated() throws Exception {
+    public void disable_bc_ab_noNodesAreCreated() throws Exception {
 	// exercise
 	pm.processEvent(fsm.e2.createEvent(b1, c1));
 	pm.processEvent(fsm.e1.createEvent(a1, b1));
