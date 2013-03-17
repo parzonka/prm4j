@@ -407,46 +407,4 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	assertEquals(expected, actual);
     }
 
-    @Test
-    public void getParameterTree_unsafeMapIterator() {
-
-	final Set<UpdateChainingsArgs> emptyChainDataSet = new HashSet<UpdateChainingsArgs>();
-
-	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
-	FSM fsm = u.fsm;
-	u.m.setIndex(0);
-	u.c.setIndex(1);
-	u.i.setIndex(2);
-	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
-	ParametricPropertyProcessor sdc = new ParametricPropertyProcessor(fpp);
-
-	ParameterNode actual = sdc.getParameterTree();
-	ParameterNode expected = new ParameterNode(EMPTY_PARAMETER_SET, fpp.getParameters());
-
-	// depth 1
-	expected.createAndGetParameterNode(u.m).setChainData(emptyChainDataSet);
-	expected.createAndGetParameterNode(u.m).setMonitorSetCount(1);
-
-	expected.createAndGetParameterNode(u.c).setChainData(emptyChainDataSet);
-	expected.createAndGetParameterNode(u.c).setMonitorSetCount(1);
-
-	expected.createAndGetParameterNode(u.i).setChainData(emptyChainDataSet);
-	expected.createAndGetParameterNode(u.i).setMonitorSetCount(1);
-
-	// depth 2
-	expected.getParameterNode(u.m, u.c).setChainData(asSet(new UpdateChainingsArgs(toNodeMask(u.c), 0)));
-	expected.getParameterNode(u.m, u.c).setMonitorSetCount(1);
-
-	expected.getParameterNode(u.c, u.i).setChainData(emptyChainDataSet);
-	expected.getParameterNode(u.c, u.i).setMonitorSetCount(1);
-
-	// depth 3
-	expected.getParameterNode(u.m, u.c, u.i).setChainData(
-		asSet(new UpdateChainingsArgs(toNodeMask(u.m), 0), new UpdateChainingsArgs(toNodeMask(u.m, u.c), 0),
-			new UpdateChainingsArgs(toNodeMask(u.c, u.i), 0), new UpdateChainingsArgs(toNodeMask(u.i), 0)));
-	expected.getParameterNode(u.m, u.c, u.i).setMonitorSetCount(0);
-
-	assertEquals(expected, actual);
-    }
-
 }
