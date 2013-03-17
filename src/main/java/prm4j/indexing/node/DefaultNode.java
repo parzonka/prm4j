@@ -25,7 +25,7 @@ public class DefaultNode extends AbstractNode {
     private final ParameterNode parameterNode;
     private final MonitorSet[] monitorSets;
     private final NodeRef nodeRef;
-    private long timestamp = Long.MIN_VALUE; // this instance was not seen yet
+    private long timestamp = Long.MAX_VALUE; // this instance was not seen yet
 
     private WeakReference<Node> cachedNodeRef = null;
     private Binding cachedBinding = null;
@@ -70,6 +70,9 @@ public class DefaultNode extends AbstractNode {
 
     @Override
     public Node getOrCreateNode(int parameterIndex, Binding binding) {
+	if (binding == null) {
+	    throw new NullPointerException("binding was null");
+	}
 	binding.registerHolder(nodeRef);
 	if (cachedParameterIndex != parameterIndex || cachedBinding != binding) {
 	    cachedParameterIndex = parameterIndex;
@@ -81,6 +84,9 @@ public class DefaultNode extends AbstractNode {
 
     @Override
     public Node getNode(int parameterIndex, Binding binding) {
+	if (binding == null) {
+	    throw new NullPointerException("binding was null");
+	}
 	if (cachedParameterIndex != parameterIndex || cachedBinding != binding) {
 	    final Node node = get(parameterIndex, binding);
 	    if (node != null) {

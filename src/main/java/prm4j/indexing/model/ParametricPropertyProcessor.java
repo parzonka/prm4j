@@ -103,7 +103,8 @@ public class ParametricPropertyProcessor {
 		// state but an accepting state.
 		final List<Set<Parameter<?>>> listOfDisableParameterSets = getDisableSets(baseEvent, enableSet);
 		disableParameterSets.put(baseEvent, enableSet, listOfDisableParameterSets);
-		final int[][] disableMasks = toParameterMasks(listOfDisableParameterSets);
+		final int[][] disableMasks = toParameterMasks(listOfDisableParameterSets,
+			Sets.union(baseEvent.getParameters(), enableSet));
 		joinArgs.put(baseEvent, new JoinArgs(nodeMask, monitorSetId, extensionPattern, copyPattern,
 			disableMasks)); // 23
 	    } // 24
@@ -225,6 +226,34 @@ public class ParametricPropertyProcessor {
 	    result[i++] = toParameterMask(parameterSet);
 	}
 	return result;
+    }
+
+    /**
+     * Basically a map over a list of parameters sets with 'toParameterMask'.
+     * 
+     * @param listOfParameterSets
+     * @return an array of parameter masks (uncompressed)
+     */
+    public static int[][] toParameterMasks(List<Set<Parameter<?>>> listOfParameterSets,
+	    Set<Parameter<?>> instanceParameterSet) {
+	final int[][] result = new int[listOfParameterSets.size()][];
+	int i = 0;
+	for (Set<Parameter<?>> parameterSet : listOfParameterSets) {
+	    result[i++] = toParameterSubsetMask(parameterSet, instanceParameterSet);
+	}
+	return result;
+    }
+
+    /**
+     * Return the index of the given parameter in the parameter set.
+     * 
+     * @param parameter
+     * @param parameterSet
+     * @return
+     */
+    public static int getCompressedIndex(Parameter<?> parameter, Set<Parameter<?>> parameterSet) {
+	assert parameterSet.contains(parameter) : "parameter must be in parameter set";
+	return Util.asSortedList(parameterSet).lastIndexOf(parameter);
     }
 
     /**

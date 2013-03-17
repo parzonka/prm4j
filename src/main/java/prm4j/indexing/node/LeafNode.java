@@ -24,7 +24,7 @@ public class LeafNode implements Node {
     private final static MonitorSet[] EMPTY_MONITOR_SET = new MonitorSet[0];
     private final ParameterNode parameterNode;
     private final NodeRef nodeRef;
-    private long timestamp = Long.MIN_VALUE; // this instance was not seen yet
+    private long timestamp = Long.MAX_VALUE; // this instance was not seen yet
 
     private final Binding key;
     private Node nextNode;

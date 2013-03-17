@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 import prm4j.api.Event;
 import prm4j.indexing.binding.Binding;
+import prm4j.indexing.model.JoinArgs;
 import prm4j.indexing.model.UpdateChainingsArgs;
 import prm4j.indexing.node.Node;
 import prm4j.indexing.node.NodeRef;
@@ -110,63 +111,64 @@ public class MonitorSet {
      * @param joinableBindings
      *            a special copy of the event bindings as an 'expanded' array containing gaps to prepare the join (aka
      *            'merge') with the bindings in the compatible monitor
-     * @param someBindingsAreKnown
-     *            <code>true</code>, if some bindings have been seen already
-     * @param maxInstanceTimestamp
-     *            the latest 'seeing' time of all bindings in joinableBindings
-     * @param copyPattern
-     *            used to copy a number of bindings from the compatible monitor
+     * @param joinArgs
+     *            stores expansionPattern and copyPattern
      */
-    public void join(NodeStore nodeStore, Event event, final Binding[] joinableBindings,
-	    long minMonitorTimestamp, long maxInstanceTimestamp, int[] copyPattern) {
+    public void join(NodeStore nodeStore, Event event, final Binding[] joinableBindings, final JoinArgs joinArgs) {
 
 	// create initial copy of the joinable; will gets cloned again if this one is used in a monitor
 	Binding[] joinable = joinableBindings.clone(); // 62
+	final int[] copyPattern = joinArgs.copyPattern;
+	final int[][] disableMasks = joinArgs.disableMasks;
 
 	// post-loop invariant: all monitors up to monitorSet[deadPartitionStart] are not dead
 	int deadPartitionStart = 0;
 	// iterate over all compatible nodes
-	for (int i = 0; i < size; i++) { // 63
+	compatibleNodesLoop: for (int i = 0; i < size; i++) {
 
 	    // this monitor holds some bindings we would like to copy to our joined bindings
 	    final NodeRef compatibleNodeRef = monitorSet[i];
 	    final Monitor compatibleMonitor = compatibleNodeRef.monitor;
 	    final long compatibleMonitorTimestamp = compatibleMonitor.getTimestamp();
 
-	    // test if 1: a monitor in the disable set have been created before the compatible monitor was created
-	    // 2: a instance in the disable set have been used after the compatible monitor was created.
-	    if (minMonitorTimestamp < compatibleMonitorTimestamp || compatibleMonitorTimestamp < maxInstanceTimestamp) { // 64
-		// => the binding was not yet enabled => current event is not part of an accepting trace continued from
-		// this monitor => the joined monitor would never reach accepting state
-		deadPartitionStart++; // this monitor may be still alive, we just avoid joining with it
-		continue; // 65
-	    }
 	    final Binding[] compatibleBindings = compatibleMonitor.getCompressedBindings();
 	    // test if lifetime of monitor is already over
 	    if (compatibleBindings == null) {
 		continue; // don't increment the deadPartitionStart => this monitor will be removed from the set
 	    }
 	    // copy some compatible bindings to our joinable
-	    createJoin(joinable, compatibleBindings, copyPattern); // 67 - 71
+	    createJoin(joinable, compatibleBindings, copyPattern);
+
+	    for (int j = 0; j < disableMasks.length; j++) {
+		final Node subInstanceNode = nodeStore.getNode(joinable, disableMasks[j]);
+		if (subInstanceNode.getTimestamp() > compatibleMonitorTimestamp
+			|| (subInstanceNode.getMonitor() != null && compatibleMonitorTimestamp > subInstanceNode
+				.getMonitor().getTimestamp())) {
+		    deadPartitionStart++; // this monitor may be still alive, we just avoid joining with it
+		    continue compatibleNodesLoop;
+		}
+	    }
+
 	    // retrieve the node associated with the joined binding
-	    final Node lastNode = nodeStore.getOrCreateNode(joinable);
+	    final Node joinedInstanceNode = nodeStore.getOrCreateNode(joinable);
 	    // due to multiple joining phases, it can happen that the node already has a monitor
-	    if (lastNode.getMonitor() == null) { // 72
-		// inlined 'DefineTo' // 73
-		final Monitor monitor = compatibleMonitor.copy(joinable); // 102-105
-		lastNode.setMonitor(monitor); // 106
+	    if (joinedInstanceNode.getMonitor() == null) {
+		// inlined 'DefineTo'
+		final Monitor monitor = compatibleMonitor.copy(joinable);
+		joinedInstanceNode.setMonitor(monitor);
 		// process and test if monitor is still alive
-		if (monitor.process(event)) { // 103
+		if (monitor.process(event)) {
 		    // this monitor is alive, so copy its reference to the alive partition
 		    monitorSet[deadPartitionStart++] = compatibleNodeRef;
 		}
-		// normal chain phase: connect necessary less informative instances so the joined binding will gets some
+		// chain phase: connect necessary less informative instances so the joined binding will gets some
 		// updates (or be used in join phase itself as compatible monitor)
-		for (UpdateChainingsArgs updateChainingsArgs : lastNode.getParameterNode().getUpdateChainingsArgs()) {
-		    nodeStore.getOrCreateNode(joinable, updateChainingsArgs.nodeMask).getMonitorSet(updateChainingsArgs.monitorSetId)
-			    .add(lastNode.getNodeRef());
-		} // 99
-		  // copy got used => clone again
+		for (UpdateChainingsArgs updateChainingsArgs : joinedInstanceNode.getParameterNode()
+			.getUpdateChainingsArgs()) {
+		    nodeStore.getOrCreateNode(joinable, updateChainingsArgs.nodeMask)
+			    .getMonitorSet(updateChainingsArgs.monitorSetId).add(joinedInstanceNode.getNodeRef());
+		}
+		// copy got used => clone again
 		joinable = joinableBindings.clone(); // 74
 	    }
 	}
@@ -187,8 +189,7 @@ public class MonitorSet {
      * @param copyPattern
      *            encodes which binding from joiningBindings gets copied to which location in joinableBindings
      */
-    private static void createJoin(Binding[] joinableBindings, Binding[] joiningBindings,
-	    int[] copyPattern) {
+    private static void createJoin(Binding[] joinableBindings, Binding[] joiningBindings, int[] copyPattern) {
 	for (int j = 0; j < copyPattern.length; j += 2) {
 	    // copy from j to j+1
 	    joinableBindings[copyPattern[j + 1]] = joiningBindings[copyPattern[j]];

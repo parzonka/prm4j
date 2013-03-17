@@ -108,7 +108,7 @@ public class NullNode implements Node {
 
     @Override
     public long getTimestamp() {
-	return Long.MIN_VALUE; // the null node did always exist
+	return Long.MIN_VALUE; // this node always existed
     }
 
     @Override
