@@ -340,6 +340,11 @@ public class ParametricPropertyProcessor {
 	allParameterSets.addAll(pp.getMonitorSetData().keys());
 	allParameterSets.addAll(pp.getPossibleParameterSets());
 	for (Set<Parameter<?>> parameterSet : allParameterSets) {
+	    if (parameterSet.isEmpty()) {
+		parameterTree.setChainData(updateChainingsArgs.get(parameterSet));
+		parameterTree.setMonitorSetCount(monitorSetIds.row(parameterSet).size());
+		parameterTree.setAliveParameterMasks(calculateAliveParameterMasksBoolean(parameterSet));
+	    }
 	    ParameterNode node = parameterTree;
 	    for (Parameter<?> parameter : Util.asSortedList(parameterSet)) {
 		if (node.getParameterNode(parameter) != null) {
