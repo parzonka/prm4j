@@ -15,7 +15,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 import prm4j.api.fsm.FSMSpec;
-import prm4j.spec.FiniteSpec;
+import prm4j.spec.finite.FiniteSpec;
 
 public class DefaultParametricMonitor_ab_b_with_initial_b_loop_Test extends AbstractDefaultParametricMonitorTest {
 

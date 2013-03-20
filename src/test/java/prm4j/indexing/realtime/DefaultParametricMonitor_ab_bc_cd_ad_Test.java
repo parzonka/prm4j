@@ -12,15 +12,21 @@ package prm4j.indexing.realtime;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static prm4j.Util.tuple;
+
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import prm4j.Util.Tuple;
+import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.binding.Binding;
 import prm4j.indexing.model.ModelVerifier;
-import prm4j.spec.FiniteSpec;
+import prm4j.indexing.model.ModelVerifier.ListMultimapVerifier;
+import prm4j.spec.finite.FiniteSpec;
 
 public class DefaultParametricMonitor_ab_bc_cd_ad_Test extends AbstractDefaultParametricMonitorTest {
 
@@ -54,27 +60,17 @@ public class DefaultParametricMonitor_ab_bc_cd_ad_Test extends AbstractDefaultPa
     @Test
     @SuppressWarnings("unchecked")
     public void model() throws Exception {
-	ModelVerifier m = new ModelVerifier(processor);
+	ModelVerifier m = new ModelVerifier(ppm);
 
-	// event_ab
-	m.findMaxOverParameterSets(fsm.event_ab, list());
-	m.findMaxOverParameterSets(fsm.event_ad, list());
-	m.joinOverParameterSets(fsm.event_ab, list());
+	m.getFindMaxInstanceTypes().verify();
 
-	// event_bc
-	m.findMaxOverParameterSets(fsm.event_bc, list()); // does not look for max
-	m.joinOverCompatibleInstances(fsm.event_bc, list(asSet(b)));
-	m.joinOverParameterSets(fsm.event_bc, list(asSet(a, b)));
-	m.disableParameterSets(fsm.event_bc, asSet(a, b), list(asSet(b, c)));
+	ListMultimapVerifier<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expectedJoinTuples = m
+		.getJoinTuples();
+	expectedJoinTuples.put(fsm.event_cd, list(tuple(asSet(fsm.c), asSet(fsm.a, fsm.b, fsm.c))));
+	expectedJoinTuples.put(fsm.event_bc, list(tuple(asSet(fsm.b), asSet(fsm.a, fsm.b))));
+	expectedJoinTuples.verify();
 
-	// event_cd
-	m.findMaxOverParameterSets(fsm.event_cd, list());
-	m.joinOverCompatibleInstances(fsm.event_cd, list(asSet(c)));
-	m.joinOverParameterSets(fsm.event_cd, list(asSet(a, b, c)));
-	m.disableParameterSets(fsm.event_cd, asSet(a, b, c), list(asSet(a, d), asSet(c, d)));
-
-	m.joinOverParameterSets(fsm.event_ad, list());
-	m.joinOverCompatibleInstances(fsm.event_ab, list());
+	m.expectDisableInstanceTypes().verify();
     }
 
     @Test

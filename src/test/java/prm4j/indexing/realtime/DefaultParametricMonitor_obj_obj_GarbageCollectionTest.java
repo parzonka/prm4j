@@ -37,8 +37,8 @@ import prm4j.indexing.monitor.StatefulMonitor;
 import prm4j.indexing.node.Node;
 import prm4j.indexing.node.NodeManager;
 import prm4j.indexing.node.NodeRef;
-import prm4j.spec.FiniteParametricProperty;
-import prm4j.spec.FiniteSpec;
+import prm4j.spec.finite.FiniteParametricProperty;
+import prm4j.spec.finite.FiniteSpec;
 
 public class DefaultParametricMonitor_obj_obj_GarbageCollectionTest extends AbstractTest {
 

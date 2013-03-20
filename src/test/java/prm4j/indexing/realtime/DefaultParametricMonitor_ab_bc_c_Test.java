@@ -19,9 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.model.ModelVerifier;
 import prm4j.indexing.node.NullNode;
-import prm4j.spec.FiniteSpec;
+import prm4j.spec.finite.FiniteSpec;
 
 public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParametricMonitorTest {
 
@@ -35,13 +34,6 @@ public class DefaultParametricMonitor_ab_bc_c_Test extends AbstractDefaultParame
 	fsm = new FSM_ab_bc_c();
 	FiniteSpec finiteSpec = new FSMSpec(fsm.fsm);
 	createDefaultParametricMonitorWithAwareComponents(finiteSpec);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void model() throws Exception {
-	ModelVerifier modelVerifier = new ModelVerifier(processor);
-	modelVerifier.joinOverParameterSets(fsm.e2, list(asSet(fsm.a, fsm.b)));
     }
 
     // firstEvent_ab //////////////////////////////////////////////////////////////////

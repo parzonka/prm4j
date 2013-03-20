@@ -20,16 +20,19 @@ import prm4j.indexing.monitor.MonitorState;
 public class FSMState extends AbstractMonitorState {
 
     private FSMState[] successorTable;
+    private final boolean isInitial;
     private final boolean isAccepting;
     private boolean isFinal;
     private final String label;// for display purposes only
     private final Alphabet alphabet;
     private final MatchHandler matchHandler;
 
-    public FSMState(int index, Alphabet alphabet, boolean isAccepting, MatchHandler matchHandler, String label) {
+    public FSMState(int index, Alphabet alphabet, boolean isAccepting, boolean isInitial, MatchHandler matchHandler,
+	    String label) {
 	super(index);
 	this.isAccepting = isAccepting;
 	isFinal = true; // a state is final if it has no successor
+	this.isInitial = isInitial;
 	this.label = label;
 	this.alphabet = alphabet;
 	this.matchHandler = matchHandler;
@@ -68,6 +71,11 @@ public class FSMState extends AbstractMonitorState {
     @Override
     public boolean isFinal() {
 	return isFinal;
+    }
+
+    @Override
+    public boolean isInitial() {
+	return isInitial;
     }
 
 }

@@ -33,8 +33,8 @@ import prm4j.indexing.node.DefaultNodeStore;
 import prm4j.indexing.node.Node;
 import prm4j.indexing.node.NodeManager;
 import prm4j.indexing.node.NodeStore;
-import prm4j.spec.FiniteParametricProperty;
-import prm4j.spec.FiniteSpec;
+import prm4j.spec.finite.FiniteParametricProperty;
+import prm4j.spec.finite.FiniteSpec;
 
 public class AbstractParametricMonitorTest extends AbstractTest {
 
@@ -53,7 +53,7 @@ public class AbstractParametricMonitorTest extends AbstractTest {
 	bindingStore = new DefaultBindingStore(new ArrayBasedBindingFactory(), finiteSpec.getFullParameterSet(), 1);
 	nodeManager = new NodeManager();
 	nodeStore = new DefaultNodeStore(processor.getParameterTree(), nodeManager);
-	prototypeMonitor = new StatefulMonitor(fpp.getInitialState());
+	prototypeMonitor = new StatefulMonitor(fpp.getSpec().getInitialState());
 	pm = new DefaultParametricMonitor(bindingStore, nodeStore, prototypeMonitor, processor.getEventContext(),
 		nodeManager, true);
     }

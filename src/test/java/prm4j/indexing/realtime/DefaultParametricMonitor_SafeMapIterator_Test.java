@@ -24,8 +24,8 @@ import prm4j.indexing.DefaultParametricMonitor;
 import prm4j.indexing.model.ParametricPropertyProcessor;
 import prm4j.indexing.monitor.AbstractMonitor;
 import prm4j.indexing.node.NodeManager;
-import prm4j.spec.FiniteParametricProperty;
-import prm4j.spec.FiniteSpec;
+import prm4j.spec.finite.FiniteParametricProperty;
+import prm4j.spec.finite.FiniteSpec;
 
 public class DefaultParametricMonitor_SafeMapIterator_Test extends AbstractDefaultParametricMonitorTest {
 

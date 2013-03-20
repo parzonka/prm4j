@@ -8,11 +8,12 @@
  * Contributors:
  * Mateusz Parzonka - initial API and implementation
  */
-package prm4j.spec;
+package prm4j.spec.finite;
 
 import java.util.Set;
 
 import prm4j.indexing.monitor.MonitorState;
+import prm4j.spec.Spec;
 
 /**
  * Represents a specification of a property with finite number of states.

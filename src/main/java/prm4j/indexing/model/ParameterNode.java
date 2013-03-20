@@ -26,6 +26,8 @@ import prm4j.indexing.node.Node;
 import prm4j.indexing.node.NodeFactory;
 import prm4j.indexing.node.NodeManager;
 
+import static prm4j.indexing.IndexingUtils.*;
+
 /**
  * Every {@link Node} is equipped with a ParameterNode, containing factory methods and providing statically computed
  * algorithm logic.
@@ -48,10 +50,7 @@ public class ParameterNode {
     private UpdateChainingsArgs[] chainDataArray;
     private int monitorSetCount;
 
-    /**
-     * stateIndex * parameterMasksCount * parameterMask
-     */
-    private boolean[][] aliveParameterMasks;
+    private int[][] aliveParameterMasks;
 
     public ParameterNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
 	super();
@@ -241,7 +240,7 @@ public class ParameterNode {
      * @return parameters sorted by parameter id
      */
     public int[] getNodeMask() {
-	return Util.toNodeMask(nodeParameterSet);
+	return toParameterMask(nodeParameterSet);
     }
 
     /**
@@ -413,11 +412,14 @@ public class ParameterNode {
      * 
      * @param aliveParameterMasks
      */
-    public void setAliveParameterMasks(boolean[][] aliveParameterMasks) {
+    public void setAliveParameterMasks(int[][] aliveParameterMasks) {
 	this.aliveParameterMasks = aliveParameterMasks;
     }
 
-    public boolean[][] getAliveParameterMasks() {
+    public int[][] getAliveParameterMasks() {
+	if (aliveParameterMasks == null) {
+	    throw new NullPointerException("aliveParameterMasks was null!");
+	}
 	return aliveParameterMasks;
     }
 
@@ -443,11 +445,15 @@ public class ParameterNode {
      * @return <code>true</code> if an accepting state is reachable
      */
     public boolean isAcceptingStateReachable(Binding[] compressedBindings) {
-	boolean[] parameterMask;
+	int[] parameterMask;
+	if (aliveParameterMasks == null) {
+	    throw new NullPointerException(String.format("aliveParameterMasks was null with bindings=%s, and node=%s",
+		    Arrays.toString(compressedBindings), getNodeParameterSet().toString()));
+	}
 	outer: for (int i = 0; i < aliveParameterMasks.length; i++) {
 	    parameterMask = aliveParameterMasks[i];
 	    for (int j = 0; j < parameterMask.length; j++) {
-		if (parameterMask[j] && compressedBindings[j].get() == null) {
+		if (compressedBindings[parameterMask[j]].get() == null) {
 		    continue outer;
 		}
 	    }

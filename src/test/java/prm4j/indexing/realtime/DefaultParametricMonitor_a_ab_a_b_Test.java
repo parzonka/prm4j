@@ -23,7 +23,7 @@ import org.junit.Test;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.monitor.AbstractMonitor;
 import prm4j.indexing.monitor.MonitorSet;
-import prm4j.spec.FiniteSpec;
+import prm4j.spec.finite.FiniteSpec;
 
 public class DefaultParametricMonitor_a_ab_a_b_Test extends AbstractDefaultParametricMonitorTest {
 

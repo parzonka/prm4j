@@ -15,56 +15,21 @@ import java.util.Set;
 import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.monitor.MonitorState;
 
-import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
 
-/**
- * Instances of this interface fully specify a parametric property to be monitored.
- */
 public interface ParametricProperty {
 
-    public boolean isFinite();
-
-    public int getStateCount();
-
-    public Set<BaseEvent> getBaseEvents();
-
-    public Set<Parameter<?>> getParameters();
-
-    public MonitorState getInitialState();
+    public Spec getSpec();
 
     public Set<BaseEvent> getCreationEvents();
 
     public Set<BaseEvent> getDisableEvents();
 
-    public Set<Set<Parameter<?>>> getPossibleParameterSets();
+    public SetMultimap<BaseEvent, Set<Parameter<?>>> getEnableParameterSets();
 
-    public SetMultimap<BaseEvent, Set<BaseEvent>> getEnablingEventSets();
+    public SetMultimap<Set<Parameter<?>>, Set<Parameter<?>>> getAliveParameterSets();
 
-    public SetMultimap<BaseEvent, Set<Parameter<?>>> getEnablingParameterSets();
-
-    /**
-     * @return mapping of base events to a list of subinstances in its enabling set
-     */
-    public ListMultimap<BaseEvent, Set<Parameter<?>>> getMaxData();
-
-    /**
-     * @return multiMap[baseEvent -> tuple(compatibleSubset, enablingParameterSet)]
-     */
-    public ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinData();
-
-    /**
-     * @return mapping from instances to their subinstances which have associated base events
-     */
-    public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getChainData();
-
-    /**
-     * @return mapping from instances to sets of instances representing sets of monitors
-     */
-    public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> getMonitorSetData();
-
-    public Set<Set<Parameter<?>>> getAliveParameterSets();
+    public Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getUpdates();
 
 }

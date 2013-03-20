@@ -22,20 +22,18 @@ import prm4j.Util;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.model.FindMaxArgs;
-import prm4j.indexing.model.JoinArgs;
-import prm4j.indexing.model.ParametricPropertyProcessor;
-import prm4j.indexing.model.UpdateChainingsArgs;
-import prm4j.spec.FiniteParametricProperty;
+import prm4j.spec.finite.FiniteParametricProperty;
 
 public class AbstractParametricPropertyProcessorTest extends AbstractTest {
 
     protected FiniteParametricProperty fpp;
     protected ParametricPropertyProcessor sdc;
+    protected ParametricPropertyModel ppm;
 
     protected void init(FSM_HasNext fsm) {
 	fpp = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
 	sdc = new ParametricPropertyProcessor(fpp);
+	ppm = new ParametricPropertyModel(fpp);
     }
 
     protected final static FindMaxArgs[] EMPTY_MAXDATA_ARRAY = new FindMaxArgs[0];
@@ -43,7 +41,8 @@ public class AbstractParametricPropertyProcessorTest extends AbstractTest {
     protected final static List<JoinArgs> EMPTY_JOINDATA_LIST = Collections.emptyList();
 
     protected void assertChainData(Set<Parameter<?>> parameterSet, Set<UpdateChainingsArgs> chainDataSet) {
-	assertEquals(chainDataSet, sdc.getParameterTree().getParameterNode(Util.asSortedList(parameterSet)).getChainDataSet());
+	assertEquals(chainDataSet, sdc.getParameterTree().getParameterNode(Util.asSortedList(parameterSet))
+		.getChainDataSet());
     }
 
     protected void assertJoinData(BaseEvent baseEvent, List<JoinArgs> joinDataList) {

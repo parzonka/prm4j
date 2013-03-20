@@ -34,7 +34,7 @@ import prm4j.indexing.binding.Binding;
 import prm4j.indexing.binding.DefaultBindingStore;
 import prm4j.indexing.node.Node;
 import prm4j.indexing.node.NodeRef;
-import prm4j.spec.FiniteSpec;
+import prm4j.spec.finite.FiniteSpec;
 
 public class DefaultBindingStoreTest extends AbstractTest {
 

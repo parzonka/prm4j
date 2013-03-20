@@ -359,10 +359,10 @@ public abstract class FSMDefinitions {
 	public final Parameter<String> c = alphabet.createParameter("c", String.class);
 	public final Parameter<String> d = alphabet.createParameter("d", String.class);
 
-	public final Symbol2<String, String> event_ab = alphabet.createSymbol2("e1", a, b);
-	public final Symbol2<String, String> event_bc = alphabet.createSymbol2("e2", b, c);
-	public final Symbol2<String, String> event_cd = alphabet.createSymbol2("e3", c, d);
-	public final Symbol2<String, String> event_ad = alphabet.createSymbol2("e4", a, d);
+	public final Symbol2<String, String> event_ab = alphabet.createSymbol2("event_ab", a, b);
+	public final Symbol2<String, String> event_bc = alphabet.createSymbol2("event_bc", b, c);
+	public final Symbol2<String, String> event_cd = alphabet.createSymbol2("event_cd", c, d);
+	public final Symbol2<String, String> event_ad = alphabet.createSymbol2("event_ad", a, d);
 
 	public final AwareMatchHandler2<String, String> matchHandler = AwareMatchHandler.create(a, d);
 

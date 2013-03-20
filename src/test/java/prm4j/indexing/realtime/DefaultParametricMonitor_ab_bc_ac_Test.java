@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
-import prm4j.spec.FiniteSpec;
+import prm4j.spec.finite.FiniteSpec;
 
 public class DefaultParametricMonitor_ab_bc_ac_Test extends AbstractDefaultParametricMonitorTest {
 

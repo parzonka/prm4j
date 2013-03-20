@@ -22,7 +22,7 @@ import prm4j.api.Event;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.indexing.monitor.AbstractMonitor;
 
-public class DefaultParametricMonitor_StressTest extends AbstractParametricMonitorTest {
+public class DefaultParametricMonitor_Stress_Test extends AbstractParametricMonitorTest {
 
     FSM_SafeMapIterator fsm;
 

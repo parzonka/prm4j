@@ -36,19 +36,20 @@ public class FSM {
 
     /**
      * Create a new state which is labeled with the name <code>"initial"</code>.
-     *
+     * 
      * @return the created state
      */
     public FSMState createInitialState() {
-	if (initialState != null)
+	if (initialState != null) {
 	    throw new IllegalStateException("Initial state already created!");
+	}
 	initialState = createState("initial");
 	return initialState;
     }
 
     /**
      * Create a new state which is labeled with a generated name of the form <code>"state_NUMBER"</code>.
-     *
+     * 
      * @return the created state
      */
     public FSMState createState() {
@@ -57,16 +58,16 @@ public class FSM {
 
     /**
      * Create a new state labeled with the given optional name.
-     *
+     * 
      * @return the created state
      */
     public FSMState createState(String optionalName) {
-	return createState(false, null, optionalName);
+	return createState(false, true, null, optionalName);
     }
 
     /**
      * Create a new accepting state which is labeled with a generated name of the form <code>"state_NUMBER"</code>.
-     *
+     * 
      * @return the created accepting state
      */
     public FSMState createAcceptingState(MatchHandler matchHandler) {
@@ -75,14 +76,14 @@ public class FSM {
 
     /**
      * Create a new accepting state labeled with the given optional name.
-     *
+     * 
      * @return the created accepting state
      */
     public FSMState createAcceptingState(MatchHandler matchHandler, String optionalName) {
 	if (matchHandler == null) {
 	    throw new NullPointerException("MatchHandler may not be null!");
 	}
-	return createState(true, matchHandler, optionalName);
+	return createState(true, false, matchHandler, optionalName);
     }
 
     private String generateStateName() {
@@ -93,18 +94,19 @@ public class FSM {
 	return "state " + stateCount + " (accepting)";
     }
 
-    private FSMState createState(boolean isAccepting, MatchHandler eventHandler, String name) {
-	if (usedNames.contains(name))
+    private FSMState createState(boolean isAccepting, boolean isInitial, MatchHandler eventHandler, String name) {
+	if (usedNames.contains(name)) {
 	    throw new IllegalArgumentException("The name [" + name + "] has already been used!");
+	}
 	usedNames.add(name);
-	FSMState state = new FSMState(stateCount++, alphabet, isAccepting, eventHandler, name);
+	FSMState state = new FSMState(stateCount++, alphabet, isAccepting, isInitial, eventHandler, name);
 	states.add(state);
 	return state;
     }
 
     /**
      * Returns the underlying alphabet for this FSM.
-     *
+     * 
      * @return the alphabet
      */
     public Alphabet getAlphabet() {
@@ -113,7 +115,7 @@ public class FSM {
 
     /**
      * Returns all created states.
-     *
+     * 
      * @return an unmodifiable set of created states
      */
     public Set<FSMState> getStates() {
@@ -122,7 +124,7 @@ public class FSM {
 
     /**
      * Returns the number of created states.
-     *
+     * 
      * @return the number of created states
      */
     public int getStateCount() {
@@ -131,7 +133,7 @@ public class FSM {
 
     /**
      * Returns the names which where used for the states.
-     *
+     * 
      * @return an unmodifiable set of the used names
      */
     public Set<String> getUsedNames() {
@@ -140,12 +142,13 @@ public class FSM {
 
     /**
      * Returns the initial state.
-     *
+     * 
      * @return the initial state
      */
     public FSMState getInitialState() {
-	if (initialState == null)
+	if (initialState == null) {
 	    throw new IllegalStateException("No initial state created!");
+	}
 	return initialState;
     }
 

@@ -10,6 +10,8 @@
  */
 package prm4j;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -24,6 +26,10 @@ import prm4j.api.BaseEvent;
 import prm4j.api.Event;
 import prm4j.api.Parameter;
 import prm4j.api.Symbol;
+import prm4j.indexing.model.EventContext;
+import prm4j.indexing.model.JoinArgs;
+import prm4j.indexing.model.ParameterNode;
+import prm4j.indexing.model.UpdateChainingsArgs;
 import prm4j.util.FSMDefinitions;
 
 /**
@@ -259,6 +265,25 @@ public abstract class AbstractTest extends FSMDefinitions /* we mix in other def
 	    return id;
 	}
 
+    }
+
+    protected static void assertChainData(ParameterNode parameterTree, Set<Parameter<?>> parameterSet,
+	    UpdateChainingsArgs... chainDatas) {
+	Set<UpdateChainingsArgs> chainDataSet = new HashSet<UpdateChainingsArgs>(Arrays.asList(chainDatas));
+	assertEquals(chainDataSet, parameterTree.getParameterNode(Util.asSortedList(parameterSet)).getChainDataSet());
+    }
+
+    protected static void assertJoinData(EventContext eventContext, BaseEvent baseEvent, JoinArgs... joinDatas) {
+	assertArrayEquals(joinDatas, eventContext.getJoinArgs(baseEvent));
+    }
+
+    protected static UpdateChainingsArgs updateChainingsArgs(int[] nodeMask, int monitorSetId) {
+	return new UpdateChainingsArgs(nodeMask, monitorSetId);
+    }
+
+    protected static JoinArgs joinArgs(int[] nodeMask, int monitorSetId, int[] extensionPattern, int[] copyPattern,
+	    int[][] disableMasks) {
+	return new JoinArgs(nodeMask, monitorSetId, extensionPattern, copyPattern, disableMasks);
     }
 
 }

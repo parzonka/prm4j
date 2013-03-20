@@ -10,68 +10,102 @@
  */
 package prm4j.indexing.model;
 
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.indexing.model.ParametricPropertyProcessor;
-import static org.junit.Assert.fail;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.SetMultimap;
 
 public class ModelVerifier {
 
-    public ParametricPropertyProcessor processor;
+    public ParametricPropertyModel processor;
 
-    public ModelVerifier(ParametricPropertyProcessor processor) {
+    public ModelVerifier(ParametricPropertyModel processor) {
 	this.processor = processor;
     }
 
-    public void findMaxOverParameterSets(BaseEvent baseEvent, List<Set<Parameter<?>>> parameterSets) {
-	checkEquality(parameterSets, processor.getParametricProperty().getMaxData().get(baseEvent),
-		"findMaxOverParameterSets");
+    public SetMultimapVerifier<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> getMonitorStateSpec() {
+	return new SetMultimapVerifier<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>>(
+		processor.getMonitorSetSpecs());
     }
 
-    /**
-     * Returns all disable parameter sets for all join operations
-     * 
-     * @param baseEvent
-     * @param parameterSets
-     */
-    public void disableParameterSets(BaseEvent baseEvent, Set<Parameter<?>> enableSetToJoinWith,
-	    List<Set<Parameter<?>>> parameterSets) {
-	checkEquality(parameterSets, processor.getDisableParameterSets().get(baseEvent, enableSetToJoinWith),
-		"disableParameterSets");
+    public SetMultimapVerifier<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getUpdateChainingTuples() {
+	return new SetMultimapVerifier<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>(
+		processor.getUpdateChainingTuples());
     }
 
-    /**
-     * Verifies that the base event tries a join operation over the list of parameter sets.
-     * 
-     * @param baseEvent
-     * @param parameterSets
-     */
-    public void joinOverParameterSets(BaseEvent baseEvent, List<Set<Parameter<?>>> parameterSets) {
-	List<Set<Parameter<?>>> list = new ArrayList<Set<Parameter<?>>>();
-	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : processor.getParametricProperty().getJoinData()
-		.get(baseEvent)) {
-	    list.add(tuple._2());
+    public SetMultimapVerifier<BaseEvent, Set<Parameter<?>>> expectDisableInstanceTypes() {
+	return new SetMultimapVerifier<BaseEvent, Set<Parameter<?>>>(processor.getDisableInstanceTypes());
+    }
+
+    public ListMultimapVerifier<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinTuples() {
+	return new ListMultimapVerifier<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>(
+		processor.getJoinTuples());
+    }
+
+    public SetMultimapVerifier<Set<Parameter<?>>, Set<Parameter<?>>> getAliveParameterSets() {
+	return new SetMultimapVerifier<Set<Parameter<?>>, Set<Parameter<?>>>(processor.getParametricProperty()
+		.getAliveParameterSets());
+    }
+
+    public ListMultimapVerifier<BaseEvent, Set<Parameter<?>>> getFindMaxInstanceTypes() {
+	return new ListMultimapVerifier<BaseEvent, Set<Parameter<?>>>(processor.getFindMaxInstanceTypes());
+    }
+
+    public class SetMultimapVerifier<K, T> {
+	private final SetMultimap<K, T> expected;
+	private final SetMultimap<K, T> actual;
+
+	SetMultimapVerifier(SetMultimap<K, T> actual) {
+	    expected = HashMultimap.create();
+	    this.actual = actual;
 	}
-	checkEquality(parameterSets, list, "joinOverParameterSets");
-    }
 
-    public void joinOverCompatibleInstances(BaseEvent baseEvent, List<Set<Parameter<?>>> parameterSets) {
-	List<Set<Parameter<?>>> list = new ArrayList<Set<Parameter<?>>>();
-	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : processor.getParametricProperty().getJoinData()
-		.get(baseEvent)) {
-	    list.add(tuple._1());
+	public SetMultimapVerifier<K, T> put(K key, T... entries) {
+	    expected.putAll(key, Arrays.asList(entries));
+	    return this;
 	}
-	checkEquality(parameterSets, list, "joinOverCompatibleInstances");
+
+	public SetMultimapVerifier<K, T> put(K key, List<T> entries) {
+	    expected.putAll(key, entries);
+	    return this;
+	}
+
+	public void verify() {
+	    assertEquals(expected, actual);
+	}
     }
 
-    private void checkEquality(Object expected, Object actual, String method) {
-	if (!expected.equals(actual)) {
-	    fail("" + method + " failed!\nexp: " + expected.toString() + "\nwas: " + actual.toString());
+    public class ListMultimapVerifier<K, T> {
+	private final ListMultimap<K, T> expected;
+	private final ListMultimap<K, T> actual;
+
+	ListMultimapVerifier(ListMultimap<K, T> actual) {
+	    expected = ArrayListMultimap.create();
+	    this.actual = actual;
+	}
+
+	public ListMultimapVerifier<K, T> put(K key, T... entries) {
+	    expected.putAll(key, Arrays.asList(entries));
+	    return this;
+	}
+
+	public ListMultimapVerifier<K, T> put(K key, List<T> entries) {
+	    expected.putAll(key, entries);
+	    return this;
+	}
+
+	public void verify() {
+	    assertEquals(expected, actual);
 	}
     }
 

@@ -23,7 +23,7 @@ import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
 import prm4j.api.fsm.FSMState;
 import prm4j.indexing.realtime.AwareMatchHandler.AwareMatchHandler1;
-import prm4j.spec.FiniteSpec;
+import prm4j.spec.finite.FiniteSpec;
 
 /**
  * TODO This pattern can not be handled properly for the moment. Needs different calculation of enable sets with added

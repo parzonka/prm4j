@@ -10,9 +10,23 @@
  */
 package prm4j.indexing.model;
 
-import java.util.Arrays;
+import static prm4j.indexing.IndexingUtils.toParameterMask;
+import static prm4j.indexing.IndexingUtils.toParameterMasks;
+import static prm4j.indexing.IndexingUtils.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
+import prm4j.Util.Tuple;
+import prm4j.api.BaseEvent;
+import prm4j.api.Parameter;
 import prm4j.indexing.monitor.DeadMonitor;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
 
 /**
  * Represents all instances which are compatible with the event instance.
@@ -63,6 +77,88 @@ public class JoinArgs {
 		+ Arrays.toString(copyPattern) + ", disableMasks=" + disableMasksString.toString() + "]";
     }
 
+    public static JoinArgs[] createArgsArray(ParametricPropertyModel ppm, BaseEvent baseEvent) {
+	final JoinArgs[] result = new JoinArgs[ppm.getJoinTuples().get(baseEvent).size()];
+	final Table<Set<Parameter<?>>, Set<Parameter<?>>, Integer> monitorSetIds = ppm.getMonitorSetIds();
+	int i = 0;
+	for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : ppm.getJoinTuples().get(baseEvent)) {
+	    final Set<Parameter<?>> compatibleSubset = tuple._1();
+	    final Set<Parameter<?>> enableSet = tuple._2();
+	    final int[] nodeMask = toParameterMask(compatibleSubset);
+	    final int monitorSetId = monitorSetIds.get(compatibleSubset, enableSet);
+	    final int[] extensionPattern = getExtensionPattern(baseEvent.getParameters(), enableSet);
+	    final int[] copyPattern = getCopyPattern(baseEvent.getParameters(), enableSet);
+	    final int[][] disableMasks = toParameterMasks(getDisableSets(ppm, baseEvent, enableSet),
+		    Sets.union(baseEvent.getParameters(), enableSet));
+	    result[i++] = new JoinArgs(nodeMask, monitorSetId, extensionPattern, copyPattern, disableMasks);
+	}
+	return result;
+    }
+
+    protected static List<Set<Parameter<?>>> getDisableSets(ParametricPropertyModel ppm, BaseEvent baseEvent,
+	    final Set<Parameter<?>> enableSet) {
+	final Set<Parameter<?>> combination = Sets.union(baseEvent.getParameters(), enableSet);
+	return toListOfParameterSetsAscending(Sets.filter(toParameterSets(ppm.getParametricProperty().getSpec()
+		.getBaseEvents()), new Predicate<Set<Parameter<?>>>() {
+	    @Override
+	    public boolean apply(Set<Parameter<?>> baseEventParameterSet) {
+		return combination.containsAll(baseEventParameterSet) && !enableSet.containsAll(baseEventParameterSet);
+	    }
+	}));
+    }
+
+    /**
+     * Creates a int pattern needed for the join operation.
+     * 
+     * @param baseSet
+     *            all parameters of this set will be kept
+     * @param joiningSet
+     *            new parameters from this set will join
+     * @return
+     */
+    protected static int[] getExtensionPattern(Set<Parameter<?>> baseSet, Set<Parameter<?>> joiningSet) {
+	final List<Integer> result = new ArrayList<Integer>();
+	final Set<Integer> baseParameterIndexSet = toParameterIndexSet(baseSet);
+	final int[] joinedArray = toParameterMask(Sets.union(baseSet, joiningSet));
+	for (int parameterIndex : joinedArray) {
+	    if (baseParameterIndexSet.contains(parameterIndex)) {
+		result.add(parameterIndex);
+	    } else {
+		result.add(-1);
+	    }
+	}
+	return toPrimitiveIntegerArray(result);
+    }
+
+    /**
+     * Returns a pattern { s1, t1, ..., sN, tN } which represents a instruction to copy a binding from sourceBinding[s1]
+     * to targetBinding[t1] to perform a join.
+     * 
+     * @param ps1
+     *            parameter set which masks the target binding
+     * @param ps2
+     *            parameter set which masks the source binding
+     * @return the pattern
+     */
+    protected static int[] getCopyPattern(Set<Parameter<?>> ps1, Set<Parameter<?>> ps2) {
+	List<Integer> result = new ArrayList<Integer>();
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	while (i < ps1.size() || j < ps2.size()) {
+	    if (i < ps1.size() && j < ps2.size() && toParameterMask(ps1)[i] == toParameterMask(ps2)[j]) {
+		i++;
+		j++;
+	    } else if (i < ps1.size() && (j >= ps2.size() || toParameterMask(ps1)[i] < toParameterMask(ps2)[j])) {
+		i++;
+	    } else {
+		result.add(j++);
+		result.add(i + k++);
+	    }
+	}
+	return toPrimitiveIntegerArray(result);
+    }
+
     @Override
     public int hashCode() {
 	final int prime = 31;
@@ -104,4 +200,5 @@ public class JoinArgs {
 	}
 	return true;
     }
+
 }

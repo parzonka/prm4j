@@ -27,6 +27,7 @@ import prm4j.api.Symbol;
 import prm4j.indexing.DefaultParametricMonitor;
 import prm4j.indexing.binding.Binding;
 import prm4j.indexing.binding.BindingStore;
+import prm4j.indexing.model.ParametricPropertyModel;
 import prm4j.indexing.model.ParametricPropertyProcessor;
 import prm4j.indexing.monitor.AbstractMonitor;
 import prm4j.indexing.monitor.DeadMonitor;
@@ -35,13 +36,14 @@ import prm4j.indexing.monitor.MonitorSet;
 import prm4j.indexing.node.Node;
 import prm4j.indexing.node.NodeManager;
 import prm4j.indexing.node.NullNode;
-import prm4j.spec.FiniteParametricProperty;
-import prm4j.spec.FiniteSpec;
+import prm4j.spec.finite.FiniteParametricProperty;
+import prm4j.spec.finite.FiniteSpec;
 
 public class AbstractDefaultParametricMonitorTest extends AbstractTest {
 
     public final static Object _ = null;
     protected FiniteParametricProperty fpp;
+    protected ParametricPropertyModel ppm;
     protected ParametricPropertyProcessor processor;
     protected AwareDefaultBindingStore bindingStore;
     protected AwareDefaultNodeStore nodeStore;
@@ -49,10 +51,11 @@ public class AbstractDefaultParametricMonitorTest extends AbstractTest {
     protected NodeManager nodeManager;
     protected ParametricMonitor pm;
 
-    protected AwareBaseMonitor monitor; // working variable
+    protected AwareBaseMonitor monitor;
 
     public void createDefaultParametricMonitorWithAwareComponents(FiniteSpec finiteSpec) {
 	fpp = new FiniteParametricProperty(finiteSpec);
+	ppm = new ParametricPropertyModel(fpp);
 	processor = new ParametricPropertyProcessor(fpp);
 	bindingStore = new AwareDefaultBindingStore(finiteSpec.getFullParameterSet(), 1);
 	nodeManager = new NodeManager();

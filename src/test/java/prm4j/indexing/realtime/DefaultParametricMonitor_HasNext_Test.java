@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.model.ModelVerifier;
 import prm4j.indexing.node.LeafNode;
 
 @SuppressWarnings("rawtypes")
@@ -67,6 +68,15 @@ public class DefaultParametricMonitor_HasNext_Test extends AbstractDefaultParame
 		// do nothing
 	    }
 	};
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void model() throws Exception {
+	final ModelVerifier mv = new ModelVerifier(ppm);
+	mv.getJoinTuples().verify();
+	mv.getFindMaxInstanceTypes().verify();
+	mv.getAliveParameterSets().put(asSet(fsm.i), asSet(fsm.i)).verify();
     }
 
     @Test

@@ -25,8 +25,8 @@ import prm4j.indexing.node.DefaultNodeStore;
 import prm4j.indexing.node.Node;
 import prm4j.indexing.node.NodeManager;
 import prm4j.indexing.node.NullNode;
-import prm4j.spec.FiniteParametricProperty;
-import prm4j.spec.FiniteSpec;
+import prm4j.spec.finite.FiniteParametricProperty;
+import prm4j.spec.finite.FiniteSpec;
 
 public class DefaultNodeStoreTest extends AbstractTest {
 

@@ -18,8 +18,15 @@ public interface MonitorState {
     public abstract MonitorState getSuccessor(BaseEvent baseEvent);
 
     /**
+     * Tests, if the current state is the initial state.
+     * 
+     * @return <code>true</code> if the current state is the initial state
+     */
+    public boolean isInitial();
+
+    /**
      * Tests, if the current state is an accepting state.
-     *
+     * 
      * @return <code>true</code> if the current state is accepting
      */
     public abstract boolean isAccepting();
@@ -35,14 +42,14 @@ public interface MonitorState {
     /**
      * Tests, if all successor states are dead states. (A dead state is a non-accepting state, where all successors are
      * dead states. Because final state <i>may</i> be an accepting state, it is not always a dead state.)
-     *
+     * 
      * @return <code>true</code> if all successor states are dead states
      */
     public abstract boolean isFinal();
 
     /**
      * Returns the unique index of this state if the state space is finite. A valid index is a non-negative integer.
-     *
+     * 
      * @return the unique index of this state or -1 if the state space is infinite.
      */
     public abstract int getIndex();

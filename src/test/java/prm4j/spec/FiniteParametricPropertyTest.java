@@ -23,9 +23,10 @@ import prm4j.AbstractTest;
 import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
-import prm4j.api.Symbol;
 import prm4j.api.fsm.FSM;
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.model.ParametricPropertyModel;
+import prm4j.spec.finite.FiniteParametricProperty;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
@@ -42,8 +43,8 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	FSM fsm = new FSM_SafeMapIterator().fsm;
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm));
 
-	assertEquals(fs.getInitialState(), fsm.getInitialState());
-	assertEquals(fs.getBaseEvents(), fsm.getAlphabet().getSymbols());
+	assertEquals(fs.getSpec().getInitialState(), fsm.getInitialState());
+	assertEquals(fs.getSpec().getBaseEvents(), fsm.getAlphabet().getSymbols());
     }
 
     @Test
@@ -71,40 +72,40 @@ public class FiniteParametricPropertyTest extends AbstractTest {
 	assertEquals(expected, actual);
     }
 
-    @Test
-    public void getEnablingEventSets_unsafeMapIterator() throws Exception {
-	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
-	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
-
-	SetMultimap<BaseEvent, Set<BaseEvent>> actual = fs.getEnablingEventSets();
-
-	SetMultimap<Symbol, Set<Symbol>> expected = HashMultimap.create();
-
-	expected.put(fsm.createColl, Collections.<Symbol> emptySet());
-
-	// expected.put(u.createIter, Collections.<Symbol> emptySet());
-	expected.put(fsm.createIter, asSet(fsm.createColl));
-	expected.put(fsm.createIter, asSet(fsm.createColl, fsm.updateMap)); // omitted by filtering loops on states
-	// expected.put(u.useIter, Collections.<Symbol> emptySet());
-	expected.put(fsm.useIter, asSet(fsm.createColl, fsm.createIter));
-	expected.put(fsm.useIter, asSet(fsm.createColl, fsm.createIter, fsm.updateMap));
-
-	// expected.put(u.updateMap, Collections.<Symbol> emptySet());
-	expected.put(fsm.updateMap, asSet(fsm.createColl));
-	expected.put(fsm.updateMap, asSet(fsm.createColl, fsm.createIter));
-	expected.put(fsm.updateMap, asSet(fsm.createColl, fsm.createIter, fsm.useIter)); // omitted by filtering loops
-											 // on
-	// states
-
-	assertEquals(expected, actual);
-    }
+    // @Test
+    // public void getEnablingEventSets_unsafeMapIterator() throws Exception {
+    // FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
+    // FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+    //
+    // SetMultimap<BaseEvent, Set<BaseEvent>> actual = fs.getEnableParameterSets();
+    //
+    // SetMultimap<Symbol, Set<Symbol>> expected = HashMultimap.create();
+    //
+    // expected.put(fsm.createColl, Collections.<Symbol> emptySet());
+    //
+    // // expected.put(u.createIter, Collections.<Symbol> emptySet());
+    // expected.put(fsm.createIter, asSet(fsm.createColl));
+    // expected.put(fsm.createIter, asSet(fsm.createColl, fsm.updateMap)); // omitted by filtering loops on states
+    // // expected.put(u.useIter, Collections.<Symbol> emptySet());
+    // expected.put(fsm.useIter, asSet(fsm.createColl, fsm.createIter));
+    // expected.put(fsm.useIter, asSet(fsm.createColl, fsm.createIter, fsm.updateMap));
+    //
+    // // expected.put(u.updateMap, Collections.<Symbol> emptySet());
+    // expected.put(fsm.updateMap, asSet(fsm.createColl));
+    // expected.put(fsm.updateMap, asSet(fsm.createColl, fsm.createIter));
+    // expected.put(fsm.updateMap, asSet(fsm.createColl, fsm.createIter, fsm.useIter)); // omitted by filtering loops
+    // // on
+    // // states
+    //
+    // assertEquals(expected, actual);
+    // }
 
     @Test
     public void getEnablingParameterSets_unsafeMapIterator() throws Exception {
 	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
 
-	SetMultimap<BaseEvent, Set<Parameter<?>>> actual = fs.getEnablingParameterSets();
+	SetMultimap<BaseEvent, Set<Parameter<?>>> actual = fs.getEnableParameterSets();
 
 	SetMultimap<BaseEvent, Set<Parameter<?>>> expected = HashMultimap.create();
 
@@ -118,11 +119,12 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     }
 
     @Test
-    public void getMaxData_unsafeMapIterator() throws Exception {
+    public void getFindMaxInstanceTypes_unsafeMapIterator() throws Exception {
 	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	ParametricPropertyModel ppm = new ParametricPropertyModel(fs);
 
-	ListMultimap<BaseEvent, Set<Parameter<?>>> actual = fs.getMaxData();
+	ListMultimap<BaseEvent, Set<Parameter<?>>> actual = ppm.getFindMaxInstanceTypes();
 
 	ListMultimap<BaseEvent, Set<Parameter<?>>> expected = ArrayListMultimap.create();
 
@@ -130,11 +132,12 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     }
 
     @Test
-    public void getJoinData_unsafeMapIterator() throws Exception {
+    public void getJoinTuples_unsafeMapIterator() throws Exception {
 	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	ParametricPropertyModel ppm = new ParametricPropertyModel(fs);
 
-	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = fs.getJoinData();
+	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = ppm.getJoinTuples();
 
 	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = ArrayListMultimap.create();
 	expected.put(fsm.createIter, tuple(asSet(fsm.c), asSet(fsm.m, fsm.c)));
@@ -143,11 +146,13 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     }
 
     @Test
-    public void getChainData_unsafeMapIterator() throws Exception {
+    public void getUpdateChainingTuples_unsafeMapIterator() throws Exception {
 	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	ParametricPropertyModel ppm = new ParametricPropertyModel(fs);
 
-	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = fs.getChainData();
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = ppm
+		.getUpdateChainingTuples();
 
 	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = HashMultimap.create();
 	// optimized away by recognizing non-state changing transitions:
@@ -170,8 +175,9 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     public void getMonitorSetData_unsafeMapIterator() throws Exception {
 	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	ParametricPropertyModel ppm = new ParametricPropertyModel(fs);
 
-	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> actual = fs.getMonitorSetData();
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> actual = ppm.getMonitorSetSpecs();
 
 	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> expected = HashMultimap.create();
 	expected.put(asSet(fsm.c, fsm.i), tuple(EMPTY_PARAMETER_SET, true)); // ci has single update set
@@ -184,26 +190,11 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     }
 
     @Test
-    public void getPossibleParameterSets_unsafeMapIterator() throws Exception {
+    public void getFullParameterSet_unsafeMapIterator() throws Exception {
 	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
 
-	Set<Set<Parameter<?>>> actual = fs.getPossibleParameterSets();
-
-	Set<Set<Parameter<?>>> expected = new HashSet<Set<Parameter<?>>>();
-	expected.add(EMPTY_PARAMETER_SET);
-	expected.add(asSet(fsm.m, fsm.c));
-	expected.add(asSet(fsm.m, fsm.c, fsm.i));
-
-	assertEquals(expected, actual);
-    }
-
-    @Test
-    public void getParameters_unsafeMapIterator() throws Exception {
-	FSM_SafeMapIterator fsm = new FSM_SafeMapIterator();
-	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
-
-	Set<Parameter<?>> actual = fs.getParameters();
+	Set<Parameter<?>> actual = fs.getSpec().getFullParameterSet();
 
 	Set<Parameter<?>> expected = new HashSet<Parameter<?>>();
 
@@ -218,8 +209,10 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     public void getChainData_FSM_a_a_a() throws Exception {
 	FSM_a_a_a fsm = new FSM_a_a_a();
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	ParametricPropertyModel ppm = new ParametricPropertyModel(fs);
 
-	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = fs.getChainData();
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = ppm
+		.getUpdateChainingTuples();
 	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = HashMultimap.create();
 
 	assertEquals(expected, actual);
@@ -229,12 +222,13 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     public void getEnablingEventSets_FSM_ab_b_with_initial_b_loop() throws Exception {
 	FSM_ab_b_with_initial_b_loop fsm = new FSM_ab_b_with_initial_b_loop();
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	ParametricPropertyModel ppm = new ParametricPropertyModel(fs);
 
-	SetMultimap<BaseEvent, Set<BaseEvent>> actual = fs.getEnablingEventSets();
-	SetMultimap<BaseEvent, Set<BaseEvent>> expected = HashMultimap.create();
+	SetMultimap<BaseEvent, Set<Parameter<?>>> actual = ppm.getParametricProperty().getEnableParameterSets();
+	SetMultimap<BaseEvent, Set<Parameter<?>>> expected = HashMultimap.create();
 
-	expected.put(fsm.e1, Collections.<BaseEvent> emptySet());
-	expected.put(fsm.e2, asSet((BaseEvent) fsm.e1));
+	expected.put(fsm.e1, Collections.<Parameter<?>> emptySet());
+	expected.put(fsm.e2, fsm.e1.getParameters());
 
 	assertEquals(expected, actual);
     }
@@ -243,25 +237,13 @@ public class FiniteParametricPropertyTest extends AbstractTest {
     public void getMonitorSetData_FSM_ab_b_with_initial_b_loop() throws Exception {
 	FSM_ab_b_with_initial_b_loop fsm = new FSM_ab_b_with_initial_b_loop();
 	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	ParametricPropertyModel ppm = new ParametricPropertyModel(fs);
 
-	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> actual = fs.getMonitorSetData();
+	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> actual = ppm.getMonitorSetSpecs();
 	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> expected = HashMultimap.create();
 
 	// compatible parameter set, (selected parameter set, sends updates)
 	expected.put(asSet(fsm.p2), tuple(EMPTY_PARAMETER_SET, true));
-
-	assertEquals(expected, actual);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void getPossibleParameterSets_FSM_ab_b_with_initial_b_loop() throws Exception {
-	FSM_ab_b_with_initial_b_loop fsm = new FSM_ab_b_with_initial_b_loop();
-	FiniteParametricProperty fs = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
-
-	Set<Set<Parameter<?>>> actual = fs.getPossibleParameterSets();
-
-	Set<Set<Parameter<?>>> expected = asSet(EMPTY_PARAMETER_SET, asSet(fsm.p1, fsm.p2));
 
 	assertEquals(expected, actual);
     }

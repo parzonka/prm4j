@@ -10,6 +10,7 @@
  */
 package prm4j.spec;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static prm4j.Util.tuple;
 
@@ -24,24 +25,30 @@ import prm4j.Util.Tuple;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.api.fsm.FSMSpec;
+import prm4j.indexing.model.ModelVerifier;
+import prm4j.indexing.model.ModelVerifier.ListMultimapVerifier;
+import prm4j.indexing.model.ModelVerifier.SetMultimapVerifier;
 import prm4j.indexing.model.ParameterNode;
+import prm4j.indexing.model.ParametricPropertyModel;
 import prm4j.indexing.model.ParametricPropertyProcessor;
+import prm4j.spec.finite.FiniteParametricProperty;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.SetMultimap;
-
-public class FiniteParametricPropertySafeSyncCollectionTest extends AbstractTest {
+public class ParametricPropertyModel_SafeSyncCollectionTest extends AbstractTest {
 
     FSM_SafeSyncCollection fsm;
-    FiniteParametricProperty fpp;
+    ParametricProperty fpp;
+    ParametricPropertyModel ppm;
+    ParametricPropertyProcessor proc;
 
     @Before
     public void init() {
 	fsm = new FSM_SafeSyncCollection();
 	fpp = new FiniteParametricProperty(new FSMSpec(fsm.fsm));
+	ppm = new ParametricPropertyModel(fpp);
+	proc = new ParametricPropertyProcessor(fpp);
     }
+
+    // parametric property
 
     @Test
     public void getCreationEvents() throws Exception {
@@ -52,44 +59,43 @@ public class FiniteParametricPropertySafeSyncCollectionTest extends AbstractTest
 	assertEquals(expected, actual);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
-    public void getMonitorSetData() throws Exception {
-	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> actual = fpp.getMonitorSetData();
-	// verify
-	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> expected = HashMultimap.create();
+    public void getMonitorStateSpec() throws Exception {
+	SetMultimapVerifier<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> expected = new ModelVerifier(ppm)
+		.getMonitorStateSpec();
 	expected.put(asSet(fsm.c), tuple(EMPTY_PARAMETER_SET, true));
 	expected.put(asSet(fsm.i), tuple(EMPTY_PARAMETER_SET, true));
-	assertEquals(expected, actual);
+	expected.verify();
 
     }
 
+    @SuppressWarnings("unchecked")
     @Test
-    public void getChainData() throws Exception {
-	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = fpp.getChainData();
-	// verify
-	SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = HashMultimap.create();
+    public void getUpdateChainingTuples() throws Exception {
+
+	SetMultimapVerifier<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = new ModelVerifier(
+		ppm).getUpdateChainingTuples();
 	expected.put(asSet(fsm.c, fsm.i), tuple(asSet(fsm.c), EMPTY_PARAMETER_SET));
 	expected.put(asSet(fsm.c, fsm.i), tuple(asSet(fsm.i), EMPTY_PARAMETER_SET));
-	assertEquals(expected, actual);
+	expected.verify();
     }
 
     @Test
-    public void getJoinData() throws Exception {
-	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> actual = fpp.getJoinData();
-	// verify
-	ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = ArrayListMultimap.create();
-	assertEquals(expected, actual);
+    public void getJoinTuples() throws Exception {
+	ListMultimapVerifier<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> expected = new ModelVerifier(
+		ppm).getJoinTuples();
+	expected.verify();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void getAliveParameterSets() throws Exception {
-	Set<Set<Parameter<?>>> actual = fpp.getAliveParameterSets();
-	// verify
-	Set<Set<Parameter<?>>> expected = new HashSet<Set<Parameter<?>>>();
-
-	expected.add(asSet(fsm.i));
-
-	assertEquals(expected, actual);
+	SetMultimapVerifier<Set<Parameter<?>>, Set<Parameter<?>>> expected = new ModelVerifier(ppm)
+		.getAliveParameterSets();
+	expected.put(asSet(fsm.c), asSet(fsm.c, fsm.i));
+	expected.put(asSet(fsm.c, fsm.i), asSet(fsm.i));
+	expected.verify();
 
     }
 
@@ -103,13 +109,11 @@ public class FiniteParametricPropertySafeSyncCollectionTest extends AbstractTest
 
 	// verify
 	assertEquals(1, c.getAliveParameterMasks().length);
-	assertBooleanArrayEquals(array(false), c.getAliveParameterMasks()[0]);
+	assertArrayEquals(array(0, 0), c.getAliveParameterMasks()[0]);
 
-	assertEquals(1, i.getAliveParameterMasks().length);
-	assertBooleanArrayEquals(array(true), i.getAliveParameterMasks()[0]);
+	assertEquals(0, i.getAliveParameterMasks().length);
 
 	assertEquals(1, ci.getAliveParameterMasks().length);
-	assertBooleanArrayEquals(array(false, true), ci.getAliveParameterMasks()[0]);
+	assertArrayEquals(array(1), ci.getAliveParameterMasks()[0]);
     }
-
 }

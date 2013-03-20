@@ -11,10 +11,9 @@
 package prm4j.indexing.model;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static prm4j.Util.toNodeMask;
+import static prm4j.indexing.model.JoinArgs.getCopyPattern;
+import static prm4j.indexing.model.JoinArgs.getExtensionPattern;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
@@ -22,20 +21,9 @@ import org.junit.Test;
 
 import prm4j.AbstractTest;
 import prm4j.api.Parameter;
-import prm4j.api.fsm.FSM;
-import prm4j.api.fsm.FSMSpec;
-import prm4j.indexing.model.FindMaxArgs;
-import prm4j.indexing.model.JoinArgs;
-import prm4j.indexing.model.ParameterNode;
-import prm4j.indexing.model.ParametricPropertyProcessor;
-import prm4j.indexing.model.UpdateChainingsArgs;
-import prm4j.spec.FiniteParametricProperty;
-
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
 
 @SuppressWarnings("rawtypes")
-public class ParametricPropertyProcessor1Test extends AbstractTest {
+public class JoinArgsTest extends AbstractTest {
 
     private final static Parameter p0 = new Parameter("p0");
     private final static Parameter p1 = new Parameter("p1");
@@ -60,7 +48,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p0, p2);
 	Set<Parameter<?>> ps2 = asSet(p2, p4);
 
-	int[] actual = ParametricPropertyProcessor.getExtensionPattern(ps1, ps2);
+	int[] actual = getExtensionPattern(ps1, ps2);
 
 	int[] expected = { 0, 2, -1 };
 
@@ -73,7 +61,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p2, p4);
 	Set<Parameter<?>> ps2 = asSet(p0, p2);
 
-	int[] actual = ParametricPropertyProcessor.getExtensionPattern(ps1, ps2);
+	int[] actual = getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, 2, 4 };
 
@@ -86,7 +74,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p0);
 	Set<Parameter<?>> ps2 = asSet(p4);
 
-	int[] actual = ParametricPropertyProcessor.getExtensionPattern(ps1, ps2);
+	int[] actual = getExtensionPattern(ps1, ps2);
 
 	int[] expected = { 0, -1 };
 
@@ -99,7 +87,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p4);
 	Set<Parameter<?>> ps2 = asSet(p0);
 
-	int[] actual = ParametricPropertyProcessor.getExtensionPattern(ps1, ps2);
+	int[] actual = getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, 4 };
 
@@ -112,7 +100,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p2, p4);
 	Set<Parameter<?>> ps2 = asSet(p0, p4);
 
-	int[] actual = ParametricPropertyProcessor.getExtensionPattern(ps1, ps2);
+	int[] actual = getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, 2, 4 };
 
@@ -125,7 +113,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p2, p3, p4);
 	Set<Parameter<?>> ps2 = asSet(p0, p1, p4);
 
-	int[] actual = ParametricPropertyProcessor.getExtensionPattern(ps1, ps2);
+	int[] actual = getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, -1, 2, 3, 4 };
 
@@ -138,7 +126,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p1, p3);
 	Set<Parameter<?>> ps2 = asSet(p0, p2, p4);
 
-	int[] actual = ParametricPropertyProcessor.getExtensionPattern(ps1, ps2);
+	int[] actual = getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, 1, -1, 3, -1 };
 
@@ -151,7 +139,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p0, p1, p2, p3);
 	Set<Parameter<?>> ps2 = asSet(p1, p2, p3, p4);
 
-	int[] actual = ParametricPropertyProcessor.getExtensionPattern(ps1, ps2);
+	int[] actual = getExtensionPattern(ps1, ps2);
 
 	int[] expected = { 0, 1, 2, 3, -1 };
 
@@ -164,7 +152,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p2);
 	Set<Parameter<?>> ps2 = asSet(p0, p1, p2);
 
-	int[] actual = ParametricPropertyProcessor.getExtensionPattern(ps1, ps2);
+	int[] actual = getExtensionPattern(ps1, ps2);
 
 	int[] expected = { -1, -1, 2 };
 
@@ -182,7 +170,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(fsm.m, fsm.c);
 	Set<Parameter<?>> ps2 = asSet(fsm.c, fsm.i);
 
-	int[] actual = ParametricPropertyProcessor.getExtensionPattern(ps1, ps2);
+	int[] actual = getExtensionPattern(ps1, ps2);
 
 	int[] expected = { 0, 1, -1 };
 
@@ -197,7 +185,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p0);
 	Set<Parameter<?>> ps2 = asSet(p4);
 
-	int[] actual = ParametricPropertyProcessor.getCopyPattern(ps1, ps2);
+	int[] actual = getCopyPattern(ps1, ps2);
 
 	int[] expected = { 0, 1 };
 
@@ -210,7 +198,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p1, p2);
 	Set<Parameter<?>> ps2 = asSet(p0, p1);
 
-	int[] actual = ParametricPropertyProcessor.getCopyPattern(ps1, ps2);
+	int[] actual = getCopyPattern(ps1, ps2);
 
 	int[] expected = { 0, 0 };
 
@@ -223,7 +211,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p4);
 	Set<Parameter<?>> ps2 = asSet(p0);
 
-	int[] actual = ParametricPropertyProcessor.getCopyPattern(ps1, ps2);
+	int[] actual = getCopyPattern(ps1, ps2);
 
 	int[] expected = { 0, 0 };
 
@@ -236,7 +224,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p0, p2);
 	Set<Parameter<?>> ps2 = asSet(p2, p4);
 
-	int[] actual = ParametricPropertyProcessor.getCopyPattern(ps1, ps2);
+	int[] actual = getCopyPattern(ps1, ps2);
 
 	int[] expected = { 1, 2 };
 
@@ -249,7 +237,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p0, p1, p2, p3);
 	Set<Parameter<?>> ps2 = asSet(p1, p2, p3, p4);
 
-	int[] actual = ParametricPropertyProcessor.getCopyPattern(ps1, ps2);
+	int[] actual = getCopyPattern(ps1, ps2);
 
 	int[] expected = { 3, 4 };
 
@@ -262,7 +250,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p2);
 	Set<Parameter<?>> ps2 = asSet(p0, p1, p2);
 
-	int[] actual = ParametricPropertyProcessor.getCopyPattern(ps1, ps2);
+	int[] actual = getCopyPattern(ps1, ps2);
 
 	int[] expected = { 0, 0, 1, 1 };
 
@@ -275,7 +263,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p2);
 	Set<Parameter<?>> ps2 = asSet(p0, p1, p2, p3, p4);
 
-	int[] actual = ParametricPropertyProcessor.getCopyPattern(ps1, ps2);
+	int[] actual = getCopyPattern(ps1, ps2);
 
 	int[] expected = { 0, 0, 1, 1, 3, 3, 4, 4 };
 
@@ -288,7 +276,7 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p0, p1, p4);
 	Set<Parameter<?>> ps2 = asSet(p2, p3, p4);
 
-	int[] actual = ParametricPropertyProcessor.getCopyPattern(ps1, ps2);
+	int[] actual = getCopyPattern(ps1, ps2);
 
 	int[] expected = { 0, 2, 1, 3 };
 
@@ -301,110 +289,11 @@ public class ParametricPropertyProcessor1Test extends AbstractTest {
 	Set<Parameter<?>> ps1 = asSet(p2, p4);
 	Set<Parameter<?>> ps2 = asSet(p0, p1, p3, p4);
 
-	int[] actual = ParametricPropertyProcessor.getCopyPattern(ps1, ps2);
+	int[] actual = getCopyPattern(ps1, ps2);
 
 	int[] expected = { 0, 0, 1, 1, 2, 3 };
 
 	assertArrayEquals(expected, actual);
-    }
-
-    // /////////////// toParameterMask ///////////////////////////
-
-    @Test
-    public void toParameterMask_arbitrary() {
-
-	int[] actual = ParametricPropertyProcessor.toParameterMask(asSet(p1, p2, p4));
-
-	int[] expected = { 1, 2, 4 };
-
-	assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void toParameterMask_emptyset() {
-
-	int[] actual = ParametricPropertyProcessor.toParameterMask(EMPTY_PARAMETER_SET);
-
-	int[] expected = {};
-
-	assertArrayEquals(expected, actual);
-    }
-
-    // /////////////// getMaxData ///////////////////////////
-
-    @Test
-    public void getMaxData_unsafeMapIterator() {
-
-	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
-	FSM fsm = u.fsm;
-	u.m.setIndex(0);
-	u.c.setIndex(1);
-	u.i.setIndex(2);
-	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
-	ParametricPropertyProcessor sdc = new ParametricPropertyProcessor(fpp);
-
-	FindMaxArgs[][] actual = sdc.getMaxData();
-
-	FindMaxArgs[][] expected = new FindMaxArgs[fpp.getBaseEvents().size()][];
-	expected[u.createColl.getIndex()] = new FindMaxArgs[0];
-	expected[u.updateMap.getIndex()] = new FindMaxArgs[0];
-	expected[u.createIter.getIndex()] = new FindMaxArgs[0];
-	expected[u.useIter.getIndex()] = new FindMaxArgs[0];
-
-	assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void getJoinData_unsafeMapIterator() {
-
-	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
-	FSM fsm = u.fsm;
-	u.m.setIndex(0);
-	u.c.setIndex(1);
-	u.i.setIndex(2);
-	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
-	ParametricPropertyProcessor sdc = new ParametricPropertyProcessor(fpp);
-
-	JoinArgs[][] actual = sdc.getJoinData();
-
-	JoinArgs[][] expected = new JoinArgs[fpp.getBaseEvents().size()][];
-	expected[u.createColl.getIndex()] = new JoinArgs[0];
-
-	expected[u.updateMap.getIndex()] = new JoinArgs[0];
-
-	JoinArgs[] jd = new JoinArgs[1];
-	int[][] disableMasks = { { 2 }, { 1, 2 } };
-	jd[0] = new JoinArgs(array(1), 0, array(-1, 1, 2), array(0, 0), disableMasks);
-	expected[u.createIter.getIndex()] = jd;
-
-	expected[u.useIter.getIndex()] = new JoinArgs[0];
-
-	assert2DimArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void getChainData_unsafeMapIterator() {
-
-	FSM_SafeMapIterator u = new FSM_SafeMapIterator();
-	FSM fsm = u.fsm;
-	u.m.setIndex(0);
-	u.c.setIndex(1);
-	u.i.setIndex(2);
-	FiniteParametricProperty fpp = new FiniteParametricProperty(new FSMSpec(fsm));
-	ParametricPropertyProcessor sdc = new ParametricPropertyProcessor(fpp);
-
-	SetMultimap<Set<Parameter<?>>, UpdateChainingsArgs> actual = sdc.getChainData();
-
-	SetMultimap<Set<Parameter<?>>, UpdateChainingsArgs> expected = HashMultimap.create();
-	expected.put(asSet(u.m, u.c, u.i), new UpdateChainingsArgs(list(0), 0));
-	expected.put(asSet(u.m, u.c, u.i), new UpdateChainingsArgs(list(2), 0));
-	expected.put(asSet(u.m, u.c, u.i), new UpdateChainingsArgs(list(0, 1), 0));
-	expected.put(asSet(u.m, u.c, u.i), new UpdateChainingsArgs(list(1, 2), 0));
-	// optimized away by recognizing non-state changing transitions:
-	// expected.put(asSet(u.m, u.c), new UpdateChainingsArgs(list(0), 0));
-	expected.put(asSet(u.m, u.c), new UpdateChainingsArgs(list(1), 0));
-
-	assertEquals(expected, actual);
     }
 
 }

@@ -23,9 +23,9 @@ import prm4j.indexing.monitor.Monitor;
 import prm4j.indexing.node.DefaultNodeStore;
 import prm4j.indexing.node.NodeManager;
 import prm4j.indexing.node.NodeStore;
-import prm4j.spec.FiniteParametricProperty;
-import prm4j.spec.FiniteSpec;
 import prm4j.spec.ParametricProperty;
+import prm4j.spec.finite.FiniteParametricProperty;
+import prm4j.spec.finite.FiniteSpec;
 
 public class ParametricMonitorFactory {
 

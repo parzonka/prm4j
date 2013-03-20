@@ -10,6 +10,7 @@
  */
 package prm4j.indexing.model;
 
+import static prm4j.indexing.IndexingUtils.toParameterMasks;
 import prm4j.api.BaseEvent;
 
 /**
@@ -22,7 +23,7 @@ public class EventContext {
     private final boolean[] creationEvents;
     private final boolean[] disableEvents;
     // baseEvent * numberOfExistingMonitorMasks * parameterMaskLength
-    private final int[][][] existingMonitorMasks;
+    private final int[][][] disableMonitors;
 
     public EventContext(JoinArgs[][] joinArgsArray, FindMaxArgs[][] findMaxArgsArray, boolean[] creationEvents,
 	    boolean[] disableEvents, int[][][] existingMonitorMasks) {
@@ -30,7 +31,23 @@ public class EventContext {
 	this.findMaxArgsArray = findMaxArgsArray;
 	this.creationEvents = creationEvents;
 	this.disableEvents = disableEvents;
-	this.existingMonitorMasks = existingMonitorMasks;
+	disableMonitors = existingMonitorMasks;
+    }
+
+    public EventContext(ParametricPropertyModel ppm) {
+	joinArgsArray = getJoinArgsArray(ppm);
+	findMaxArgsArray = getFindMaxArgsArray(ppm);
+	creationEvents = getCreationEvents(ppm);
+	disableEvents = getDisableEvents(ppm);
+	disableMonitors = getDisableMonitors(ppm);
+    }
+
+    protected static int[][][] getDisableMonitors(ParametricPropertyModel ppm) {
+	final int[][][] result = new int[ppm.getParametricProperty().getSpec().getBaseEvents().size()][][];
+	for (BaseEvent baseEvent : ppm.getParametricProperty().getSpec().getBaseEvents()) {
+	    result[baseEvent.getIndex()] = toParameterMasks(ppm.getDisableInstanceTypes().get(baseEvent));
+	}
+	return result;
     }
 
     public FindMaxArgs[] getFindMaxArgs(BaseEvent baseEvent) {
@@ -54,7 +71,39 @@ public class EventContext {
      * @return numberOfExistingMonitorMasks * parameterMaskLength
      */
     public int[][] getExistingMonitorMasks(BaseEvent baseEvent) {
-	return existingMonitorMasks[baseEvent.getIndex()];
+	return disableMonitors[baseEvent.getIndex()];
+    }
+
+    private JoinArgs[][] getJoinArgsArray(ParametricPropertyModel ppm) {
+	final JoinArgs[][] result = new JoinArgs[ppm.getParametricProperty().getSpec().getBaseEvents().size()][];
+	for (BaseEvent baseEvent : ppm.getParametricProperty().getSpec().getBaseEvents()) {
+	    result[baseEvent.getIndex()] = JoinArgs.createArgsArray(ppm, baseEvent);
+	}
+	return result;
+    }
+
+    private FindMaxArgs[][] getFindMaxArgsArray(ParametricPropertyModel ppm) {
+	final FindMaxArgs[][] result = new FindMaxArgs[ppm.getParametricProperty().getSpec().getBaseEvents().size()][];
+	for (BaseEvent baseEvent : ppm.getParametricProperty().getSpec().getBaseEvents()) {
+	    result[baseEvent.getIndex()] = FindMaxArgs.createArgsArray(ppm, baseEvent);
+	}
+	return result;
+    }
+
+    private boolean[] getCreationEvents(ParametricPropertyModel ppm) {
+	final boolean[] result = new boolean[ppm.getParametricProperty().getSpec().getBaseEvents().size()];
+	for (BaseEvent baseEvent : ppm.getParametricProperty().getSpec().getBaseEvents()) {
+	    result[baseEvent.getIndex()] = ppm.getParametricProperty().getCreationEvents().contains(baseEvent);
+	}
+	return result;
+    }
+
+    private boolean[] getDisableEvents(ParametricPropertyModel ppm) {
+	final boolean[] result = new boolean[ppm.getParametricProperty().getSpec().getBaseEvents().size()];
+	for (BaseEvent baseEvent : ppm.getParametricProperty().getSpec().getBaseEvents()) {
+	    result[baseEvent.getIndex()] = ppm.getParametricProperty().getDisableEvents().contains(baseEvent);
+	}
+	return result;
     }
 
 }

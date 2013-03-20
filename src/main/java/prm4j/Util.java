@@ -11,7 +11,6 @@
 package prm4j;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,7 +21,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import prm4j.api.Parameter;
 import prm4j.indexing.binding.Binding;
 
 public class Util {
@@ -97,6 +95,19 @@ public class Util {
 	return !set1.equals(set2) && set1.containsAll(set2);
     }
 
+    /**
+     * Creates a list of sets which is sorted by set size descending.
+     * 
+     * @param collOfSets
+     *            a collection of sets
+     * @return a list of sets in descending order
+     */
+    public static <T> List<Set<T>> toReverseTopologicalOrdering(final Collection<Set<T>> collOfSets) {
+	final List<Set<T>> listOfSets = new ArrayList<Set<T>>(collOfSets);
+	Collections.sort(listOfSets, Util.REVERSE_TOPOLOGICAL_SET_COMPARATOR);
+	return listOfSets;
+    }
+
     public static <T> Set<T> unmodifiableUnion(Set<T> set1, Set<T> set2) {
 	Set<T> result = new HashSet<T>(set1);
 	result.addAll(set2);
@@ -145,20 +156,6 @@ public class Util {
 	List<T> list = new ArrayList<T>(c);
 	java.util.Collections.sort(list);
 	return list;
-    }
-
-    public static int[] toNodeMask(Parameter<?>... parameters) {
-	int[] nodeMask = new int[parameters.length];
-	int i = 0;
-	for (Parameter<?> parameter : parameters) {
-	    nodeMask[i++] = parameter.getIndex();
-	}
-	Arrays.sort(nodeMask);
-	return nodeMask;
-    }
-
-    public static int[] toNodeMask(Set<Parameter<?>> parametersSet) {
-	return toNodeMask(parametersSet.toArray(new Parameter<?>[0]));
     }
 
     public static String bindingsToString(Binding[] bindings) {

@@ -63,4 +63,14 @@ public abstract class AbstractMonitorState implements MonitorState {
 	return index;
     }
 
+    @Override
+    public int hashCode() {
+	return index;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	return index == ((MonitorState) obj).getIndex();
+    }
+
 }
