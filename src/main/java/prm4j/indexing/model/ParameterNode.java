@@ -19,6 +19,7 @@ import java.util.Set;
 import prm4j.Util;
 import prm4j.api.Parameter;
 import prm4j.indexing.binding.Binding;
+import prm4j.indexing.monitor.MonitorState;
 import prm4j.indexing.node.DefaultNodeFactory;
 import prm4j.indexing.node.LeafNodeFactory;
 import prm4j.indexing.node.LeafNodeWithMonitorSetsFactory;
@@ -51,6 +52,7 @@ public class ParameterNode {
     private int monitorSetCount;
 
     private int[][] aliveParameterMasks;
+    private int[][][] state2AliveParameterMasks;
 
     public ParameterNode(Set<Parameter<?>> nodeParameterSet, Set<Parameter<?>> fullParameterSet) {
 	super();
@@ -407,13 +409,22 @@ public class ParameterNode {
     }
 
     /**
-     * Sets the information necessary to calculate if an accepting state can be reached from the given state and the
-     * given bindings
+     * Sets the information necessary to calculate if an accepting state can be reached with the given bindings
      * 
      * @param aliveParameterMasks
      */
     public void setAliveParameterMasks(int[][] aliveParameterMasks) {
 	this.aliveParameterMasks = aliveParameterMasks;
+    }
+
+    /**
+     * Sets the information necessary to calculate if an accepting state can be reached from the given state and the
+     * given bindings
+     * 
+     * @param state2AliveParameterMasks
+     */
+    public void setState2AliveParameterMasks(int[][][] state2AliveParameterMasks) {
+	this.state2AliveParameterMasks = state2AliveParameterMasks;
     }
 
     public int[][] getAliveParameterMasks() {
@@ -438,18 +449,24 @@ public class ParameterNode {
     }
 
     /**
-     * Tests, if an accepting state can be reached from the given bindings.
+     * Tests, if an accepting state can be reached from the given state and the given bindings.
      * 
+     * @param state
      * @param compressedBindings
      *            A number of these bindings is checked for aliveness.
      * @return <code>true</code> if an accepting state is reachable
      */
-    public boolean isAcceptingStateReachable(Binding[] compressedBindings) {
+    public boolean isAcceptingStateReachable(final MonitorState state, final Binding[] compressedBindings) {
+	// if the more fine-granular state2aliveParameterMasks are available, use them. If not, use the
+	// aliveParameterMasks which rely on the instance type. (the instance type subsumes all states which may induce
+	// the parameters comprising the instance type)
+	return state2AliveParameterMasks == null ? isAcceptingStateReachable(compressedBindings, aliveParameterMasks)
+		: isAcceptingStateReachable(compressedBindings, state2AliveParameterMasks[state.getIndex()]);
+    }
+
+    private static boolean isAcceptingStateReachable(final Binding[] compressedBindings,
+	    final int[][] aliveParameterMasks) {
 	int[] parameterMask;
-	if (aliveParameterMasks == null) {
-	    throw new NullPointerException(String.format("aliveParameterMasks was null with bindings=%s, and node=%s",
-		    Arrays.toString(compressedBindings), getNodeParameterSet().toString()));
-	}
 	outer: for (int i = 0; i < aliveParameterMasks.length; i++) {
 	    parameterMask = aliveParameterMasks[i];
 	    for (int j = 0; j < parameterMask.length; j++) {

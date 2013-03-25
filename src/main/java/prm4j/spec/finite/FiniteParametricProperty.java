@@ -16,8 +16,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import prm4j.Util;
 import prm4j.Util.Tuple;
@@ -25,7 +25,6 @@ import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
 import prm4j.indexing.monitor.MonitorState;
 import prm4j.spec.ParametricProperty;
-import prm4j.spec.Spec;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -63,7 +62,7 @@ public class FiniteParametricProperty implements ParametricProperty {
     }
 
     @Override
-    public Spec getSpec() {
+    public FiniteSpec getSpec() {
 	return finiteSpec;
     }
 
@@ -177,6 +176,7 @@ public class FiniteParametricProperty implements ParametricProperty {
      * Returns the update relation X -> X' where an instance i with Dom(i) = X propagates events to an instance i' with
      * Dom(i') = X'.
      */
+    @Override
     public Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getUpdates() {
 	final Set<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> updates = new HashSet<Tuple<Set<Parameter<?>>, Set<Parameter<?>>>>();
 	new FSMVisitor(finiteSpec.getBaseEvents()) {

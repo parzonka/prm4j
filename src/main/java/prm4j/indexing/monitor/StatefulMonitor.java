@@ -42,7 +42,7 @@ public class StatefulMonitor extends AbstractMonitor {
 	    terminate();
 	    return false;
 	}
-	MatchHandler matchHandler = state.getMatchHandler();
+	final MatchHandler matchHandler = state.getMatchHandler();
 	if (matchHandler != null) {
 	    matchHandler.handleAndCountMatch(getUncompressedBindings(), event.getAuxiliaryData());
 	    // when a state is a accepting state, it is still possible we will reach another accepting state (or loop on
@@ -50,7 +50,7 @@ public class StatefulMonitor extends AbstractMonitor {
 	}
 	if (state.isFinal()
 		|| (Globals.CHECK_MONITOR_VALIDITY_ON_EACH_UPDATE && !getParameterNode().isAcceptingStateReachable(
-			getCompressedBindings()))) {
+			state, getCompressedBindings()))) {
 	    terminate();
 	    return false;
 	}
@@ -75,7 +75,7 @@ public class StatefulMonitor extends AbstractMonitor {
     @Override
     public boolean isAlive() {
 	return !isTerminated() && state != null && !state.isFinal()
-		&& getParameterNode().isAcceptingStateReachable(getCompressedBindings());
+		&& getParameterNode().isAcceptingStateReachable(state, getCompressedBindings());
     }
 
     @Override

@@ -19,7 +19,9 @@ import prm4j.Util;
 import prm4j.Util.Tuple;
 import prm4j.api.Parameter;
 import prm4j.indexing.IndexingUtils;
+import prm4j.indexing.monitor.MonitorState;
 import prm4j.spec.ParametricProperty;
+import prm4j.spec.finite.FiniteParametricProperty;
 
 import com.google.common.collect.Table;
 
@@ -43,7 +45,8 @@ public class ParametricPropertyProcessor {
 	    if (parameterSet.isEmpty()) {
 		parameterTreeRoot.setChainData(createUpdateChainingArgs(ppm, parameterSet));
 		parameterTreeRoot.setMonitorSetCount(monitorSetIds.row(parameterSet).size());
-		parameterTreeRoot.setAliveParameterMasks(calculateAliveParameterMasksBoolean(ppm, parameterSet));
+		parameterTreeRoot.setAliveParameterMasks(createAliveParameterMasks(ppm, parameterSet));
+		parameterTreeRoot.setState2AliveParameterMasks(createState2AliveParameterMasks(ppm, parameterSet));
 	    }
 	    ParameterNode node = parameterTreeRoot;
 	    for (Parameter<?> parameter : Util.asSortedList(parameterSet)) {
@@ -53,17 +56,48 @@ public class ParametricPropertyProcessor {
 		    node = node.createAndGetParameterNode(parameter);
 		    node.setChainData(createUpdateChainingArgs(ppm, node.getNodeParameterSet()));
 		    node.setMonitorSetCount(monitorSetIds.row(node.getNodeParameterSet()).size());
-		    node.setAliveParameterMasks(calculateAliveParameterMasksBoolean(ppm, node.getNodeParameterSet()));
+		    node.setAliveParameterMasks(createAliveParameterMasks(ppm, node.getNodeParameterSet()));
+		    node.setState2AliveParameterMasks(createState2AliveParameterMasks(ppm, node.getNodeParameterSet()));
 		}
 	    }
 	}
 	return parameterTreeRoot;
     }
 
-    private int[][] calculateAliveParameterMasksBoolean(ParametricPropertyModel ppm, Set<Parameter<?>> parameterSet) {
+    /**
+     * Creates a disjunction of parameter masks X where each X represents all bindings which have to be alive so that a
+     * accepting state is reachable.
+     * 
+     * @param ppm
+     * @param parameterSet
+     * @return a disjunction of parameter masks
+     */
+    private int[][] createAliveParameterMasks(ParametricPropertyModel ppm, Set<Parameter<?>> parameterSet) {
 	Set<Set<Parameter<?>>> parameterSets = ppm.getParametricProperty().getAliveParameterSets().get(parameterSet);
 	IndexingUtils.toParameterMasks(parameterSets, parameterSet);
 	return IndexingUtils.toParameterMasks(parameterSets, parameterSet);
+    }
+
+    /**
+     * Creates a mapping of state indices to disjunction of parameter masks X where each X represents all bindings which
+     * have to be alive so that a accepting state is reachable.
+     * 
+     * @param ppm
+     * @param parameterSet
+     * @return a mapping of state indices to a disjunction of parameter masks
+     */
+    private int[][][] createState2AliveParameterMasks(ParametricPropertyModel ppm, Set<Parameter<?>> parameterSet) {
+	if (ppm.getParametricProperty() instanceof FiniteParametricProperty) {
+
+	    FiniteParametricProperty fpp = (FiniteParametricProperty) ppm.getParametricProperty();
+	    int[][][] result = new int[fpp.getSpec().getStates().size()][][];
+	    for (MonitorState state : fpp.getSpec().getStates()) {
+		result[state.getIndex()] = IndexingUtils.toParameterMasks(fpp.getState2AliveParameterSets().get(state),
+			parameterSet);
+	    }
+	    return result;
+	}
+	return null;
     }
 
     private Set<UpdateChainingsArgs> createUpdateChainingArgs(ParametricPropertyModel ppm,
