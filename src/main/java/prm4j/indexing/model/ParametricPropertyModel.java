@@ -165,13 +165,25 @@ public class ParametricPropertyModel {
 	return result;
     }
 
+    /**
+     * Returns the set of X where X is (at least one)
+     * <ul>
+     * <li>a base event definition
+     * <li>the parametric instance type of a node storing a monitor set of compatible nodes
+     * <li>the parametric instance type of a node carrying a monitor
+     * 
+     * @return the instance types relevant in the parameter tree
+     */
     public Set<Set<Parameter<?>>> getRelevantInstanceTypes() {
 	final Set<Set<Parameter<?>>> result = new HashSet<Set<Parameter<?>>>();
 	for (BaseEvent baseEvent : getParametricProperty().getSpec().getBaseEvents()) {
+	    // a base event definition
 	    result.add(baseEvent.getParameters());
+	    // parametric instance type of a node storing a monitor set of compatible nodes
 	    for (Tuple<Set<Parameter<?>>, Set<Parameter<?>>> tuple : getJoinTuples().get(baseEvent)) {
 		result.add(tuple._1());
 	    }
+	    // parametric instance type of a node carrying a monitor
 	    result.addAll(getMonitorInstanceTypes());
 	}
 	return result;
@@ -182,14 +194,21 @@ public class ParametricPropertyModel {
     }
 
     /**
-     * @return the maxArgs
+     * Returns a mapping of baseEvents to lists of parameter sets X where X identifies a instance which may store a
+     * monitor state relevant for the instance carried with the base event.
+     * 
+     * @return baseEvent to list of instance types relevant for the find-max phase
      */
     public ListMultimap<BaseEvent, Set<Parameter<?>>> getFindMaxInstanceTypes() {
 	return maxArgs;
     }
 
     /**
-     * @return the joinArgs
+     * Returns a mapping of baseEvents to lists of tuples (X,X') where X identifies a parametric instance which stores
+     * the common part of the parametric instance carried in the event and X' identifies the domain of the combined
+     * parametric instance.
+     * 
+     * @return baseEvent to list of instance types relevant for the join phase
      */
     public ListMultimap<BaseEvent, Tuple<Set<Parameter<?>>, Set<Parameter<?>>>> getJoinTuples() {
 	return joinArgs;
@@ -203,7 +222,11 @@ public class ParametricPropertyModel {
     }
 
     /**
-     * @return the monitorSetSpecs
+     * Returns a mapping of X to set of tuples (X',b) where X identifies a parametric instance which stores a monitor
+     * set and X' represents the domain of all instances stored in the set (when X' = {}, then the domain is not
+     * relevant, e.g. it is the domain which is the difference from the domains of other monitor sets).
+     * 
+     * @return the monitor set specifications for each node
      */
     public SetMultimap<Set<Parameter<?>>, Tuple<Set<Parameter<?>>, Boolean>> getMonitorSetSpecs() {
 	return monitorSetSpecs;
