@@ -116,17 +116,16 @@ public class MonitorSet {
      */
     public void join(NodeStore nodeStore, Event event, final Binding[] joinableBindings, final JoinArgs joinArgs) {
 
-	// create initial copy of the joinable; will gets cloned again if this one is used in a monitor
+	// create initial copy of the joinable; will be cloned again if this one is used in a monitor
 	Binding[] joinable = joinableBindings.clone(); // 62
 	final int[] copyPattern = joinArgs.copyPattern;
 	final int[][] disableMasks = joinArgs.disableMasks;
 
 	// post-loop invariant: all monitors up to monitorSet[deadPartitionStart] are not dead
 	int deadPartitionStart = 0;
-	// iterate over all compatible nodes
+
 	compatibleNodesLoop: for (int i = 0; i < size; i++) {
 
-	    // this monitor holds some bindings we would like to copy to our joined bindings
 	    final NodeRef compatibleNodeRef = monitorSet[i];
 	    final Monitor compatibleMonitor = compatibleNodeRef.monitor;
 	    final long compatibleMonitorTimestamp = compatibleMonitor.getTimestamp();
@@ -136,9 +135,9 @@ public class MonitorSet {
 	    if (compatibleBindings == null) {
 		continue; // don't increment the deadPartitionStart => this monitor will be removed from the set
 	    }
-	    // copy some compatible bindings to our joinable
 	    createJoin(joinable, compatibleBindings, copyPattern);
 
+	    // time check
 	    for (int j = 0; j < disableMasks.length; j++) {
 		final Node subInstanceNode = nodeStore.getNode(joinable, disableMasks[j]);
 		if (subInstanceNode.getTimestamp() > compatibleMonitorTimestamp
@@ -161,8 +160,8 @@ public class MonitorSet {
 		    // this monitor is alive, so copy its reference to the alive partition
 		    monitorSet[deadPartitionStart++] = compatibleNodeRef;
 		}
-		// chain phase: connect necessary less informative instances so the joined binding will gets some
-		// updates (or be used in join phase itself as compatible monitor)
+
+		// update-chainings phase
 		for (UpdateChainingsArgs updateChainingsArgs : joinedInstanceNode.getParameterNode()
 			.getUpdateChainingsArgs()) {
 		    nodeStore.getOrCreateNode(joinable, updateChainingsArgs.nodeMask)
@@ -172,7 +171,7 @@ public class MonitorSet {
 		joinable = joinableBindings.clone(); // 74
 	    }
 	}
-	// remove all dead monitors from the monitor set by nullifying the 'dead partition'
+	// remove all dead monitors from the monitor set by nullifying all entries in the dead partition
 	for (int i = deadPartitionStart; i < size; i++) {
 	    monitorSet[i] = null;
 	}

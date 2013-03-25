@@ -22,6 +22,7 @@ import java.util.Set;
 import prm4j.Util;
 import prm4j.api.BaseEvent;
 import prm4j.api.Parameter;
+import prm4j.indexing.binding.Binding;
 
 public class IndexingUtils {
 
@@ -96,6 +97,22 @@ public class IndexingUtils {
 	int i = 0;
 	for (Set<Parameter<?>> parameterSet : collOfParameterSets) {
 	    result[i++] = toMappedParameterMask(parameterSet, availableParameters);
+	}
+	return result;
+    }
+
+    /**
+     * Returns a compressed binding representation for the given uncompressed bindings and the parameter mask.
+     * 
+     * @param uncompressedBindings
+     * @param parameterMask
+     * @return compressed binding representation associated to the given parameter mask
+     */
+    public static Binding[] toCompressedBindings(Binding[] uncompressedBindings, int[] parameterMask) {
+	Binding[] result = new Binding[parameterMask.length];
+	int j = 0;
+	for (int i = 0; i < parameterMask.length; i++) {
+	    result[j++] = uncompressedBindings[parameterMask[i]];
 	}
 	return result;
     }
