@@ -137,6 +137,18 @@ public class DefaultParametricMonitor_HasNext_Test extends AbstractDefaultParame
 	assertMatchesCount(3);
     }
 
+    @Test
+    public void detectMatches_hasNext_next_next_next() throws Exception {
+	pm.processEvent(fsm.hasNext.createEvent(i1));
+	assertMatchesCount(0);
+	pm.processEvent(fsm.next.createEvent(i1));
+	assertMatchesCount(0);
+	pm.processEvent(fsm.next.createEvent(i1));
+	assertMatchesCount(1);
+	pm.processEvent(fsm.next.createEvent(i2));
+	assertMatchesCount(2);
+    }
+
     private void assertMatchesCount(int count) {
 	assertEquals(count, fsm.matchHandler.getHandledMatches().size());
     }
