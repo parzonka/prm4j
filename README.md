@@ -2,12 +2,6 @@
 
 prm4j is a light-weight runtime verification library. It can be used to efficiently monitor and detect patterns of object interactions by matching the program’s execution trace against a parametric property. This property describes a pattern containing free variables typed by classes. During runtime this pattern is matched by binding the variables to concrete object instances.
 
-![alt text](https://github.com/parzonka/parzonka.github.com/raw/master/resources/pictures/fig-library-3.pdf "prm4j-diagram")
-
-<p align="center">
-  <img src="https://github.com/parzonka/parzonka.github.com/raw/master/resources/pictures/fig-library-3.pdf" alt="prm4j-diagram">
-</p>
-
 A Java target application can be intrumented using AspectJ so that relevant may be passed to prm4j. Latter implements the specification and matching of parametric properties. prm4j also provides an API to create and pass events to the monitor.  Arbitrary code may be executed when a match is detected. This may be a simple warning or recovery code performing changes in the instrumented target application.
 
 ##Example
